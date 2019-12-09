@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/posts/</link>
+    <description>Recent content in Posts on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Thu, 26 Sep 2019 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</title>
+      <link>https://mark-lin.com/posts/20190926_it_11/</link>
+      <pubDate>Thu, 26 Sep 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190926_it_11/</guid>
+      <description>正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何</description>
+    </item>
+    
+  </channel>
+</rss>

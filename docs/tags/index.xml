@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/</link>
+    <description>Recent content in Tags on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Thu, 26 Sep 2019 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>it 鐵人賽</title>
+      <link>https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD/</link>
+      <pubDate>Thu, 26 Sep 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>系統</title>
+      <link>https://mark-lin.com/tags/%E7%B3%BB%E7%B5%B1/</link>
+      <pubDate>Thu, 26 Sep 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/tags/%E7%B3%BB%E7%B5%B1/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

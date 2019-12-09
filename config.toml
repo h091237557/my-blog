@@ -1,0 +1,35 @@
+
+baseURL = "https://mark-lin.com"
+title = "拿鐵派的馬克 Blog"
+theme = "hugo-primer"
+languageCode = "ja"
+publishDir = "docs"
+
+# If you are using Chinese, Japanese, or Korean, I highly recommend you to set this true.
+hasCJKLanguage = true
+summaryLength = 70
+# Code pen
+pygmentsCodeFences = true
+pygmentsUseClasses = true
+googleAnalytics = "U-12345678-0"
+
+# Enter a copyright notice to display in the site footer.
+# To display a copyright symbol, type `&copy;`.
+copyright = "&copy;Your Name 2019"
+
+[frontmatter]
+# update sitemap.xml's lastmod datetime by file change time, instead of git.
+lastmod = ["lastmod", ":fileModTime", ":default"]
+
+[params]
+description = "Describe what your web page is about"
+twitter = "your_twitter_id"
+# You can use favicon by addin them manually.
+useIcon = true
+useTwitterCard = true
+# Use MathJax.js. Disabling site-wide and you still can enable in indivisual pages
+math = true
+
+shareTo = ["Twitter", "Facebook"]
+showFooterCredits = true
+
