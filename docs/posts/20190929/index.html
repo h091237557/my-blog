@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-14 之資料庫層的優化 - 表的設計 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mysql, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-14 之資料庫層的優化 - 表的設計 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style.css">
+  </head>
+
+
+  <body class="bg-gray">
+    <div id="holy" class="container-lg bg-white h-100">
+
+      <div id="header" class="px-1 bg-white">
+        <nav class="UnderlineNav UnderlineNav--right px-2">
+  <a class="UnderlineNav-actions muted-link h2" href="https://mark-lin.com">
+    拿鐵派的馬克 Blog
+  </a>
+
+  
+  
+</nav>
+
+      </div>
+
+      <div role="main" id="main" class="holy-main markdown-body px-4 bg-white">
+        
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-14 之資料庫層的優化 - 表的設計</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+<a href='/categories/series' class="muted-link">
+  <span class="Label Label--gray-darker">Series</span>
+</a>
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-09. Published at: 2019-09-29.">
+        
+          Lastmod: 2019-12-09
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ZPcBZlbJcf.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<hr>
+<p>本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。</p>
+<ul>
+<li>表設計的幾個小建議</li>
+<li>正規與非正規的小戰爭</li>
+</ul>
+<h2 id="heading1">表設計的幾個小建議</h2>
+<hr>
+<p>這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。</p>
+<h3 id="-1--------">建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + )</h3>
+<p>基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :</p>
+<ul>
+<li>char</li>
+<li>varchar</li>
+<li>text</li>
+<li>blob</li>
+</ul>
+<h4 id="char-vs-varchar">char vs varchar</h4>
+<p>char 的特點 :</p>
+<ul>
+<li>最大 255 byte</li>
+<li>不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。</li>
+<li>用 char 需要處理空白。</li>
+</ul>
+<p>varchar 特色 :</p>
+<ul>
+<li>存幾個字就是需花費 n+1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 + 1 = 2 byte。</li>
+<li>65535 為最大，實際為 65532。</li>
+<li>當 varchar 大於一定字數時，會自動轉成 text。</li>
+</ul>
+<pre><code>varchar (255+) 轉成 tinytext
+varchar (500+) 轉成 text
+varchar (20000+) 轉成 mediumtext
+</code></pre><p>下表為 char 與 varchar 的實際存儲空間比較。</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>char(4)</th>
+<th>花費空間</th>
+<th>varchar(4)</th>
+<th>花費空間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>'&rsquo;</td>
+<td>&ldquo;白白&rdquo;</td>
+<td>4 bytes</td>
+<td>'&rsquo;</td>
+<td>1 bytes</td>
+</tr>
+<tr>
+<td>&lsquo;ab&rsquo;</td>
+<td>&lsquo;ab白白&rsquo;</td>
+<td>4 bytes</td>
+<td>&lsquo;ab&rsquo;</td>
+<td>3 bytes</td>
+</tr>
+<tr>
+<td>&lsquo;abcd&rsquo;</td>
+<td>&lsquo;abcd&rsquo;</td>
+<td>4 bytes</td>
+<td>&lsquo;abcd&rsquo;</td>
+<td>5 bytes</td>
+</tr>
+<tr>
+<td>&lsquo;abcdefgh&rsquo;</td>
+<td>&lsquo;abcd&rsquo;</td>
+<td>4 bytes</td>
+<td>&lsquo;abcd&rsquo;</td>
+<td>5 bytes</td>
+</tr>
+</tbody>
+</table>
+<p>表格來源: <a href="https://dev.mysql.com/doc/refman/5.6/en/char.html">MySQL 5.6 Reference Manual</a></p>
+<p>注意一下，上面中的白代表為空白的意思，因為 markdown table 在轉換時，有些轉換器會將空白移除，所以上表以白替代。</p>
+<p><strong>那什麼時後選 char 什麼時後選 varchar 呢 ?</strong></p>
+<p>比較簡單的選擇基準為 :</p>
+<ul>
+<li>變動、長、不常更新 =&gt; 選 varchar，</li>
+<li>固定、短、常更新 =&gt; 選 char。</li>
+</ul>
+<p>char 適合常更新的原因在於它比較沒有碎片化的問題，因為它長度是固定的。</p>
+<h4 id="text-vs-blob">text vs blob</h4>
+<ul>
+<li>text: 可儲 0 ~ 65536 字元，儲文字。</li>
+<li>blob: 可儲 0 ~ 65536 字元，儲二進位。</li>
+</ul>
+<p>這兩個基本上都是用來儲大量文字的東西，但是看了不少篇的文章，它們都建議儘可能的不要使用它，不過我覺得比較準備一點的說法在於，不要在表內，存太長的字串 ( 包含 varchar )，真的要的話建另一張表來儲。</p>
+<p>原因在於，它可能會多使用一些空間與 i/o 來處理，在前幾篇文章中，咱們知道一張表會使用 pk 來建立 b+ 樹，然後最下面的節點才能儲放每一行的資料，但是 text 的內容是例外，它不會儲在那一行，而會另外開空間來儲。</p>
+<h3 id="-2-------">建議 2. 選擇適當的欄位類型 - 數字 ( 性能 + )</h3>
+<p>在 mysql 中所提供的整數數字類型如下 :</p>
+<ul>
+<li>tinyint: -128 ~ 127 (1 bytes)</li>
+<li>smallint: -32768 ~ 32767 (2 bytes)</li>
+<li>mediumint: -8388608 ~ 8388607 (3 bytes)</li>
+<li>int: -2147483648 ~ 2147483647 (4 bytes )</li>
+<li>bigint: -2^63 ~ 2^63-1 (8 bytes)</li>
+</ul>
+<p>而它所提供的浮點數字型(也就是有小數點)如下 :</p>
+<ul>
+<li>float: -3.402823466E+38 ~ 3.402823466E+38 (4 bytes)</li>
+<li>double: -1.7976931348623157E+308 ~ 1.7976931348623157E+308 (8 bytes)</li>
+<li>decimal: ~ -1E+66 ~ ~ 1E+66 (它比較特別，上述兩個是近似值，而它是完全精準值，每 9 個數字 4 bytes)</li>
+</ul>
+<p><strong>數字的選擇基本就是以下兩個準則 :</strong></p>
+<ul>
+<li>選擇適合的大小，能用 int 就不要用 bigint。</li>
+<li>選擇適合的類型，例如錢錢請用 decimal。</li>
+<li>選擇使用 unsigned，它的功用就是就儲放負數的空間全移到正數位置，也就是說可儲放空間 * 2。</li>
+</ul>
+<p>簡單說以下 unsigned。假設我們在 tinyint (-128 ~ 128) 設 unsigned，就代表此欄位變成可以儲 (0 ~ 256) 多了一倍的空間。像編號這種就很適合。</p>
+<h3 id="-3-------or---">建議 3. 選擇適當的欄位類型 - 日期 ( 性能 + or 維護性 + )</h3>
+<p>日期基本上有以下三種選擇 :</p>
+<ul>
+<li>datetime: 以 &lsquo;YYYY-MM-DD HH:MM:SS&rsquo; 格式儲放(8 bytes)。</li>
+<li>timestamp: 以 timestamp 格式儲放 (但它只到 2038 年) 4 bytes。</li>
+<li>unsigned int: 將 timestamp 格式儲成 int 格式 (4 bytes)。</li>
+</ul>
+<h4 id="datetime">datetime</h4>
+<ul>
+<li>以 &lsquo;YYYY-MM-DD HH:MM:SS&rsquo; 格式。</li>
+<li>跨時區不適用，因為它只儲當地時間。</li>
+<li>佔 8 bytes。</li>
+<li>時間可儲到世界末日。</li>
+<li>可直接使用預設時間(現在)。</li>
+<li>可讀性高(你看一眼就知道時間)。</li>
+</ul>
+<h4 id="timestamp">timestamp</h4>
+<ul>
+<li>以 UTC timestamp 格式儲放。</li>
+<li>適用於時區轉換。</li>
+<li>排序與索引效率優於 datetime。</li>
+<li>佔 4 bytes。</li>
+<li>時間可儲到 2038 年。</li>
+<li>mysql 提供不少可操作它的函數。</li>
+<li>可直接使用預設時間(現在)。</li>
+</ul>
+<h4 id="unsigned-int">unsigned int</h4>
+<ul>
+<li>以 UTC timestamp 格式儲成 unsigned int 欄位</li>
+<li>佔 4 bytes</li>
+<li>適用於時區轉換。</li>
+<li>排序與索引效率優於 datetime。</li>
+<li>時間大概可儲到 2106 年。</li>
+</ul>
+<h4 id="-">選那個呢 ?</h4>
+<p>基本上第一個還是先看你的需求，如果是有跨時間儲資料庫情況，那 datetime 可以移掉了，因為它是直接儲你 local 的時間。</p>
+<p>在假設沒時區的問題下，要選那個呢 ?</p>
+<p>目前我是比較建議用 unsigned int，但這真的沒有什麼標準答案。我會選擇的原因如下 :</p>
+<ul>
+<li>unsigned int 嚴格來說可以解 2038 問題，債不要留給子孫 (100 年後的就先別管)。</li>
+<li>unsigned int 在 mysql 沒辦法給它預設值，但事實上不少 ORM 都有提供 (sql 魔人請別嘴我)。</li>
+<li>mysql 提供的 timestamp 函數，我真不常用到它，基本上大部份的轉換，我都選擇在應用層處理，別讓資料庫做太多事。</li>
+<li>性能較好點兒與 datetime 相比。</li>
+</ul>
+<p>在選擇時，我還會考慮公司的規範，因為假設公司內一個資料庫儲 datetime、一個儲 timestamp，那你想想應用層的程式會長什麼樣子 ?</p>
+<p><strong>~ 備註參考用 ~</strong></p>
+<p>基本上有對 mysql 進行深入研究的，大概都有讀過這個書<a href="https://www.books.com.tw/products/CN10991137">高性能 MySQL</a>，它裡面是建議別用 int 來儲放日期，它說沒什麼好處。但是它沒說理由，所以我就先不理它。</p>
+<h3 id="-4---pk---">建議 4 : 請別選擇太長值當 PK ( 性能+ )</h3>
+<p>在索引那篇文章中，咱們有提到在 innodb 中，每一張表都會建立 clustered Index b+ 樹，而它是根據以下準則來決定這顆樹的索引值。</p>
+<p>它的選擇如下 :</p>
+<ol>
+<li>primary key ( PK )。</li>
+<li>如果沒有 pk 則選擇一個非空的 unique 索引來當 pk。</li>
+<li>如果還是沒有，innodb 會自動產生一個隱藏的欄位來建立。</li>
+</ol>
+<p>沒有必要的話，請直接使用 auto increment 的 id 編號當 pk，儘可能不要用一些 guid 或啥長長的東東來當 pk。</p>
+<p>主要的原因在於，這真的會影響性能。</p>
+<p>前面幾篇文章說過，在 innodb 裡，它會使用 pk 來建立一個 b+ 樹的索引結構，如下圖，除了最小面的節點有實際上存行資料外，其它的都是放 pk 索引值 :</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190929/20089358AhIPHUQdsP.png" alt="">
+圖 1 : clustered Index b+</p>
+<p>問題就出在其它儲 pk 索引值的那些節點，如下圖紅色區塊，一個紅色區塊裡面會包含索引用的節點，假設我們一個區塊限定為 4 kb，下圖咱們每個索引節點大小為 2 kb，所以可以儲兩個，但是如果索引節點大小變為 4 kb 的話，你覺得會如何 ?</p>
+<p>它會變成只能儲一個，這也代表區塊變多，也代表 i/o 要更多次。</p>
+<p>這也是為什麼不建議用太長值當 pk，因為太長值代表它需要多花點空間來儲，這導致它會增加區塊的數量，最後導致 i/o 次數更多。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190929/200893581eAsrIT9v7.png" alt="">
+圖 2 : 索引值太大問題</p>
+<h3 id="-5------">建議 5 : 新增一些特殊用欄位 ( 維護性 + )</h3>
+<h4 id="-1--">特殊欄位 1 : 邏輯刪除欄位</h4>
+<p>在某些重要的表上，可以新增一個欄位來代表它是否被『 移除 』，但這裡不是只真的移除，只是給它下個 tag，這種好處在於預防萬一。目前應該有不少公司是這樣搞的。</p>
+<h4 id="-2--">特殊欄位 2 : 建立、修改時間欄位</h4>
+<p>而這個就是會在每個表新增『建立』與『修改』的時間欄位，雖然會耗用一些資源，但是這樣真的有助於於 debug 用。像當你發現某一行改了，然後你有了修改時間，那這時你就可以用這時間去查查應用層一些 log 它到底做了什麼事情，真的好用真心不騙。</p>
+<p>有時後多儲點東西減少點性能，增加維護性事實上未來也可以省不少錢錢。</p>
+<h3 id="-6---null----">建議 6 : 儘量的不允需 NULL ( 性能 + )</h3>
+<p>基本上有兩個問題 :</p>
+<ul>
+<li>儲 null 耗的空間比一般的還多。</li>
+<li>count 有可能會出現 bug。</li>
+</ul>
+<pre><code>索引欄位　{name} 
+
+假設資料為:
+{'mark',18}
+{ null, 17}
+
+
+SELECT count(*) FROM user;  =&gt; 2 筆
+SELECT count(name) FROM user; =&gt; 1 筆
+</code></pre><p>最後簡單說一下，null 事實上不太會影響到索引查詢，你只要在索引欄位下的是 is null 這種語法，那都會打中索引，不會變全掃。而如果你會變全掃，基本上不是 null 的關係，而是你下的 sql 關係。</p>
+<h3 id="-6------">建議 6 : 最後一點請註解 ( 維護性 + )</h3>
+<p>當你看到資料表裡面一堆欄位的註解是空的時，你會哭的，尤其是在看不懂欄位名的情況且你主管叫你去應用層看程式碼來推時，你真會哭到想拿起刀。咱真有看過。</p>
+<h2 id="heading2">正規化與反正規的小戰爭</h2>
+<hr>
+<p>正規與反正規是兩種資料儲放的型式，比較簡單且白話文的分法為 :</p>
+<ul>
+<li>正規化 : 分層多張表儲放。</li>
+<li>反正規化 : 全部都儲在一張表。</li>
+</ul>
+<p>咱們簡單的來看一下範例。</p>
+<p>假設咱們要儲放部門人員資訊。</p>
+<h4 id="heading3">正規化所建立的表</h4>
+<p>交易單 table</p>
+<table>
+<thead>
+<tr>
+<th>trade_id</th>
+<th>user_id</th>
+<th>volume</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>001</td>
+<td>10</td>
+</tr>
+<tr>
+<td>2</td>
+<td>002</td>
+<td>20</td>
+</tr>
+<tr>
+<td>3</td>
+<td>003</td>
+<td>30</td>
+</tr>
+</tbody>
+</table>
+<p>交易人 table</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>name</th>
+<th>age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>001</td>
+<td>mark</td>
+<td>20</td>
+</tr>
+<tr>
+<td>002</td>
+<td>jiro</td>
+<td>35</td>
+</tr>
+<tr>
+<td>003</td>
+<td>ian</td>
+<td>55</td>
+</tr>
+</tbody>
+</table>
+<h4 id="heading4">反正規化所建立的表</h4>
+<p>而反正化則只會建立一張票，如下，交易人的資料會放在同一張裡面。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>volume</th>
+<th>user_id</th>
+<th>user_name</th>
+<th>user_age</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>10</td>
+<td>001</td>
+<td>mark</td>
+<td>20</td>
+</tr>
+<tr>
+<td>2</td>
+<td>20</td>
+<td>002</td>
+<td>jiro</td>
+<td>35</td>
+</tr>
+<tr>
+<td>3</td>
+<td>30</td>
+<td>003</td>
+<td>ian</td>
+<td>55</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading5">正規化與反正規化的比較</h3>
+<p>正規化的特點如下 :</p>
+<ul>
+<li>更新操作一定優於反正規化。</li>
+<li>較少重複的數據。</li>
+<li>每個表較小，比較容易使用緩存池。</li>
+<li>某一些操作比較方便。( 例如在非正規化要取得所群組資訊，那就一定要用 group，而在正規化可能就是一張票資訊 )</li>
+</ul>
+<p>反正規化:</p>
+<ul>
+<li>查詢操作優於正規化，因為不用 join，而且也可以更簡單的設計索引策略。</li>
+<li>但更新會很麻煩，而且還要考慮競爭的問題 ( 這之後的章節會說 )。</li>
+<li>表可能會很大，不適合未來擴展與分家。</li>
+</ul>
+<h4 id="-1">選那個呢 ?</h4>
+<p>先說一下兩種模式的主軸 :</p>
+<ul>
+<li>反正規化: 追求最高效率的查詢。</li>
+<li>正規化 : 追求穩定。</li>
+</ul>
+<p>基本上可以的話請選正規化，原因在於穩定，除非你很有自信，系統現在至未來都會很少更新需求，並且你也知道更新時可能會有那些雷，不然的話，還是請選正規化。</p>
+<h3 id="-2">何謂合格或好的正規化呢 ?</h3>
+<p>基本上就是所謂的『 第 n 正規化型式 』，基本上咱覺得到第三層就夠了。</p>
+<p>然後這裡詳細的正規化型式可以去看筆者以前寫的文章應該就夠了，雖然是 3 年前寫的，但是回過頭看還是覺得寫的算清楚。</p>
+<p><a href="http://marklin-blog.logdown.com/posts/1394159-mongodb-30-17-design-the-formal-war-with-anti-normalization">30-17之MongoDB的設計&mdash;正規與反正規化的戰爭</a></p>
+<h2 id="heading6">結論與心得</h2>
+<hr>
+<p>本篇文章我稍微簡單的整理一些，咱們平常開發時，要建立一個表時的需要注意事項，並且也順到的探談了一下正規化與反正化規化的問題。</p>
+<p>不過這些準則上，不全然是為了性能的準則，有一些是會為了維護性而增加的一些東西，這 30 天的文章主題是『 從 0 至 1 儘可能的建立好的系統 ( 性能 ) 』，然後主題是性能，但別忘了我們的目的是好的系統。</p>
+<blockquote>
+<p>一個好的性統的要點是『 平衡 』喔</p>
+</blockquote>
+<h2 id="heading7">參考資料</h2>
+<hr>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/32382274">浅谈MySQL表结构设计</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI2NDU3OTg5Nw==&amp;mid=2247483799&amp;idx=1&amp;sn=4d1f45ab7d5bc9655a8fef2601171e52&amp;chksm=eaab3fc1dddcb6d794dde2ee8e71a56a9b71fdc207efc033c56d1b53c7dc05b096e7cbc3482b&amp;scene=21#wechat_redirect">MySQL表设计踩过的坑！</a></li>
+<li><a href="https://stackoverflow.com/questions/7029127/using-mysqls-timestamp-vs-storing-timestamps-directly">stackover-Using MySQL's TIMESTAMP vs storing timestamps directly</a></li>
+<li><a href="http://gpshumano.blogs.dri.pt/2009/07/06/mysql-datetime-vs-timestamp-vs-int-performance-and-benchmarking-with-myisam/">MySQL DATETIME vs TIMESTAMP vs INT performance and benchmarking with MyISAM</a></li>
+<li><a href="https://stackoverflow.com/questions/4594229/mysql-integer-vs-datetime-index">MySQL Integer vs DateTime index</a></li>
+<li><a href="http://n.sfs.tw/content/index/10266">[Mysql] 資料型態int, float, double, text, char, varchar, blob大小</a></li>
+<li><a href="http://wubx.net/varchar-vs-text/">varchar和text说不清的那些事</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      
+    
+  </section>
+</article>
+
+      </div>
+
+      <div id="side" class="pr-1 bg-white">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-14 之資料庫層的優化 - 表的設計</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">表設計的幾個小建議</a>
+      <ul>
+        <li><a href="#-1--------">建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + )</a></li>
+        <li><a href="#-2-------">建議 2. 選擇適當的欄位類型 - 數字 ( 性能 + )</a></li>
+        <li><a href="#-3-------or---">建議 3. 選擇適當的欄位類型 - 日期 ( 性能 + or 維護性 + )</a></li>
+        <li><a href="#-4---pk---">建議 4 : 請別選擇太長值當 PK ( 性能+ )</a></li>
+        <li><a href="#-5------">建議 5 : 新增一些特殊用欄位 ( 維護性 + )</a></li>
+        <li><a href="#-6---null----">建議 6 : 儘量的不允需 NULL ( 性能 + )</a></li>
+        <li><a href="#-6------">建議 6 : 最後一點請註解 ( 維護性 + )</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">正規化與反正規的小戰爭</a>
+      <ul>
+        <li></li>
+        <li><a href="#heading5">正規化與反正規化的比較</a></li>
+        <li><a href="#-2">何謂合格或好的正規化呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">結論與心得</a></li>
+    <li><a href="#heading7">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    
+    
+      <div>
+        
+          <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        
+
+        
+          <iframe src="https://www.facebook.com/plugins/share_button.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&layout=button&size=small&mobile_iframe=true&width=61&height=20&appId" width="61" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true" allow="encrypted-media"></iframe>
+        
+
+        
+
+        
+
+      </div>
+    
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 bg-white text-center">
+        
+
+  <span class="text-small text-gray">
+    ©Your Name 2019 &middot; 
+
+    Powered by the
+    <a href="https://github.com/qqhann/hugo-primer" class="link-gray-dark">Hugo-Primer</a> theme for
+    <a href="https://gohugo.io" class="link-gray-dark">Hugo</a>.
+  </span>
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
