@@ -4,6 +4,7 @@ title = "拿鐵派的馬克 Blog"
 theme = "hugo-primer"
 languageCode = "ja"
 publishDir = "docs"
+disqusShortname = "mark-lin"
 
 # If you are using Chinese, Japanese, or Korean, I highly recommend you to set this true.
 hasCJKLanguage = true
