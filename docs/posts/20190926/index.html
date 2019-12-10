@@ -98,7 +98,6 @@
   <section class="pb-6 mb-3 border-bottom">
     <p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ZPcBZlbJcf.png" alt=""></p>
 <h2 id="heading">正文開始</h2>
-<hr>
 <p>接下來咱們要來理解資料庫系統中最核心的問題 :</p>
 <blockquote>
 <p>要如何儲放資料，才能更快速的找到資料呢 ?</p>
@@ -122,11 +121,10 @@
 <li>B+樹 ( InnoDB 的選擇 )</li>
 </ul>
 <h2 id="-binary-search">二分搜尋 Binary Search</h2>
-<hr>
 <p>首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。</p>
 <p>那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358Ae8XEecWxI.png" alt="">
-圖 1 : 線性搜尋</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358Ae8XEecWxI.png" alt=""></p>
+<p>圖 1 : 線性搜尋</p>
 <p>那要如何加快呢 ? 基本上就是將它整理成固定的規律與特性，讓我們可以根據這個規律進行一些更快速的搜尋，這就是所謂的資料結構。</p>
 <p>而最初在設計時，所選擇的規律概念就是所謂的『 二分搜尋 』。</p>
 <p>要使用二分搜尋的前提條件為 :</p>
@@ -138,8 +136,8 @@
 <p>將資料砍成兩半，每一次砍時，判斷你要的資料在左還右 ( 因為是排序，所以可判斷 )，然後再從那段重複一樣的事情。</p>
 </blockquote>
 <p>範例圖如下 :</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/200893587uYn9KtGNM.png" alt="">
-圖 2 : 二分搜尋概念</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/200893587uYn9KtGNM.png" alt=""></p>
+<p>圖 2 : 二分搜尋概念</p>
 <h3 id="-">那要選那個資料結構來實現二元搜尋呢 ?</h3>
 <p>資料結構只是一種概念，比較關鍵的重點在於記憶體的連續性，而這個連續性就可以導出兩個資料結構，那就是『 array 』與『 list 』。</p>
 <h4 id="array--x-">Array ( X )</h4>
@@ -158,10 +156,9 @@
 <p>所以基於以上原因，不會選擇這種資料結構。</p>
 <h4 id="list--x-">List ( X )</h4>
 <p>list 呢 ? 它的記憶體是分散的。不行，因為以下原因如下圖 3 所示，它無法進行二元搜尋，因為它的記憶體是分散的，也就是說如果要至 5，那你要先知道 3 的記憶體位置，它那裡才有記錄 5 在那個位置上。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358i8dWwVsfv1.png" alt="">
-圖 3 : list 進行二元搜尋問題</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358i8dWwVsfv1.png" alt=""></p>
+<p>圖 3 : list 進行二元搜尋問題</p>
 <h2 id="--bst-binary-search-tree-">二元搜尋樹 ( BST Binary Search Tree )</h2>
-<hr>
 <p>上述說明的兩個資料結構事實上都有某些優點 :</p>
 <ul>
 <li>Array 可以使用 Binary Search。</li>
@@ -172,8 +169,8 @@
 <p>那就是『 二元搜尋樹 』，簡稱 BST。</p>
 </blockquote>
 <p>BST 基本上長的如下圖 4 所示，基本特性就是左子樹值一定小於根節點，而右子樹值一定都大於根節點。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358BHJSdMArgE.png" alt="">
-圖 4 : 二元搜尋樹</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358BHJSdMArgE.png" alt=""></p>
+<p>圖 4 : 二元搜尋樹</p>
 <p>然後資料庫的操作基本上為新增、刪除、搜尋。接下來我們來說說它們每一個操作的時間。</p>
 <ul>
 <li>搜尋 : 平均時間複雜度 log(n)，因為只要往其中一邊走。</li>
@@ -182,11 +179,10 @@
 </ul>
 <p>基本上資料庫這三個基本操作平均而言都有 log(n) 指數級的操作時間，正常來說應該是可以選擇它。</p>
 <h2 id="--balanced-bst-">平衡二元搜尋樹 ( Balanced BST )</h2>
-<hr>
 <p>BST 平均來看基本操作都有指數級的時間複雜度，但為什麼還是沒選他呢 ?</p>
 <p>主要的原因在於，它最壞變成 O(n) 的時間複雜度操作，如下圖 5 所示，它的確也是一個 BST，這樣如果我們要搜尋某個值，仍然是一個一個慢慢找。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358izAJOp15xM.png" alt="">
-圖 5 : 有問題的 BST</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358izAJOp15xM.png" alt=""></p>
+<p>圖 5 : 有問題的 BST</p>
 <p>因為後來就誕生一種『 平衡二元搜尋樹 』，如下圖 6 所示，事實和上面二元樹相同，只是差在每當插入節點時，會進行平衡。</p>
 <p>它的特點如下 :</p>
 <ul>
@@ -195,8 +191,8 @@
 <li>它的最好、最壞、平均的新增、刪除、搜尋的時間複雜度都是 O (logn)。</li>
 <li>AVL 樹、紅黑樹都是屬於平衡二元搜尋樹，它們都會自動的進行平衡操作。</li>
 </ul>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ezitNTP40j.png" alt="">
-圖 6 : 平衡二元樹</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ezitNTP40j.png" alt=""></p>
+<p>圖 6 : 平衡二元樹</p>
 <h4 id="-1">平衡二元搜尋樹，正常來說，已經是在搜尋中最有效率的資料結構了，但是為什麼它是沒選它呢 ?</h4>
 <blockquote>
 <p>因為它是以『 記憶體 』來說，操作最有效率，但是以『 硬碟 』來說則否。</p>
@@ -207,10 +203,9 @@
 <p>因為 I/O 的問題</p>
 </blockquote>
 <p>然後你想想如果一個很深的平衡二元搜尋樹，那如果要找的值是在最小面，以下圖 7 為例，那它就至少要進行 100 次 i/o 操作。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358H3yqPtnDLU.png" alt="">
-圖 7 : 平衡二元樹在節點多時的問題</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358H3yqPtnDLU.png" alt=""></p>
+<p>圖 7 : 平衡二元樹在節點多時的問題</p>
 <h2 id="b-">B 樹</h2>
-<hr>
 <p>根據上述 i/o 的原因，因此又誕生出叫『 B 樹 』的東東，它想解決的東西為 :</p>
 <blockquote>
 <p>解決高度太高的所產生的問題 ( ex. 資料庫索引的 i/o 問題 )。</p>
@@ -222,14 +217,14 @@
 <li>每個內部節點都有儲放完整資料。</li>
 <li>每個節點內的內部節點，都是依順序排序。</li>
 </ul>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358SNSR9D86Gz.png" alt="">
-圖 8 : b 樹</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358SNSR9D86Gz.png" alt=""></p>
+<p>圖 8 : b 樹</p>
 <p>基本上它的概念就是在一個節點內，多塞些東西，為了減少 i/o 讀取次數，如上圖 8 所示。</p>
 <h4 id="-io----">為什麼可以減少 I/O 次數呢 ? 節點不是還是一樣多 ?</h4>
 <p>主要原因在於，平衡二元搜尋樹，每一個節點都是儲放在一個硬碟區塊中，而這個區塊大小為 4 kb，在讀取資料時都是以一個區塊為最小單位，也可以想成說，不管你節點資料是 2 byte 還是 1 kb，讀取次數都是和 4 kb 的一樣。</p>
 <p>所以 b 樹處理的想法，就是儘可能將每個節點都塞滿 4 KB 的資料，並且內部在使用節點來區分，這樣每一次 i/o 讀取就可以讀到多個節點，這樣就可以減少 i/o 次數了。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358tAZeFzlMxu.png" alt="">
-圖 9 : b 樹與平衡樹的 i/o 比較</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358tAZeFzlMxu.png" alt=""></p>
+<p>圖 9 : b 樹與平衡樹的 i/o 比較</p>
 <h3 id="b-1">B 樹的問題</h3>
 <h4 id="-b--innodb--">有了 B 樹後，為什麼還需要 InnoDB 仍然沒有選擇它呢 ?</h4>
 <p>因為有以下幾個問題 :</p>
@@ -245,18 +240,17 @@
 <li>尋找 1 : 要 3 次 i/o 才可以找到資料。</li>
 </ul>
 <p>這就是 b 樹不穩定的範例，最好的情況是根節點就可以找到，而最壞是最底下的節點才找到。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358Os9GMWwVNe.png" alt="">
-圖 10 : b 樹查詢不穩定問題</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358Os9GMWwVNe.png" alt=""></p>
+<p>圖 10 : b 樹查詢不穩定問題</p>
 <h4 id="heading2">範圍搜尋時沒什麼效率</h4>
 <p>下圖 11 所示，假設咱們要找大於 2 的資料，那基本上就是所有的節點都會走一次，你可以算算幾次 i/o，下圖綠色線就是走的路。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358I3NqN8Pa3U.png" alt="">
-圖 11 : b-樹範圍搜尋時問題</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358I3NqN8Pa3U.png" alt=""></p>
+<p>圖 11 : b-樹範圍搜尋時問題</p>
 <h4 id="-io-">節點太多 I/O 的問題</h4>
 <p>下圖 12 所示，如果咱們每個節點變大的話，那你覺得原本可以放兩個的，真的還可以放兩個嗎 ?</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358zrL1epSRs5.png" alt="">
-圖 12 : 資料變大問題</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358zrL1epSRs5.png" alt=""></p>
+<p>圖 12 : 資料變大問題</p>
 <h2 id="b---innodb--">B+ 樹 ( Innodb 的選擇 )</h2>
-<hr>
 <p>b+ 樹是為了解決 b 樹的以下問題 :</p>
 <blockquote>
 <p>查詢時不穩定、範圍搜尋時沒什麼效率、節點太多 I/O 的問題</p>
@@ -273,13 +267,13 @@
 <blockquote>
 <p>只有最下面的節點有資料，其它上面的節點只存索引</p>
 </blockquote>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358gVvqssFgqR.png" alt="">
-圖 13 : b+ 樹</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358gVvqssFgqR.png" alt=""></p>
+<p>圖 13 : b+ 樹</p>
 <h3 id="b-2">B+ 樹的搜尋與範例搜尋流程</h3>
 <p>所以如果它要取得 5 的資料，那基本流程如下圖 14 所示，會 3 次 i/o，而如果你要找 6 實際上也是 3 次 i/o，這也代表所有節點搜尋的速度是平均的，而不會有快有慢。</p>
 <p>而如果要找 5 的，也只要找到 5 以後，在一直往右抓資料就夠囉。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358dQNaCa8rXa.png" alt="">
-圖 14 : b+ 樹的搜尋範例</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358dQNaCa8rXa.png" alt=""></p>
+<p>圖 14 : b+ 樹的搜尋範例</p>
 <h4 id="-b-">它與 B 樹的比較</h4>
 <ul>
 <li>b+ 樹層級更少 : 主要的原因在於，非葉子節點 4 kb 的空間全部用來只儲指針，這也代表它有更多的空間來儲放。</li>
@@ -287,10 +281,8 @@
 <li>b+ 樹自帶排序 : 因為它有用個鏈表，來依順序的葉子節點串起來。</li>
 </ul>
 <h2 id="heading3">結論與心得</h2>
-<hr>
 <p>本篇文章咱們從 0 至 1 的理解為什麼 innodb 要選擇使用 b+ 樹的原理，而這也是我們學習資料庫核心索引的第一步，當你理解以下，你就可以知道為什麼之後索引要這樣使用囉。</p>
 <h2 id="heading4">參考資料</h2>
-<hr>
 <ul>
 <li><a href="https://zhuanlan.zhihu.com/p/27700617">平衡二叉树、B树、B+树、B*树 理解其中一种你就都明白了</a></li>
 <li><a href="https://zhuanlan.zhihu.com/p/67501288">面试题：InnoDB中一棵B+树能存多少行数据？</a></li>

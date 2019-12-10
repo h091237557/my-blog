@@ -98,7 +98,6 @@
   <section class="pb-6 mb-3 border-bottom">
     <p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ZPcBZlbJcf.png" alt=""></p>
 <h2 id="heading">正文開始</h2>
-<hr>
 <p>上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b+ 樹來建立索引機制 ?</p>
 <p>本篇文章分為以下幾個章節 :</p>
 <ul>
@@ -107,7 +106,6 @@
 <li>InnoDB 所提供的索引類型</li>
 </ul>
 <h2 id="-innodb----clustered-index-">一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index )</h2>
-<hr>
 <p>假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?</p>
 <table>
 <thead>
@@ -191,7 +189,6 @@
 <li>只有使用 PK 來搜尋才會使用此樹，其它搜尋都是全部掃描。</li>
 </ul>
 <h2 id="--innodb----secondary-index-">一張『 自已 』加了索引的表InnoDB 實際上如何儲呢 ? ( Secondary Index )</h2>
-<hr>
 <p>上面的 clustered Index 是咱們啥都不做，它就會自然建立起來的東西，而接下來咱們要介紹的『 Secondary Index 』才是咱們實際上可以自行建立的索引。</p>
 <pre><code>ALTER TABLE table ADD INDEX age_index(age) 
 </code></pre><p>所以當咱們執行以上 sql 指令後，會使用 age 欄位，來建立出來的索引 b+ 樹如下圖，其中要注意一下，自已建的 secondary index 本身沒有資料，所以通常情況還要在去 clustered Index 抓資料。</p>
@@ -268,7 +265,6 @@
 <p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358dJhux6Xqgs.png" alt="">
 圖 8 : 範例 2 之後去 clustered Index 尋找圖</p>
 <h2 id="innodb-">InnoDB 所提供的索引類型</h2>
-<hr>
 <p>在 InnoDB 中，它有提供的索引基本上分為兩大類 :</p>
 <ul>
 <li>clustered Index</li>
@@ -520,7 +516,6 @@ SELECT name FROM table WHERE name like 'C-%';
 </ul>
 <p>就降</p>
 <h2 id="heading9">結論與心得</h2>
-<hr>
 <p>這一章咱們介紹了 mysql 中的非常多的索引，咱們簡單的畫一張來理解一下它們的關係，如下圖 16 所示。</p>
 <p>首先基本最大的兩個分類為 :</p>
 <ul>
