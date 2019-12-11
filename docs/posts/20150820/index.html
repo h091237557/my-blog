@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單 5 -『 物件導向特性-繼承 ( Inheritance ) 4 - abstract 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單 5 -『 物件導向特性-繼承 ( Inheritance ) 4 - abstract 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單 5 -『 物件導向特性-繼承 ( Inheritance ) 4 - abstract 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c%E4%BA%95%E5%AD%97%E8%99%9F' class="muted-link">
+  <span class="Label Label--gray">c井字號</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-20.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="abstract">使用修飾詞abstract，限定類別只能被繼承</h2>
+<p>在Class Car 前增加<code>abstract</code>，表是該類別只能繼承、不能實作，也被稱為抽象類別。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//父類別
+</span><span class="c1"></span>    <span class="c1">//增加『abstract』修飾詞，讓該類別只能繼承。不能實作。
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">abstract</span>  <span class="k">class</span> <span class="nc">Car</span>
+    <span class="p">{</span>
+
+        <span class="c1">//車子的速度
+</span><span class="c1"></span>        <span class="k">protected</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
+        <span class="c1">//車子的顏色
+</span><span class="c1"></span>        <span class="k">protected</span>  <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+
+        <span class="c1">// 定義建構子，預設Speed為50，Color為Blue
+</span><span class="c1"></span>        <span class="k">public</span>  <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//定義車子移動的方法。  
+</span><span class="c1"></span>        <span class="k">public</span>  <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+</code></pre></div><h2 id="heading">抽像類別的特性</h2>
+<ul>
+<li>抽象類別不能實體化。</li>
+<li>抽象類別可能包含抽象方法與存取子。</li>
+<li>無法使用『Sealed』修飾詞，因為兩個意思完全相反。</li>
+<li>衍生自抽象類別的非抽象類別必須包含所有繼承抽象方法和存取子的實作。</li>
+</ul>
+<h2 id="heading1">抽象方法的使用</h2>
+<p>抽象方法只能存在於抽象類別中。不然會出錯喔。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="c1">//父類別
+</span><span class="c1"></span>    <span class="c1">//增加『abstract』修飾詞，讓該類別只能繼承。不能實作。
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">abstract</span>  <span class="k">class</span> <span class="nc">Car</span>
+    <span class="p">{</span>
+
+        <span class="c1">//車子的速度
+</span><span class="c1"></span>        <span class="k">protected</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
+        <span class="c1">//車子的顏色
+</span><span class="c1"></span>        <span class="k">protected</span>  <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+
+        <span class="c1">// 定義建構子，預設Speed為50，Color為Blue
+</span><span class="c1"></span>        <span class="k">public</span>  <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//定義車子移動的方法。  
+</span><span class="c1"></span>        <span class="c1">//抽象方法宣告，沒有提供實際的實作，因此並沒有方法主題。
+</span><span class="c1"></span>        <span class="c1">//抽象方法只能存在於抽象類別中。
+</span><span class="c1"></span>        <span class="k">public</span>   <span class="k">abstract</span>   <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="p">}</span>
+</code></pre></div><p>子類別，使用Overried，來進行抽象類別覆寫。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">// 子類別繼承Car
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
+    <span class="p">{</span>
+        <span class="c1">//BMWCar類別建構子
+</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//BMW的屬性引擎
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+
+        <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行抽象類別覆寫方法提供自已實作。
+</span><span class="c1"></span>        <span class="k">public</span>  <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;String--&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div><h3 id="heading2">抽象方法的特性</h3>
+<ul>
+<li>抽象方法隱含是一種虛擬方法(但他無法擁有Virtual修飾詞)。</li>
+<li>抽象方法宣告只允許在抽象類別裡。</li>
+<li>因為抽象方法宣告沒有提供實際的實作，因此並有沒方法主題，方法宣告僅以分號做結束。</li>
+<li>在抽象方法宣告『static』與『virtual』修飾詞會出錯。</li>
+</ul>
+<h2 id="heading3">參考資料</h2>
+<p><a href="http://msdn.microsoft.com/zh-tw/library/sf985hc5.aspx">http://msdn.microsoft.com/zh-tw/library/sf985hc5.aspx</a>
+<a href="http://msdn.microsoft.com/zh-tw/library/ms173150.aspx">http://msdn.microsoft.com/zh-tw/library/ms173150.aspx</a></p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單 5 -『 物件導向特性-繼承 ( Inheritance ) 4 - abstract 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#abstract">使用修飾詞abstract，限定類別只能被繼承</a></li>
+    <li><a href="#heading">抽像類別的特性</a></li>
+    <li><a href="#heading1">抽象方法的使用</a>
+      <ul>
+        <li><a href="#heading2">抽象方法的特性</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

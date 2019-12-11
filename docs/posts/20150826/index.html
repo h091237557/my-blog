@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單 11-『 泛型 ( Generics ) 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如Li|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單 11-『 泛型 ( Generics ) 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如Li|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單 11-『 泛型 ( Generics ) 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c%E4%BA%95%E5%AD%97%E8%99%9F' class="muted-link">
+  <span class="Label Label--gray">c井字號</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-26.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">什麼是泛型呢</h2>
+<p>什麼是泛型呢~? 這個東西<!-- raw HTML omitted -->有看過吧，你有時後會在程式碼裡看到List<!-- raw HTML omitted -->這種寫法，
+這代表List串列中，你可以存放『T』型別，例如List<!-- raw HTML omitted -->就是裡面存放string，List<!-- raw HTML omitted -->就是裡面存放int。<!-- raw HTML omitted -->也被稱為型別參數。事實上我們可以將範例想成簡單點，那就是一個可以讓你自由決定型別的功能。</p>
+<h2 id="heading1">為什麼要有泛型呢</h2>
+<p>假設需要我們建立一個ArrayList，但確發現要取出值都需要轉型，這是因為當你將某個物件存入ArrayList集合時，它的型別就隱含轉換成object了。只要是命名空system.Collection的集合類別都是如何(stack之類的)</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/t4y2DW3cRLqj5wrMS3Ea_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>轉型是沒什麼問題，但在處理集合時，常常都會需要使用迴圈來取出或存入集合元素，假設迴歸數很大很大的話，那就會對程式的執行速度產生一定的影響了(不過不嚴重)。還有一點就是，缺泛編輯時期的安全檢查。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/SDgszgZRV26y4PyFxjIv_ScreenClip.png" alt="ScreenClip.png"></p>
+<h2 id="heading2">泛型的優點</h2>
+<ul>
+<li>
+<p>可以用不同的型別去做相同動作的事情如我上述程式碼的這段。
+<img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/PRaZD6mgSMepZgimCsh6_ScreenClip.png" alt="ScreenClip.png"></p>
+</li>
+<li>
+<p>可以減少Boxing與UnBoxing，使效能增加。</p>
+</li>
+<li>
+<p>讓程式碼更有彈性、重複使用程式碼。</p>
+</li>
+</ul>
+<h2 id="heading3">泛型類別和方法</h2>
+<p>這邊寫個泛型的小範例，來知道一下大概的寫法。下列程式碼建立Car類別，其中Class Car&lt;T,T1&gt;被稱為『泛型類別』，而T power 被稱為『泛型參數』。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/9XczePSTSGiosu2dbhQz_ScreenClip.png" alt="ScreenClip.png"></p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/JSfwap0Q3aTGtbKYRPAa_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>輸出結果</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/Ii1cEkQuToiGfGxmQoRc_ScreenClip.png" alt="ScreenClip.png"></p>
+<h2 id="heading4">類別參數的條件約束</h2>
+<p>既然泛型可以讓我們自由決定型別，但有時候太自由也不太好，那我們要著麼樣來約束呢?如下，其中『where』就是就是限制的關鍵字，而『T』就是受限制的型別參數，最後Class就是限制的內容。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/oD34R9y8QvCixjKsevCH_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>下列程式碼為多參數限定。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/5g1O0SCDQ7uYXORSZhPL_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>其中限制的內容請參考下圖，來源為MSDN。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/SmWTzMz5QHaEf5XABiEI_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>我們這邊在來寫個簡單的小程式。</p>
+<p>建立個Car類別，並且有二個型別參數T與T1，並限制T型別參數必預是『參數型別』。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/VxyIQjsBT92LUgELQiko_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>然後我們用兩種寫法來測試看看，第一種為T指定為 string型別，第二種為T指定為int型別。
+其中，string型別會正確執行，這邊別忘了string為參考型別喔! 而第二種int則會出錯。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/289984/miYOFd3lRgyuVpoXQUwY_ScreenClip.png" alt="ScreenClip.png"></p>
+<p><code>注</code>:
+如果不知道實值與參考是啥的可以參考一下小弟寫的這篇<code>實值型別與參考型別的記憶體配置</code></p>
+<h2 id="heading5">未繫結的型別參數有幾項注意事項</h2>
+<ul>
+<li>無法使用!= 和 == 運算子，因為不能確定實體的型別引數是否會支援這些運算子。</li>
+<li>這些參數可與System.Object相互轉換或明確轉換成任何介面型別。</li>
+<li>你可以與NULL比較。如果將未繫結的型別參數與NULL比較，那麼當型別引數為實值型別時一定會傳FALSE。</li>
+</ul>
+<h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="http://frankiestudy.blogspot.tw/2012/09/c.html">http://frankiestudy.blogspot.tw/2012/09/c.html</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/512aeb7t.aspx">http://msdn.microsoft.com/zh-tw/library/512aeb7t.aspx</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/d5x73970.aspx">http://msdn.microsoft.com/zh-tw/library/d5x73970.aspx</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/kx37x362.aspx">http://msdn.microsoft.com/zh-tw/library/kx37x362.aspx</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單 11-『 泛型 ( Generics ) 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">什麼是泛型呢</a></li>
+    <li><a href="#heading1">為什麼要有泛型呢</a></li>
+    <li><a href="#heading2">泛型的優點</a></li>
+    <li><a href="#heading3">泛型類別和方法</a></li>
+    <li><a href="#heading4">類別參數的條件約束</a></li>
+    <li><a href="#heading5">未繫結的型別參數有幾項注意事項</a></li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

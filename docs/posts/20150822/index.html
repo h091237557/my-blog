@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單7-『 部分類別 ( Partial Class ) 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單7-『 部分類別 ( Partial Class ) 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單7-『 部分類別 ( Partial Class ) 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c%E4%BA%95%E5%AD%97%E8%99%9F' class="muted-link">
+  <span class="Label Label--gray">c井字號</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-22.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="--partial-class-">部份類別 ( Partial Class )</h2>
+<p>部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。</p>
+<p>程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="c1">//部分類別(Employee其中一個組件)
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">PracticeTime</span><span class="p">;</span>
+       
+        <span class="k">public</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">//部分類別(Employee其中一個組件)
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">string</span>   <span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;GoToDinner&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+ 	
+ 	<span class="k">protected</span> <span class="k">void</span> <span class="n">Page_Load</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
+   	<span class="p">{</span>
+            <span class="n">Employee</span> <span class="n">Employ</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Employee</span> <span class="p">{</span> <span class="n">PracticeTime</span> <span class="p">=</span> <span class="s">&#34;100&#34;</span> 
+            <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">Employ</span><span class="p">.</span><span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="n">TextBox6</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">Employ</span><span class="p">.</span><span class="n">PracticeTime</span><span class="p">;</span>     
+    <span class="p">}</span>
+</code></pre></div><p>執行結果</p>
+<pre><code>	GoToDinner
+	100
+</code></pre><h2 id="heading">部分類別的特性</h2>
+<ul>
+<li>所有組件都必需在<code>相同</code>的<code>命名空間(Namespace)</code></li>
+<li>如果有任何組件宣告為<code>abstract</code>則被視為抽象，如果宣告為<code>Sealed</code>則被視為密封，如果其中一繼承某基底類別，整個型別都會繼承</li>
+<li>任何組件都可以指定不同的基底介面，最後的型別會實作所有部份宣告的任何介面</li>
+</ul>
+<h2 id="heading1">部份方法的特性</h2>
+<blockquote>
+<p>部分方法的簽章是在部分型別中的一部分定義，而其實作是在型別的另一部分中定義。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 		<span class="c1">//部份類別
+</span><span class="c1"></span>   		 <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
+    	<span class="p">{</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">PracticeTime</span><span class="p">;</span>
+
+        <span class="c1">//定義方法
+</span><span class="c1"></span>        <span class="k">partial</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+       
+       
+    	<span class="p">}</span>
+
+    	<span class="c1">//部份類別
+</span><span class="c1"></span>    	<span class="k">public</span>   <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
+    	<span class="p">{</span>
+       	 <span class="c1">//部分方法，實作。
+</span><span class="c1"></span>         	<span class="k">partial</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span>
+        	<span class="p">{</span>
+          	  <span class="n">Console</span> <span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;DoWork~~~&#34;</span> <span class="p">)</span><span class="p">;</span>
+        	<span class="p">}</span>
+
+
+        	<span class="k">public</span>   <span class="kt">string</span>   <span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span>
+        	<span class="p">{</span>
+          	  <span class="k">return</span> <span class="s">&#34;GoToDinner&#34;</span> <span class="p">;</span>
+        	<span class="p">}</span>
+    	<span class="p">}</span>
+</code></pre></div><p>如果其中一個部分型別改成</p>
+<pre><code> 		partial void DoWork()
+  	 	{
+  	 	}
+</code></pre><p>編譯器會打斷他的腿。</p>
+<h3 id="heading2">部份方法其它特性</h3>
+<ul>
+<li>部分型別兩個部分中的簽章必須相符</li>
+<li>方法必預回傳<code>void</code></li>
+<li>沒有存取修飾詞是被允許的</li>
+<li>如果沒有任何一個部分方法提供實作，則編譯器便會移除該方法和所有的呼叫。</li>
+<li>部份方法都是隱含<code>private</code>，因此不能<code>virtual</code></li>
+</ul>
+<h2 id="heading3">參考資料</h2>
+<p><a href="http://msdn.microsoft.com/zh-tw/library/wa80x488.aspx">http://msdn.microsoft.com/zh-tw/library/wa80x488.aspx</a></p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單7-『 部分類別 ( Partial Class ) 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--partial-class-">部份類別 ( Partial Class )</a></li>
+    <li><a href="#heading">部分類別的特性</a></li>
+    <li><a href="#heading1">部份方法的特性</a>
+      <ul>
+        <li><a href="#heading2">部份方法其它特性</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
