@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單 1-『 基本概念 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單 1-『 基本概念 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單 1-『 基本概念 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c' class="muted-link">
+  <span class="Label Label--gray">c#</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-16.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>物件導向基本概念為『類別』與『物件』
+基本上保哥這篇文章已經寫的很清楚了<a href="http://blog.miniasp.com/post/2009/08/27/OOP-Basis-What-is-class-and-object.aspx">保哥</a> (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。</p>
+<h2 id="heading">類別</h2>
+<p>小弟是把類別想成是『汽車藍圖』，它定義好了汽車的屬性與方法，
+但它沒有實體(Instance)，也就是說，你必須實作這張汽車藍圖它才能產生實體(可以開的車~)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="k">class</span> <span class="nc">Car</span>
+   	<span class="p">{</span>
+        <span class="c1">//定義車子的速度欄位
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">int</span> <span class="n">Speed</span><span class="p">;</span>
+        <span class="c1">//車子的顏色欄位
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+
+        <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="p">)</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+</code></pre></div><h2 id="heading1">物件</h2>
+<p>就是實際做出來的車。以程式術語來說，運用汽車藍圖做出車的過程就是所謂的
+『實體化』系統會自動給予物件記憶體。以下為實體化的C#程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red
+</span><span class="c1"></span>	<span class="n">Car</span> <span class="n">MyCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span> <span class="p">{</span> <span class="n">Speed</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="m">0</span><span class="p">,</span> <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;red&#34;</span> <span class="p">}</span><span class="p">;</span>
+	<span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	
+	<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+	<span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">red</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="m">1</span><span class="m">0</span><span class="m">0</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+</code></pre></div><p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/291235/Sq9edW1RDL2E34GPLBtw_ScreenClip.png" alt="ScreenClip.png"></p>
+<hr>
+<h2 id="--constructor-">建構子或建構函式 ( constructor )</h2>
+<p>其中<code>Car MyCar = new Car </code>，即為產生一個名叫<code>MyCar</code>的<code>Car</code>實體。
+<code>new Car </code>除了產生實體，它還會幫你呼叫一個名為<code>Car()</code>的方法。該方法就是所謂的建構子(constructor)。</p>
+<p>但我並沒有定義Car()方法， C#預設會自動產生一個同名的方法，稱為建構子或建構函式(constructor)
+而你自已也可以定義。建構子主要的目的為『幫助實體化時設定初始值』</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">        <span class="c1">/// 
+</span><span class="c1"></span>        <span class="c1">/// 定義建構子，預設Speed為50，Color為Blue
+</span><span class="c1"></span>        <span class="c1">/// 
+</span><span class="c1"></span>        <span class="k">public</span> <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+       
+      
+  		<span class="n">Car</span> <span class="n">MyCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+  		<span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+		
+		<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+		<span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">Blue</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="m">5</span><span class="m">0</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+
+</code></pre></div><h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1">http://zh.wikipedia.org/wiki/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1</a></li>
+<li><a href="http://blog.miniasp.com/post/2009/08/27/OOP-Basis-What-is-class-and-object.aspx">http://blog.miniasp.com/post/2009/08/27/OOP-Basis-What-is-class-and-object.aspx</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/dd460654.aspx">http://msdn.microsoft.com/zh-tw/library/dd460654.aspx</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單 1-『 基本概念 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">類別</a></li>
+    <li><a href="#heading1">物件</a></li>
+    <li><a href="#--constructor-">建構子或建構函式 ( constructor )</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

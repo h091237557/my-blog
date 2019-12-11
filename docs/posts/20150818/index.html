@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c' class="muted-link">
+  <span class="Label Label--gray">c#</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-18.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="virtual-">Virtual 修飾詞</h2>
+<blockquote>
+<p>子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?</p>
+</blockquote>
+<p>virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及<code>允許在衍生類別中給予覆寫</code>。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="c1">//父類別
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
+    <span class="p">{</span>
+
+        <span class="c1">//車子的速度
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
+        <span class="c1">//車子的顏色
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+
+        <span class="c1">// 定義建構子，預設Speed為50，Color為Blue
+</span><span class="c1"></span>        <span class="k">public</span>  <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//定義車子移動的方法。
+</span><span class="c1"></span>        <span class="c1">//在該方法加上Virtual，讓子類別可以覆寫該方法。
+</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+</code></pre></div><h2 id="override-">Override 修飾詞</h2>
+<p>Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="c1">// 子類別繼承Car
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
+    <span class="p">{</span>
+        <span class="c1">//BMWCar類別建構子
+</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//BMW的屬性引擎
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+
+        <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
+</span><span class="c1"></span>        <span class="k">public</span> <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+    
+    <span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+    <span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">BMW_Red</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="n">BWM500</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span><span class="err">『</span><span class="n">Override</span><span class="err">』</span>
+</code></pre></div><h2 id="override-1">Override 修飾詞特性</h2>
+<h3 id="-1">注意 1</h3>
+<p>你不能覆寫<code>非虛擬</code>或<code>靜態方法</code>。被覆寫的父類別方法必須是<code>Virtual</code>、<code>abstract</code>、<code>Override</code>。</p>
+<h3 id="-2">注意 2</h3>
+<p><code>override</code> 方法和 <code>virtual</code> 方法都必須有相同的存取層級修飾詞。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">       <span class="c1">//定義車子移動的方法。
+</span><span class="c1"></span>       <span class="c1">//在該方法加上Virtual，讓子類別可以覆寫該方法。
+</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+       <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
+</span><span class="c1"></span>        <span class="k">protected</span>  <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+<span class="err">如</span><span class="err">果</span><span class="err">將</span><span class="n">BMWCar類別程式碼其的DriveCar</span><span class="p">(</span><span class="p">)</span><span class="err">方</span><span class="err">法</span><span class="err">改</span><span class="err">為</span> <span class="k">protected</span> <span class="err">則</span><span class="err">會</span><span class="err">出</span><span class="err">錯</span><span class="err">。</span>
+</code></pre></div><h3 id="-3">注意 3</h3>
+<p>如果是覆寫『屬性』時，則以下有兩項條件</p>
+<ul>
+<li>覆寫屬性宣告必須指定和所繼承屬性完全相同的存取修飾詞、型別和名稱。</li>
+<li>且被覆寫的屬性必須是 virtual、abstract 或 override。</li>
+</ul>
+<h3 id="-4">注意 4</h3>
+<p>如果方法是在類別指定，而在呼叫的類別有兩個方法相容，則C#編譯器會自動呼叫最適合的方法。</p>
+<p>我們將BMWCar 類別改為如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">// 子類別繼承Car
+</span><span class="c1"></span>   	 <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
+    <span class="p">{</span>
+        <span class="c1">//BMWCar類別建構子
+</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//BMW的屬性引擎
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+
+        <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
+</span><span class="c1"></span>        <span class="c1">//參數a 為 string
+</span><span class="c1"></span>        <span class="k">public</span>   <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span> <span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;String--&#34;</span> <span class="p">+</span> <span class="n">a</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//參數a 為 int
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;Int--&#34;</span> <span class="p">+</span> <span class="n">a</span>  <span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+</code></pre></div><p>然後實體化並呼叫DriveCar方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="kt">int</span> <span class="n">a</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="c1">//string a = &#34;Hello&#34; ;
+</span><span class="c1"></span>    <span class="n">BMWCar</span> <span class="n">MyBMWCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyBMWCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">;</span>
+</code></pre></div><p>則執行結果為如下，會自動呼叫<code>public override string DriveCar(int a)</code>，
+因為編輯器會自動幫我們選擇最適合的方法。</p>
+<pre><code>	正在開『BWM_Red』 的車時速『BWM500』在移動「Override』int--1
+</code></pre><p>而如果實體化並呼叫DriveCar改為</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//int a = 1;
+</span><span class="c1"></span>   	<span class="kt">string</span> <span class="n">a</span> <span class="p">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
+    <span class="n">BMWCar</span> <span class="n">MyBMWCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyBMWCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">;</span>
+</code></pre></div><p>則執行結果為如下。</p>
+<pre><code>	正在開『BWM_Red』 的車時速『BWM500』在移動「Override』String--Hello
+</code></pre><h2 id="heading">參考文章</h2>
+<ul>
+<li><a href="http://www.dotblogs.com.tw/skychang/archive/2012/05/10/72114.aspx?fid=60865">http://www.dotblogs.com.tw/skychang/archive/2012/05/10/72114.aspx?fid=60865</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/6fawty39.aspx">http://msdn.microsoft.com/zh-tw/library/6fawty39.aspx</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/ebca9ah3.aspx">http://msdn.microsoft.com/zh-tw/library/ebca9ah3.aspx</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/9fkccyh4.aspx">http://msdn.microsoft.com/zh-tw/library/9fkccyh4.aspx</a></li>
+<li><a href="http://www.dotnetperls.com/virtual">http://www.dotnetperls.com/virtual</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#virtual-">Virtual 修飾詞</a></li>
+    <li><a href="#override-">Override 修飾詞</a></li>
+    <li><a href="#override-1">Override 修飾詞特性</a>
+      <ul>
+        <li><a href="#-1">注意 1</a></li>
+        <li><a href="#-2">注意 2</a></li>
+        <li><a href="#-3">注意 3</a></li>
+        <li><a href="#-4">注意 4</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考文章</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

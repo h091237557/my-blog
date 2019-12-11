@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="c#, 物件導向, oo" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.0.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/c' class="muted-link">
+  <span class="Label Label--gray">c#</span>
+</a>
+
+<a href='/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91' class="muted-link">
+  <span class="Label Label--gray">物件導向</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-11. Published at: 2015-08-17.">
+        
+          Lastmod: 2019-12-11
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><code>繼承</code>為物件導向的<code>三大特性之一(封裝、多型)</code>，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但請官爺們想簡單點)，兒子可能會有老爸的大鼻子或小嘴巴，並且可以開著老爸的車(財產)出去玩，這就是繼承。</p>
+<p>繼承父類別(基底類別 Base Class)的類別就被稱為子類別(衍生類別 Derived Class)，子類別繼承了父類別的屬性與方法。</p>
+<h2 id="--">繼承的傳遞 : 你也會繼承到你阿公的東西</h2>
+<p>繼承是可以傳遞，Class C 繼承至 Class B，而 Class B 繼承至 Class A，則 Class C 會繼承至 Class A、B
+白話文就是，你也會繼承到你阿公的東西。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="err">以</span><span class="err">下</span><span class="err">為</span><span class="err">繼</span><span class="err">承</span><span class="err">程</span><span class="err">式</span><span class="err">碼</span>
+  	<span class="c1">/// &lt;summary&gt;
+</span><span class="c1"></span>    <span class="c1">/// 父類別
+</span><span class="c1"></span>    <span class="c1">/// &lt;/summary&gt;
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
+    <span class="p">{</span>
+
+        <span class="c1">//車子的速度
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
+        <span class="c1">//車子的顏色
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>  
+        <span class="c1">/// &lt;summary&gt;
+</span><span class="c1"></span>        <span class="c1">/// 定義建構子，預設Speed為50，Color為Blue
+</span><span class="c1"></span>        <span class="c1">/// &lt;/summary&gt;
+</span><span class="c1"></span>        <span class="k">public</span>   <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+
+        <span class="c1">//定義車子移動的方法
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+
+    <span class="c1">/// &lt;summary&gt;
+</span><span class="c1"></span>    <span class="c1">/// 子類別繼承Car
+</span><span class="c1"></span>    <span class="c1">/// &lt;/summary&gt;
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
+    <span class="p">{</span>
+        <span class="c1">//BMW的屬性引擎
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+
+    <span class="p">}</span>
+</code></pre></div><p>以下紅色框框的部份就是從父類別Car繼承而來的屬性與方法</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/291243/iCWBf6ATp6ixAC0PdCMT_%E6%9C%AA%E5%91%BD%E5%90%8D.png" alt="未命名.png"></p>
+<p>Equals、GetHashCode、GetType、ToString，就是剛剛提到的繼承會傳遞，以上幾個方法都是繼承至阿公(給人容易理解的名詞)類別Object，如下，在C#中只要是物件都會
+繼承Object類別。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	  <span class="c1">// 摘要:
+</span><span class="c1"></span>    <span class="c1">//     支援 .NET Framework 類別階層架構中的所有類別，提供衍生類別的低階服務。 這是 .NET Framework 中所有類別的超基底類別，是型別階層架構的根。
+</span><span class="c1"></span><span class="na">    [Serializable]</span>
+<span class="na">    [ClassInterface( ClassInterfaceType.AutoDual)]</span>
+<span class="na">    [ComVisible( true)]</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Object</span>
+    <span class="p">{</span>
+        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     初始化 System.Object 類別的新執行個體。
+</span><span class="c1"></span><span class="na">        [ ReliabilityContract(Consistency .WillNotCorruptState, Cer.MayFail)]</span>
+        <span class="k">public</span> <span class="n">Object</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     判斷指定的 System.Object 和目前的 System.Object 是否相等。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 參數:
+</span><span class="c1"></span>        <span class="c1">//   obj:
+</span><span class="c1"></span>        <span class="c1">//     要與目前物件比較的物件。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     如果指定的物件等於目前的物件，則為 true，否則為 false。
+</span><span class="c1"></span><span class="na">        [ TargetedPatchingOptOut(&#34;Performance critical to inline across NGen image boundaries&#34; )]</span>
+        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">Equals</span><span class="p">(</span> <span class="kt">object</span> <span class="n">obj</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     判斷指定的物件執行個體是否視為相等。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 參數:
+</span><span class="c1"></span>        <span class="c1">//   objA:
+</span><span class="c1"></span>        <span class="c1">//     要比較的第一個物件。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">//   objB:
+</span><span class="c1"></span>        <span class="c1">//     要比較的第二個物件。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     如果物件被視為相等則為 true，否則為 false。 如果 objA 和 objB 都是 null，則這個方法會傳回 true。
+</span><span class="c1"></span><span class="na">        [ TargetedPatchingOptOut(&#34;Performance critical to inline across NGen image boundaries&#34; )]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">Equals</span><span class="p">(</span> <span class="kt">object</span> <span class="n">objA</span><span class="p">,</span> <span class="kt">object</span> <span class="n">objB</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     做為特定型別的雜湊函式。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     目前 System.Object 的雜湊程式碼。
+</span><span class="c1"></span><span class="na">        [ TargetedPatchingOptOut(&#34;Performance critical to inline across NGen image boundaries&#34; )]</span>
+        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">int</span> <span class="n">GetHashCode</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     取得目前執行個體的 System.Type。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     目前執行個體的確實執行階段型別。
+</span><span class="c1"></span><span class="na">        [ SecuritySafeCritical]</span>
+        <span class="k">public</span> <span class="n">Type</span> <span class="n">GetType</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     建立目前 System.Object 的淺層複本 (Shallow Copy)。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     目前 System.Object 的淺層複本。
+</span><span class="c1"></span><span class="na">        [ SecuritySafeCritical]</span>
+        <span class="k">protected</span> <span class="kt">object</span> <span class="n">MemberwiseClone</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     判斷指定的 System.Object 執行個體是否為相同的執行個體。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 參數:
+</span><span class="c1"></span>        <span class="c1">//   objA:
+</span><span class="c1"></span>        <span class="c1">//     要比較的第一個物件。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">//   objB:
+</span><span class="c1"></span>        <span class="c1">//     要比較的第二個物件。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     如果 objA 與 objB 為相同的執行個體或兩者皆為 null 參考，則為 true，否則為 false。
+</span><span class="c1"></span><span class="na">        [ ReliabilityContract(Consistency .WillNotCorruptState, Cer.Success)]</span>
+<span class="na">        [ TargetedPatchingOptOut(&#34;Performance critical to inline across NGen image boundaries&#34; )]</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="kt">bool</span> <span class="n">ReferenceEquals</span><span class="p">(</span> <span class="kt">object</span> <span class="n">objA</span><span class="p">,</span> <span class="kt">object</span> <span class="n">objB</span><span class="p">)</span><span class="p">;</span>
+        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 摘要:
+</span><span class="c1"></span>        <span class="c1">//     傳回表示目前物件的字串。
+</span><span class="c1"></span>        <span class="c1">//
+</span><span class="c1"></span>        <span class="c1">// 傳回:
+</span><span class="c1"></span>        <span class="c1">//     表示目前物件的字串。
+</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="n">ToString</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><h2 id="heading">繼承特性</h2>
+<p>#繼承特性</p>
+<p>繼承它有一些特性(在C#中)</p>
+<ul>
+<li>一個子類別只能繼承一個父類別 (C++可以繼承多類別)</li>
+<li>子類別一定會呼叫父類別的建構子</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">		<span class="n">BMWCar</span> <span class="n">MyBMWCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BMWCar</span> <span class="p">(</span><span class="p">)</span><span class="p">;</span>
+		<span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyBMWCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">(</span><span class="err">看</span><span class="err">看</span><span class="err">上</span><span class="err">面</span><span class="err">父</span><span class="err">類</span><span class="err">別</span><span class="err">的</span><span class="err">程</span><span class="err">式</span><span class="err">碼</span><span class="p">)</span>
+		
+		<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+		<span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">Blue</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="m">5</span><span class="m">0</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+		<span class="p">(</span><span class="err">上</span><span class="err">面</span><span class="err">正</span><span class="err">是</span><span class="err">父</span><span class="err">類</span><span class="err">別</span><span class="err">的</span><span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span><span class="p">)</span>
+</code></pre></div><p><strong>但這時如果子類別有有一個建構子會著麼樣呢 ??</strong></p>
+<p>先自訂子類別建構子如下，然後在執行，會發現結果為<code>會先執行父類別建構子再執行子類別建構子</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	
+ 	<span class="c1">/// &lt;summary&gt;
+</span><span class="c1"></span>    <span class="c1">/// 子類別繼承Car
+</span><span class="c1"></span>    <span class="c1">/// &lt;/summary&gt;
+</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
+    <span class="p">{</span>
+        <span class="c1">//BMWCar類別建構子
+</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
+            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">//BMW的屬性引擎
+</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+
+    <span class="p">}</span>
+    
+    <span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+    <span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">BMW_red</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="n">BMW500</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+    <span class="p">(</span><span class="err">會</span><span class="err">先</span><span class="err">執</span><span class="err">行</span><span class="err">父</span><span class="err">類</span><span class="err">別</span><span class="err">建</span><span class="err">構</span><span class="err">子</span><span class="err">再</span><span class="err">執</span><span class="err">行</span><span class="err">子</span><span class="err">類</span><span class="err">別</span><span class="err">建</span><span class="err">構</span><span class="err">子</span><span class="p">)</span>
+</code></pre></div><h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/%E7%BB%A7%E6%89%BF%E6%80%A7">http://zh.wikipedia.org/wiki/%E7%BB%A7%E6%89%BF%E6%80%A7</a></li>
+<li><a href="http://programdoubledragon.blogspot.tw/2013/03/c7.html">http://programdoubledragon.blogspot.tw/2013/03/c7.html</a></li>
+<li><a href="http://msdn.microsoft.com/zh-tw/library/ms173149.aspx">http://msdn.microsoft.com/zh-tw/library/ms173149.aspx</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">繼承的傳遞 : 你也會繼承到你阿公的東西</a></li>
+    <li><a href="#heading">繼承特性</a></li>
+    <li><a href="#heading1">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

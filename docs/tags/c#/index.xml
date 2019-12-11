@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>c# on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/c#/</link>
+    <description>Recent content in c# on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Wed, 19 Aug 2015 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/c#/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>物件導向系列菜單 4 -『 物件導向特性-繼承(Inheritance) 3 - Sealed 』</title>
+      <link>https://mark-lin.com/posts/20150819/</link>
+      <pubDate>Wed, 19 Aug 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150819/</guid>
+      <description>特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』</title>
+      <link>https://mark-lin.com/posts/20150818/</link>
+      <pubDate>Tue, 18 Aug 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150818/</guid>
+      <description>Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』</title>
+      <link>https://mark-lin.com/posts/20150817/</link>
+      <pubDate>Mon, 17 Aug 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150817/</guid>
+      <description>繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 1-『 基本概念 』</title>
+      <link>https://mark-lin.com/posts/20150816/</link>
+      <pubDate>Sun, 16 Aug 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150816/</guid>
+      <description>物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也</description>
+    </item>
+    
+  </channel>
+</rss>
