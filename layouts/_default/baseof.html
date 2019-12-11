@@ -55,19 +55,20 @@
   </head>
 
 
-  <body class="bg-gray">
+  <body>
+        <div id="header" class="px-1 bg-white">
+                {{ partial "header.html" . }}
+              </div>
     <div id="holy" class="container-lg bg-white h-100">
 
-      <div id="header" class="px-1 bg-white">
-        {{ partial "header.html" . }}
-      </div>
 
-      <div role="main" id="main" class="holy-main markdown-body px-4 bg-white">
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
         {{ block "main" . }}
         {{ end }}
       </div>
 
-      <div id="side" class="pr-1 bg-white">
+      <div id="side" class="pr-1">
         <aside class="pr-3">
           {{ block "side" . }}
           <div id="toc" class="mb-3">
@@ -76,7 +77,7 @@
         </aside>
       </div>
 
-      <div id="footer" class="pt-2 pb-3 bg-white text-center">
+      <div id="footer" class="pt-2 pb-3 text-center">
         {{ partial "footer.html" . }}
       </div>
     </div>

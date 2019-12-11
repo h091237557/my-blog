@@ -1,0 +1,37 @@
+<nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="{{ .Site.BaseURL }}">
+          {{ .Site.Title }}
+        </a>
+  </div>
+
+
+  {{ $currentPage := . }}
+  {{ with .Site.Menus.main }}
+  <div>
+    {{ range sort . }}
+    {{ if .HasChildren }}
+    <div class="flex-column position-relative dropdown" >
+      {{ .Pre }}
+      <span class="UnderlineNav-item {{ if $currentPage.HasMenuCurrent "main" . }}selected{{ end }}">{{ .Name }}</span>
+      <div class="Box Box--condensed position-absolute dropdown-content ">
+        {{ range .Children }}
+        <div class="Box-body" style="">
+          <a href="{{ .RelPermalink }}">
+            {{ .Name }}
+          </a>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+    {{ else }}
+    <!-- .URL -->
+    <a class="UnderlineNav-item {{ if $currentPage.IsMenuCurrent "main" . }}selected{{ end }}" href="{{ .URL }}">
+      {{ .Pre }}
+      <span>{{ .Name }}</span>
+    </a>
+    {{ end }}
+    {{ end }}
+  </div>
+  {{ end }}
+</nav>
