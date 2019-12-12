@@ -1,0 +1,298 @@
+/* custom css here */
+.markdown-body h2 {
+    border-bottom: 5px solid #87ceeb;
+}
+
+tr {
+  background-color: #333 !important;
+}
+
+.markdown-body table th, .markdown-body table td {
+  border: 1px solid #444;
+}
+
+.logo {
+  color: #6e6e6e;
+  text-align: center;
+}
+
+.log > a {
+  font-size: 1em;
+}
+
+.tagline {
+  font-size: 0.4em;
+  color: #6e6e6e;
+}
+
+.post-list > p {
+  color: #ddd;
+}
+
+a:hover {
+  text-decoration: none !important;
+}
+
+#header {
+  background-color: #333 !important;
+  font-size: 40px;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+
+.UnderlineNav-actions {
+  color: #FFD632;
+  text-decoration: none;
+  border: none;
+  font-weight: bold;
+}
+
+body {
+  background-color: #333;
+  color: #ddd;
+}
+
+#main {
+  background-color: #444;
+}
+
+#side {
+  background-color: #444;
+}
+
+#footer{
+  background-color: #444;
+}
+
+pre {
+  background-color: #2b2b2b !important;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  box-shadow: inset 0 1px 10px rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.1), 0 -1px 0 rgba(0, 0, 0, 0.5);
+  padding: .5em;
+  overflow: auto;
+}
+
+img {
+  opacity: 0.95;
+}
+
+.markdown-body h1 {
+  color: #FFD632 !important;
+  border-bottom: 1px solid #fc0;
+  text-transform: uppercase;
+}
+
+.h1 {
+  color: #FFD632 !important;
+}
+
+.h2 {
+  font-size: 20px !important;
+}
+
+h2 {
+  color: #87ceeb !important
+}
+
+h3,h4 {
+  color: lightgreen !important;
+}
+
+a {
+  color: #FFD632;
+}
+
+blockquote {
+  background-color: #fff1a5 !important;
+  border-radius: 3px !important;
+  border-left-color: #ffe559 !important;
+  border-left: 0.5em solid #ffe559 !important;
+  font-style: normal !important;
+  color: black !important;
+  padding-left: .5em !important;
+  margin: 1.25em 0;
+}
+
+blockquote > p {
+  color: black;
+  padding: 10px;
+}
+
+#toc {
+  background-color: #333 !important;
+  border: 0px solid #d1d5da;
+}
+
+#toc > b {
+  color: #FFD632;
+}
+
+#toc a {
+  color: #ddd !important;
+}
+
+span {
+  color: #ddd;
+}
+
+.Box {
+  background-color: #333 !important;
+  border: none;
+}
+
+.Label {
+  background-color: lightgreen;
+  color: black;
+}
+
+.tag-span {
+  display: block;
+  margin: 5px 0;
+}
+
+.main-header {
+  display: block;
+  height: 20px;
+}
+
+.previous_page {
+  background-color: #333 !important;
+  border: none !important;
+}
+
+.pagination a {
+  color: #d1d5da;
+  background-color: #333 !important;
+  border: none !important;
+}
+
+.pagination .disabled {
+  color:#d1d5da; 
+  background-color: #333;
+  border: none !important;
+}
+
+.pagination .disabled:hover {
+  color:#d1d5da; 
+  background-color: #2b2b2b;
+  border: none !important;
+}
+
+.subhead-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.rounded-2 {
+  background-color: #333;
+  margin-bottom: 10px;
+}
+
+.Subhead {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* theme default*/
+
+html,
+body {
+  height: 100%;
+}
+.h-100 {
+  height: 100%;
+}
+
+#holy {
+  display: grid;
+  /* auto: as wide as its content
+   * fr: all available space */
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "header header"
+    "main side"
+    "footer side";
+}
+#header {
+  grid-area: header;
+}
+#main {
+  grid-area: main;
+  max-width: 782px;
+}
+#side {
+  grid-area: side;
+  width: 230px;
+}
+#footer {
+  grid-area: footer;
+}
+aside {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  display: block;
+  overflow-y: auto;
+}
+
+/* Menu */
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.dropdown:hover .dropdown-content {
+  visibility: visible;
+  opacity: 1;
+}
+.dropdown-content:hover {
+  visibility: visible;
+  opacity: 1;
+}
+.dropdown-content {
+  visibility: hidden;
+  opacity: 0;
+  transition: all 0.2s ease;
+  top: 55px;
+  right: 0;
+  white-space: nowrap;
+  min-width: 160px;
+  z-index: 1;
+}
+
+/* TOC */
+#toc {
+  margin-top: 1.5rem;
+  padding: 0.7rem;
+}
+#toc * {
+  list-style: none;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#toc ul {
+  padding-left: 0.8rem;
+}
+#toc li {
+  margin-top: 0.3rem;
+}
+
+@media screen and (max-width: 1012px) {
+  #holy {
+    display: block;
+  }
+  #header {
+  }
+  #main {
+    max-width: 1012px;
+  }
+  #side {
+    display: none;
+  }
+}
