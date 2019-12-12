@@ -88,10 +88,6 @@ img {
   color: #FFD632 !important;
 }
 
-.h2 {
-  font-size: 20px !important;
-}
-
 h2 {
   color: #87ceeb !important
 }
@@ -178,21 +174,6 @@ span {
   color:#d1d5da; 
   background-color: #2b2b2b;
   border: none !important;
-}
-
-.subhead-text {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.rounded-2 {
-  background-color: #333;
-  margin-bottom: 10px;
-}
-
-.Subhead {
-  border-bottom: none;
-  padding-bottom: 0;
 }
 
 /* theme default*/
