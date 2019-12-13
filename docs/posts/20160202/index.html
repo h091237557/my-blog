@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  CSS-Position 觀念 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="css, css-box" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="CSS-Position 觀念 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">CSS-Position 觀念</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/css' class="muted-link">
+  <span class="Label Label--gray">css</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-02-01.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在上一篇<code>Css Box Model</code>討論完<code>Element的大小</code>問題，接來下來談談<code>Element的位置(Position)</code>問題，Css中可以對Element的Position屬性設置四種類型的值分別為<code>static</code>、<code>relative</code>、<code>absolute</code>、<code>fixed</code>。</p>
+<h2 id="static">Static</h2>
+<p><code>static</code>為<code>position</code>的<code>預設值</code>，它會在頁面上佔據位置，但<code>不能</code>使用<code>top right bottom left</code>移動<code>Element</code>。請看看下面範例。</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html">HTML
+
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test1&#34;</span><span class="p"></span><span class="p">&gt;</span>Test1<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test2&#34;</span><span class="p"></span><span class="p">&gt;</span>Test2<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css"><span class="nt">CSS</span>	
+	<span class="p">.</span><span class="nc">test1</span> <span class="p">{</span>
+	  <span class="k">position</span><span class="p">:</span><span class="kc">static</span><span class="p">;</span>
+ 	  <span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+ 	  <span class="k">top</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+  	  <span class="k">right</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="p">.</span><span class="nc">test2</span> <span class="p">{</span>
+ 	  <span class="k">background-color</span><span class="p">:</span><span class="kc">green</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div><p>從結果可看出<code>Test1</code>完全沒有移動，且有佔據位置，所以<code>Test2</code>會在<code>Test1</code>下面。</p>
+<p><img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454687371_52613.png" alt="screenshot.png"></p>
+<h2 id="relative">Relative</h2>
+<p><code>relative</code>為<code>相對定位</code>，元素在頁面上佔據位置，<code>可</code>使用<code>top right bottom left</code>移動<code>Element</code>。</p>
+<p>其中所謂的<code>相對定位</code>概念可以想成，一個元素設置成相對定位，然後可以設置它垂直或水平的位置，讓這個元素<code>相對於原本位置進行移動</code>，並且會保留原本位置的空間。如下圖框2的原本位置空間會保留。</p>
+<p><img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454689656_1419.png" alt="screenshot.png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html">HTML
+
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test1&#34;</span><span class="p"></span><span class="p">&gt;</span>Test1<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test2&#34;</span><span class="p"></span><span class="p">&gt;</span>Test2<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css"><span class="nt">CSS</span>
+	<span class="p">.</span><span class="nc">test1</span> <span class="p">{</span>
+	  <span class="k">position</span><span class="p">:</span><span class="err"></span><span class="kc">relative</span><span class="p">;</span>
+ 	  <span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+ 	  <span class="k">top</span><span class="p">:</span><span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+  	  <span class="k">left</span><span class="p">:</span><span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="p">.</span><span class="nc">test2</span> <span class="p">{</span>
+ 	  <span class="k">background-color</span><span class="p">:</span><span class="kc">green</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div><p>從下圖可知<code>Test1</code>，向下位移了<code>10px</code>，並向右移<code>10px</code>，但注意Test1原本的空間位置還在喔。</p>
+<p><img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454690529_48311.png" alt="screenshot.png"></p>
+<h2 id="absolute">Absolute</h2>
+<p><code>Absolute</code>為<code>絕對定位</code>，相對於<code>最近一級且不是static的父元素</code>來進行定位。元素在頁面不占據位置，你可以想成他從頁面上浮起來，然後它移動的起使位置為父元素，可以使用top right bottom left移動元素位置，如下圖不會像相對定位一樣保留原本<code>框2</code>的空間與位置。</p>
+<p><img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454691745_95019.png" alt="screenshot.png"></p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html">HTML
+
+	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test1&#34;</span><span class="p"></span><span class="p">&gt;</span>Test1<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+  	<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test2&#34;</span><span class="p"></span><span class="p">&gt;</span>Test2
+   		<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;test3&#34;</span><span class="p"></span><span class="p">&gt;</span>Test3<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+ 	<span class="p">&lt;</span><span class="p">/</span><span class="nt">div</span><span class="p">&gt;</span>
+</code></pre></div><p>CSS</p>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css">	<span class="p">.</span><span class="nc">test1</span> <span class="p">{</span>
+ 		<span class="k">height</span><span class="p">:</span><span class="mi">30</span><span class="kt">px</span><span class="p">;</span>
+ 		<span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="p">.</span><span class="nc">test2</span> <span class="p">{</span>
+  	 	<span class="k">height</span><span class="p">:</span><span class="mi">50</span><span class="kt">px</span><span class="p">;</span>
+   		<span class="k">position</span><span class="p">:</span><span class="kc">relative</span><span class="p">;</span>
+  		<span class="k">background-color</span><span class="p">:</span><span class="kc">green</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="p">.</span><span class="nc">test3</span><span class="p">{</span>
+ 	 	<span class="k">position</span><span class="p">:</span><span class="kc">absolute</span><span class="p">;</span>
+  		<span class="k">top</span><span class="p">:</span><span class="mi">0</span><span class="kt">px</span><span class="p">;</span>
+  		<span class="k">left</span><span class="p">:</span><span class="mi">50</span><span class="kt">px</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div><p><code>Test3</code>因為設定了<code>absolute</code>，所以他會依照<code>Test3父的元素</code>且<code>position不為static</code>的<code>Test2</code>的位置來進行位移。
+<img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454693826_65877.png" alt="screenshot.png"></p>
+<p>而這時如果將<code>test2</code>的<code>position修改為static</code>結果會變成如下圖，因為沒有找到合適的父元素，所以他會定位最原始的區塊。</p>
+<p><img src="https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454694135_93886.png" alt="screenshot.png"></p>
+<h3 id="absolute-">absolute 設置會修改屬性</h3>
+<p>當一個元素被設定為<code>absolute</code>會發生三件事。</p>
+<ul>
+<li>把該元素往上浮了一層，元素脫離了原本文檔流，所以不在占據原本的空間，還會覆蓋下層的素。</li>
+<li>該元素會變會<code>block level element</code>也就是<code>display:block</code>，例如將一個<code>span(inline level element)</code>設成<code>absoulte</code>它就可以設置寬高了。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css">		<span class="nt">原本的</span>
+		<span class="o">&lt;</span><span class="nt">span</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;test&#34;</span><span class="o">&gt;</span><span class="nt">Hello</span> <span class="nt">Mark</span><span class="o">&lt;</span><span class="o">/</span><span class="nt">span</span><span class="o">&gt;</span>
+
+		<span class="p">.</span><span class="nc">test</span><span class="p">{</span>
+  			<span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+  			<span class="k">width</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+  			<span class="k">height</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+		<span class="p">}</span>
+</code></pre></div><pre><code>![screenshot.png](https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454695222_99583.png)	
+</code></pre>
+<p>將.test增加<code>position:absolute;</code>如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css">		<span class="p">.</span><span class="nc">test</span><span class="p">{</span>
+ 			 <span class="k">position</span><span class="p">:</span><span class="kc">absolute</span><span class="p">;</span>
+  			 <span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+  			 <span class="k">width</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+ 			 <span class="k">height</span><span class="p">:</span><span class="mi">100</span><span class="kt">px</span><span class="p">;</span>
+		<span class="p">}</span>
+</code></pre></div><pre><code>![screenshot.png](https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454695402_0792.png)
+</code></pre>
+<p>該元素如果是<code>Block</code>元素，元素的寬度由原來的<code>width:100%</code>，轉為<code>auto</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-css" data-lang="css">		<span class="o">&lt;</span><span class="nt">div</span> <span class="nt">class</span><span class="o">=</span><span class="s2">&#34;test1&#34;</span><span class="o">&gt;</span><span class="nt">Test1</span><span class="o">&lt;</span><span class="o">/</span><span class="nt">div</span><span class="o">&gt;</span>
+		
+		<span class="p">.</span><span class="nc">test1</span> <span class="p">{</span>
+ 			 <span class="k">height</span><span class="p">:</span><span class="mi">30</span><span class="kt">px</span><span class="p">;</span>
+   	     	 <span class="k">background-color</span><span class="p">:</span><span class="kc">red</span><span class="p">;</span>
+		<span class="p">}</span>
+</code></pre></div><pre><code>![screenshot.png](https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454697012_53905.png)	
+</code></pre>
+<p>然後我們將<code>test1</code>增加<code>position:absolute</code>，然後會變成。</p>
+<pre><code>![screenshot.png](	https://az787680.vo.msecnd.net/user/h091237557/4179b2c3-4645-41b9-b58b-29983cb23adc/1454697265_19891.png)
+</code></pre>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="http://web.jobbole.com/83317/">http://web.jobbole.com/83317/</a></li>
+<li><a href="http://www.w3school.com.cn/css/css_positioning_absolute.asp">http://www.w3school.com.cn/css/css_positioning_absolute.asp</a></li>
+<li><a href="http://zh-tw.learnlayout.com/position.html">http://zh-tw.learnlayout.com/position.html</a></li>
+<li><a href="http://web.jobbole.com/82482/">http://web.jobbole.com/82482/</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>CSS-Position 觀念</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#static">Static</a></li>
+    <li><a href="#relative">Relative</a></li>
+    <li><a href="#absolute">Absolute</a>
+      <ul>
+        <li><a href="#absolute-">absolute 設置會修改屬性</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

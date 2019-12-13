@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Cordova-Cordova Chrome Debug &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="Cordova" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Cordova-Cordova Chrome Debug | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Cordova-Cordova Chrome Debug</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/cordova' class="muted-link">
+  <span class="Label Label--gray">Cordova</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-02-10.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在<code>Cordova</code>上呢?這篇文章就是要介紹如何時用Chrome來進行<code>Cordova</code>的Debug。</p>
+<h2 id="step1-developer-usb-debug">Step1 將模擬器的Developer USB Debug打開</h2>
+<p>首先打開你的模擬器，然後到<code>Settings</code>，然後往下拉，找找<code>Developer options</code>，發現著找不到，因為預設是隱藏的，喝喝。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-1.png" alt="screenshot.png"></p>
+<p>所以要將它打開需要先到<code>About Phone</code>，然後你會看到<code>Build number</code>，這時就『點』下去，記憶中是要點3到4次，然後點完後在回去找<code>Develper options</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-2.png" alt="screenshot.png"></p>
+<p>發現Magic~<code>Developer options</code>出現了。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-3.png" alt="screenshot.png"></p>
+<p>最後在將<code>USB debugging</code>打勾就可以了。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-4.png" alt="screenshot.png"></p>
+<h2 id="step2-chromeinspectdevices">Step2 打開chrome://inspect/#devices</h2>
+<p>首先在Chrome上打<code>chrome://inspect/#devices</code>然後可以看有你的模擬器(記得模擬器要先打開)，但空空的沒地方點。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-6.png" alt="screenshot.png"></p>
+<p><img src="http://yixiang8780.com/outImg/20160901-5.png" alt="screenshot.png"></p>
+<h2 id="step3-corodva-anroid">Step3 執行Corodva Anroid</h2>
+<p>則時就在你的專案上面執行<code>Cordova run Android</code>，確定有正確的執行後，在<code>Devices</code>你就會看到你執行的專案名稱，然後點一下<code>Inspect</code>，你就可以看到熟悉的Debug方法了。</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-7.png" alt="screenshot.png"></p>
+<p>你看看，親切~!</p>
+<p><img src="http://yixiang8780.com/outImg/20160901-8.png" alt="screenshot.png"></p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/"><a href="http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/">http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Cordova-Cordova Chrome Debug</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#step1-developer-usb-debug">Step1 將模擬器的Developer USB Debug打開</a></li>
+    <li><a href="#step2-chromeinspectdevices">Step2 打開chrome://inspect/#devices</a></li>
+    <li><a href="#step3-corodva-anroid">Step3 執行Corodva Anroid</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

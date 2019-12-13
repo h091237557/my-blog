@@ -1,14 +1,14 @@
 <!-- Tags -->
 {{ if isset .Site.Taxonomies "tags" }}
   <div class="Box Box--blue p-2 mb-3 mt-5">
-    <a href="{{ "tags/" | relLangURL }}" class="link-gray-dark">
+    <!-- <a href="{{ "tags/" | relLangURL }}" class="link-gray-dark"> -->
       <h4>Tags</h4>
-    </a>
+    <!-- </a> -->
     
     {{ range $name, $items := .Site.Taxonomies.tags }}
     <span class="css-truncate no-wrap tag-span">
       <a href="{{ "tags/" | relLangURL }}{{ $name | urlize | lower }}" class="link-gray text-emphasized css-truncate-target"><span class="">{{ $name | humanize }}</span></a>
-      <span class="text-right Countel--gray">- {{ len $items }}</span>
+      <span class="text-right Counter Counter--gray"> {{ len $items }}</span>
     </span>
     {{ end }}
   </div>

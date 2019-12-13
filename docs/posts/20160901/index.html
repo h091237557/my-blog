@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-1 之 MongoDB 基礎知識 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從0 → 1開始來學習MongoDB，咱們這30天的文章結構大至上會如下。 首先，先來個十篇的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-1 之 MongoDB 基礎知識 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從0 → 1開始來學習MongoDB，咱們這30天的文章結構大至上會如下。 首先，先來個十篇的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-1 之 MongoDB 基礎知識</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-01.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從<code>0 → 1</code>開始來學習<code>MongoDB</code>，咱們這30天的文章結構大至上會如下。</p>
+<ul>
+<li>首先，先來個十篇的新手村之旅，大致上是說明<code>MongoDB</code>的基本操作<code>CRUD</code>。</li>
+<li>再來開始進階一點，當我們上面十篇會基本上的使用<code>MongoDB</code>後，我們接下來就是要學習『如何用的好』，這時我們大概會花個六、七篇左右來說明說明。</li>
+<li>然後我們這時要來『驗證』你上面的東西有沒有學會，我們大概會用個三篇來模擬個應用。記好『驗證』自已有沒有學會，是學習過程很重要的步驟，請別老是覺得看過懂了，就算學會，這種道理就像是你腦袋想的和寫出來的程式不見得會一樣，請記得寫測試驗證。</li>
+<li>接下來就是進行分散式的章節，大概來個六~七篇。</li>
+<li>最後就是一樣驗證你上面的東西有沒有學會。</li>
+</ul>
+<p>上面大概就是這30天的簡略流程，那麼就開始吧。</p>
+<p>由於是第一天，所以基本上就是要文言文一下，說明一下<code>mongodb</code>是啥。</p>
+<ul>
+<li>什麼是MongoDB</li>
+<li>MongoDB的優缺與缺點</li>
+<li>MongoDB的組成<code>Document</code>與<code>Collection</code></li>
+</ul>
+<h2 id="-mongodb-">~ 什麼是MongoDB ~</h2>
+<p><code>MongoDB</code>一種強大，靈活、且易於擴展的文件導向式(document-oriented)資料庫，與傳統的關聯式導向資料庫相比，它不再有<code>row</code>的概念，取而代之的是<code>document</code>的概念，如下圖的fu。</p>
+<p><img src="http://yixiang8780.com/outImg/20161128-2.png" alt=""></p>
+<h2 id="-mongodb-1">~ MongoDB的優缺與缺點 ~</h2>
+<h3 id="heading">優點</h3>
+<ul>
+<li>Schema-less : MongoDB擁有非常彈性的<code>Schema</code>，這對RDBMS來說非常的難以高效能的方法來實現。</li>
+<li>易於擴展 : MongoDB的設計採用橫向擴展，它的<code>document</code>的數據模型使寫能很容易在多台伺服器之間進行數據分割。</li>
+<li>優透的性能 : MongoDB能預分配，以利用額外的空間換取穩定，同時盡可能把多的內存用作cache，試圖為每次查詢自動選擇正確的索引。</li>
+</ul>
+<h3 id="heading1">缺點</h3>
+<ul>
+<li>不支援事務操作 : 所以通常不適合應用在銀行或會計這種系統上，因為不包證一致性。</li>
+<li>占用比較多空間 : 主要是有兩個原因，首先是它會預分配空間，為了提高效能，而第二個原因是欄位所占用的空間。</li>
+</ul>
+<h2 id="-mongodb-document--collection-">~ MongoDB的組成 Document 與 Collection ~</h2>
+<h3 id="document">Document</h3>
+<p><code>Document</code>是<code>mongodb</code>的核心，它就是<code>Key</code>對應個<code>Value</code>組合，例如下列範例。</p>
+<pre><code>{
+	name : &quot;mark&quot;.
+	age : 100 , 
+	title : 'Mark BIG BIG'
+}
+</code></pre><p><code>document</code>中的值可以是多種不同的類型，並且<code>Key</code>有幾個規定，首先它是區分大小寫，例如下面的範例這兩種是不同的，<code>mongodb</code>會存成兩份<code>document</code>。</p>
+<pre><code>{ name : &quot;mark&quot; }
+{ Name : &quot;mark&quot; }
+</code></pre><p>而另一個規定是<code>Key</code>不能相同的，例如下面的範例是非法的。</p>
+<pre><code>{ age : &quot;100&quot; , age : &quot;1000&quot; }
+</code></pre><h3 id="collection">Collection</h3>
+<p><code>Collection</code>就是一組<code>Document</code>，如果把它用來與關聯式資料庫比較，他就是<code>Table</code>裡面存放了很多<code>Row</code>。</p>
+<p><code>Collection</code>是動態的，這代表這一個<code>collection</code>裡的<code>document</code>可以是各種類型，例如下面這幾種文檔都可以存放在同一個<code>collection</code>裡，不像關聯式規定的好好。</p>
+<pre><code>{ id :1, name : &quot;mark&quot; }
+{ age : 100 }
+</code></pre><p>整體而言他們兩個關係長這樣。</p>
+<p><img src="http://yixiang8780.com/outImg/20161128-1.png" alt=""></p>
+<h2 id="--">~ 結語 ~</h2>
+<p>第一天，沒啥好結語的fu，只能說<code>+u</code>，給所有參賽者。</p>
+<h2 id="--1">~ 參考資料 ~</h2>
+<ul>
+<li><a href="http://www.adathedev.co.uk/2011/02/thoughts-on-mongodb-from-sql-server-dev.html"><a href="http://www.adathedev.co.uk/2011/02/thoughts-on-mongodb-from-sql-server-dev.html">http://www.adathedev.co.uk/2011/02/thoughts-on-mongodb-from-sql-server-dev.html</a></a></li>
+<li><a href="https://read01.com/BznRQJ.html"><a href="https://read01.com/BznRQJ.html">https://read01.com/BznRQJ.html</a>
+</a></li>
+<li><a href="http://stackoverflow.com/questions/5244437/pros-and-cons-of-mongodb"><a href="http://stackoverflow.com/questions/5244437/pros-and-cons-of-mongodb">http://stackoverflow.com/questions/5244437/pros-and-cons-of-mongodb</a></a></li>
+<li><a href="https://docs.mongodb.com/manual/"><a href="https://docs.mongodb.com/manual/">https://docs.mongodb.com/manual/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-1 之 MongoDB 基礎知識</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-mongodb-">~ 什麼是MongoDB ~</a></li>
+    <li><a href="#-mongodb-1">~ MongoDB的優缺與缺點 ~</a>
+      <ul>
+        <li><a href="#heading">優點</a></li>
+        <li><a href="#heading1">缺點</a></li>
+      </ul>
+    </li>
+    <li><a href="#-mongodb-document--collection-">~ MongoDB的組成 Document 與 Collection ~</a>
+      <ul>
+        <li><a href="#document">Document</a></li>
+        <li><a href="#collection">Collection</a></li>
+      </ul>
+    </li>
+    <li><a href="#--">~ 結語 ~</a></li>
+    <li><a href="#--1">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

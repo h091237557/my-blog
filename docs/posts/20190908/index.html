@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-08.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。</p>
+<ul>
+<li><code>find</code>方法基本說明</li>
+<li><code>find</code>的搜尋條件(含搜尋故事)</li>
+</ul>
+<p>P.S <code>+u^8</code>~</p>
+<h2 id="find-">find 方法基本說明</h2>
+<p><code>mongodb</code>使用<code>find</code>來進行搜尋，它的第一個參數決定要那些資料，而第二個參數則決定要返回那些<code>key</code>。</p>
+<p>基本的使用範例如下，首先我們先建立一些資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;bb&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>我們想尋找到<code>name</code>為<code>mark</code>的<code>document</code>，並且我們希望回傳值只回傳<code>id</code>這個<code>key</code>就好，搜尋指令如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">1</span> <span class="p">}</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161206-1.png" alt=""></p>
+<p>搜尋結果如下，它只回傳了<code>key id</code>的內容，但是可以看到<code>_id</code>也被回傳回來，因為在默認情況下<code>_id</code>這個<code>key</code>會自動被傳回來，如果真的不想它也回傳回來可以下達下列搜尋指令。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span><span class="s2">&#34;_id&#34;</span><span class="o">:</span><span class="mi">0</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161206-2.png" alt=""></p>
+<h2 id="-find--">~ find 的搜尋條件 ~</h2>
+<p>這邊我們將要說明<code>find</code>常用搜尋條件，and、or、大於等於、大於、小於、小於等於、包含、不包含，有了這些條件我們就可以更方便的尋找你所需要的<code>document</code>。</p>
+<p>這邊簡單的整理成一張表來對應操作符號。</p>
+<table>
+<thead>
+<tr>
+<th>條件</th>
+<th align="center">操作符號</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AND</td>
+<td align="center"><code>$and</code>，另一種方法也可以直接在<code>query</code>中下<code>{&quot;key1&quot;,&quot;value1&quot;,&quot;key2&quot;:&quot;value2&quot;}</code>|</td>
+</tr>
+<tr>
+<td>OR</td>
+<td align="center"><code>$or</code></td>
+</tr>
+<tr>
+<td>NOT</td>
+<td align="center"><code>$not</code></td>
+</tr>
+<tr>
+<td>NOR</td>
+<td align="center"><code>$nor</code></td>
+</tr>
+<tr>
+<td>大於</td>
+<td align="center"><code>$gt</code></td>
+</tr>
+<tr>
+<td>大於等於</td>
+<td align="center"><code>$gte</code></td>
+</tr>
+<tr>
+<td>小於</td>
+<td align="center"><code>$lt</code></td>
+</tr>
+<tr>
+<td>小於等於</td>
+<td align="center"><code>$lte</code></td>
+</tr>
+<tr>
+<td>包含</td>
+<td align="center"><code>$in</code></td>
+</tr>
+<tr>
+<td>不包含</td>
+<td align="center"><code>$nin</code></td>
+</tr>
+</tbody>
+</table>
+<p>我們接下來會先產生幾筆測試資料，再來測試幾個搜尋故事。</p>
+<p>測試資料如下，這是一組使用者資訊，裡面記載了使用者的名稱、年紀、粉絲數以及喜歡數。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//collection為user
+</span><span class="c1"></span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">35</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">220</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">50</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">120</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">33</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">500</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;5&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1300</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;6&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;7&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;landry&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">}</span>
+</code></pre></div><h3 id="30306060fans200200">我想要尋找年紀30歲以上(包含30)，但不滿60歲(不包含60)，fans又有200人以上(包含200)的人</h3>
+<p>這時就需要<code>$gte</code>、<code>$lt</code>和<code>and</code>一起用囉，這有兩種寫法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//這是第一種
+</span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
+	<span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;$lt&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">}</span><span class="p">,</span>
+	 <span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span> <span class="o">:</span> <span class="mi">200</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+	 
+<span class="c1">//這是第二種
+</span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
+	<span class="p">{</span><span class="s2">&#34;$and&#34;</span><span class="o">:</span><span class="p">[</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;$lt&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">}</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span> <span class="o">:</span> <span class="mi">200</span><span class="p">}</span><span class="p">}</span><span class="p">]</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，應該只找到<code>steven</code>這位仁兄。</p>
+<p><img src="http://yixiang8780.com/outImg/20161206-3.png" alt=""></p>
+<h3 id="-fans--100-likes--100-">我想要尋找 fans 小於等於 100，或是 likes 小於 100 的人。</h3>
+<p>這時就需要用到<code>or</code>和<code>$lt</code>、<code>$lte</code>囉。</p>
+<pre><code>db.user.find(
+	{&quot;$or&quot;: [{&quot;fans&quot;:{&quot;$lte&quot;:100}},{&quot;likes&quot;:{&quot;$lt&quot;:100}}]})
+
+</code></pre><p>結果如下，應該是找到三位<code>mark、steven、stanly</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161206-4.png" alt=""></p>
+<h3 id="-age--2560-">我想要尋找 age 為 25、60 的人。</h3>
+<p>這時可用<code>$in</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$in&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">60</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，應該是找到三位<code>mark、max、landry</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161206-5.png" alt=""></p>
+<h3 id="-age--2560--id-">我想要尋找 age 不為 25、60 的人，並且只給我它的 id 就好。</h3>
+<p>這時可用<code>$nin</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$nin&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">60</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>結果如下~應該是會找到4位。</p>
+<p><img src="http://yixiang8780.com/outImg/20161206-6.png" alt=""></p>
+<h3 id="-likes--100----not-">我想要尋找 likes 小於等於 100 的人 ( 使用 $not )</h3>
+<p>這邊事實上可以很簡單的用<code>$lte</code>，但因為我們要介紹一下<code>$not</code>所以會寫的比較麻煩點兒，
+而真正可以發揮<code>$not</code>功能時，是在和正規表達式聯合使用時，用來查找不匹配的<code>document</code>。</p>
+<p>來解釋一下這段，首先它會尋找所有<code>likes</code>大於<code>100</code>的<code>document</code>，但這時在配個<code>$not</code>就變成完全相反會變成小於等於喔。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;likes&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$not&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gt&#34;</span><span class="o">:</span><span class="mi">100</span><span class="p">}</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>所以結果應該是找到4筆。</p>
+<p><img src="http://yixiang8780.com/outImg/20161206-7.png" alt=""></p>
+<h3 id="-fans--100--likes--500">我們想要找同時不滿足 fans 大於 100 人且 likes 大於 500。</h3>
+<p>這邊我們可以用<code>$nor</code>來尋找，它的意思就是選出所有不滿足條件的<code>document</code>。</p>
+<pre><code>db.user.find({&quot;$nor&quot;:[{&quot;fans&quot;:{&quot;$lt&quot;:100}},{&quot;likes&quot;:{&quot;$lt&quot;:100}}]})
+
+</code></pre><p><img src="http://yixiang8780.com/outImg/20161206-8.png" alt=""></p>
+<h2 id="--">~ 結語 ~</h2>
+<p>今天說明了很多的條件符號，可以簡單分成以以下兩類，邏輯符號與比較符號，運用這兩種符號就可以針對很多種情況下進行搜尋，當然還不只這些，明天將會繼續，我累了……。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th align="center">操作符號</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>邏輯符號</td>
+<td align="center"><code>$and</code>、<code>$or</code>、<code>$or</code>、<code>not</code>|</td>
+</tr>
+<tr>
+<td>邏輯符號用法</td>
+<td align="center"><code>{$xxx: [ { expression1 },{ expression2 }]}` </code>{ field: { $not: { <!-- raw HTML omitted --> } } }`|</td>
+</tr>
+<tr>
+<td>比較符號</td>
+<td align="center"><code>$gt</code>、<code>$gte</code>、<code>$lt</code>、<code>$lte</code>、<code>$in``$nin</code></td>
+</tr>
+<tr>
+<td>比較符號用法</td>
+<td align="center"><code>{field: {$gt: value} } ` </code>{ field: { $in($nin): [<!-- raw HTML omitted -->, <!-- raw HTML omitted -->, &hellip; <!-- raw HTML omitted --> ] } }`</td>
+</tr>
+</tbody>
+</table>
+<h2 id="--1">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/"><a href="https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/">https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/</a></a></li>
+<li><a href="http://www.cnblogs.com/egger/p/3135847.html"><a href="http://www.cnblogs.com/egger/p/3135847.html">http://www.cnblogs.com/egger/p/3135847.html</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#find-">find 方法基本說明</a></li>
+    <li><a href="#-find--">~ find 的搜尋條件 ~</a>
+      <ul>
+        <li><a href="#30306060fans200200">我想要尋找年紀30歲以上(包含30)，但不滿60歲(不包含60)，fans又有200人以上(包含200)的人</a></li>
+        <li><a href="#-fans--100-likes--100-">我想要尋找 fans 小於等於 100，或是 likes 小於 100 的人。</a></li>
+        <li><a href="#-age--2560-">我想要尋找 age 為 25、60 的人。</a></li>
+        <li><a href="#-age--2560--id-">我想要尋找 age 不為 25、60 的人，並且只給我它的 id 就好。</a></li>
+        <li><a href="#-likes--100----not-">我想要尋找 likes 小於等於 100 的人 ( 使用 $not )</a></li>
+        <li><a href="#-fans--100--likes--500">我們想要找同時不滿足 fans 大於 100 人且 likes 大於 500。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--">~ 結語 ~</a></li>
+    <li><a href="#--1">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

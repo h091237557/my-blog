@@ -49,6 +49,123 @@
     </item>
     
     <item>
+      <title>30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</title>
+      <link>https://mark-lin.com/posts/20190910/</link>
+      <pubDate>Sat, 10 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190910/</guid>
+      <description>本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜</description>
+    </item>
+    
+    <item>
+      <title>30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex</title>
+      <link>https://mark-lin.com/posts/20190909/</link>
+      <pubDate>Fri, 09 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190909/</guid>
+      <description>本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式</description>
+    </item>
+    
+    <item>
+      <title>30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</title>
+      <link>https://mark-lin.com/posts/20190908/</link>
+      <pubDate>Thu, 08 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190908/</guid>
+      <description>前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本</description>
+    </item>
+    
+    <item>
+      <title>30-7之MongoDB新手村CRUD---刪除</title>
+      <link>https://mark-lin.com/posts/20190907/</link>
+      <pubDate>Wed, 07 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190907/</guid>
+      <description>本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別</description>
+    </item>
+    
+    <item>
+      <title>30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</title>
+      <link>https://mark-lin.com/posts/20190906/</link>
+      <pubDate>Tue, 06 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190906/</guid>
+      <description>本篇文章將要說明陣列修改器$push，主要就是針對document中的陣列進行修改，同時他也可以搭配$each、$slice、$ne、$ad</description>
+    </item>
+    
+    <item>
+      <title>30-5之MongoDB新手村CRUD---更新</title>
+      <link>https://mark-lin.com/posts/20190905/</link>
+      <pubDate>Mon, 05 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190905/</guid>
+      <description>本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。 基本更新方法Update。 更</description>
+    </item>
+    
+    <item>
+      <title>30-4之MongoDB新手村CRUD---新增之Bulk與新增效能測試</title>
+      <link>https://mark-lin.com/posts/20160904/</link>
+      <pubDate>Sun, 04 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160904/</guid>
+      <description>本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMan</description>
+    </item>
+    
+    <item>
+      <title> 30-3之MongoDB新手村CRUD---新增</title>
+      <link>https://mark-lin.com/posts/20160903/</link>
+      <pubDate>Sat, 03 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160903/</guid>
+      <description>安裝好MongoDB後，接下來本篇主要說明如何新增資料至MongoDB中，而用更精確的詞彙來說是，如何新增document至collecti</description>
+    </item>
+    
+    <item>
+      <title>30-1 之 MongoDB 基礎知識</title>
+      <link>https://mark-lin.com/posts/20160901/</link>
+      <pubDate>Thu, 01 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160901/</guid>
+      <description>Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從0 → 1開始來學習MongoDB，咱們這30天的文章結構大至上會如下。 首先，先來個十篇的</description>
+    </item>
+    
+    <item>
+      <title>30-2之使用 Docker 來建構 MongoDB</title>
+      <link>https://mark-lin.com/posts/20160902/</link>
+      <pubDate>Thu, 01 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160902/</guid>
+      <description>由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安</description>
+    </item>
+    
+    <item>
+      <title>Cordova-Cordova Chrome Debug</title>
+      <link>https://mark-lin.com/posts/20160210/</link>
+      <pubDate>Wed, 10 Feb 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160210/</guid>
+      <description>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome</description>
+    </item>
+    
+    <item>
+      <title>CSS-Box Model 觀念</title>
+      <link>https://mark-lin.com/posts/20160201/</link>
+      <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160201/</guid>
+      <description>Css Box Model 規定了Element處理元素Content、Padding、border、margin的方式 。 Box Model基本概念 這張圖就是在說明一個</description>
+    </item>
+    
+    <item>
+      <title>CSS-Position 觀念</title>
+      <link>https://mark-lin.com/posts/20160202/</link>
+      <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160202/</guid>
+      <description>在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme</description>
+    </item>
+    
+    <item>
       <title>HTML5 之走在平行時空的 Web Worker</title>
       <link>https://mark-lin.com/posts/20151001/</link>
       <pubDate>Thu, 01 Oct 2015 19:51:35 +0800</pubDate>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+   30-3之MongoDB新手村CRUD---新增 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="安裝好MongoDB後，接下來本篇主要說明如何新增資料至MongoDB中，而用更精確的詞彙來說是，如何新增document至collecti|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content=" 30-3之MongoDB新手村CRUD---新增 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="安裝好MongoDB後，接下來本篇主要說明如何新增資料至MongoDB中，而用更精確的詞彙來說是，如何新增document至collecti|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1"> 30-3之MongoDB新手村CRUD---新增</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-03.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>安裝好<code>MongoDB</code>後，接下來本篇主要說明如何新增資料至<code>MongoDB</code>中，而用更精確的詞彙來說是，如何新增<code>document</code>至<code>collection</code>中。這邊我們會說明以下幾種<code>MongoDB</code>所的方法，來建立資料, 並說明這三種有何不同，而至於效能部份請看下篇~</p>
+<ul>
+<li><code>Insert</code></li>
+<li><code>InsertOne</code></li>
+<li><code>InsertMany</code></li>
+</ul>
+<h2 id="-insert-">~ Insert方法 ~</h2>
+<h3 id="insert">單筆資料Insert</h3>
+<p><code>insert</code>函數可以將一個<code>document</code>建立到<code>collection</code>裡，我們這裡建立一個簡單的範例來看如何使用<code>insert</code>。</p>
+<p>首先我們的需求是要建立一份使用者清單<code>(collection)</code>，然後可以存放多筆使用者資料<code>(document)</code>，我們假設使用者資料如下。</p>
+<p>順到一提，<code>mongodb</code>自帶<code>javascript shell</code>，所以可以在<code>shell</code>執行<code>javascript</code> 一些語法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">user1</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
+	<span class="nx">age</span> <span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+	<span class="nx">bmi</span> <span class="o">:</span> <span class="mi">10</span>
+<span class="p">}</span>
+
+</code></pre></div><p>然後我們要將這筆<code>document</code>新增至<code>user</code>的<code>collection</code>裡。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">user1</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>新增完後，我們可以執行<code>find</code>指令，來查看<code>user</code>這<code>collection</code>中的資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>程式執行過程如下圖，而回傳值如下，代表成功新增一筆。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">WriteResult</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;nInserted&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161130-1.png" alt=""></p>
+<h3 id="insert1">多筆資料Insert</h3>
+<p><code>Insert</code>函數同時也可以執行多筆，但效能好不好下篇會有比較。其中注意<code>insert</code>有個參數<code>ordered </code>，<code>true</code>時代表如果其中一筆資料有問題，它就會停止下來，後面的資料都不會新增，而<code>false</code>時，則代表不會停下來，後面的資料會繼續新增，預設是<code>true</code>。</p>
+<p>我們用下面範例來看看使用方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user1</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
+	<span class="nx">age</span> <span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+	<span class="nx">bmi</span> <span class="o">:</span> <span class="mi">10</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="nx">count</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span>
+<span class="nx">users</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">count</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">users</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">user1</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">users</span><span class="p">,</span><span class="p">{</span><span class="nx">ordered</span><span class="o">:</span><span class="kc">false</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20161130-3.png" alt=""></p>
+<h2 id="-insertone-">~ InsertOne方法 ~</h2>
+<p><code>InsertOne</code>函數事實上用法和<code>insert</code>差不多，只有兩點不同，首先是回傳，<code>insertOne</code>會回傳你所建立的<code>document</code>的<code>ObjectId</code>，<code>ObjectId</code>是系統自動生成的，是唯一值，而第二點不同就如同它的名字，他只能一次新增一筆。</p>
+<p>我們來試試下列範例。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">user1</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
+	<span class="nx">age</span> <span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+	<span class="nx">bmi</span> <span class="o">:</span> <span class="mi">10</span>
+<span class="p">}</span>
+
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insertOne</span><span class="p">(</span><span class="nx">user1</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>從結果可以看到他回傳了該筆資料的<code>ObjectId</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161130-2.png" alt=""></p>
+<h2 id="-insertmany-">~ InsertMany方法 ~</h2>
+<p>InsertMany函數是<code>mongodb 3.2</code>版時新增的，用法也和<code>insert</code>函數差不多，但比較不同的是他的回傳值如下，他會回傳所有所建立的<code>documnet</code>的<code>ObjectId</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+   <span class="s2">&#34;acknowledged&#34;</span> <span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+   <span class="s2">&#34;insertedIds&#34;</span> <span class="o">:</span> <span class="p">[</span>
+      <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;562a94d381cb9f1cd6eb0e1a&#34;</span><span class="p">)</span><span class="p">,</span>
+      <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;562a94d381cb9f1cd6eb0e1b&#34;</span><span class="p">)</span><span class="p">,</span>
+      <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;562a94d381cb9f1cd6eb0e1c&#34;</span><span class="p">)</span>
+   <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div><p>以下為範例，來看看他的使用方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user1</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="nx">name</span> <span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
+	<span class="nx">age</span> <span class="o">:</span> <span class="mi">18</span><span class="p">,</span>
+	<span class="nx">bmi</span> <span class="o">:</span> <span class="mi">10</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="nx">count</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="nx">users</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">count</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">users</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">user1</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insertMany</span><span class="p">(</span><span class="nx">users</span><span class="p">,</span><span class="p">{</span><span class="nx">ordered</span><span class="o">:</span><span class="kc">false</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>執行過程與結果如下。</p>
+<p><img src="http://yixiang8780.com/outImg/20161130-4.png" alt=""></p>
+<h2 id="--">~ 結語 ~</h2>
+<p>這三種方法事實上用法大同小異，有時只差在回傳值，如果需要回傳<code>ObjectId</code>的話就用<code>insertMany</code>或<code>insertOne</code>，不需要的話就用<code>insert</code>就行了，對了還有這三個方法如果要新增到的<code>collection</code>不存在的話會自動幫你建立，至於速度方法我們將於下一篇做比較。</p>
+<p>P.S 不要愛上我的Kevin ~</p>
+<h2 id="--1">~ 參考資料 ~</h2>
+<p>*<a href="http://stackoverflow.com/questions/36792649/whats-the-difference-between-insert-insertone-and-insertmany-method"><a href="http://stackoverflow.com/questions/36792649/whats-the-difference-between-insert-insertone-and-insertmany-method">http://stackoverflow.com/questions/36792649/whats-the-difference-between-insert-insertone-and-insertmany-method</a></a></p>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/"><a href="https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/">https://docs.mongodb.com/v3.2/reference/method/db.collection.insertOne/</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.0/reference/write-concern/"><a href="https://docs.mongodb.com/v3.0/reference/write-concern/">https://docs.mongodb.com/v3.0/reference/write-concern/</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.2/reference/method/db.collection.insert/"><a href="https://docs.mongodb.com/v3.2/reference/method/db.collection.insert/">https://docs.mongodb.com/v3.2/reference/method/db.collection.insert/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b> 30-3之MongoDB新手村CRUD---新增</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-insert-">~ Insert方法 ~</a>
+      <ul>
+        <li><a href="#insert">單筆資料Insert</a></li>
+        <li><a href="#insert1">多筆資料Insert</a></li>
+      </ul>
+    </li>
+    <li><a href="#-insertone-">~ InsertOne方法 ~</a></li>
+    <li><a href="#-insertmany-">~ InsertMany方法 ~</a></li>
+    <li><a href="#--">~ 結語 ~</a></li>
+    <li><a href="#--1">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-10.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明<code>cursor</code>的用法以及一些<code>curosr</code>的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮<code>索引</code>情況下<code>find</code>的搜尋原理。</p>
+<ul>
+<li><code>Cursor</code>是啥</li>
+<li><code>Cursor</code>的方法</li>
+<li>搜尋的原理</li>
+</ul>
+<p><code>P.S</code> 三分之一囉，也代表基本的<code>mongodb</code>的<code>crud</code>要<code>Ending</code>囉。</p>
+<h2 id="-cursor--">~ Cursor 是啥 ~</h2>
+<p><code>cursor</code>是<code>find</code>時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是<code>Iterator 模式</code>的實作。</p>
+<p>除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前<code>insertMany</code>時，他會一次回傳全部的結果，<code>mongodb shell</code>就會自動一直輸出，結果看不到後來執行的東西。</p>
+<p>我們實際來看一下<code>cursor</code>的用法，首先我們還是要先新增一些資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>然後進行搜尋，並用一個變數<code>cursor</code>存放。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">cursor</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="k">while</span> <span class="p">(</span><span class="nx">cursor</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">obj</span> <span class="o">=</span> <span class="nx">cursor</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">print</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="s2">&#34; ~呼呼~&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>結行結果如下圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20161208-1.png" alt=""></p>
+<h2 id="-cursor--1">~ Cursor 的方法 ~</h2>
+<p><code>limit、skip、sort</code>這三個是很常用的<code>cursor</code>方法，主要功能就是限制、忽略、排序。</p>
+<h3 id="limit">limit</h3>
+<p>要限制<code>find</code>結果的數量可以用<code>limit</code>，不過注意<code>limit</code>是指定上限而不是指定下限，
+使用方法如下，<code>limit(10)</code>就是代表最多只回傳<code>10</code>筆資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div><h3 id="skip">skip</h3>
+<p>當你想要忽略前面幾筆，在開始回傳值時，就是可以用<code>skip</code>，使用方法如下，<code>skip(10)</code>，代表忽略前十筆，然後在開始回傳，不過注意『 <code>skip</code>如果數量很多時速度會變很慢 』。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div><h3 id="sort">sort</h3>
+<p><code>sort</code>它主要就是將<code>find</code>出的資料，根據條件，進行排序。</p>
+<p>例如假設我們有以下的資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">25</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">10</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">40</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">5</span><span class="p">}</span>
+</code></pre></div><p>然後我們希望可以根據<code>age</code>排序，由小到大，<code>{age:1}</code>代表由小到大，而<code>{age:-1}</code>則相反由大到小。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">age</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下~</p>
+<p><img src="http://yixiang8780.com/outImg/20161208-2.png" alt=""></p>
+<h3 id="heading">三個都可以一起使用</h3>
+<p>這三個條件我們都可以一起使用，例如，你希望尋找先忽略前10筆，並且數量限制為50筆，最後在進行排序，則指令如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="--">~ 搜尋的原理 ~</h2>
+<p>在不考慮有索引<code>(下一篇會開始說)</code>的條件下，<code>mongodb</code>會如下圖一樣開始搜尋。</p>
+<p><img src="http://yixiang8780.com/outImg/20161208-4.png" alt=""></p>
+<p>所以說如果你要找的值是放在資料的最後面，你找到的時間會最久，給個程式實驗看看。</p>
+<p>首先來個測試資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>來我們來測試看看找到<code>{&quot;x&quot; : 1}</code>和<code>{&quot;x&quot;: 999999}</code>速度會差多少，其中加<code>limit(1)</code>是因為只讓它尋找第一個，如果沒限制它會一直繼續找，看還有沒有符合的，這樣兩者速度是相等的，因為都是全文掃描，而<code>explain(&quot;executionStats&quot;)</code>是叫<code>mongodb</code>列出詳細的執行結果。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+
+<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">999999</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+</code></pre></div><p>首先看看下圖，是 <code>{ &quot;x&quot; : 1 }</code>的，可以看到執行時間幾乎沒有，而掃描的<code>document</code>之有<code>2</code>，也就是只找兩個<code>document</code>就找到<code>{ &quot;x&quot; :1 }</code>，而那兩個就是<code> { &quot;x&quot; : 0 } 和 { &quot;x&quot; : 1 }</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161208-5.png" alt=""></p>
+<p>然後我們在來看看 <code>{ &quot;x&quot; : 999999 }</code>的結果，執行時間<code>413ms</code>差距和<code>{&quot;x&quot;:1}</code>差距實在很大，而它幾乎要全部掃描完<code>document</code>才找到 <code>{ &quot;x&quot; : 999999 } </code>，難怪會著麼慢。</p>
+<p><img src="http://yixiang8780.com/outImg/20161208-6.png" alt=""></p>
+<h2 id="--1">~ 結語 ~</h2>
+<p>或許會有人問我，為什麼要把搜尋原理放在搜尋的最後才講，這個麻，因為突然想到…… ， 不過我個人是比較喜好先寫的出來，在來想它的原理，這種道理就像大學如果一開始先教資料庫的正規化，然後才開始學著麼用資料庫的道理是一樣 ~ 不過這也只是個人的想法 ~</p>
+<p>呼 ~ 今天鐵人賽總於進行了三分之一了，也終於將<code>mongodb</code>的基本<code>CRUD</code>都『簡單』的說明一下，記好是『簡單』，如果是『詳細』的話那大概30天都在寫它了，這樣太無趣了。</p>
+<h2 id="--2">~ 參考資料 ~</h2>
+<ul>
+<li><a href="http://www.mongoing.com/eshu_explain3"><a href="http://www.mongoing.com/eshu_explain3">http://www.mongoing.com/eshu_explain3</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.0/reference/method/js-cursor/"><a href="https://docs.mongodb.com/v3.0/reference/method/js-cursor/">https://docs.mongodb.com/v3.0/reference/method/js-cursor/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-cursor--">~ Cursor 是啥 ~</a></li>
+    <li><a href="#-cursor--1">~ Cursor 的方法 ~</a>
+      <ul>
+        <li><a href="#limit">limit</a></li>
+        <li><a href="#skip">skip</a></li>
+        <li><a href="#sort">sort</a></li>
+        <li><a href="#heading">三個都可以一起使用</a></li>
+      </ul>
+    </li>
+    <li><a href="#--">~ 搜尋的原理 ~</a></li>
+    <li><a href="#--1">~ 結語 ~</a></li>
+    <li><a href="#--2">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

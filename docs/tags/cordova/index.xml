@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cordova on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/cordova/</link>
+    <description>Recent content in Cordova on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Wed, 10 Feb 2016 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/cordova/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Cordova-Cordova Chrome Debug</title>
+      <link>https://mark-lin.com/posts/20160210/</link>
+      <pubDate>Wed, 10 Feb 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160210/</guid>
+      <description>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome</description>
+    </item>
+    
+  </channel>
+</rss>

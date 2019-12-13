@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-2之使用 Docker 來建構 MongoDB &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-2之使用 Docker 來建構 MongoDB | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-2之使用 Docker 來建構 MongoDB</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-01.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>由於網站上已經有很多<code>mongodb</code>的安裝方法，所以本篇將說明，如何使用<code>Docker</code>來建立<code>可使用mongodb的環境</code>，這也代表你的電腦只要有安裝<code>docker</code>，都可以使用<code>mongodb</code>，不再需要去找各種東西的安裝方法。</p>
+<h2 id="-step1-docker-">~ Step1. 安裝Docker ~</h2>
+<h3 id="mac">Mac安裝</h3>
+<p><a href="https://docs.docker.com/docker-for-mac/"><a href="https://docs.docker.com/docker-for-mac/">https://docs.docker.com/docker-for-mac/</a></a></p>
+<p><code>docker</code>最開始時還沒支援<code>mac</code>，而是需要用到其它方法來使用，但現在已經有出<code>docker-for-Mac</code>了，但注意雖然他是穩定版，但在<code>mac</code>自動休眠後，常常發生<code>Bad response from Docker engine</code>……，這目前好像沒啥解法，只能<code>reset docker</code> 或 重開機 ……</p>
+<h3 id="windows7-">Windows7 安裝</h3>
+<p><a href="https://www.docker.com/products/docker-toolbox"><a href="https://www.docker.com/products/docker-toolbox">https://www.docker.com/products/docker-toolbox</a></a></p>
+<p>雖然出了<code>docker-for-windows</code>但目前只支援<code>windows10和Server 2016</code>，windows7哭哭。</p>
+<h3 id="windows10-">Windows10 安裝</h3>
+<p><a href="https://docs.docker.com/docker-for-windows/"><a href="https://docs.docker.com/docker-for-windows/">https://docs.docker.com/docker-for-windows/</a></a></p>
+<p>懶講。</p>
+<h3 id="ubuntu-">Ubuntu 安裝</h3>
+<p><a href="https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html"><a href="https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html">https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html</a></a></p>
+<p>請參考這篇安裝。</p>
+<h2 id="-step2--dockercomposeyml-">~ Step2. 建立 docker-compose.yml ~</h2>
+<p>在某個檔案夾下建立<code>docker-compose.yml</code>，並且內容如下，然後在執行<code>docker-compose up</code>指令，它就自動幫你建立一個裝有<code>mongodb</code>的環境。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>services<span class="p">:</span><span class="w">
+</span><span class="w">  </span>mongo<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>mongo<span class="w">
+</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;27017:27017&#34;</span><span class="w">
+</span><span class="w">    </span>volumes_from<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>mongodata<span class="w">
+</span><span class="w">  </span>mongodata<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>tianon/<span class="kc">true</span><span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>/data/db<span class="w">
+</span></code></pre></div><p>下圖為在該檔案夾下執行<code>docker-compose up</code>結果。可以看到他建立一個port為27017並且資料存放在環境<code>/data/db</code>的<code>mongodb</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161129-1.png" alt="Alt text"></p>
+<h2 id="-step3-docker-container-mongodb-">~ Step3. 進入Docker Container裡操作 MongoDB ~</h2>
+<p>在執行完<code>docker-compose up</code>後，換到另一個<code>shell</code>，然後你可以執行<code>docker ps</code>指令來確定有<code>mongodb</code>的<code>container</code>有沒有執行，你可以把<code>container</code>想成為一個很小的<code>VM</code>。</p>
+<p>從下圖可知，執行<code>docker ps</code>後可看到你這台電腦有在執行的<code>container</code>，其中<code>mongo</code>就是我們剛剛執行的。</p>
+<p><img src="http://yixiang8780.com/outImg/20161129-2.png" alt="Alt text"></p>
+<p>接下來我們就執行<code>docker exec -ti 333fba82b57e bash</code>，其中<code>333fba82b57e</code>為<code>CONTAINER ID</code>，如下圖，你就進入到這個<code>container</code>中囉。</p>
+<p><img src="http://yixiang8780.com/outImg/20161129-3.png" alt="Alt text"></p>
+<p>最後在執行<code>mongo</code>你就可以執行<code>mongodb</code>的指令囉。</p>
+<p><img src="http://yixiang8780.com/outImg/20161129-4.png" alt="Alt text"></p>
+<h2 id="--">~ 結語 ~</h2>
+<p><code>docker</code>如果學會真的是很方便，如果是在<code>team</code>中，有新人來，不在需要和他說要安裝啥、安裝啥、然後卡到大喊學長救我，學長事實上會有點……，除非人真的很好，又或是他對你有意思。</p>
+<p>各位<code>+u^2</code>。</p>
+<h2 id="--1">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://joshhu.gitbooks.io/dockercommands/content/Containers/IntoContainers.html"><a href="https://joshhu.gitbooks.io/dockercommands/content/Containers/IntoContainers.html">https://joshhu.gitbooks.io/dockercommands/content/Containers/IntoContainers.html</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-2之使用 Docker 來建構 MongoDB</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-step1-docker-">~ Step1. 安裝Docker ~</a>
+      <ul>
+        <li><a href="#mac">Mac安裝</a></li>
+        <li><a href="#windows7-">Windows7 安裝</a></li>
+        <li><a href="#windows10-">Windows10 安裝</a></li>
+        <li><a href="#ubuntu-">Ubuntu 安裝</a></li>
+      </ul>
+    </li>
+    <li><a href="#-step2--dockercomposeyml-">~ Step2. 建立 docker-compose.yml ~</a></li>
+    <li><a href="#-step3-docker-container-mongodb-">~ Step3. 進入Docker Container裡操作 MongoDB ~</a></li>
+    <li><a href="#--">~ 結語 ~</a></li>
+    <li><a href="#--1">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

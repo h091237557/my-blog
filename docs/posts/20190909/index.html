@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2016-09-09.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明其它幾個搜尋方法，包含如何搜尋<code>document</code>中的陣列欄位的值以及運用正規表達式<code>regex </code>來進行搜尋。</p>
+<ul>
+<li>搜尋陣列內容</li>
+<li>正規表達式搜尋</li>
+</ul>
+<h2 id="--">~ 搜尋陣列內容 ~</h2>
+<p>這邊我們將要介紹幾個陣列搜尋符號<code>$all</code>、<code>$size</code>、<code>$slice</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="center">Tables</th>
+<th align="center">Are</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><code>$all</code></td>
+<td align="center">當需要尋找多個元素節合的<code>document</code>時，就可以使用它</td>
+</tr>
+<tr>
+<td align="center"><code>$size</code></td>
+<td align="center">當要尋找特定長度的陣列時，就可以用它~</td>
+</tr>
+<tr>
+<td align="center"><code>$slice</code></td>
+<td align="center">可以指定回傳的陣列指定的範例 ex. <code>10</code>就為前十條，<code>-10</code>就為後十條。</td>
+</tr>
+<tr>
+<td align="center"><code>$elemMatch</code></td>
+<td align="center">它會只針對陣列，進行多組<code>query</code>。</td>
+</tr>
+</tbody>
+</table>
+<p>假設情況我們<code>collection</code>中有下列<code>document</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">330</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="-fans--stevenmax-">我們這時想要尋找 fans 中同時有 steven、max 的網紅</h3>
+<p>我們這時就可以使用<code>$all</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$all&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，應該是只找到<code>mark、stanly</code>這兩個人。</p>
+<p><img src="http://yixiang8780.com/outImg/20161207-1.png" alt=""></p>
+<h3 id="-fans-">我們想要尋找 fans 總共有三位的網紅。</h3>
+<p>我們這時可以用<code>$size</code>，不過有點可惜的一件事，<code>$size</code>無法與搜尋條件(ex.<code>$gte</code>)使用，所以無法尋找3人以上之類的，通常要來實現這種需求就只能多加個欄位了。</p>
+<p>我們來看看<code>$size</code>的使用方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$size&#34;</span> <span class="o">:</span><span class="mi">3</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161207-2.png" alt=""></p>
+<h3 id="-mark--fans">我們希望尋找 mark 的第一個 fans。</h3>
+<p><code>$slice</code>主要功能就是將陣列切割只回傳你指定的範例。</p>
+<pre><code>db.user.find({&quot;name&quot;:&quot;mark&quot;},{&quot;fans&quot;:{&quot;$slice&quot;:1}})
+</code></pre><p><img src="http://yixiang8780.com/outImg/20161207-3.png" alt=""></p>
+<h3 id="-x--30--100-">我們想要尋找 x 中至少有一個值為大於 30 小於 100 的網紅。</h3>
+<pre><code>db.user.find({&quot;x&quot;:{&quot;$elemMatch&quot; : {&quot;$gt&quot; : 30 , &quot;$lt&quot; : 100}}})
+</code></pre><p><img src="http://yixiang8780.com/outImg/20161207-4.png" alt=""></p>
+<h2 id="--1">~ 正規表達式搜尋 ~</h2>
+<p><code>mongodb</code>當然有提供正規表達式的搜尋，如果你正規表達式夠強，那幾乎可以直接找到你所有想要的資料。</p>
+<p>測試資料如下，事實上和上面一樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">30</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+
+<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span><span class="p">,</span>
+	<span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span><span class="p">,</span>
+	<span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="mi">26</span><span class="p">,</span><span class="mi">330</span><span class="p">,</span><span class="mi">41</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="-name--s-">我們想要尋找 name 為 s 開頭的網紅。</h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="sr">/^s/</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，應該會尋找到<code>steven、stanly</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161207-5.png" alt=""></p>
+<h3 id="-fans--m-">我們想要尋找 fans 中有包含 m 開頭的網紅。</h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span> <span class="sr">/^m/</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，應該會尋找到<code>mark、steven、stanly</code>三位。</p>
+<p><img src="http://yixiang8780.com/outImg/20161207-6.png" alt=""></p>
+<h2 id="--2">~ 結語 ~</h2>
+<p>本章說明了陣列欄位的搜尋方法，同時也簡單的說明正規表達式的搜尋，這些方法都很重要，
+往後幾章時都還有可能繼續用到。</p>
+<p>P.S 終於復活囉……</p>
+<h2 id="--3">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/manual/reference/operator/query/elemMatch/#op._S_elemMatch"><a href="https://docs.mongodb.com/manual/reference/operator/query/elemMatch/#op._S_elemMatch">https://docs.mongodb.com/manual/reference/operator/query/elemMatch/#op._S_elemMatch</a></a></li>
+<li><a href="https://docs.mongodb.com/manual/reference/operator/query/all/"><a href="https://docs.mongodb.com/manual/reference/operator/query/all/">https://docs.mongodb.com/manual/reference/operator/query/all/</a></a></li>
+<li><a href="https://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/"><a href="https://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/">https://atedev.wordpress.com/2007/11/23/%E6%AD%A3%E8%A6%8F%E8%A1%A8%E7%A4%BA%E5%BC%8F-regular-expression/</a></a></li>
+<li><a href="https://docs.mongodb.com/getting-started/shell/query/"><a href="https://docs.mongodb.com/getting-started/shell/query/">https://docs.mongodb.com/getting-started/shell/query/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 搜尋陣列內容 ~</a>
+      <ul>
+        <li><a href="#-fans--stevenmax-">我們這時想要尋找 fans 中同時有 steven、max 的網紅</a></li>
+        <li><a href="#-fans-">我們想要尋找 fans 總共有三位的網紅。</a></li>
+        <li><a href="#-mark--fans">我們希望尋找 mark 的第一個 fans。</a></li>
+        <li><a href="#-x--30--100-">我們想要尋找 x 中至少有一個值為大於 30 小於 100 的網紅。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--1">~ 正規表達式搜尋 ~</a>
+      <ul>
+        <li><a href="#-name--s-">我們想要尋找 name 為 s 開頭的網紅。</a></li>
+        <li><a href="#-fans--m-">我們想要尋找 fans 中有包含 m 開頭的網紅。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--2">~ 結語 ~</a></li>
+    <li><a href="#--3">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
