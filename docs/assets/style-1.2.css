@@ -11,15 +11,6 @@ tr {
   border: 1px solid #444;
 }
 
-.logo {
-  color: #6e6e6e;
-  text-align: center;
-}
-
-.log > a {
-  font-size: 1em;
-}
-
 .tagline {
   font-size: 0.4em;
   color: #6e6e6e;
@@ -176,6 +167,24 @@ span {
   border: none !important;
 }
 
+.logo {
+  width: 9em;
+  -webkit-transform: rotate(-2.5deg);
+  transform: rotate(-2.5deg);
+  margin-bottom: 30px;
+}
+
+.log-main {
+  display: block;
+  text-align: center;
+}
+
+.logo-small {
+  font-size: 16px;
+  display: block;
+  text-align: center;
+}
+
 /* theme default*/
 
 html,
@@ -199,6 +208,7 @@ body {
 }
 #header {
   grid-area: header;
+  margin-bottom: 45px;
 }
 #main {
   grid-area: main;
