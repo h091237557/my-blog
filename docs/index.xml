@@ -49,6 +49,69 @@
     </item>
     
     <item>
+      <title>HTML5 之走在平行時空的 Web Worker</title>
+      <link>https://mark-lin.com/posts/20151001/</link>
+      <pubDate>Thu, 01 Oct 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20151001/</guid>
+      <description>什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪</description>
+    </item>
+    
+    <item>
+      <title>Jquery 的 Promise 之 when 與 then ( pipe )</title>
+      <link>https://mark-lin.com/posts/20150909/</link>
+      <pubDate>Wed, 09 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150909/</guid>
+      <description>在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務</description>
+    </item>
+    
+    <item>
+      <title>Javascript非同步編程的方法 - Promise</title>
+      <link>https://mark-lin.com/posts/20150908/</link>
+      <pubDate>Tue, 08 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150908/</guid>
+      <description>在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步</description>
+    </item>
+    
+    <item>
+      <title>Javascript非同步編程的方法 - Pub/Sub</title>
+      <link>https://mark-lin.com/posts/20150907/</link>
+      <pubDate>Mon, 07 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150907/</guid>
+      <description>發布與訂閱模式Pub/Sub它主要的概念為 : 定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者 在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 J</description>
+    </item>
+    
+    <item>
+      <title>Javascript 非同步編程的方法 - setTimeout</title>
+      <link>https://mark-lin.com/posts/20150906/</link>
+      <pubDate>Sun, 06 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150906/</guid>
+      <description>在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中</description>
+    </item>
+    
+    <item>
+      <title>Javascript 之 Event Driven</title>
+      <link>https://mark-lin.com/posts/20150905/</link>
+      <pubDate>Sat, 05 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150905/</guid>
+      <description>在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，</description>
+    </item>
+    
+    <item>
+      <title>Javascript 之單線程</title>
+      <link>https://mark-lin.com/posts/20150904/</link>
+      <pubDate>Fri, 04 Sep 2015 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20150904/</guid>
+      <description>首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑</description>
+    </item>
+    
+    <item>
       <title>物件導向系列菜單 11-『 泛型 ( Generics ) 』</title>
       <link>https://mark-lin.com/posts/20150826/</link>
       <pubDate>Wed, 26 Aug 2015 19:51:35 +0800</pubDate>

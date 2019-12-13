@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Javascript 之 Event Driven &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="js, javascript, 單線程, event driven" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Javascript 之 Event Driven | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Javascript 之 Event Driven</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/javascript' class="muted-link">
+  <span class="Label Label--gray">javascript</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2015-09-05.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在<code>Javascript單線程</code>該篇文章中有提到，大部份這種<code>單線程但可以處理非同步</code>的語言都有共同的特性那就是<code>事件驅動(Event Driven)</code>，它一般是由通過<code>事件循環(Event Loop)</code>與<code>事件隊列（Event Queue）</code>來實現。</p>
+<h2 id="--event-driven---event-queue-">事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ）</h2>
+<p>先來說說<code>事件驅動(Event Driven)</code>，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了<code>ENTER</code>之類的事件來決定，而不像一些如<code>批次程式設計（batch programming）</code>是由程式開發者來決定。</p>
+<p>我們來看看下面這張<code>Philip Roberts</code>在JSConf EU 2014講述Javascript event-loop時所出現的這圖。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/QRavWVfJS9aG4f18ccUe_eventloop.png" alt="eventloop.png"></p>
+<p>首先左上角為<code>V8 Javascript runtime</code>，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。</p>
+<blockquote>
+<p>one thread == one call stack == on thing at time</p>
+</blockquote>
+<p>其中<code>Stack</code>裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至<code>callback queue</code>裡尋找看看有沒有<code>callback</code>要執行。</p>
+<h2 id="javascript">Javascript程式碼單線程運行流程範例</h2>
+<p>我們將以下列這段簡單的程式碼來看Javascript的執行流程。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;hi&#34;</span><span class="p">)</span>
+	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="nx">cb</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;there&#34;</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">,</span><span class="mi">5000</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Mark Lin&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>首先為第一張圖，在還沒執行程式程式碼時，所有的<code>Stack</code>與<code>Task Quenu</code>都是空的。
+<img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/ImVy3COXT7SiCmPhKVmS_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>然後我們開始執行，首先載入這段JS，<code>Stack</code>會產生<code>main()</code>這個區塊，再執行到
+<code>console.log('hi')</code>時，也會在<code>Stack</code>產生<code>console.log('hi')</code>的區塊，並在Console印出<code>hi</code>，最後<code>console.log('hi')</code>工作完成，會從Stack中釋放出。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/QVm1NVIQScGig9Mo8YW3_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>執行到<code>setTimeoout</code>，<code>Stack</code>會產生<code>setTimeout</code>的區塊，並且會向api發送工作，然後繼續往下執行。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/MupUEwZ1TkaKLBmjUCnJ_ScreenClip.png" alt="ScreenClip.png"></p>
+<p>執行<code>console.log(&quot;Mark Lin&quot;)</code>，最後工作剛成後，<code>Stack</code>全部清空。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/gQgkweeTiUCEwU64ImLg_ScreenClip.png" alt="ScreenClip.png"></p>
+<p><code>Stack</code>全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將<code>CallBack cb</code>放置<code>Task Quenu</code>，並且由於<code>Stack</code>已清空，它會自動去<code>Task Quenu</code>尋找<code>Task</code>，這時發現了Cb然後就執行<code>consoel.log(&quot;there&quot;)</code>。</p>
+<p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/jzoItCQHQSYZMUvYY0je_ScreenClip.png" alt="ScreenClip.png"></p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=8aGhZQkoFbQ">https://www.youtube.com/watch?v=8aGhZQkoFbQ</a></li>
+<li><a href="https://vimeo.com/96425312">https://vimeo.com/96425312</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Javascript 之 Event Driven</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--event-driven---event-queue-">事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ）</a></li>
+    <li><a href="#javascript">Javascript程式碼單線程運行流程範例</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

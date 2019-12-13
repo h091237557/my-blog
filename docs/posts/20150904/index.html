@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Javascript 之單線程 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="js, javascript, 單線程" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Javascript 之單線程 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Javascript 之單線程</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/javascript' class="muted-link">
+  <span class="Label Label--gray">javascript</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2015-09-04.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>首先看看下面的程式碼，會發現永遠跑不出<code>So sad</code>，因為<code>Javascript為單線程</code>，雖然設定１秒過後isEnd為false，然後應該就直接跑出<code>So sad</code>，但因為被while一直佔住線程，因此永遠不會執行setTimeout事件，與console.log(&ldquo;So sad&rdquo;) 。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">isEnd</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+     <span class="k">while</span> <span class="p">(</span><span class="nx">isEnd</span><span class="p">)</span><span class="p">;</span>
+     <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;So sad&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>Javascript的單線程是指一個瀏覽器行程（process）只有一個JS的執行線程（但不代表瀏覽器是單線程），同一個時段內只會有一段代碼在執行，代表一次只能完成一件事，如果有多件事，就代表你要排隊，一件一件的處理，如果有一件事卡死或要做很久，就代表下面的事永遠不會執行，優點是簡單，環境單純，但缺點是如果其中一個事件很耗時間，會拖慢整個程式執行。</p>
+<p>Javascript將事件分為兩種<code>同步（Synchronous）</code>與<code>非同步（Asynchronous）</code>來解決單線程的缺點。</p>
+<h2 id="-synchronous-">同步（ Synchronous ）</h2>
+<p>就是一個完成換下一個，下一個完再換下下一個處理，程式執行順序與任務的排列順序是相同的，如下程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS">	<span class="err"></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>輸出結果。</p>
+<pre><code>	１
+	２
+	３
+</code></pre><h2 id="-asynchronous-">非同步（ Asynchronous ）</h2>
+<p>非同步為每一個任務都有一個<code>CallBack</code>，代表每個任務執行完後會執行該<code>CallBack</code>而不是執行下一個任務，因此程式執行順序與任務的排列順序是不相同的，下列以ajax為範例。</p>
+<pre><code>	console.log(1);
+	＄.ajax({
+		url:&quot;tests/1&quot;
+		success:function(data){
+			console.log(2);
+		}	
+	})
+	console.log(3);
+</code></pre><p>輸出結果。</p>
+<pre><code>	１
+	３
+	２
+</code></pre><p>也就是說，假設該ajax很耗時，你可以不用等到ajax執行完，才跑<code>console.log(3)</code>，而是先給它個callback等ajax執完後自動插入回線程中執行<code>console.log(2)</code>。</p>
+<h2 id="-javascript--">為什麼 Javascript 是單線程 ?</h2>
+<p><code>Javascript</code>最初做為瀏覽器腳本語言，主要用途在於和使用者戶動與操作DOM，也因此如果該語言為多線程語言就會發生不少混亂，例如<code>Javascript</code>有兩個線程，一個線程針對某個DOM節點新增某些內容，而另一線程為刪除該節點，那瀏覽器要以那個為主?所以為了避免這些亂，因此<code>Javascript</code>被設計為單線程語言。</p>
+<pre><code>HTML5提出了Web Worker的標準，web worker是運行在瀏覽器的後台，並且子線程完全由主線程控制，並且不得操作
+DOM，所以該標準並沒有影響javascript為單線程的本質。
+</code></pre>
+<h2 id="javascript--">Javascript 為單線程，又怎著非同步的執行呢 ?</h2>
+<p>通常這種語言為單線程，但又可以處理非同步的語言都有個一種共同點，那就是<code>事件驅動event driven）機制</code>，一般是由通過<code>事件循環(Event Loop)</code>與<code>事件隊列（Event Queue）</code>來實現。</p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html">http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html</a></li>
+<li><a href="http://sporto.github.io/blog/2012/12/09/callbacks-listeners-promises/">http://sporto.github.io/blog/2012/12/09/callbacks-listeners-promises/</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a></li>
+<li><a href="http://www.cnblogs.com/Mainz/p/3552717.html">http://www.cnblogs.com/Mainz/p/3552717.html</a></li>
+<li><a href="https://vimeo.com/96425312">https://vimeo.com/96425312</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Javascript 之單線程</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-synchronous-">同步（ Synchronous ）</a></li>
+    <li><a href="#-asynchronous-">非同步（ Asynchronous ）</a></li>
+    <li><a href="#-javascript--">為什麼 Javascript 是單線程 ?</a></li>
+    <li><a href="#javascript--">Javascript 為單線程，又怎著非同步的執行呢 ?</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Jquery 的 Promise 之 when 與 then ( pipe ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="js, javascript, promise, jqeury" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Jquery 的 Promise 之 when 與 then ( pipe ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Jquery 的 Promise 之 when 與 then ( pipe )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/javascript' class="muted-link">
+  <span class="Label Label--gray">javascript</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2015-09-09.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在這篇文章中，我們將來說明一下<code>when</code>與<code>then(pipe)</code>的用法，這兩個方法都算是<code>promise</code>衍伸技術。</p>
+<h2 id="deferredwhen">deferred.when</h2>
+<p>在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用<code>when</code>來完成這種類型的工作。</p>
+<p><code>When</code>相當與執行<code>Promise</code>情況的<code>AND</code>。也就是說一旦給定的所有<code>Promise</code>均已執行後，就立即執行<code>when</code>方法產生的<code>Promise</code>對象。而一旦任一個<code>Promise</code>被拒絕，則立即拒絕<code>when</code>產生的<code>Promise</code>。</p>
+<p>下列程式碼為<code>when</code>的基本使用方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS">	<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test1&#39;</span><span class="p">)</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test2&#39;</span><span class="p">)</span><span class="p">;</span>
+	
+	<span class="nx">$</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="nx">promise1</span><span class="p">,</span><span class="nx">promise2</span><span class="p">)</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+		<span class="c1">//promise1與promise2都完成時會執行的事情。
+</span><span class="c1"></span>	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>如果要取得<code>promise1</code>與<code>promise2</code>的回傳參數則如下程式碼，其中<code>arg1</code>為<code>promise1</code>的回傳參數，而<code>arg2</code>為<code>promise2</code>的回傳參數。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test1&#39;</span><span class="p">)</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test2&#39;</span><span class="p">)</span><span class="p">;</span>
+	
+	<span class="nx">$</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="nx">promise1</span><span class="p">,</span><span class="nx">promise2</span><span class="p">)</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">)</span><span class="p">{</span>
+		<span class="c1">//promise1與promise2都完成時會執行的事情。
+</span><span class="c1"></span>	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>##d eferred.then(.pipe)</p>
+<p>從<code>Jquery1.8</code>開始，官網建議將<code>deferred.pipe()</code>由<code>deferred.then()</code>替代。</p>
+<p><code>deferred.then()</code>方法的回傳可以做以下兩件事。</p>
+<ul>
+<li>如果<code>then</code>回傳為<code>promise</code>物件，則<code>then</code>生成的<code>promise</code>物件會模仿這個<code>promise</code>物件。</li>
+<li>如果<code>then</code>回傳為<code>非promise</code>物件，則<code>then</code>生成的<code>promise</code>物件會立即因該回傳值而執行、拒絕或通知，取決於<code>then</code>那個初使<code>promise</code>發生什麼事了。</li>
+</ul>
+<p>來看看使用情況，假設某<code>api</code>回傳發生錯誤時，不是回傳<code>http status XXX</code>，而是回傳個<code>Json</code>如<code>{error:true}</code>之類的，由於<code>promise</code>是在<code>http</code>請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在<code>done</code>裡。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">)</span>
+  	<span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+   	   	<span class="k">if</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+       	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span><span class="p">;</span>
+    	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
+        	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Success&#39;</span><span class="p">)</span><span class="p">;</span>
+      	<span class="p">}</span>
+	<span class="p">}</span><span class="p">)</span>
+	<span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+   		 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>上述程式碼，不是個好的解決方法，非得要在<code>done</code>做兩次判斷，因此我們這時就可以使用<code>.then</code>，來過濾<code>Promise</code>，如下程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">getData</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span>
+			<span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">;</span>
+		<span class="k">else</span>
+		   <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
+		<span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">;</span>	
+
+	<span class="nx">getData</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Success&#34;</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Fail&#34;</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>這樣在<code>done</code>就不需要在進行兩次判斷，其中<code>then</code>的回傳值為<code>promise</code>，因此該<code>promise</code>會模仿<code>$.get('/getData')</code>的<code>promise</code>。</p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/">https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/</a></li>
+<li><a href="http://www.css88.com/jqapi-1.9/deferred.pipe/">http://www.css88.com/jqapi-1.9/deferred.pipe/</a></li>
+<li><a href="http://www.dotblogs.com.tw/a802216/archive/2013/10/02/122225.aspx">http://www.dotblogs.com.tw/a802216/archive/2013/10/02/122225.aspx</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Jquery 的 Promise 之 when 與 then ( pipe )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#deferredwhen">deferred.when</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

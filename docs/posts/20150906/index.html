@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Javascript 非同步編程的方法 - setTimeout &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="js, javascript, settimeout" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Javascript 非同步編程的方法 - setTimeout | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.1.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="log">
+      <a class="UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Javascript 非同步編程的方法 - setTimeout</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/javascript' class="muted-link">
+  <span class="Label Label--gray">javascript</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-13. Published at: 2015-09-06.">
+        
+          Lastmod: 2019-12-13
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在<code>Javascript單線程</code>與<code>Javascript之Event Driven</code>這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。</p>
+<h2 id="settimeout">setTimeout基本用法</h2>
+<p>SetTimeout為Javascript的原生函數，主要的用法為<code>在一個指定的延遲時間後執行某個函數</code>。</p>
+<p>下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&ldquo;Hello&rdquo;)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS">	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>
+	<span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被<code>While</code>阻塞，<code>setTimeout</code>就不會在1秒後執行，而是等while執行完在執行。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">;</span> 
+	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">;</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Time elapsed:&#39;</span><span class="p">,</span> <span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span><span class="p">,</span> <span class="s1">&#39;ms&#39;</span><span class="p">)</span><span class="p">;</span> 
+	<span class="p">}</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span> <span class="o">-</span> <span class="nx">start</span> <span class="o">&lt;</span> <span class="mi">2000</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<span class="c">&lt;!--</span> <span class="nx">tas</span> <span class="o">--</span><span class="o">&gt;</span>
+	<span class="nx">輸出結果</span><span class="err">：</span>
+	<span class="nx">Time</span> <span class="nx">elapsed</span><span class="o">:</span> <span class="mi">2002</span> <span class="nx">ms</span>
+<span class="o">--</span><span class="o">-</span>
+</code></pre></div><h2 id="settimeout--0--">setTimeout ( 0 ) 的意思</h2>
+<p>SetTimeout為<code>在一個指定的延遲時間後執行某個函數</code>，所以如果帶入<code>(0)</code>，則是否意味馬上執行的意思?來看下面程式碼。</p>
+<pre><code>setTimeout(function(){
+   console.log(&quot;Hello&quot;);
+},0)
+console.log(&quot;Mark&quot;);
+</code></pre>
+<!-- raw HTML omitted -->
+<pre><code>執行結果為：
+Mark
+Hello
+</code></pre>
+<p>嚴來來說不是立即執行，而是<code>立即排進Task Quenu</code>等待執行，等<code>Call Stack</code>空時它會至<code>Task Quenu</code>尋找工作，因此執行結果才為<code>Mark Hello</code>。</p>
+<p>如果不知道<code>Task Quenu</code>或<code>Call Stack</code>可至該篇看<code>Event Driven</code>的觀念。
+<a href="http://marklin-blog.logdown.com/posts/294474-javascript-event-driven">Javascript Event Driven</a></p>
+<hr>
+<p>## setTimeout非同步的範例</p>
+<p>首先看看下面的程式碼，<code>doSomething</code>函數需要等到取得到<code>data</code>才執行，但<code>getData</code>會執行很久，但下面的<code>doSomething1</code>與<code>2</code>不需要<code>data</code>就可以執行，所以這時這種寫法就會很浪費時間。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">getData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">doSomething</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+	
+	<span class="nx">doSomething1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span class="nx">doSomething2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>所以我們將<code>getData</code>fucntion修改為如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">function</span> <span class="nx">getData</span><span class="p">(</span><span class="nx">callBack</span><span class="p">)</span><span class="p">{</span>			
+		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+			<span class="c1">//getData要執行的程式碼
+</span><span class="c1"></span>			
+			<span class="nx">callBack</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+</code></pre></div><p>然後我們整段程式碼就可以改成。</p>
+<pre><code>	getData(doSomething);
+	doSomething1();
+	doSomething2();
+</code></pre><p>上面這種寫法，我們把同步操作轉變成非同步操作，getData不會阻塞住整個線程，以上就是其種一種的非同步的寫法，但這種寫法有個缺點就是很容易變成CallBack地獄。</p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a></li>
+<li><a href="http://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00CYM0Z8Y">http://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00CYM0Z8Y</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Javascript 非同步編程的方法 - setTimeout</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#settimeout">setTimeout基本用法</a></li>
+    <li><a href="#settimeout--0--">setTimeout ( 0 ) 的意思</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
