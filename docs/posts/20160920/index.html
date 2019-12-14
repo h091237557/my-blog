@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-20之MongoDB運用研究---PO文情境模擬(3) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-20之MongoDB運用研究---PO文情境模擬(3) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-20之MongoDB運用研究---PO文情境模擬(3)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-20.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分析者的角度，使用聚合工作<code>Aggregate framework</code>與<code>MapReduce</code>來進行一些分析案例，一樣為了怕使用者忘記需求，我們還是再再貼一次~~</p>
+<h2 id="heading">~需求說明~</h2>
+<p>我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，所以我們簡單的先列出我們可以用的功能。</p>
+<ol>
+<li>使用者可以簡單的新增發文，並且會存放<code>Text</code>、<code>Date</code>、<code>Author</code>、<code>likes</code>、<code>Message</code>。(完成)</li>
+<li>建立<code>100</code>萬筆模擬<code>po</code>文。(完成)</li>
+<li>使用者可以刪除發文。(完成)</li>
+<li>使用者可以對自已的po文進行更新。(完成)</li>
+<li>使用者可以進行留言和刪除留言。(完成)</li>
+<li>使用者可以<code>like</code>發文。(完成)</li>
+<li>使用者可以根據<code>Text</code>、<code>Author</code>、<code>likes</code>、<code>Date</code>進行搜尋。(完成)</li>
+<li>管理者可以速行分析個案(已經想到囉如下)</li>
+</ol>
+<h2 id="-8">~分析個案 (需求8)~</h2>
+<ol>
+<li>Boss希望可以知道最多人留言的貼文，並且該貼文中前三位留言最熱絡的使用者，並計算留言次數。</li>
+<li>Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~</li>
+</ol>
+<p>嗯……才兩個好像有點少，但你往下來就知道可以寫很多了，都是要動腦想三下著麼做的啊……</p>
+<h3 id="1-boss">1. Boss希望可以知道最多人留言的貼文，並且知道該貼文中，前三位留言最熱絡的使用者，並計算留言次數。</h3>
+<p>首先先來解決這需求，仔細看看不太難，將需求拆解成如下步驟就好。</p>
+<ol>
+<li>將每筆貼文的留言數量計算出來，並存放在<code>messagesCount</code>這變數中。</li>
+<li>根據<code>messagesCount</code>進行排序。</li>
+<li>將排序好的資料取第一個。</li>
+<li>在將<code>messages</code>中的<code>author</code>來進行分組統計，並將結果存放在<code>count</code>中。</li>
+<li>在針對<code>count</code>進行排序，取前三名。</li>
+<li>交給Boss看……</li>
+</ol>
+<p>根據以上的步驟我們使用<code>mongodb</code>的<code>aggreagate framework</code>來寫出下列程式碼，啊咧啊咧…… 著麼只寫到步驟2的排序…… ?</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
+<span class="p">{</span>
+	<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$size&#34;</span> <span class="o">:</span> <span class="s2">&#34;$messages&#34;</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span>
+	<span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>因為<code>GG</code>了，咱們的排序所耗用的記憶體超過<code>mongodb</code>的限制囉，請看下圖~</p>
+<p><img src="http://yixiang8780.com/outImg/20161220-1.png" alt=""></p>
+<p>網路上有人推薦說，在建立<code>document</code>時就多建立一個欄位，來存放它的數量，然後直接建立索引，但在我們這邊是會<code>GG</code>掉的，因為我們的留言隨時都在變，而且沒新增或刪除個留言都還要去對那個存放欄位進行更新，而且還有索引，這樣會讓咱們的效能大大的下降，所以在這應用中否定這選項~</p>
+<p>那要著麼辦呢 ? 後來又查到一個方法，那就是<code>allowDiskUse </code>參數，<code>mongodb</code>有個限制在<code>Pipeline</code>的階段中，規定記憶體只能用<code>100mb</code>，不然就會跳出上圖的錯誤，但如果將<code>allowDiskUse</code>設定為<code>true</code>，則它多出來的資料暫存寫入到臨時的<code>collection</code>，只是會不會有什麼問題或壞處，官網上都沒特別提到……</p>
+<p>繼續正題，然後解決完這個<code>sort</code>的問題後，我們就可以使取得貼文的留言數最多的貼文。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
+<span class="p">[</span>
+<span class="p">{</span>
+<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$size&#34;</span> <span class="o">:</span> <span class="s2">&#34;$messages&#34;</span> <span class="p">}</span><span class="p">,</span><span class="s2">&#34;messages&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$limit&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="p">]</span><span class="p">,</span>
+ <span class="p">{</span> <span class="nx">allowDiskUse</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>咱們再繼續往下寫，取得了最多留言數的貼文後，我們要繼續來尋找留言最多的人是那位，我們先使用<code>$unwind</code>將<code>messages</code>的陣列欄位，拆分成多個<code>document</code>，以方便我們用來<code>group</code>，再下來我們就可以根據<code>messages</code>的<code>author</code>來進行分組，並且計算每一組的數量存放至<code>count</code>來欄位。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
+<span class="p">[</span>
+<span class="p">{</span>
+<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$size&#34;</span> <span class="o">:</span> <span class="s2">&#34;$messages&#34;</span> <span class="p">}</span><span class="p">,</span><span class="s2">&#34;messages&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;messagesCount&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$limit&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$unwind&#34;</span> <span class="o">:</span> <span class="s2">&#34;$messages&#34;</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$group&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;$messages.author&#34;</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$sum&#34;</span> <span class="o">:</span><span class="mi">1</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span>
+<span class="p">]</span><span class="p">,</span>
+ <span class="p">{</span> <span class="nx">allowDiskUse</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>最後咱們在來進行排序 ~ 就完成這需求囉 ~ 看看下圖誰留言數最多，嗯最多留言的是一位叫<code>ian</code>的大大，我的<code>fans</code>之一。</p>
+<p><img src="http://yixiang8780.com/outImg/20161220-2.png" alt=""></p>
+<p>想複習的請參考小的聚合章節~謝謝，還有我要更正一句話，在一開始這個需求時，有說過這句話<code>仔細看看不太難</code>，對不起事實上我想了很久……。</p>
+<blockquote>
+<p><a href="http://ithelp.ithome.com.tw/articles/10185952">30-14之聚合(1)&mdash;Aggregate Framework的哩哩扣扣</a></p>
+<p><a href="http://ithelp.ithome.com.tw/articles/10186033">30-15之聚合(2)&mdash;Pipeline武器庫</a></p>
+</blockquote>
+<h3 id="2-boss---">2. Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~</h3>
+<p>嗯…這鬼問題 ~ 我腦袋著麼想都想不到如何用<code>aggregate framework</code>來解決，所以我只能使用<code>MapReduce</code>來解了。</p>
+<p>先來想想要著麼解，首先假設我們的貼文大概長這樣。</p>
+<pre><code>{ &quot;text&quot; : &quot;This is a pen&quot;},
+{ &quot;text&quot; : &quot;This is an apple&quot;}
+</code></pre><p>然我們想想<code>map</code>出來的結果要啥樣，它需要個<code>Key</code>和<code>Vales</code>，所以它的<code>map</code>出的結果應該要長成這樣。</p>
+<pre><code>&quot;this&quot; : [1,1],
+&quot;is&quot; : [1,1],
+&quot;a&quot; : [1],
+&quot;an&quot; : [1],
+&quot;pen&quot; : [1],
+&quot;appale&quot; : [1]
+</code></pre><p>然後我們<code>reduces</code>出來後的結果應該是降。</p>
+<pre><code>{ &quot;_id&quot; : &quot;this&quot;, &quot;value&quot; : 2 }
+{ &quot;_id&quot; : &quot;is&quot;, &quot;value&quot; : 2 }
+{ &quot;_id&quot; : &quot;a&quot;, &quot;value&quot; : 1 }
+{ &quot;_id&quot; : &quot;an&quot;, &quot;value&quot; : 1 }
+{ &quot;_id&quot; : &quot;pen&quot;, &quot;value&quot; : 1 }
+{ &quot;_id&quot; : &quot;apple&quot;, &quot;value&quot; : 1 }
+</code></pre><p>想好<code>map</code>與<code>reduces</code>的結果後，我們就可以開始寫程式碼囉，首先是<code>map</code>函數，它會將每個<code>text</code>裡的句子分解出一個單字一個單，並且以陣列型式儲放，然後再建立<code>key</code>與<code>value</code>，就如同我們上面所想的那樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>  
+	<span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+  	<span class="kd">var</span> <span class="nx">words</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&#34; &#34;</span><span class="p">)</span><span class="p">;</span>  	
+  	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  		<span class="nx">emit</span><span class="p">(</span><span class="nx">words</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+  	<span class="p">}</span>    
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>然後是<code>reduces</code>函數，它會將<code>map</code>產生出來的<code>key</code>與<code>values</code>進行加總的組裝，完成後也會如同我們上面所預期的那樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">reduce</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">values</span> <span class="p">)</span> <span class="p">{</span>    
+    <span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>    
+    <span class="nx">values</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span> <span class="p">{</span>            
+        <span class="nx">count</span> <span class="o">+=</span><span class="nx">v</span><span class="p">;</span>    
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">count</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>都準備好後，我們來執行<code>mapreduce</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span><span class="nx">map</span><span class="p">,</span> <span class="nx">reduce</span><span class="p">,</span> <span class="p">{</span><span class="nx">out</span><span class="o">:</span> <span class="s2">&#34;wordCount&#34;</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>最後在看看結果。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">result</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">value</span><span class="o">:</span><span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div><p>結果如下，嗯……但是有沒有感覺這些單字很眼熟，嗯沒錯幾乎是我們模擬的句子裡的單字，<code>This</code>啊~或是<code>is</code>之類的，但這些單字都沒啥用。</p>
+<p><img src="http://yixiang8780.com/outImg/20161220-3.png" alt=""></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">sentences</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="s2">&#34;This is {{ an_adjective }} people.&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;This sentence has {{ a_noun }} and {{ an_adjective }} {{ noun }} in it.&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;It is very {{ adjective }} event&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;Stop ~ you are a {{ noun }}&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;This is {{ adjective }} {{ noun }}.&#34;</span>
+<span class="p">]</span>
+</code></pre></div><p>由於以上找到的單字都沒啥用處，所以我們將講<code>map</code>那，過濾掉那些我們預設的單字，
+我們將<code>map</code>函數修改成如下，它會自動跳過我們預設的單字</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>  
+	<span class="kd">var</span> <span class="nx">text</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+  	<span class="kd">var</span> <span class="nx">words</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">toLowerCase</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&#34; &#34;</span><span class="p">)</span><span class="p">;</span> 
+  	<span class="kd">var</span> <span class="nx">filterWords</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&#34;this&#34;</span><span class="p">,</span><span class="s2">&#34;is&#34;</span><span class="p">,</span><span class="s2">&#34;people.&#34;</span><span class="p">,</span><span class="s2">&#34;sentence&#34;</span><span class="p">,</span><span class="s2">&#34;has&#34;</span><span class="p">,</span><span class="s2">&#34;and&#34;</span><span class="p">,</span><span class="s2">&#34;in&#34;</span><span class="p">,</span><span class="s2">&#34;it.&#34;</span><span class="p">,</span><span class="s2">&#34;very&#34;</span><span class="p">,</span><span class="s2">&#34;event&#34;</span><span class="p">,</span><span class="s2">&#34;stop&#34;</span><span class="p">,</span><span class="s2">&#34;you&#34;</span><span class="p">,</span><span class="s2">&#34;are&#34;</span><span class="p">,</span><span class="s2">&#34;a&#34;</span><span class="p">,</span><span class="s2">&#34;an&#34;</span><span class="p">,</span><span class="s2">&#34;~&#34;</span><span class="p">,</span><span class="s2">&#34;of&#34;</span><span class="p">,</span><span class="s2">&#34;it&#34;</span><span class="p">]</span><span class="p">;</span>
+  	
+  	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">words</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  		<span class="k">if</span><span class="p">(</span><span class="nx">filterWords</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">words</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="p">{</span>
+  		  	<span class="nx">emit</span><span class="p">(</span><span class="nx">words</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+  		<span class="p">}</span>
+  	<span class="p">}</span>    
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>我們來看看執行結果，嗯嗯好多了，然後我們可以看到最熱門的單詞是<code>pair</code>……這啥鬼~不過也只好認囉~畢竟這也只是模擬資料。</p>
+<p><img src="http://yixiang8780.com/outImg/20161220-4.png" alt=""></p>
+<p>本需求可以參考小的所寫的<code>mapReduces</code>的章節來回憶回憶</p>
+<blockquote>
+<p><a href="http://ithelp.ithome.com.tw/articles/10186195">30-16之聚合(3)&mdash;潮潮的MapReduce</a></p>
+</blockquote>
+<h2 id="heading1">~結語~</h2>
+<p>呼呼~~模擬應用就到這暫時結束囉，也都將之前學習的東西全部都複習過囉，接下來咱們又要繼續學習新東西囉~哼哼~接下來學的東西事實上才和大數據有關~呼呼~</p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-20之MongoDB運用研究---PO文情境模擬(3)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">~需求說明~</a></li>
+    <li><a href="#-8">~分析個案 (需求8)~</a>
+      <ul>
+        <li><a href="#1-boss">1. Boss希望可以知道最多人留言的貼文，並且知道該貼文中，前三位留言最熱絡的使用者，並計算留言次數。</a></li>
+        <li><a href="#2-boss---">2. Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">~結語~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

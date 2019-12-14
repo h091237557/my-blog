@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-26之MongoDB運用研究---股價應用模擬(1) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在F|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-26之MongoDB運用研究---股價應用模擬(1) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在F|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-26之MongoDB運用研究---股價應用模擬(1)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-26.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在<code>Fintech</code>幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。</p>
+<h2 id="--">~ 情景說明 ~</h2>
+<p>二哈是一位二貨，他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二</p>
+<p><img src="http://yixiang8780.com/outImg/20161226-2.jpeg" alt=""></p>
+<p>回歸主題，二哈的需求只是分析，所以我們再分析前，我們要先建立好資料，通常能分析的資料量是越大越好，所以我們這邊一定會需要用到分片，並且我們先從最基本的股票資料k線與成交量來建立資料，首先我們的資料結構應該如下。</p>
+<pre><code>{
+股價代碼	&quot;code&quot; : 1011,
+日期		&quot;date&quot; : 20160101,
+開盤價  	&quot;open&quot; : 100,
+最高價  	&quot;height&quot; : 100,
+收盤價  	&quot;close&quot; : 90,
+最低價  	&quot;low&quot; : 80,
+成交量  	&quot;volume&quot; : 1000
+}
+</code></pre><p>然後我們來正試開始吧。</p>
+<h2 id="-step-1--">~ Step 1. 架構分析 ~</h2>
+<h3 id="heading">索引架構思考</h3>
+<p>首先我們根據以上的資料結構可知，我們該主題目前不太需要考慮到正規化與反正規化的問題，那接下來我們來思考看看<strong>索引</strong>的問題，但那蠢二哈只想到分析但不知道分析啥，我們來幫他想想。</p>
+<p>我們來一條一條列出，我們想到的需求。</p>
+<ul>
+<li>二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。</li>
+<li>二哈想尋找出該股票某段區間的資料。</li>
+<li>二哈想找出當日交易最熱絡的股票。</li>
+<li>二哈想找出某日價格波動最高的股票。</li>
+</ul>
+<p>細細想一下，大部份的使用情境都一定需要時間，而且是個範圍，然後有時在搭配某個股票，所以我們基本上會針對<code>date</code>和<code>code</code>來考慮建立索引，那要選用那種索引呢，目前有三種選擇我們先列出。</p>
+<pre><code>第一種
+{ &quot;date&quot; : 1 , &quot;code&quot; : 1 }
+
+第二種
+{ &quot;code&quot; : 1 , &quot;date&quot; : 1 }
+
+第三種
+{ &quot;code&quot; :1 },{ &quot;date&quot; :1 } 
+</code></pre><p>還記得<code>{ &quot;sortKey&quot; : 1 , &quot;queryKey&quot; : 1 }</code>這個複合索引時有提到的東西麻，很常用來排序的請放前面，日期和股價代碼，理論上來說日期會很常用到排序，所以我們第二種索引可以刪除。</p>
+<p>那第一種與第三種要選那種? 首先我們要先知道第三種佔的空間一定會比較多，然後我們在思考一件事，我們股價代碼會很常用到排序麻，如果沒有那我們選用第一種就好，嗯的確沒有，所以我們目前『暫定』選第一種<code>{ &quot;date&quot; : 1 , &quot;code&quot; : 1 }</code>為索引。</p>
+<h3 id="heading1">分片的片鍵選擇</h3>
+<p>接下來我們要來決定我們的分片依據要選誰 ? 首先我們先複習一下昨天才說過的良好的片鍵特性。</p>
+<ul>
+<li>容易分割片鍵</li>
+<li>高隨機性的片鍵</li>
+<li>可以指向單個分片的片鍵</li>
+</ul>
+<p>但以上三點都符合不太可能，所以我們這時要先思考我們的需求用最多的是啥 ? 答案是搜尋，
+就是所謂的讀取操作，然後我們在搜尋時最常使用的欄位是誰?<code>code</code>與<code>date</code>，那是單一搜尋較多還是範圍搜尋，應該是範圍，知道了以上的需求我們來想想我們的片鍵要選誰?</p>
+<p>首先第一候選人<code>code</code>，先想一下它有沒有符合上面三個特性的其中一個，容易分割的片鍵，嚴格來說一般般，不過以基數來看也算充足，應該是還行~ 高隨機就一定沒有，而最後一個可以指向單個分片，嗯有~因為當你有尋找某個股票時它就一定會去所屬的分片找，所以嚴格來說它第一和第三個特性都有符合。</p>
+<p>再來是第二候選人<code>date</code>，首先是容易分割片鍵，嗯這一定有，第二個高隨機性，沒有而且它是個升序片鍵，第三點指向單個分片這點也算有，所以嚴格來說它第一和第三個特性也都有符合。</p>
+<p>兩個候選人第一和第三都符合，但有點要注意，<code>date</code>這種候選人，它是升序片鍵，也就是說接下來新增的資料都會塞在最後面的<code>chunk</code>，所以這種類型的經常會導致資料均衡壓力會很重，所以暫不考慮它。</p>
+<p>在去除了<code>date</code>，就選擇<code>code</code>了嗎 ? NO~NO~ 還有一個東西需要考慮，我們要用這兩個建立複合片鍵嗎 ?</p>
+<p>說實話適合，它就需要大量讀取範圍時很適合使用，但我們目前的欄位好像都沒辦法達至它的要求，複合片鍵要求第一個片鍵是基數較低的欄位，無論是<code>code</code>或<code>date</code>都不適合，所以我們就先取掉這選項。</p>
+<p>根據以上種種原因，我們先暫定分片為<code>code</code>，除非後來有根據可以換別的。</p>
+<h2 id="-step-2--">~ Step 2. 建立模擬資料 ~</h2>
+<p>首先一樣看看我們的<code>pack.json</code>，我們一樣需要使用<code>mongodb</code>而另一個需要使用的<code>randgen</code>，我要用它產生出常態分配股價，這邊是<a href="https://github.com/h091237557/30-MongoDB/blob/master/Test/30-26/test.js">全部的程式碼</a>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+  <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;30-26&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;version&#34;</span><span class="o">:</span> <span class="s2">&#34;1.0.0&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;description&#34;</span><span class="o">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;main&#34;</span><span class="o">:</span> <span class="s2">&#34;index.js&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;scripts&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;test&#34;</span><span class="o">:</span> <span class="s2">&#34;echo \&#34;Error: no test specified\&#34; &amp;&amp; exit 1&#34;</span>
+  <span class="p">}</span><span class="p">,</span>
+  <span class="s2">&#34;author&#34;</span><span class="o">:</span> <span class="s2">&#34;&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;license&#34;</span><span class="o">:</span> <span class="s2">&#34;ISC&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;dependencies&#34;</span><span class="o">:</span> <span class="p">{</span>
+    <span class="s2">&#34;mongodb&#34;</span><span class="o">:</span> <span class="s2">&#34;^2.2.16&#34;</span><span class="p">,</span>
+    <span class="s2">&#34;randgen&#34;</span><span class="o">:</span> <span class="s2">&#34;^0.1.0&#34;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div><p>我們這邊簡單說一下常態分配產生股價的方法，常態分配是統計學上，用來描述某些群體的機率分配，我們來看看下面這張圖，圖片來自於<code>wiki</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161226-1.png" alt=""></p>
+<p>上面這張圖主要就是說某些群體，它的值會有<code>６８％</code>在深藍的範圍內，也就是所謂的一個標準差內，而有<code>９５％</code>的機率是會在二個標準差以內。</p>
+<p>然後我們看一下，我們上面使用的<code>lib``randgen</code>來看看他的用法。</p>
+<pre><code>num = rnorm(2, 5);
+</code></pre><p>第一個參數為平均數，第二個參數為標準差，也就是說它有68%的機率，<code>num</code>會座落在<code>2-5 ~ 2+5 </code>之間也就是<code>-3~7</code>之間，而有95％的機率會落在<code>2-5*2 ~ 2+5*2</code>也就是<code>-8~12</code>之間。</p>
+<p>上面大概說明完常態分配後，我們接下來就可以來看一下我們模擬股價的程式碼，不算太難，其中該方法的第一個參數為你想模擬幾天的資料，而第二個參數是上一個股標的結果，代入繼續丟資料進這個陣列中，這樣我們比較好丟到<code>mongodb</code>中。</p>
+<p>然後我來說一下幾個值，首先是<code>price</code>，它是每天要用常態時的平均數，我們只有在第一天時會先隨機產生個價格，然後接下來的每天我們的<code>price</code>會改用前一天的收盤價，然後再用它來產生出當天的其它價格。而至於<code>sd</code>就是標準差，我們乘上<code>0.07</code>是因為台股<code>７%</code>限制，然後在除<code>3</code>是因為三個標準差以常態分配來看是<code>99.9%</code>，也就是說我這個模擬股價只有<code>0.1%</code>的情況下才會超過<code>7%</code>上限，這只是模擬～～～</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//　用來建立單筆多天的股價資料
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">createStockDatas</span><span class="p">(</span><span class="nx">count</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">randPrice</span> <span class="o">=</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">randCode</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="p">)</span><span class="p">,</span>
+    <span class="nx">temp</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">price</span> <span class="o">=</span> <span class="nx">temp</span> <span class="o">||</span> <span class="nx">randPrice</span><span class="p">,</span>
+      <span class="nx">sd</span> <span class="o">=</span> <span class="nx">price</span> <span class="o">*</span> <span class="mf">0.07</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span>
+      <span class="nx">open</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">rnorm</span><span class="p">(</span><span class="nx">price</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span><span class="p">)</span><span class="p">,</span>
+      <span class="nx">low</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">rnorm</span><span class="p">(</span><span class="nx">price</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span><span class="p">)</span><span class="p">,</span>
+      <span class="nx">heigh</span> <span class="o">=</span> <span class="nx">randHeigh</span><span class="p">(</span><span class="nx">open</span><span class="p">,</span> <span class="nx">price</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span><span class="p">,</span>
+			<span class="nx">close</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">rnorm</span><span class="p">(</span><span class="nx">price</span><span class="p">,</span><span class="nx">sd</span><span class="p">)</span><span class="p">)</span><span class="p">,</span>
+		 	<span class="nx">volume</span> <span class="o">=</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">100000</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
+      <span class="s2">&#34;code&#34;</span><span class="o">:</span> <span class="nx">code</span><span class="p">,</span>
+      <span class="s2">&#34;date&#34;</span><span class="o">:</span> <span class="nx">date</span><span class="p">.</span><span class="nx">setDate</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getDate</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="nx">i</span><span class="p">)</span><span class="p">,</span>
+      <span class="s2">&#34;open&#34;</span><span class="o">:</span> <span class="nx">open</span><span class="p">,</span>
+      <span class="s2">&#34;heigh&#34;</span><span class="o">:</span> <span class="nx">heigh</span><span class="p">,</span>
+      <span class="s2">&#34;close&#34;</span><span class="o">:</span> <span class="nx">close</span><span class="p">,</span> 
+      <span class="s2">&#34;low&#34;</span><span class="o">:</span> <span class="nx">low</span><span class="p">,</span>
+      <span class="s2">&#34;volume&#34;</span><span class="o">:</span> <span class="nx">volume</span>
+    <span class="p">}</span><span class="p">)</span>
+    <span class="nx">temp</span> <span class="o">=</span> <span class="nx">low</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">result</span>
+<span class="p">}</span>
+
+<span class="c1">// 產生常態分配的最高價，但最高價不能小於開盤價。
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">randHeigh</span><span class="p">(</span><span class="nx">open</span><span class="p">,</span> <span class="nx">avg</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">result</span> <span class="o">&lt;=</span> <span class="nx">open</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="nx">rnorm</span><span class="p">(</span><span class="nx">avg</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 產生常態分配的最底價，但最低價不能大於最高價。
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">randlow</span><span class="p">(</span><span class="nx">heigh</span><span class="p">,</span> <span class="nx">avg</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="nx">result</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">result</span> <span class="o">&gt;=</span> <span class="nx">heigh</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="nx">rnorm</span><span class="p">(</span><span class="nx">avg</span><span class="p">,</span> <span class="nx">sd</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 產生亂數 min ~ max 範圍。
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">randNum</span><span class="p">(</span><span class="nx">min</span><span class="p">,</span> <span class="nx">max</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="nx">max</span><span class="p">)</span> <span class="o">+</span> <span class="nx">min</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 隨機產生股價代碼。
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">randCode</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span> <span class="o">+</span> <span class="nx">randNum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><p>建立好個股模擬多天的方法後，我們就可以模擬多筆多天的資料新增的<code>mongos</code>裡囉，注意我們的<code>port</code>要用<code>20006</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">mongodb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongodb&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">rnorm</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;randgen&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">rnorm</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">mongodbServer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">20006</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">auto_reconnect</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nx">poolSize</span><span class="o">:</span> <span class="mi">10</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Db</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nx">mongodbServer</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">stockCount</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">days</span> <span class="o">=</span> <span class="mi">3600</span><span class="p">;</span>
+
+
+<span class="c1">// 執行新增至mongodb動作。
+</span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;stocks&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">collection</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="nx">testDatas</span><span class="p">(</span><span class="nx">stockCount</span><span class="p">,</span> <span class="nx">days</span><span class="p">)</span><span class="p">;</span>
+		<span class="nx">collection</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="p">}</span>
+		<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 用來建立模擬資料
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">testDatas</span><span class="p">(</span><span class="nx">stockCount</span><span class="p">,</span> <span class="nx">days</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">stockCount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">result</span> <span class="o">=</span> <span class="nx">createStockDatas</span><span class="p">(</span><span class="nx">days</span><span class="p">,</span> <span class="nx">result</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+	<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們這個測試準備打算建立<code>10000</code>筆股票，然後模擬天數為<code>5000</code>，基本上總共有5000千多萬筆資料。</p>
+<p>fight ~~~</p>
+<p>別忘了開掛。</p>
+<pre><code>node --max-old-space-size=8192 test.js 
+</code></pre><p>今天先到這囉。</p>
+<h2 id="--1">~ 結語 ~</h2>
+<p>本篇文章中，我們說明了我們這個應用的架構設計，已經索引與分片的架構，下一篇文章我們將會說明二哈這貨的使用說明。</p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-26之MongoDB運用研究---股價應用模擬(1)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 情景說明 ~</a></li>
+    <li><a href="#-step-1--">~ Step 1. 架構分析 ~</a>
+      <ul>
+        <li><a href="#heading">索引架構思考</a></li>
+        <li><a href="#heading1">分片的片鍵選擇</a></li>
+      </ul>
+    </li>
+    <li><a href="#-step-2--">~ Step 2. 建立模擬資料 ~</a></li>
+    <li><a href="#--1">~ 結語 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

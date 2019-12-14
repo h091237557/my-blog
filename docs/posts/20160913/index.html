@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-13之MongoDB索引(3)---比較特別的索引使用 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-13之MongoDB索引(3)---比較特別的索引使用 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-13之MongoDB索引(3)---比較特別的索引使用</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-13.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明幾個比較特別索引使用的方法。</p>
+<ul>
+<li>索引陣列欄位</li>
+<li>索引子欄位</li>
+<li>全文索引</li>
+</ul>
+<p><code>P.S</code> 快要一半囉~~<code>+u^13</code></p>
+<h2 id="--">~ 索引陣列欄位 ~</h2>
+<p>假設你有下列資料，但發現搜尋<code>fans</code>裡的值很慢，你想要建立索引，要著麼建呢?</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;hello&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
+</code></pre></div><p>事實上就和之前幾篇建立索引一樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>那我們在再假設資料如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> 
+  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span> 
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;a&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">11</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;b&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">10</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;c&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">21</span><span class="p">}</span><span class="p">,</span>
+  <span class="p">]</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span> <span class="p">,</span> 
+  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span> 
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;e&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">10</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;f&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;c&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">21</span><span class="p">}</span><span class="p">,</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div><p>這時如果我們建立<code>fans</code>裡的<code>name</code>為索引，指令會如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans.name&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>通過以上的方法就可以很簡單的將陣列欄位建立索引，但要是有幾點要注意。</p>
+<ul>
+<li>陣列索引的代價比一般的索引高，因為它需要更新的更多。</li>
+<li>一個索引中的陣列只能有一個，這是為了避免索引爆炸性增長。</li>
+</ul>
+<p>根據第二個注意點，我們來解釋一下，假設你有一個索引為<code>{ &quot;a&quot; : 1 , &quot;b&quot; : 1 }</code>
+那麼下表會列出他的合法與否。</p>
+<table>
+<thead>
+<tr>
+<th>資料</th>
+<th align="center">合法與否</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db.test.insert({ &quot;a&quot; : 1, &quot;b&quot; : 2 })</code></td>
+<td align="center">OK</td>
+</tr>
+<tr>
+<td><code>db.test.insert({ &quot;a&quot; : [1,2,3] , &quot;b&quot; : 2 })</code></td>
+<td align="center">OK</td>
+</tr>
+<tr>
+<td><code>db.test.insert({ &quot;a&quot; : [1,2,3] , &quot;b&quot; : [1,2,3]})</code></td>
+<td align="center">NO</td>
+</tr>
+</tbody>
+</table>
+<p>因為如果<code>a</code>有<code>n</code>個元素，而<code>b</code>有<code>m</code>個元素，那索引就會建立<code>n * m</code>個索引列表，會爆炸，所以才有這限制。</p>
+<h2 id="--1">~ 索引子欄位 ~</h2>
+<p>假設有下列資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+  <span class="s2">&#34;address&#34;</span> <span class="o">:</span> <span class="p">{</span>
+     <span class="s2">&#34;city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span><span class="p">,</span>
+     <span class="s2">&#34;zip&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>如果我們需要在<code>city</code>這子欄位上建立索引，可下達該指令。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;address.city&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><blockquote>
+<p>注意，<code>{&quot;address&quot; : 1}</code>與 <code>{&quot;address.city&quot; : 1}</code>這兩種是不同的，
+對主欄位建立索引，只能用下列指令，才能使用索引進行查詢。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;address&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span> <span class="p">,</span> <span class="s2">&#34;zip&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>而無法使用如下的搜尋，除非索引為<code>{&quot;address.city&quot; : 1}</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="p">{</span><span class="s2">&#34;address.city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span> <span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="--2">~ 全文索引 ~</h2>
+<p><code>mongodb</code>中有一種專門用來搜尋<code>全文</code>的索引，前面有一篇有說到可以用正規表達式來進行搜尋，但它的缺點就在於大型全文的速度會非常慢，而且無法處理語言的理解。</p>
+<p>以下有兩點要注意。</p>
+<blockquote>
+<ul>
+<li>創建全文索引的成本非常高，建議是在離線狀況下建立全文索引。</li>
+<li>目前不支援中文。</li>
+</ul>
+</blockquote>
+<h3 id="heading">全文索引使用方法</h3>
+<p>假設測試資料如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
+   <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+   <span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;Indexes support the efficient execution of queries 
+</span><span class="s2">    		      in MongoDB&#34;</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span>
+   <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+   <span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;MongoDB can use the index to limit the number of
+</span><span class="s2">                  documents it must inspect.&#34;</span>
+
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span>
+	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;hello word&#34;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們來建立全文索引。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="nx">post_content</span><span class="o">:</span><span class="s2">&#34;text&#34;</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>當建立好索引後，我們就可以使用索引來進行搜尋，例如我們想要找出有包含<code>mongodb</code>單詞的文章。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongodb&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>執行結果如下，找到了兩筆，並且可以知道在全文索引中是不分大小寫的。</p>
+<p><img src="http://yixiang8780.com/outImg/20161211-1.png" alt=""></p>
+<p>而如你想要精確的查詢例如尋找<code>mongodb can</code>，則可以用雙引號括起來，如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;\&#34;mongodb can\&#34;&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下。</p>
+<p><img src="http://yixiang8780.com/outImg/20161211-2.png" alt=""></p>
+<p>想要尋找<code>mongodb</code>或<code>word</code>的<code>document</code>，則使用下面的搜尋式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongodb word&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，呃不小心多建立一個<code>id:3</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161211-3.png" alt=""></p>
+<h2 id="--3">~ 結語 ~</h2>
+<p>今天這篇簡單的說明下幾個比較特別但卻常用的索引，其中全文索引這邊事實上蠻多人不推用<code>mongodb</code>來建立索引，主因還是因為中文的關係，大部份還是建議用<code>elasticseach</code>或<code>Sphinx</code>，<code>elasticsearch</code>是真的不錯用，很多單詞都會解析，速度也快，目前在全文索引中還真看不出<code>mongodb</code>有啥優勢的~個人感想~</p>
+<h2 id="--4">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.2/core/index-multikey/"><a href="https://docs.mongodb.com/v3.2/core/index-multikey/">https://docs.mongodb.com/v3.2/core/index-multikey/</a></a></li>
+<li><a href="https://www.zhihu.com/question/19856707"><a href="https://www.zhihu.com/question/19856707">https://www.zhihu.com/question/19856707</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.2/reference/operator/query/text/#op._S_text"><a href="https://docs.mongodb.com/v3.2/reference/operator/query/text/#op._S_text">https://docs.mongodb.com/v3.2/reference/operator/query/text/#op._S_text</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-13之MongoDB索引(3)---比較特別的索引使用</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 索引陣列欄位 ~</a></li>
+    <li><a href="#--1">~ 索引子欄位 ~</a></li>
+    <li><a href="#--2">~ 全文索引 ~</a>
+      <ul>
+        <li><a href="#heading">全文索引使用方法</a></li>
+      </ul>
+    </li>
+    <li><a href="#--3">~ 結語 ~</a></li>
+    <li><a href="#--4">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-15之MongoDB聚合(2)---Pipeline武器庫 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-15之MongoDB聚合(2)---Pipeline武器庫 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-15之MongoDB聚合(2)---Pipeline武器庫</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-15.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分析方法。</p>
+<ul>
+<li>數學表達式(<code>mathematical expression</code>)</li>
+<li>日期表達式(<code>date expression</code>)</li>
+<li>字串表達式(<code>string expression</code>)</li>
+<li>邏輯表達式(<code>logical expression</code>)</li>
+</ul>
+<h2 id="--">~ 數學表達式 ~</h2>
+<p>以下列表為比較常用的數學表達式(<a href="https://docs.mongodb.com/v3.2/meta/aggregation-quick-reference/#arithmetic-expressions">全部在這</a>)。</p>
+<table>
+<thead>
+<tr>
+<th>表達式</th>
+<th align="center">說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$add</code></td>
+<td align="center">接受多個表達式，然後相加。</td>
+</tr>
+<tr>
+<td><code>$subtract</code></td>
+<td align="center">接受兩個表達式，用第一個減去第二個作為結果。</td>
+</tr>
+<tr>
+<td><code>$multiply</code>| 接受多個表達式，然後相乘。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>$divide</code></td>
+<td align="center">接受兩個表達式，然後相除。</td>
+</tr>
+<tr>
+<td><code>$mod</code></td>
+<td align="center">接受個表達式，然後相除取餘。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="--1">實際運用 ~ 我們想要知道訂單總收入是多少。</h3>
+<p>我們來看看實際上是如何運用，假設我們有下列資料，該資料為訂單資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="mi">0</span> <span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span> <span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">200</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">3</span> <span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">50</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">4</span> <span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">210</span><span class="p">,</span> <span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="mi">200</span> <span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">5</span> <span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="mi">20</span> <span class="p">}</span>
+</code></pre></div><p>這個應用中，我們希望知道總收入是多少，以下為收入公式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">每筆訂單收入</span> <span class="o">=</span> <span class="nx">price</span> <span class="o">*</span> <span class="nx">count</span> <span class="o">-</span> <span class="nx">discount</span> 
+</code></pre></div><p>然後我們在將他拆解成<code>pipeline</code>過程，我們使用先算出每筆訂單收入，再加總起來這步驟。</p>
+<ol>
+<li>將每筆訂單的收入計算出並存放在<code>income</code>欄位。</li>
+<li>將所有訂單<code>income</code>欄位加總起來，並存放在<code>total</code>欄位。</li>
+</ol>
+<p>根據以上步驟我們可以產生出以下的聚合方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">order</span><span class="p">.</span><span class="nx">aggregate</span> <span class="p">(</span><span class="p">{</span> 
+<span class="c1">//1. 將每筆訂單的收入計算出並存放在`income`欄位。
+</span><span class="c1"></span>	<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span>
+		  <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span> 
+		  <span class="s2">&#34;income&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$subtract&#34;</span> <span class="o">:</span>
+		  		<span class="p">[</span> <span class="p">{</span> <span class="nx">$multiply</span> <span class="o">:</span> <span class="p">[</span> <span class="s2">&#34;$price&#34;</span><span class="p">,</span><span class="s2">&#34;$count&#34;</span><span class="p">]</span> <span class="p">}</span> <span class="p">,</span> <span class="s2">&#34;$discount&#34;</span><span class="p">]</span> 
+		  <span class="p">}</span>
+	<span class="p">}</span><span class="p">,</span><span class="p">{</span>
+<span class="mf">2.</span> <span class="nx">將所有訂單</span><span class="sb">`</span><span class="sb">income</span><span class="sb">`</span><span class="nx">欄位加總起來</span><span class="err">，</span><span class="nx">並存放在</span><span class="sb">`</span><span class="sb">total</span><span class="sb">`</span><span class="nx">欄位</span>
+	<span class="nx">$group</span> <span class="o">:</span> <span class="p">{</span>
+			<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+			<span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">$sum</span> <span class="o">:</span> <span class="s2">&#34;$income&#34;</span><span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span> <span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="mi">11680</span> <span class="p">}</span>
+</code></pre></div><blockquote>
+<p>雖然這個範例只運用到少數幾個表達式，但事實上用法都大同小異，只要會了一個基本上其它的運用起來也會很順。</p>
+</blockquote>
+<h2 id="--2">~ 日期表達式 ~</h2>
+<p>這種類型的表達式，大部份都是用來將一串日期轉化成你想要的單位例如月、日、年等。</p>
+<table>
+<thead>
+<tr>
+<th>表達式</th>
+<th align="center">說明</th>
+<th align="center">範圍</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$year</code></td>
+<td align="center">轉換成年 ex.2016 。</td>
+<td align="center">NO</td>
+</tr>
+<tr>
+<td><code>$month</code></td>
+<td align="center">轉換成月 ex. 1 (代表一月)</td>
+<td align="center">1~12</td>
+</tr>
+<tr>
+<td><code>$week</code>| 轉換成星期 ex. 1 (代表該年第一個星期)</td>
+<td align="center">0~53</td>
+<td></td>
+</tr>
+<tr>
+<td><code>$dayOfMonth</code></td>
+<td align="center">轉換成該月的第n天 ex. 1 (代表該月第一天)</td>
+<td align="center">1-31</td>
+</tr>
+<tr>
+<td><code>$dayOfYear</code></td>
+<td align="center">轉換成該年的第n天 ex. 1 (代表該年第一天)</td>
+<td align="center">1-366</td>
+</tr>
+<tr>
+<td><code>$dayOfWeek</code>| 轉換成該星期的某一天 ex. 1 (星期一)</td>
+<td align="center">1(星期日)~7(星期六)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>$hour</code></td>
+<td align="center">提取出該時間的小時</td>
+<td align="center">0~23</td>
+</tr>
+<tr>
+<td><code>$minute</code></td>
+<td align="center">提取出該時間的分鐘</td>
+<td align="center">0~59</td>
+</tr>
+<tr>
+<td><code>$second</code></td>
+<td align="center">提取出該時間的秒</td>
+<td align="center">0~60</td>
+</tr>
+</tbody>
+</table>
+<h3 id="---date-">實際運用 ~ 我們想取得 date 的詳細資料。</h3>
+<p>我們來看看實際轉換的結果，假設我們有下列資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="nx">ISODate</span><span class="p">(</span><span class="s2">&#34;2016-01-02T08:10:20.651Z&#34;</span><span class="p">)</span> <span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span>
+	<span class="nx">$project</span> <span class="o">:</span> <span class="p">{</span>
+		<span class="s2">&#34;year&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">$year</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span> <span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;month&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">$month</span>  <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;week&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">$week</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;dayOfMonth&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$dayOfMonth&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span> <span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;dayOfYear&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$dayOfYear&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;dayOfWeek&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$dayOfWeek&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;hour&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$hour&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;minute&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$minute&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="s2">&#34;second&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$second&#34;</span> <span class="o">:</span> <span class="s2">&#34;$date&#34;</span><span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下，其中<code>week</code>為<code>0</code>是因為它是從第0周開始，而<code>dayOfWeek</code>為<code>7</code>代表當天是星期六。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="s2">&#34;2016-01-02T08:10:20.651Z&#34;</span>
+<span class="p">{</span>
+	<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="s2">&#34;year&#34;</span> <span class="o">:</span> <span class="mi">2016</span><span class="p">,</span>
+	<span class="s2">&#34;month&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="s2">&#34;week&#34;</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="s2">&#34;dayOfMonth&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+	<span class="s2">&#34;dayOfYear&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+	<span class="s2">&#34;dayOfWeek&#34;</span> <span class="o">:</span> <span class="mi">7</span><span class="p">,</span>
+	<span class="s2">&#34;hours&#34;</span> <span class="o">:</span> <span class="mi">8</span><span class="p">,</span>
+	<span class="s2">&#34;minute&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+	<span class="s2">&#34;second&#34;</span> <span class="o">:</span> <span class="mi">20</span> 
+
+<span class="p">}</span>
+</code></pre></div><h2 id="--3">~ 字串表達式 ~</h2>
+<p>就是將聚合中的字串做一些哩哩扣扣的事情。</p>
+<table>
+<thead>
+<tr>
+<th>表達式</th>
+<th align="center">說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$substr</code></td>
+<td align="center">可以『只』取得某字串的一個範圍。</td>
+</tr>
+<tr>
+<td><code>$concat</code></td>
+<td align="center">將指定的字串連在一起。</td>
+</tr>
+<tr>
+<td><code>$toLower</code>| 變小寫。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>$toUpper</code></td>
+<td align="center">變大寫。</td>
+</tr>
+<tr>
+<td><code>$strcasecmp</code></td>
+<td align="center">比較兩個字串是否相等，如果相等為0，如果字串ASCII碼大於另一字串則為1，否則為-1。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="---item--b--document--describe-">實際應用 ~ 我們想取得 item 開頭為 B 的 document ，並且輸出的 describe 要全轉換為小寫。</h3>
+<p>下面是我們的資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;ABC&#34;</span><span class="p">,</span> <span class="s2">&#34;describe&#34;</span><span class="o">:</span><span class="s2">&#34;AAbbcc&#34;</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;BCE&#34;</span> <span class="p">,</span> <span class="s2">&#34;describe&#34;</span><span class="o">:</span><span class="s2">&#34;hello WorD&#34;</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;item&#34;</span> <span class="o">:</span> <span class="s2">&#34;CAA&#34;</span> <span class="p">,</span> <span class="s2">&#34;describe&#34;</span><span class="o">:</span><span class="s2">&#34;BBCCaa&#34;</span><span class="p">}</span>
+</code></pre></div><p>我們可以根據問題，來將之拆分為以下步驟。</p>
+<ol>
+<li>取得每個<code>item</code>的第一個值，並存放在<code>temp</code>欄位中。</li>
+<li>並且每個<code>temp</code>與<code>B</code>進行比較，比較結果放在<code>result</code>欄位中。</li>
+<li>篩選出<code>result</code>為<code>0</code>的<code>document</code>。</li>
+<li>將該<code>document</code>的<code>describe</code>欄位轉換成小寫。</li>
+</ol>
+<p>以下為拆分出來的聚合方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
+<span class="p">{</span>
+<span class="c1">//1. 取得每個`item`的第一個值，並存放在`temp`欄位中。
+</span><span class="c1"></span>	<span class="nx">$project</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;describe&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;temp&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$substr&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;$item&#34;</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="p">}</span> <span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span>
+<span class="c1">//2. 並且每個`temp`與`B`進行比較，比較結果放在`result`欄位中。
+</span><span class="c1"></span>	<span class="nx">$project</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;describe&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;result&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$strcasecmp&#34;</span><span class="o">:</span><span class="p">[</span><span class="s2">&#34;$temp&#34;</span><span class="p">,</span><span class="s2">&#34;B&#34;</span><span class="p">]</span><span class="p">}</span><span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> 
+<span class="c1">//3. 篩選出`result`為`0`的`document`。
+</span><span class="c1"></span>	<span class="nx">$match</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;result&#34;</span> <span class="o">:</span> <span class="mi">0</span> <span class="p">}</span> 
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> 
+<span class="mf">4.</span> <span class="nx">將該</span><span class="sb">`</span><span class="sb">document</span><span class="sb">`</span><span class="nx">的</span><span class="sb">`</span><span class="sb">describe</span><span class="sb">`</span><span class="nx">欄位轉換成小寫</span><span class="err">。</span>
+	<span class="nx">$project</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;describe&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$toLower&#34;</span> <span class="o">:</span> <span class="s2">&#34;$describe&#34;</span> <span class="p">}</span> <span class="p">}</span> <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>執行結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> 
+	<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;58500f0d7fac2213af387c9c&#34;</span><span class="p">)</span><span class="p">,</span> 
+	<span class="s2">&#34;describe&#34;</span> <span class="o">:</span> <span class="s2">&#34;hello word&#34;</span> 
+<span class="p">}</span>
+</code></pre></div><h2 id="--4">~ 邏輯表達式 ~</h2>
+<p>下面是些比較常使用的邏輯表達式列表。</p>
+<table>
+<thead>
+<tr>
+<th align="left">表達式</th>
+<th align="left">說明</th>
+<th align="left">使用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><code>$cmp</code></td>
+<td align="left">比較expr1與2，相同為0，1&gt;2為1，相反則為-1 。</td>
+<td align="left"><code>&quot;$cmp&quot;:[expr1,expr2]</code>|</td>
+</tr>
+<tr>
+<td align="left"><code>$eq</code></td>
+<td align="left">一樣比較expr1與2，但相同則返回<code>true</code>否則為<code>false</code>。</td>
+<td align="left"><code>&quot;$eq&quot;:[expr1,expr2]</code>|</td>
+</tr>
+<tr>
+<td align="left"><code>$lt、$lte</code>| 小於和小於等於</td>
+<td align="left"><code>&quot;$lt&quot; : value</code>|</td>
+<td></td>
+</tr>
+<tr>
+<td align="left"><code>$gt、$gte</code></td>
+<td align="left">大於和大於等於</td>
+<td align="left"><code>&quot;$gt&quot; : value</code>|</td>
+</tr>
+<tr>
+<td align="left"><code>$and</code>| 所有表達式都為<code>true</code>，則回傳<code>true</code></td>
+<td align="left"><code>&quot;$and&quot;:[expr1,expr2..]</code>|</td>
+<td></td>
+</tr>
+<tr>
+<td align="left"><code>$or</code></td>
+<td align="left">其中一個表達式為<code>true</code>，則回傳<code>true</code></td>
+<td align="left"><code>&quot;$or&quot; : [expr1,expr2..]</code>|</td>
+</tr>
+<tr>
+<td align="left"><code>$not</code></td>
+<td align="left">針對表達示取反值</td>
+<td align="left"><code>&quot;$not&quot; : expr</code>|</td>
+</tr>
+<tr>
+<td align="left"><code>$cond</code></td>
+<td align="left">就是一般程式裡的<code>ifelse</code></td>
+<td align="left"><code>&quot;$cond&quot;:[boolExpr,trueExpr,falseExpr]</code>|</td>
+</tr>
+</tbody>
+</table>
+<h3 id="--200-class-">實際應用 ~ 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依 class 進行分組，算出各組的總收入。</h3>
+<p>首先一樣，先看看我們有的資料，如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">180</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">350</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">90</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">320</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">150</span><span class="p">}</span>
+</code></pre></div><p>然後根據問題，我們將拆分為以下<code>pipeline</code>步驟。</p>
+<ol>
+<li>全部的訂單先判斷折扣率，並存放在<code>discount</code>裡。</li>
+<li>計算每分訂單的收入，並存放在<code>total</code>裡。</li>
+<li>根據<code>class</code>進行分組，並計算各組的總收入，存放在<code>result</code>裡。</li>
+</ol>
+<p>以下為根據步驟所建立出的聚合方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
+<span class="p">{</span>	
+<span class="c1">// 1. 全部的訂單先判斷折扣率，並存放在`discount`裡。
+</span><span class="c1"></span>	<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> 
+		<span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+		<span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+		<span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+		<span class="s2">&#34;discount&#34;</span> <span class="o">:</span> <span class="p">{</span>
+			<span class="s2">&#34;$cond&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="p">{</span> <span class="nx">$gte</span><span class="o">:</span> <span class="p">[</span> <span class="s2">&#34;$count&#34;</span><span class="p">,</span> <span class="mi">200</span> <span class="p">]</span> <span class="p">}</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span>
+<span class="c1">// 2. 計算每分訂單的收入，並存放在`total`裡。
+</span><span class="c1"></span>	<span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span>
+		<span class="s2">&#34;class&#34;</span> <span class="o">:</span><span class="mi">1</span><span class="p">,</span>
+		<span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$multiply&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;$price&#34;</span><span class="p">,</span><span class="s2">&#34;$count&#34;</span><span class="p">,</span><span class="s2">&#34;$discount&#34;</span><span class="p">]</span> <span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> 
+<span class="c1">// 3. 根據`class`進行分組，並計算各組的總收入，存放在`result`裡。
+</span><span class="c1"></span>	<span class="s2">&#34;$group&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;$class&#34;</span> <span class="p">,</span> <span class="s2">&#34;result&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$sum&#34;</span> <span class="o">:</span> <span class="s2">&#34;$total&#34;</span><span class="p">}</span> <span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span> <span class="s2">&#34;result&#34;</span> <span class="o">:</span> <span class="mi">4960</span> <span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span> <span class="s2">&#34;result&#34;</span> <span class="o">:</span> <span class="mi">4600</span> <span class="p">}</span>
+</code></pre></div><h2 id="--5">~ 結語 ~</h2>
+<p>本章介紹了很多的表達式，也都用實際的範例來說明如何使用，不過也只是用很基本的方法，
+如果要更熟練的使用這些表達式，筆者建議進行更多的實例練習，以及在練習時也要持續思考有沒有更好更快的方法，那相信你不需要多久的時間，就能很熟練囉。</p>
+<h2 id="--6">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/cond/"><a href="https://docs.mongodb.com/manual/reference/operator/aggregation/cond/">https://docs.mongodb.com/manual/reference/operator/aggregation/cond/</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.2/reference/operator/aggregation/strcasecmp/#exp._S_strcasecmp"><a href="https://docs.mongodb.com/v3.2/reference/operator/aggregation/strcasecmp/#exp._S_strcasecmp">https://docs.mongodb.com/v3.2/reference/operator/aggregation/strcasecmp/#exp._S_strcasecmp</a></a></li>
+<li><a href="http://stackoverflow.com/questions/17044587/how-to-aggregate-sum-in-mongodb-to-get-a-total-count"><a href="http://stackoverflow.com/questions/17044587/how-to-aggregate-sum-in-mongodb-to-get-a-total-count">http://stackoverflow.com/questions/17044587/how-to-aggregate-sum-in-mongodb-to-get-a-total-count</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-15之MongoDB聚合(2)---Pipeline武器庫</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 數學表達式 ~</a>
+      <ul>
+        <li><a href="#--1">實際運用 ~ 我們想要知道訂單總收入是多少。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--2">~ 日期表達式 ~</a>
+      <ul>
+        <li><a href="#---date-">實際運用 ~ 我們想取得 date 的詳細資料。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--3">~ 字串表達式 ~</a>
+      <ul>
+        <li><a href="#---item--b--document--describe-">實際應用 ~ 我們想取得 item 開頭為 B 的 document ，並且輸出的 describe 要全轉換為小寫。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--4">~ 邏輯表達式 ~</a>
+      <ul>
+        <li><a href="#--200-class-">實際應用 ~ 我想要計算出每筆訂單的實際收入，其中當數量大於200時打八折，最後在依 class 進行分組，算出各組的總收入。</a></li>
+      </ul>
+    </li>
+    <li><a href="#--5">~ 結語 ~</a></li>
+    <li><a href="#--6">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

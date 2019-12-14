@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-16之MongoDB聚合(3)---潮潮的MapReduce &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-16之MongoDB聚合(3)---潮潮的MapReduce | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-16之MongoDB聚合(3)---潮潮的MapReduce</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-16.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞，尤其應該有不少人有看過這篇『<a href="http://blog.jobbole.com/1321/">我是如何向老婆解释MapReduce的？</a>』，不過它原文版好像消失了，扣惜。</p>
+<h2 id="mapreduce">~MapReduce~</h2>
+<p><code>MapReduce</code>是<code>google</code>所提出的軟體架構，主要用來處理大量的數據，而<code>mongodb</code>根據它的架構建構出可以在<code>mongodb</code>中使用的聚合工作，<code>MapReduce</code>它可以將一個複雜的問題拆分為多個小問題(<code>map</code>)，然後發送到不同的機器上，完成時再合併為一個解決方案(<code>reduce</code>)，簡單的畫張圖來看看。</p>
+<p><img src="http://yixiang8780.com/outImg/20161216-1.png" alt=""></p>
+<p>但這個方法和<code>aggregate framework</code>有什麼差別 ?</p>
+<blockquote>
+<p><code>aggregate framework</code> 提供較優透的性能。</p>
+<p><code>MapReduce</code>性能較差，但可提供更複雜的聚合功能。</p>
+</blockquote>
+<h2 id="-mongodb--mapreduce-">~ Mongodb 的 MapReduce 使用~</h2>
+<p><code>mongodb</code>中的<code>MapReduce</code>使用的方法如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
+    <span class="nx">map</span><span class="p">,</span>    
+    <span class="nx">reduce</span><span class="p">,</span> 
+    <span class="p">{</span>
+        <span class="o">&lt;</span><span class="nx">out</span><span class="o">&gt;</span><span class="p">,</span>    
+        <span class="o">&lt;</span><span class="nx">query</span><span class="o">&gt;</span><span class="p">,</span> 
+        <span class="o">&lt;</span><span class="nx">sort</span><span class="o">&gt;</span><span class="p">,</span>   
+        <span class="o">&lt;</span><span class="nx">limit</span><span class="o">&gt;</span><span class="p">,</span>  
+        <span class="o">&lt;</span><span class="nx">finalize</span><span class="o">&gt;</span><span class="p">,</span> 
+        <span class="o">&lt;</span><span class="nx">scope</span><span class="o">&gt;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>其中參數的說明如下。</p>
+<table>
+<thead>
+<tr>
+<th>參數</th>
+<th align="center">說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>map</code></td>
+<td align="center"><code>map</code>函數，主要功能為產生<code>key</code>給<code>reduce</code>。</td>
+</tr>
+<tr>
+<td><code>reduce</code></td>
+<td align="center"><code>reduce</code>函數。</td>
+</tr>
+<tr>
+<td><code>out</code></td>
+<td align="center">輸出結果集合的名稱。</td>
+</tr>
+<tr>
+<td><code>query</code></td>
+<td align="center">在<code>map</code>前，可用<code>query</code>先進行篩選。</td>
+</tr>
+<tr>
+<td><code>sort</code></td>
+<td align="center">在<code>map</code>前，可用<code>sort</code>進行排序。</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td align="center">在<code>map</code>前，可限制數量。</td>
+</tr>
+<tr>
+<td><code>finalize</code></td>
+<td align="center">可以將<code>reduce</code>的結果，丟給某個<code>key</code>。</td>
+</tr>
+<tr>
+<td><code>scope</code></td>
+<td align="center">可以在js中使用變數。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1---class-">實際應用1 ~ 根據 class 分組計算每組訂單收入</h3>
+<p>是的，這個例子我們在<code>aggregate framework</code>時有用過，事實上這種簡單的例子用<code>MapReduce</code>來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。</p>
+<p>先看看我們有的資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">180</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">350</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">90</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">320</span><span class="p">}</span><span class="p">,</span>
+<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">150</span><span class="p">}</span>
+</code></pre></div><p>然後因為我們要根據<code>class</code>進行分組，所以我們<code>map</code>的拆分基礎就是<code>class</code>，
+而<code>reduce</code>要做的工作就是將<code>map</code>出的結果進行運算，詳細的<code>MapReduce</code>過程請看下圖。</p>
+<p>首先是<code>map</code>的工作，它將<code>colleciton</code>中的<code>document</code>根據<code>map</code>函數進行歸納成<code>Key , Values</code>的結構。
+<img src="http://yixiang8780.com/outImg/20161216-2.png" alt=""></p>
+<p>然後在使用<code>Reduces</code>函數，進行運算。
+<img src="http://yixiang8780.com/outImg/20161216-3.png" alt=""></p>
+<p>以下為合在一起的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span> 
+    	<span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">price</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span>
+    	<span class="nx">emit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="kr">class</span><span class="p">,</span><span class="nx">total</span><span class="p">)</span> 
+    <span class="p">}</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="nx">values</span><span class="p">)</span><span class="p">{</span> 
+      <span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+      <span class="p">}</span>
+       <span class="k">return</span> <span class="nx">total</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span> <span class="nx">out</span> <span class="o">:</span> <span class="s2">&#34;test&#34;</span> <span class="p">}</span>
+<span class="p">)</span>
+
+</code></pre></div><p>然後如果這時想看執行結果可以輸入下列指令，其中<code>result</code>為一個<code>collection</code>，是由<code>Reduces</code>所產生出的最後結果。</p>
+<pre><code>result.find()
+</code></pre><p>結果如下。</p>
+<pre><code>{ &quot;_id&quot; : &quot;1&quot;, &quot;value&quot; : 5300 }
+{ &quot;_id&quot; : &quot;2&quot;, &quot;value&quot; : 5600 }
+</code></pre><h3 id="2---class--2--3--dollar-">實際應用2 ~ 根據 class 進行分組，並且我們只想知道 2 與 3 的總收入，並且加上 dollar 單位。</h3>
+<p>這個應用事實上有不少做法，這裡我們的作法是先用<code>query</code>篩選出<code>2</code>與<code>3</code>，然後在來計算它們的總收入，最後在用<code>finalize </code>來加上<code>dollar</code>。</p>
+<p>首先看看我們有的資料。</p>
+<pre><code>{ &quot;class&quot; : &quot;1&quot;, &quot;price&quot; : 10,&quot;count&quot; : 180},
+{ &quot;class&quot; : &quot;1&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 350},
+{ &quot;class&quot; : &quot;2&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 90},
+{ &quot;class&quot; : &quot;2&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 320},
+{ &quot;class&quot; : &quot;2&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 150},
+{ &quot;class&quot; : &quot;3&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 100},
+{ &quot;class&quot; : &quot;3&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 200},
+{ &quot;class&quot; : &quot;3&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 300}
+</code></pre><p>程式碼如下，事實上這個範例我們只是要看<code>query</code>和<code>finalize</code>的用法，這些事實上也可以寫在<code>map</code>或<code>reduces</code>裡……。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
+    <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span> 
+    	<span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">price</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span>
+    	<span class="nx">emit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="kr">class</span><span class="p">,</span><span class="nx">total</span><span class="p">)</span> 
+    <span class="p">}</span><span class="p">,</span>
+    <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="nx">values</span><span class="p">)</span><span class="p">{</span> 
+      <span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
+      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+      <span class="p">}</span>
+       <span class="k">return</span> <span class="nx">total</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span> <span class="nx">out</span> <span class="o">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span>
+      <span class="nx">query</span> <span class="o">:</span> <span class="p">{</span> <span class="kr">class</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$in&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;3&#34;</span><span class="p">]</span><span class="p">}</span> <span class="p">}</span><span class="p">,</span>
+      <span class="nx">finalize</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">reducedVal</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">reducedVal</span> <span class="o">=</span> <span class="nx">reducedVal</span> <span class="o">+</span> <span class="s2">&#34; dollar &#34;</span><span class="p">;</span>
+		 <span class="k">return</span> <span class="nx">reducedVal</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><p>結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span> <span class="s2">&#34;5600 dollar &#34;</span> <span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;3&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span> <span class="s2">&#34;6000 dollar &#34;</span> <span class="p">}</span>
+</code></pre></div><h2 id="heading">~結語~</h2>
+<p>本篇文章簡單的說明<code>mongodb</code>中的<code>MapReduce</code>的用法，但還沒有說明到資料量大時要如何使用，這方面就在後面講完分片的概念後，將會一起說明。</p>
+<h2 id="heading1">~參考資料~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/manual/core/map-reduce/"><a href="https://docs.mongodb.com/manual/core/map-reduce/">https://docs.mongodb.com/manual/core/map-reduce/</a></a></li>
+<li><a href="https://zh.wikipedia.org/zh-tw/MapReduce"><a href="https://zh.wikipedia.org/zh-tw/MapReduce">https://zh.wikipedia.org/zh-tw/MapReduce</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-16之MongoDB聚合(3)---潮潮的MapReduce</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#mapreduce">~MapReduce~</a></li>
+    <li><a href="#-mongodb--mapreduce-">~ Mongodb 的 MapReduce 使用~</a>
+      <ul>
+        <li><a href="#1---class-">實際應用1 ~ 根據 class 分組計算每組訂單收入</a></li>
+        <li><a href="#2---class--2--3--dollar-">實際應用2 ~ 根據 class 進行分組，並且我們只想知道 2 與 3 的總收入，並且加上 dollar 單位。</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">~結語~</a></li>
+    <li><a href="#heading1">~參考資料~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

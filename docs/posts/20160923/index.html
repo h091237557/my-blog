@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-23之MongoDB分片Sharding---Hello Sharding &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-23之MongoDB分片Sharding---Hello Sharding | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-23之MongoDB分片Sharding---Hello Sharding</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-23.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、更多容量空間的來做一些哩哩扣扣的事情。</p>
+<ul>
+<li>分片原理。</li>
+<li>分片實作。</li>
+</ul>
+<h2 id="heading">~分片原理~</h2>
+<p>分片是啥 ? 它主要的概念就是將<code>collection</code>拆分，將其分散到不同的機器，來分擔單一<code>server</code>的壓力。</p>
+<p>咱們先來看看我們平常單一<code>server</code>的<code>mongodb</code>結構，其中<code>mongod</code>就代表我們實際上存放資料的地方，它平常都是指令和<code>client</code>端通信，<code>client</code>就有點像咱們平常用的<code>mongodb shell</code>之類的。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-1.png" alt=""></p>
+<p>而咱們在來看看，如果用了分片會變啥樣，如下圖，三個<code>mongod</code>都會統一通信到<code>mongos</code>，在和<code>client</code>進行通訊，<code>mongos</code>不存儲任何資料，它就是個路由<code>server</code>，你要什麼資料就發給它，它在去決定去那個<code>mongod</code>裡尋找資料。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-2.png" alt=""></p>
+<p>那這邊有個問題來囉~這三個<code>mongod</code>要著麼決定誰要存放那些資料 ? 答案是下面標題<code>片鍵</code>~</p>
+<h3 id="-shard-keys">片鍵 Shard Keys</h3>
+<p>片鍵是啥 ? 它就是當你要進行分片時，你選定的<code>collection</code>切分的依據，假設我們有下面的資料。</p>
+<pre><code>{ &quot;name&quot;:&quot;mark&quot; , &quot;age&quot; :18}
+{ &quot;name&quot;:&quot;steven&quot; , &quot;age&quot; :20}
+{ &quot;name&quot;:&quot;ian&quot; , &quot;age&quot; :20}
+{ &quot;name&quot;:&quot;jack&quot; , &quot;age&quot; :30}
+{ &quot;name&quot;:&quot;stanly&quot; , &quot;age&quot; :31}
+{ &quot;name&quot;:&quot;jiro&quot; , &quot;age&quot; :32}
+{ &quot;name&quot;:&quot;hello&quot; , &quot;age&quot; :41}
+{ &quot;name&quot;:&quot;world&quot; , &quot;age&quot; :52}
+...
+
+...
+{ &quot;name&quot;:&quot;ho&quot;,&quot;age&quot; : 100}
+</code></pre><p>它就有可能會分片成這樣，假設咱們拆分為三片，然後我們指定片鍵為<code>age</code>欄位，它就大致上可能會分成這樣，會根據片鍵建立<code>chunk</code>，然後再將這堆<code>chunk</code>分散到這幾個分片中，<code>{min~10}</code>就是一個<code>chunk</code>，就是一組<code>document</code>。</p>
+<table>
+<thead>
+<tr>
+<th>分片001</th>
+<th align="center">分片002</th>
+<th align="right">分片003</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>{ min ~ 10 }</td>
+<td align="center">{ 30 ~ 40 }</td>
+<td align="right">{ 60 ~ 70 }</td>
+</tr>
+<tr>
+<td>{ 10 ~ 20 }</td>
+<td align="center">{ 40 ~ 50 }</td>
+<td align="right">{ 70 ~ max }</td>
+</tr>
+<tr>
+<td>{ 20 ~ 30 }</td>
+<td align="center">{ 50 ~ 60 }</td>
+<td align="right"></td>
+</tr>
+</tbody>
+</table>
+<p>這邊事實上有很多東西可以思考，例如片鍵的選者或分片設計等，這些主題將留在後面幾篇在來介紹，你之要先大概只知片鍵是啥的就好了。</p>
+<h2 id="heading1">~分片實作~</h2>
+<p>首先咱們先在單機上來建立看看，一樣先進入<code>mongodb shell</code>。</p>
+<pre><code>mongo --nodb
+</code></pre><p>然後使用<code>ShardingTest</code>來建立分片用的<code>cluster</code>，其中<code>shards</code>為<code>3</code>代表建立3個分片，而<code>chungszie</code>之後會講，先簡單設<code>1</code>就好。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">cluster</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ShardingTest</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;shards&#34;</span> <span class="o">:</span> <span class="mi">3</span> <span class="p">,</span> <span class="s2">&#34;chunksize&#34;</span> <span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>執行完我們可以看到它的輸出。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-3.png" alt=""></p>
+<p>然後就準備換到另一個<code>shell</code>，接下來我們就可以連接到<code>mongos</code>囉，根據我們上面的結果可知，我們的<code>mongos</code>是建立在<code>port : 20006</code>的位置，來連吧~</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span> <span class="o">=</span> <span class="p">(</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20006&#34;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
+</code></pre></div><p>進去以後我們來丟些資料，來測試看看。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後我們可以執行<code>sh.status()</code>來看看這個<code>cluster</code>的運行狀況。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-4.png" alt=""></p>
+<p>但是我們的分片可還沒啟用喔，它還需要執行這行指令。</p>
+<pre><code>sh.enableSharding(&quot;test&quot;)
+</code></pre><p>呃對了~上面的指令只是允許<code>test</code>這資料庫可以使用分片了，但在進行分片前，我們還要先決定要如何針對<code>collection</code>進行拆分，這時我們就要選擇片鍵<code>sharing key</code>，它將根據某個欄位進行拆分，這邊注意，只要索引過的鍵才能夠作為片鍵，所以我們要先建索引。</p>
+<pre><code>db.users.ensureIndex({&quot;name&quot;:1})
+</code></pre><p>然後再針對<code>collection</code>分片，<code>test.users</code>第一個是資料庫，第二個是<code>collection</code>。</p>
+<pre><code>sh.shardCollection(&quot;test.users&quot;,{&quot;name&quot;:1})
+</code></pre><p>然後執行完看到這個結果就代表ok~</p>
+<pre><code>{ &quot;collectionsharded&quot; : &quot;test.users&quot;, &quot;ok&quot; : 1 }
+</code></pre><p>然後咱們在來看一下<code>sh.status()</code>的結果。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-5.png" alt=""></p>
+<p>其中可以看到他<code>shared0000</code>裡已經將<code>collection</code>開拆成很多個<code>chunk</code>囉，不過因為我們<code>Balancer</code>的東西還沒啟動，所以還沒分配到其它<code>shard</code>，這篇我們下章節在來說說。</p>
+<p><img src="http://yixiang8780.com/outImg/20161223-6.png" alt=""></p>
+<p>然後我們來搜尋看看詳細資訊，下圖結果可以知道它去這<code>shard0000</code>尋找到<code>doument</code>，並且就如同索引一樣，不需要全部掃描來尋找，是的你可以把片鍵想成索引。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;user889391&#34;</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161223-7.png" alt=""></p>
+<h2 id="heading2">~結語~</h2>
+<p>本篇文章中，我們學習了分片的基本知識，也簡單的介紹建立分片的方法，但事實上還有很多分片的原理我們沒有完全說到，例如如何分片、片鍵的選擇、<code>chunk</code>的拆分，這些我們後面幾篇都會來說明說明。</p>
+<h2 id="heading3">~參考資料~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.2/sharding/"><a href="https://docs.mongodb.com/v3.2/sharding/">https://docs.mongodb.com/v3.2/sharding/</a></a></li>
+<li><a href="http://blog.fens.me/mongodb-shard/"><a href="http://blog.fens.me/mongodb-shard/">http://blog.fens.me/mongodb-shard/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-23之MongoDB分片Sharding---Hello Sharding</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">~分片原理~</a>
+      <ul>
+        <li><a href="#-shard-keys">片鍵 Shard Keys</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">~分片實作~</a></li>
+    <li><a href="#heading2">~結語~</a></li>
+    <li><a href="#heading3">~參考資料~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

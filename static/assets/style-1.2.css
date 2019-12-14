@@ -185,6 +185,10 @@ span {
   text-align: center;
 }
 
+.tag-span > a {
+  max-width: 165px !important;
+}
+
 /* theme default*/
 
 html,

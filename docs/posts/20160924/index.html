@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-24之MongoDB分片Sharding(2)---Chunk的札事 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-24之MongoDB分片Sharding(2)---Chunk的札事 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-24之MongoDB分片Sharding(2)---Chunk的札事</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-24.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的<code>chunk</code>，
+它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。</p>
+<ul>
+<li><code>chunk</code>的分配與拆分。</li>
+</ul>
+<h2 id="-chunk--">~ chunk 的分配與拆分 ~</h2>
+<p>在上一篇文章中，我們知道每個分片中都包含了多個<code>chunk</code>，而每<code>chunk</code>中，又包含了某個範圍的<code>document</code>組，我們先簡單來畫個圖複習一下。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-1.png" alt=""></p>
+<p>然後我們接下來要討論的就是，<code>mongodb</code>是如何拆分<code>chunk</code>和如何將<code>chunk</code>分片到<code>shard</code>裡，首先我們先來看看<code>chunk</code>的拆分。</p>
+<h3 id="chunk-">chunk 的拆分</h3>
+<p>首先我們先想一下，<code>chunk</code>它本身是一堆<code>document</code>的集合體，大概長降,我們使用上一章節的範例，來看一下<code>chunk</code>的詳細資訊，假設我們都已經分片好了，我們直接看結果。</p>
+<p>首先我們需要先移動到一個名為<code>config</code>的資料庫。</p>
+<pre><code>use config
+&gt; switched to db config
+</code></pre><p>然後再執行<code>db.chunks.find().pretty()</code>來看一下，目前只有一個<code>chunk</code>，它目前窩在<code>shard0000</code>，而它的範圍是<code>min ~ max</code>，呃對了忘了說，我們的資料是1萬筆的<code>{&quot;name&quot;:&quot;user&quot;+i}</code>這種物件。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-3.png" alt=""></p>
+<p>這時我們要問個問題囉，<strong>它什麼時後會再分成另一個<code>chunk</code> ?</strong></p>
+<p>答案是<code>chunk</code>的大小，<code>mongodb</code>預設<code>chunk</code>最大限制為<code>64MB</code>，當超過時<code>mongos</code>會將它拆分為兩塊<code>chunk</code>，如下圖，此圖為官方圖片。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-2.png" alt=""></p>
+<p>預設是<code>64MB</code>，當然我們也有辦法修改預設，指令如下，下面<code>32</code>代表為<code>32MB</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">use</span> <span class="nx">config</span>
+<span class="o">&gt;</span> <span class="nx">switched</span> <span class="nx">to</span> <span class="nx">db</span> <span class="nx">config</span>
+
+<span class="nx">db</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;chunksize&#34;</span> <span class="o">:</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span> <span class="mi">32</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>但是這邊要修改大小時有幾點要思考一下。</p>
+<blockquote>
+<p><code>chunk</code> 越小時可以使分片的可以使分片的資料量更均衡，不會有差距太大的狀況，但缺點就是，因為小所以會常移動<code>chunk</code>，所以<code>mongos</code>壓力會比較重。</p>
+</blockquote>
+<h3 id="chunk-1">chunk 的拆分實驗</h3>
+<p>咱們來簡單的測試看看<code>chunk</code>的拆分，首先來建立一些資料，大小約為<code>4188890 byte</code>大概為<code>4mb</code>左右，然後我們的<code>chunk</code>大小預設為<code>1mb</code>，所以理論上應會開拆為3~4個<code>chunk</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">100000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>建好後別忘了執行這兩個指令。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<span class="nx">sh</span><span class="p">.</span><span class="nx">shardCollection</span><span class="p">(</span><span class="s2">&#34;test.users&#34;</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>然後我們指行<code>sh.status()</code>來看看結果，呃我淚囉為什麼會拆分為8個……</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-4.png" alt=""></p>
+<p>我們來檢查一下<code>chunk size</code>的設定，如下圖嗯沒錯~是<code>1</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">use</span> <span class="nx">config</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161224-5.png" alt=""></p>
+<p>那我們在來檢查一下資料大小是不是我們算錯，呃也沒算也，<code>size</code>為<code>4188890</code>的確是<code>4mb</code>左右。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">user</span> <span class="nx">test</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">stats</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161224-6.png" alt=""></p>
+<blockquote>
+<p>這問題目前無解，官網目前也只說當<code>chunk</code>成長到超過設定大小時會進行分拆。<a href="https://docs.mongodb.com/v3.0/core/sharding-chunk-splitting/">傳送門</a>給你看。</p>
+</blockquote>
+<h3 id="chunk-2">chunk 的分配</h3>
+<p>在說明完<code>chunk</code>的拆分後，我們要說明一下<code>chunk</code>的分配，也就是指<code>mongos</code>如何將<code>chunk</code>分配給分片。</p>
+<p><code>mongos</code>中有個東西叫<code>balancer</code>，這東西就是負責<code>chunk</code>的搬移，它會週期性的檢查分片是否存在不均衡，如果有不均衡情況，它就會自動開始搬遷<code>chunk</code>，你可以根據下面指令來看看<code>balancer</code>的訊息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">use</span> <span class="nx">config</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">locks</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>執行結果如下，其中<code>who</code>就說明了我們的<code>balancer</code>在那個地方，我們的則是在<code>&quot;who&quot; : &quot;LindeMBP:20006</code>這台上面。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-7.png" alt=""></p>
+<p>這邊也要問題個問題，<strong>什麼是不均衡情況?</strong></p>
+<p>根據官網的說明，假設某個分片裡的<code>chunk</code>數量，多於其它的分片某個數量，就被認定為<code>不均衡情況</code>，但這邊也有個數量級距，請看下表一下，我們以第一行<code>小於20</code>這個來說明，它主要是說，當你的<code>chunk</code>數量小於20時，你的<code>最多chunk的分片</code>與<code>最少chunk的分片</code>差超過<code>2</code>時，就會開始進行搬遷。</p>
+<table>
+<thead>
+<tr>
+<th><code>chunk</code>數量</th>
+<th align="center">遷移閾值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>小於20</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td>20-79</td>
+<td align="center">4</td>
+</tr>
+<tr>
+<td>大於80</td>
+<td align="center">8</td>
+</tr>
+</tbody>
+</table>
+<p>這邊也有一點要注意。</p>
+<blockquote>
+<p>mongodb有提供手動分配<code>chunk</code>的功能，所以在沒打開<code>balancer </code>的情況下也可手動將<code>chunk</code>分配給其它的分片。</p>
+</blockquote>
+<h3 id="chunk-3">chunk 分配的實作。</h3>
+<p>首先我們先來看看我們的分片狀態如何，我們執行<code>sh.status()</code>，我們可以發現，所有的<code>chunk</code>都集中在<code>shared0000</code>，正常來說應該是平均分配，為啥了?</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-8.png" alt=""></p>
+<p>我們可以用下面指令，來檢查看看我們上面所說的<code>balancer</code>有沒有開啟。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">use</span> <span class="nx">config</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">settings</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">pretty</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>下圖為結果，你可以看到咱們的<code>balancer</code>的<code>stopped</code>為<code>true</code>，可以知道我們的<code>balancer</code>是停止的，所以咱們要用下面指令來打開來。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-9.png" alt=""></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">use</span> <span class="nx">config</span>
+<span class="nx">sh</span><span class="p">.</span><span class="nx">setBalancerState</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+</code></pre></div><p>執行完後，<code>balancer</code>就是開始它的工作，來檢查分片有沒有均衡，如果不均衡就重分配，我在來執行看看<code>sh.status()</code>的結果。呼呼~分配完成<code>332</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161224-10.png" alt=""></p>
+<h2 id="heading">~結語~</h2>
+<p>本篇文章中，我們將上一章節所缺少的一些觀念補齊，讓我們更加的了解到分片的原理，其它包含了<code>chunk</code>的分割條件已經一些資訊查看，並且還有<code>chunk</code>如何分配到分片的說明，接下來的一篇我們將說明片鍵的策略。</p>
+<h2 id="heading1">~參考資料~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.2/tutorial/manage-sharded-cluster-balancer/#enable-the-balancer"><a href="https://docs.mongodb.com/v3.2/tutorial/manage-sharded-cluster-balancer/#enable-the-balancer">https://docs.mongodb.com/v3.2/tutorial/manage-sharded-cluster-balancer/#enable-the-balancer</a></a></li>
+<li><a href="https://kknews.cc/zh-tw/news/orlj8o.html"><a href="https://kknews.cc/zh-tw/news/orlj8o.html">https://kknews.cc/zh-tw/news/orlj8o.html</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-24之MongoDB分片Sharding(2)---Chunk的札事</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-chunk--">~ chunk 的分配與拆分 ~</a>
+      <ul>
+        <li><a href="#chunk-">chunk 的拆分</a></li>
+        <li><a href="#chunk-1">chunk 的拆分實驗</a></li>
+        <li><a href="#chunk-2">chunk 的分配</a></li>
+        <li><a href="#chunk-3">chunk 分配的實作。</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">~結語~</a></li>
+    <li><a href="#heading1">~參考資料~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

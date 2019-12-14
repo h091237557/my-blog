@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="上篇文章我們已經說明完，如何在本機上建立 mongodb 副本集，而本篇文章，我們將要實際的使用docker來建立有三個節點的副本集，也就是所謂 cluster 。 開始前的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="上篇文章我們已經說明完，如何在本機上建立 mongodb 副本集，而本篇文章，我們將要實際的使用docker來建立有三個節點的副本集，也就是所謂 cluster 。 開始前的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-22.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>上篇文章我們已經說明完，如何在本機上建立 mongodb 副本集，而本篇文章，我們將要實際的使用docker來建立有三個節點的副本集，也就是所謂 cluster 。</p>
+<ul>
+<li>開始前的準備</li>
+<li>建立架構圖</li>
+<li>fight !</li>
+</ul>
+<h2 id="heading">~開始前的準備~</h2>
+<p>首先再開始之前你當然要先將<code>docker</code>裝好，可以參考下面這章，但你的<code>docker compose</code>那邊可以不用做到，因為我還沒研究出，如何用<code>docker compose</code>來建立<code>cluster</code>……QQ。</p>
+<blockquote>
+<p><a href="http://ithelp.ithome.com.tw/articles/10184657">30-2之使用Docker來建構MongoDB環境</a></p>
+</blockquote>
+<p>確定執行<code>docker --version</code>有類似下面的資訊出來就ok囉。</p>
+<pre><code>Docker version 1.12.3, build 6b644ec
+</code></pre><p>接下來呢咱們需要下載<code>mongodb image</code>，平常我們都是用<code>docker compose</code>直接執行它都會幫我們偷偷下載好，而現在我們就需要自已下載，指令如下。</p>
+<pre><code>docker pull mongo
+</code></pre><p>然後咱們就都準備好囉。</p>
+<h2 id="heading1">~建立架構圖~</h2>
+<p>我們來看看下圖，首先我們會先建立一個<code>cluster</code>取名為<code>my-mongo-cluster</code>，然後裡面有三個<code>mongodb</code>並且對外連接<code>port</code>設為<code>30001</code>、<code>30002</code>、<code>30003</code>，並且這三個的<code>container</code>都可以互相溝通。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-4.png" alt=""></p>
+<h2 id="heading2">~建立流程~</h2>
+<p>Fight !</p>
+<h3 id="step1-mymongoclusterdocker-network">step1 將<code>my-mongo-cluster</code>加入到<code>docker network</code>裡</h3>
+<p>我們先執行看看<code>docker network ls</code>然後會出現下圖的列表。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-1.png" alt=""></p>
+<p>然後我們再執行下面的指令將新增個<code>network</code>到<code>docker network</code>裡。</p>
+<pre><code>docker network create my-mongo-cluster
+</code></pre><p>然後你就可以看到我們將<code>my-mongo-cluster</code>加入至<code>docker network</code>裡。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-2.png" alt=""></p>
+<h3 id="step2--mongodb--container-mymongocluster--network-">Step2 建立三個 MongoDB 的 Container，並加入至 my-mongo-cluster 這 network 中</h3>
+<p>首先來看看指令，然後我們來解釋一下每個指令是啥意思。</p>
+<ul>
+<li><code>docker run</code> : 就只是執行<code>docker</code>而以。</li>
+<li><code>-p 30001:27017</code> : 將<code>port:27017</code>暴露出來，為了讓其它<code>mongodb</code>可連接到，而<code>30001</code>則為該<code>container</code>的本機<code>port</code>。</li>
+<li><code>--name mongo1</code> : 將該<code>container</code>命名為<code>mongo1</code>。</li>
+<li><code>--net my-mongo-cluster </code> : 將該<code>container</code>加入到<code>my-mongo-cluster</code>這<code>docker network</code>裡面，然它們可以互相通信。</li>
+<li><code>mongo mongod --replSet my-mongo-set</code> : 運行<code>mongod</code>時將該<code>mongo</code>加入到名為<code>my-mongo-set</code>的副本集中。</li>
+</ul>
+<pre><code>docker run 
+-p 30001:27017 
+--name mongo1 
+--net my-mongo-cluster 
+mongo mongod --replSet my-mongo-set
+</code></pre><p>記好上面這些是要縮成一行來執行，如下。</p>
+<pre><code>docker run -p 30001:27017 --name mongo1 --net my-mongo-cluster mongo mongod --replSet my-mongo-set
+</code></pre><p>執行完這行指令後，你就建立好了一個<code>container</code>呢，但別忘囉我們要建立三個，所以還要再執行兩次，另外兩個只是修改一下<code>port</code>，對了在執行其它兩個建立時要新開兩個<code>Shell</code>。</p>
+<pre><code>docker run 
+-p 30002:27017 
+--name mongo1 
+--net my-mongo-cluster 
+mongo mongod --replSet my-mongo-set
+</code></pre><pre><code>docker run 
+-p 30003:27017 
+--name mongo1 
+--net my-mongo-cluster 
+mongo mongod --replSet my-mongo-set
+</code></pre><p>建立完後你可以執行<code>docker ps</code>指令看首你所建立的<code>container</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-3.png" alt=""></p>
+<h3 id="step3-">Step3 設定副本集</h3>
+<p>建立完後，咱們就可以連到<code>container</code>裡控制<code>mongodb</code>囉。</p>
+<pre><code>docker exec -it mongo1 mongo
+</code></pre><p>然後進行後我們想看看它的副本集資訊，我們執行下面的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s1">&#39;localhost:27017&#39;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161222-5.png" alt=""></p>
+<p>然後看到上面的執行結果，會發現它提示我們還沒有可用的副本集設定，所以我們這時要寫一段段代碼，主要就是副本集設定，程式碼如下，其中<code>_id</code>要設定的與所設定的副本集名稱一樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">config</span> <span class="o">=</span> <span class="p">{</span>
+  	<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;my-mongo-set&#34;</span><span class="p">,</span>
+  	<span class="s2">&#34;members&#34;</span> <span class="o">:</span> <span class="p">[</span>
+  		<span class="p">{</span>
+  			<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+  			<span class="s2">&#34;host&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongo1:27017&#34;</span>
+  		<span class="p">}</span><span class="p">,</span>
+  		<span class="p">{</span>
+  			<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+  			<span class="s2">&#34;host&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongo2:27017&#34;</span>
+  		<span class="p">}</span><span class="p">,</span>
+  		<span class="p">{</span>
+  			<span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+  			<span class="s2">&#34;host&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongo3:27017&#34;</span>
+  		<span class="p">}</span>
+  	<span class="p">]</span>
+  <span class="p">}</span>
+
+<span class="nx">rs</span><span class="p">.</span><span class="nx">initiate</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span>
+</code></pre></div><p>然後我們再執行一次<code>db.isMaster()</code>，你就會看到我們設定完成囉。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-6.png" alt=""></p>
+<h3 id="step4-">Step4 測試是否有備份</h3>
+<p>首先我們先建立些測試資料，並新增到<code>primary</code>的<code>mongodb</code>中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後再連線到<code>secondary</code>裡尋找看看。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db2</span> <span class="o">=</span> <span class="p">(</span><span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s1">&#39;mongo2:27017&#39;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+<span class="nx">db2</span><span class="p">.</span><span class="nx">setSlaveOk</span><span class="p">(</span><span class="p">)</span>
+<span class="nx">db2</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>執行結果如下~完成~。</p>
+<p><img src="http://yixiang8780.com/outImg/20161222-7.png" alt=""></p>
+<h2 id="heading3">~結語~</h2>
+<p>副本集方面的事情我就先說明到這，雖然還有不少東西可以講，但那都是管理方面與副本集設計方面的問題，這些我就真的懶講囉……</p>
+<p><code>P.S</code> 今天打流感疫苗，但著麼打完後就要燒起來的感覺……</p>
+<h2 id="heading4">~參考資料~</h2>
+<ul>
+<li><a href="http://www.sohamkamani.com/blog/2016/06/30/docker-mongo-replica-set/"><a href="http://www.sohamkamani.com/blog/2016/06/30/docker-mongo-replica-set/">http://www.sohamkamani.com/blog/2016/06/30/docker-mongo-replica-set/</a></a></li>
+<li><a href="http://sofar.blog.51cto.com/353572/1640558"><a href="http://sofar.blog.51cto.com/353572/1640558">http://sofar.blog.51cto.com/353572/1640558</a></a></li>
+<li><a href="https://cnodejs.org/topic/5590adbbebf9c92d17e734de"><a href="https://cnodejs.org/topic/5590adbbebf9c92d17e734de">https://cnodejs.org/topic/5590adbbebf9c92d17e734de</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">~開始前的準備~</a></li>
+    <li><a href="#heading1">~建立架構圖~</a></li>
+    <li><a href="#heading2">~建立流程~</a>
+      <ul>
+        <li><a href="#step1-mymongoclusterdocker-network">step1 將my-mongo-cluster加入到docker network裡</a></li>
+        <li><a href="#step2--mongodb--container-mymongocluster--network-">Step2 建立三個 MongoDB 的 Container，並加入至 my-mongo-cluster 這 network 中</a></li>
+        <li><a href="#step3-">Step3 設定副本集</a></li>
+        <li><a href="#step4-">Step4 測試是否有備份</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">~結語~</a></li>
+    <li><a href="#heading4">~參考資料~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

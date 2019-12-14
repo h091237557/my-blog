@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-6之MongoDB新手村CRUD---更新之陣列欄位攻略 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、p|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-6之MongoDB新手村CRUD---更新之陣列欄位攻略 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、p|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-06.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、pull 來使用。</p>
+<ul>
+<li>陣列更新修改器攻略</li>
+</ul>
+<p>呼好多……</p>
+<h2 id="--">~ 陣列更新修改器攻略 ~</h2>
+<h3 id="push">$push</h3>
+<p><code>$push</code>是陣列修改器，假如一個<code>document</code>中已經有陣列的結構，使用<code>push</code>會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。</p>
+<p>使用方法如下範例，首先先新增一筆資料，然後新增加一個叫<code>jack</code>的<code>fans</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">}</span>
+	<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-1.png" alt=""></p>
+<h3 id="each">$each</h3>
+<p><code>$push</code>一次新增只能新增一筆元素，而搭配<code>$each</code>就可以新增多筆。</p>
+<p>使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個<code>fans</code>分別為<code>jack</code>、<code>landry</code>、<code>max</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+
+	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">}</span>
+	<span class="p">)</span>
+</code></pre></div><p>結果如下圖</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-2.png" alt=""></p>
+<h3 id="slice">$slice</h3>
+<p>如果你希望限制一個陣列的大小，就算多<code>push</code>進元素，也不要超過限制大小，這時你就可以用<code>$slice</code>，不過注意它是保留最後<code>n</code>個元素。</p>
+<p>使用方法如下範例，新增一筆資料，然後我們希望<code>fans</code>人數不超過<code>5人</code>，但我們硬多塞一個人進去。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+
+	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
+			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
+			 <span class="s2">&#34;$slice&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">5</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
+	<span class="p">)</span>
+</code></pre></div><p>執行結果如下，可以看到第一位<code>steven</code>被刪除，只保留了最後5位。</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-3.png" alt=""></p>
+<h3 id="addtoset">$addToSet</h3>
+<p>你可能有這個需求，假設你要新增一個元素到陣列裡，並且保證陣列內的元素不會重複，這時就可以使用<code>$addToSet</code>。</p>
+<p>使用方法如下範例，新增一筆資料，然後<code>fans</code>有<code>steven、landry、stanly</code>，這時我們在新增<code>steven</code>和<code>jack</code>進去，預期應該<code>steven</code>不會被新增進去，也就是不會產生兩個<code>steven</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+	
+		<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="s2">&#34;$addToSet&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
+			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">]</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
+	<span class="p">)</span>
+</code></pre></div><p>執行結果如下，符合預期。</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-4.png" alt=""></p>
+<h3 id="pop--pull">$pop 與 pull</h3>
+<p><code>$pop</code>與<code>$pull</code>這兩個修改器都是用來刪除元素用的，<code>$pop</code>可以從頭或尾刪除，而<code>$pull</code>則是基於特定條件來刪除。</p>
+<p>先來看看<code>$pop</code>的使用範例。其中<code>&quot;fans&quot;:1</code>代表從<code>fans</code>陣列尾刪除<code>&quot;fans&quot;:-1</code>則從陣列頭刪除。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+	
+	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="s2">&#34;$pop&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span>
+	<span class="p">)</span>
+
+</code></pre></div><p>下圖為執行結果。</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-5.png" alt=""></p>
+<p>這時我們在來看看<code>$pull</code>用法，假設我們要將<code>crisis</code>這<code>fans</code>刪除，使用方法如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
+		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
+	<span class="p">}</span><span class="p">)</span>
+	
+	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
+		<span class="p">{</span><span class="s2">&#34;$pull&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span><span class="p">}</span><span class="p">}</span>
+	<span class="p">)</span>
+</code></pre></div><p>執行結果如下圖</p>
+<p><img src="http://yixiang8780.com/outImg/20161204-6.png" alt=""></p>
+<h2 id="--1">~ 結語 ~</h2>
+<p>今天說了不少個修改器簡單的進行總結一下。</p>
+<ul>
+<li>要將元素丟進陣列時可用<code>$push</code>。</li>
+<li>要將『多個』元素丟進陣列時可搭配<code>$each</code>。</li>
+<li>要限制陣列大小時請用<code>$slice</code>。</li>
+<li>要保證陣列內容不重複請用<code>$addToSet</code>。</li>
+<li>要刪除陣列元素請用<code>$pop</code>和<code>$pull</code>。</li>
+</ul>
+<p>結束……又快要燒起來的<code>fu</code>，<code>+u^6</code>。</p>
+<h2 id="--2">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://docs.mongodb.com/v3.2/reference/operator/update-array/"><a href="https://docs.mongodb.com/v3.2/reference/operator/update-array/">https://docs.mongodb.com/v3.2/reference/operator/update-array/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 陣列更新修改器攻略 ~</a>
+      <ul>
+        <li><a href="#push">$push</a></li>
+        <li><a href="#each">$each</a></li>
+        <li><a href="#slice">$slice</a></li>
+        <li><a href="#addtoset">$addToSet</a></li>
+        <li><a href="#pop--pull">$pop 與 pull</a></li>
+      </ul>
+    </li>
+    <li><a href="#--1">~ 結語 ~</a></li>
+    <li><a href="#--2">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

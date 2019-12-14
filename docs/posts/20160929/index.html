@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-29之MongoDB--- 事務操作的空虛感 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB, transaction" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。 MongoDB 不支持事務操作 但事實上這段話有很多觀念要來說明說明，不然很|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-29之MongoDB--- 事務操作的空虛感 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。 MongoDB 不支持事務操作 但事實上這段話有很多觀念要來說明說明，不然很|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-29之MongoDB--- 事務操作的空虛感</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-29.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。</p>
+<blockquote>
+<p>MongoDB 不支持事務操作</p>
+</blockquote>
+<p>但事實上這段話有很多觀念要來說明說明，不然很難讓人了解事務操作是啥，所以我們這篇要用來補充一下這個主題。</p>
+<h2 id="--">~ 事務操作是啥鬼 ~</h2>
+<p>咱們首先先來了解一下，<strong>事務</strong>是啥?根據<code>wiki</code>的定義。</p>
+<blockquote>
+<p>資料庫事務是資料庫管理系統執行過程中的一個邏輯單位，由一個有限的資料庫操作序列構成。</p>
+</blockquote>
+<p>這邊用白話文來簡單說明一下，事實操作你可以把他想成一個工作流程，例如煮菜，你首先要先洗菜、切菜、丟到鍋子、加調味料，『煮菜』這名詞就是一個事務，它裡面包含了剛剛說明的流程。</p>
+<p>我們轉回的在資料庫中的事務，假設我們是個證券商，我們收到使用者的下單通知，那我們資料庫會著麼進行? 我們下面來試試列出該事務操作過程。其中我們有兩個資料表<code>accounts</code>為使用者的帳戶資料、第二個為<code>orders</code>下單資料，呃對了先不管交割日這鬼，也就是付錢日。</p>
+<ol>
+<li>首先我們會先在<code>orders</code>新增一筆訂單。</li>
+<li>再到<code>accounts</code>針對該使用者的帳戶進行扣款。</li>
+</ol>
+<p><strong>那如果發生錯誤時，事務會著麼處理?</strong></p>
+<p>根據以上的例子，我們拿來繼續使用，假設我們在第二個步驟，準備要扣款時，系統突然<code>gg</code>了，那要著麼樣?在一些資料庫中，當整個事務提交給資料庫時，<strong>它會保證這整個事務要嘛全部完成，要嘛全部沒完成。</strong></p>
+<p>也就是說，如果我們第二個步驟掛掉時，我們一開始在<code>orders</code>新增的一筆訂單會取消，會保持整個事務的完整性，不會只完成一半。</p>
+<p>最後這邊我們來看一下事務操作的四個特性<code>ACID</code>，來腦補一下，以下內容為<code>wiki</code>，並且自已寫寫說明。</p>
+<ul>
+<li>原子性（Atomicity） : 要麼全執行、要麼全取消，沒得商量。</li>
+<li>一致性（Consistency）: 這個是指在事務開始與結束後，資料庫的完整性約束沒有被破壞。</li>
+<li>隔離性（Isolation）: 多個事務執行時，任一個事務不會影響到其它的事務。</li>
+<li>持久性（Durability）: 代表即時停電或啥，事務一旦提交後，則持久化保存在資料庫中。</li>
+</ul>
+<h2 id="-mongodb--">~ MongoDB 不支援事務 ~</h2>
+<p>對<code>mongodb</code>不支援事務，但它還是有支援一些符合各別特性的操作，總共有三個。</p>
+<h3 id="1--document--findandmodify">1. 在單個 document 上有提供原子性操作 findAndModify</h3>
+<p><code>mongodb</code>有提供單個<code>document</code>，操作，也就是說如果你要針對該<code>document</code>進行更新，要麼全部更新完成，不然就全部不更新，我們簡單用個範例來說明如何設計成，符合原子性的功能。</p>
+<p>我們把上面的例子拿下來用。</p>
+<blockquote>
+<p>假設我們是個證券商，我們收到使用者的下單通知，那我們資料庫會著麼進行? 我們下面來試試列出該事務操作過程。其中我們有兩個資料表<code>accounts</code>為使用者的帳戶資料、第二個為<code>orders</code>下單資料，呃對了先不管交割日這鬼，也就是付錢日。</p>
+</blockquote>
+<p>但注意一點，如果我們是建立將<code>accounts</code>與<code>orders</code>分成兩個<code>collection</code>來建立，那我們就沒辦法使用<code>mongodb</code>所提供的原子性操作，因為就變為多<code>document</code>的操作。</p>
+<p>所以我們需要將它修改為都存放在同一個<code>collection</code>，沒錯也就是進行反正規化，資料大概會變成這樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;user&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> 
+  <span class="nx">balance</span> <span class="o">:</span> <span class="mi">10000</span> <span class="p">,</span>
+  <span class="nx">orders</span> <span class="o">:</span> <span class="p">[</span>
+  	<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="mi">1000</span> <span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="s2">&#34;20160101&#34;</span> <span class="p">}</span><span class="p">,</span>
+  	<span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span> <span class="p">,</span> <span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="mi">2000</span> <span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="s2">&#34;20160103&#34;</span><span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們進行交易時，我們需要先檢查<code>balance</code>確定是否有足的錢，然後在新增一筆下單到<code>orders</code>欄位中，最後才修改<code>balance</code>，而我們這時需要用到<code>findAndModify </code>，它可以確保這筆交易的，在確定完<code>balance</code>後，不會有其它線程來更新它的<code>balance</code>。</p>
+<p>我們來說一下沒用<code>findAndModify</code>會發生什麼情況，假設<code>balance</code>有<code>10000</code>，有一筆下單要<code>6000</code>元，然後<code>A</code>是來處理這筆訂單的線程，我們來模擬情境一下。</p>
+<ul>
+<li>A : 我先來確定一下<code>balance</code>是否有足夠的錢，嗯嗯~~還有<code>10000</code>很夠的。</li>
+<li>B(另一個線程) : 我先來扣錢一下，總共要扣<code>5000</code>元，現在<code>balance</code>只剩<code>5000</code>。</li>
+<li>A : 好~那接下來新增一筆下單到<code>orders</code>欄位，然後再進行扣款。</li>
+<li>A : what fuc&hellip;. !!! 為啥<code>balance</code>現在不夠錢了 ! 錢呢 !?</li>
+</ul>
+<p>嗯記好，這時要用<code>findAndModify</code>才不會發生上面這種鳥事。下面為更新的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">findAndModify</span><span class="p">(</span><span class="p">{</span>  
+	<span class="s2">&#34;query&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;user&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$gt&#34;</span> <span class="o">:</span> <span class="mi">6000</span> <span class="p">}</span><span class="p">}</span><span class="p">,</span>
+	<span class="s2">&#34;update&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$set&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span> <span class="mi">4000</span> <span class="p">}</span><span class="p">,</span>
+					<span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;orders&#34;</span> <span class="o">:</span>
+					 <span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&#34;total&#34;</span><span class="o">:</span><span class="mi">6000</span><span class="p">,</span><span class="s2">&#34;date&#34;</span><span class="o">:</span><span class="s2">&#34;20160110&#34;</span><span class="p">}</span> <span class="p">}</span> <span class="p">}</span>
+
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><h3 id="2--document--isolate">2. 對多個 document 使用 $isolate</h3>
+<p><code>mongodb</code>還有提供一個東東，它可以讓你在更新大量<code>document</code>時，其它的線程無法針對這些更新的文檔進行讀與寫，也就是支援隔離性（Isolation）。</p>
+<p>但當然它也是有缺點的，有以下三個缺點。</p>
+<ul>
+<li>首先是性能的問題，因為你都把人家鎖住了，人家當然要等你解鎖，</li>
+<li>他沒有支援原子性的功能，也就是你更新完一半囉，但發生錯誤了，你已經更新好的不會回復成原始狀態。</li>
+<li>它不支援分片。</li>
+</ul>
+<h3 id="3-two-phase-commits-">3. Two Phase Commits 來模擬事務操作</h3>
+<p><code>mongodb</code>官方，有提供一種範例方法，讓我們手動的來建立事務操作，它可以讓我們在進行大量更新時，如果發生錯誤，則之前更新的會全部還原，這種方法就叫<code>Two Phase Commits</code>。</p>
+<p>我們直接拿官方的例子來說明，假設有兩個銀行帳號。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nx">balance</span><span class="o">:</span><span class="mi">1000</span><span class="p">,</span> <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="p">[</span><span class="p">]</span><span class="p">}</span><span class="p">)</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="nx">balance</span><span class="o">:</span><span class="mi">1000</span><span class="p">,</span> <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="p">[</span><span class="p">]</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>然後我們這時要將帳號<code>A</code>轉帳<code>100元</code>到帳處<code>B</code>，我們這邊將用<code>two phase commits</code>來一步一步的完成這筆交易</p>
+<h4 id="step-1--initial">Step 1. 設定事務初始狀態為 initial</h4>
+<p>首先我們會在一個新的<code>collection</code>名為<code>transaction</code>新增一筆資料，記錄這該筆事務的資訊，並且設定<code>state</code>為<code>initial</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">save</span><span class="p">(</span>
+<span class="p">{</span><span class="nx">source</span><span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="nx">destination</span><span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span> <span class="nx">state</span><span class="o">:</span><span class="s2">&#34;initial&#34;</span><span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div><h4 id="step-2--accounts--pending">Step 2. 開始修改 accounts 前，先修改初始狀態為 Pending</h4>
+<p>首先先尋找出狀態為<code>inital</code>的事務。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">t</span> <span class="o">=</span><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">findOne</span><span class="p">(</span><span class="p">{</span><span class="nx">state</span><span class="o">:</span><span class="s2">&#34;initial&#34;</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;source&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span>
+     <span class="s2">&#34;destination&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&#34;state&#34;</span> <span class="o">:</span><span class="s2">&#34;initial&#34;</span><span class="p">}</span>
+</code></pre></div><p>然後在針對該事務，將<code>status</code>更新為<code>pending</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$set</span><span class="o">:</span><span class="p">{</span><span class="nx">state</span><span class="o">:</span><span class="s2">&#34;pending&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>這時我們的事務資訊更新為如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;source&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;destination&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span><span class="mi">100</span><span class="p">,</span> <span class="s2">&#34;state&#34;</span> <span class="o">:</span><span class="s2">&#34;pending&#34;</span><span class="p">}</span>
+</code></pre></div><h4 id="step-3-">Step 3. 開始更新兩個帳戶</h4>
+<p>然後我們就可以開始更新兩個帳戶，並且將事務資訊，記錄到<code>pendingTransactions </code>這個欄位。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span> 
+    <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$ne</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">$inc</span><span class="o">:</span><span class="p">{</span> <span class="nx">balance</span><span class="o">:</span> <span class="o">-</span><span class="nx">t</span><span class="p">.</span><span class="nx">value</span> <span class="p">}</span><span class="p">,</span> 
+    <span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+    
+<span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">destination</span><span class="p">,</span> 
+    <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$ne</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">$inc</span><span class="o">:</span><span class="p">{</span> <span class="nx">balance</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">value</span> <span class="p">}</span><span class="p">,</span> 
+    <span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>首先先看看這行，這行是要先尋找出我們指令要更新的帳戶，其中<code>pendingTransactions: { $ne: t._id }</code>代表的意思為<code>pendingTransactions</code>裡不含<code>t._id</code>才找出來。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span> <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="p">{</span> <span class="nx">$ne</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span>
+</code></pre></div><p>然後下面這兩行，才是更新欄位，會將<code>balance</code>增加<code>t.value</code>，然後將該事務的<code>id</code>存放至<code>pendingTransactions </code>內。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"> <span class="p">{</span><span class="nx">$inc</span><span class="o">:</span><span class="p">{</span> <span class="nx">balance</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">value</span> <span class="p">}</span><span class="p">,</span> 
+    <span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>然後最後這是該階段帳戶的結果。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc97fb8a04f5126961523&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">900</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span> <span class="p">]</span> <span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc984b8a04f5126961524&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">1100</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span> <span class="p">]</span> <span class="p">}</span>
+</code></pre></div><h4 id="step-4--committed">Step 4. 設置事務狀態為 committed</h4>
+<pre><code>db.transactions.update({_id:t._id},{$set:{state:&quot;committed&quot;}})
+</code></pre><p>結果如下，<code>state</code>修改為<code>committed</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;destination&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;source&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="s2">&#34;state&#34;</span> <span class="o">:</span><span class="s2">&#34;committed&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span><span class="mi">100</span><span class="p">}</span>
+</code></pre></div><h4 id="step-5-done">Step 5. 移出帳戶內事務資訊，並修改事務狀態為<code>done</code></h4>
+<p>首先我們將帳戶內的事務資訊給刪除，因為已經不需要了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">source</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$pull</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">destination</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$pull</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc97fb8a04f5126961523&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">900</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="p">]</span> <span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc984b8a04f5126961524&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">1100</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="p">]</span> <span class="p">}</span>
+</code></pre></div><p>然後我們最後再將事務狀態修改為<code>done</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$set</span><span class="o">:</span><span class="p">{</span><span class="nx">state</span><span class="o">:</span><span class="s2">&#34;done&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>結果如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc7a8b8a04f5126961522&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;destination&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> 
+    <span class="s2">&#34;source&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="s2">&#34;state&#34;</span> <span class="o">:</span><span class="s2">&#34;done&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span><span class="mi">100</span><span class="p">}</span>
+</code></pre></div><p>上面這一整串<code>Step1</code>到<code>Step5</code>的流程就是<code>two phase commit</code>的流程。</p>
+<h3 id="heading">發生失敗的操作</h3>
+<p>上面都是跑正常的轉帳流程，還看不出這麻煩的流程可以做啥，所以我們這時來看看，如果中途轉帳時發生錯誤時，則流程要著麼樣跑，可以回復成原始模樣。</p>
+<p>我們只直接用如果已經更新帳戶內的<code>balance</code>後發生錯誤要著麼進行回復。</p>
+<h4 id="step-1--canceling">Step 1. 設置事務狀態為 canceling</h4>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$set</span><span class="o">:</span><span class="p">{</span><span class="nx">state</span><span class="o">:</span><span class="s2">&#34;canceling&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><h4 id="step-2-">Step 2. 回復為原始狀態</h4>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">source</span><span class="p">,</span> 
+    <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">$inc</span><span class="o">:</span><span class="p">{</span><span class="nx">balance</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">value</span><span class="p">}</span><span class="p">,</span> 
+    <span class="nx">$pull</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+    
+<span class="nx">db</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">name</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">destination</span><span class="p">,</span> 
+    <span class="nx">pendingTransactions</span><span class="o">:</span> <span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span>
+    <span class="p">{</span><span class="nx">$inc</span><span class="o">:</span><span class="p">{</span><span class="nx">balance</span><span class="o">:</span> <span class="o">-</span><span class="nx">t</span><span class="p">.</span><span class="nx">value</span><span class="p">}</span><span class="p">,</span> 
+    <span class="nx">$pull</span><span class="o">:</span><span class="p">{</span><span class="nx">pendingTransactions</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>然後我們可以看一下回復後的結果，嗯沒錯，就是原始的樣子。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc97fb8a04f5126961523&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">1000</span><span class="p">,</span> 
+    <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;A&#34;</span><span class="p">,</span> <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="p">]</span> <span class="p">}</span>
+<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span><span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;4d7bc984b8a04f5126961524&#34;</span><span class="p">)</span><span class="p">,</span> <span class="s2">&#34;balance&#34;</span> <span class="o">:</span><span class="mi">1000</span><span class="p">,</span> 
+    <span class="s2">&#34;name&#34;</span> <span class="o">:</span><span class="s2">&#34;B&#34;</span><span class="p">,</span> <span class="s2">&#34;pendingTransactions&#34;</span> <span class="o">:</span><span class="p">[</span> <span class="p">]</span> <span class="p">}</span>
+</code></pre></div><h4 id="step-3-canceled">Step 3. 設置事務狀態為<code>canceled</code></h4>
+<p>最後再修改事務狀態，然後收工。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">transactions</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="nx">_id</span><span class="o">:</span><span class="nx">t</span><span class="p">.</span><span class="nx">_id</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="nx">$set</span><span class="o">:</span><span class="p">{</span><span class="nx">state</span><span class="o">:</span><span class="s2">&#34;canceled&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="--1">~ 結語 ~</h2>
+<p>這篇文章說簡單的解釋了事務操作是啥以及特性，並且也有說明沒有事務操作會發生什麼事情，然後也說明了事務操作在<code>mongodb</code>內的假實現，因為他並沒有完全的實現，所以我很喜歡叫他假實現。</p>
+<p>基本上這個鐵人賽已經進入尾尾聲了，基本上最後一篇已經不太會說技術的東西，也只是這三十天的心得，請見諒，因為我累囉~~~~~</p>
+<h2 id="--2">~ 參考資料 ~</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1"><a href="https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1">https://zh.wikipedia.org/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1</a></a></li>
+<li><a href="https://docs.mongodb.com/manual/tutorial/perform-two-phase-commits/"><a href="https://docs.mongodb.com/manual/tutorial/perform-two-phase-commits/">https://docs.mongodb.com/manual/tutorial/perform-two-phase-commits/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-29之MongoDB--- 事務操作的空虛感</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#--">~ 事務操作是啥鬼 ~</a></li>
+    <li><a href="#-mongodb--">~ MongoDB 不支援事務 ~</a>
+      <ul>
+        <li><a href="#1--document--findandmodify">1. 在單個 document 上有提供原子性操作 findAndModify</a></li>
+        <li><a href="#2--document--isolate">2. 對多個 document 使用 $isolate</a></li>
+        <li><a href="#3-two-phase-commits-">3. Two Phase Commits 來模擬事務操作</a></li>
+        <li><a href="#heading">發生失敗的操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#--1">~ 結語 ~</a></li>
+    <li><a href="#--2">~ 參考資料 ~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

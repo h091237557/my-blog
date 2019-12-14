@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-21之MongoDB的副本集 replica set(1) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-21之MongoDB的副本集 replica set(1) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.2.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-21之MongoDB的副本集 replica set(1)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
+  <span class="Label Label--gray">IT 鐵人賽 2016</span>
+</a>
+
+<a href='/tags/mongodb' class="muted-link">
+  <span class="Label Label--gray">mongodb</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2016-09-21.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環境呢 ? GG 囉可不是啊一聲就可以解決的，你可能就被老闆不要不要的，很慘的~ 而副本集就是用來解決這問題，事實上也就只是被備份。</p>
+<ul>
+<li>副本集原理</li>
+<li>副本集建立(單機版給你好測試)</li>
+</ul>
+<h2 id="heading">~副本集原理~</h2>
+<p>首先我們先看看<code>mongodb</code>官網所提供的圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20161221-1.png" alt=""></p>
+<p>上面這張圖，你可以想成這個系統它有三個<code>mongodb</code>，其中<code>primary</code>節點接受所有<code>client</code>端的讀或寫，整個副本集只有一個<code>primary</code>，並且每當有資料新增時，<code>primary</code>會同步到其它兩個<code>secondary</code>。</p>
+<p>然後當<code>primary</code>節點<code>GG</code>的話，會變成下面這張圖的結果(一樣來至官網)。</p>
+<p><img src="http://yixiang8780.com/outImg/20161221-2.png" alt=""></p>
+<p>在這裡面，各節點都是通過一個叫心跳請求(<code>heartbeat request</code>)的機制來通信，如果當<code>primary</code>節點如果在10秒內無法和其它節點進行通信，這系統會自動從<code>secondary</code>節點中選取一個當主節點。</p>
+<h2 id="heading1">~副本集建立~</h2>
+<p>在上面大概簡單的了解完它的原理後，我們就實際上的來操作看看，首先我們執行下面指令，
+來進行到沒有<code>db</code>的<code>mongodb shell</code>環境。</p>
+<pre><code>mongo --nodb
+</code></pre><p>然後通過下面的指令，就可以建立一個副本集，其中<code>nodes : 3</code>代表三個節點，一個<code>primary</code>其它兩個為<code>secondary</code>。</p>
+<pre><code>replicaSet = new ReplSetTest({&quot;nodes&quot;:3})
+</code></pre><p>不過執行完上面這行指令它還沒啟動喔還需要執行下面兩行，<code>startSet</code>為啟動那三個節點的進程，而<code>initiate</code>為設定複制功能。</p>
+<pre><code>replicaSet.startSet()
+replicaSet.initiate()
+</code></pre><p>當執行完上面兩行後，我們就要跳到另一個<code>Shell</code>，然後連接到<code>primary</code>的節點，喲~?那它的<code>port</code>是啥?雖然有些文章中說預設是<code>31000</code>、<code>31001</code>、<code>31002</code>但我的電腦卻不是，所以建議還是在執行<code>startSet</code>時看一下，它應該會輸出下面這張圖的資訊。</p>
+<p><img src="http://yixiang8780.com/outImg/20161221-3.png" alt=""></p>
+<p>嗯看到了吧，通常第一個就是<code>primary</code>，不是的話就試試其它的，然後我們這時就可以執行下面指令進入到它的裡面了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">conn1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20000&#34;</span><span class="p">)</span>
+</code></pre></div><p>接下來我們就可以執行一些指令來看看這個副本集的狀態。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">primaryDB</span> <span class="o">=</span> <span class="nx">conn1</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
+<span class="nx">primaryDB</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>結果如下，其中<code>isMaster</code>這欄位就是說明這節點是<code>primary</code>節點。</p>
+<p><img src="http://yixiang8780.com/outImg/20161221-4.png" alt=""></p>
+<h2 id="-secondary-">~驗證一下有沒有備份到 secondary 節點~</h2>
+<p>首先我們先新增一些資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">primaryDB</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後我們這時連到<code>secondary</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">conn2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20001&#34;</span><span class="p">)</span>
+</code></pre></div><p>進去後在輸入。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">secondaryDB</span> <span class="o">=</span> <span class="nx">conn2</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
+<span class="nx">secondaryDB</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>然後你會看到下面的錯誤訊息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">error</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$err&#34;</span> <span class="o">:</span> <span class="s2">&#34;not master and slaveok=false&#34;</span><span class="p">,</span><span class="s2">&#34;code&#34;</span> <span class="o">:</span><span class="mi">13435</span> <span class="p">}</span>
+</code></pre></div><p>這時要要再執行這行指令才能在<code>seoncdary</code>才能開啟。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">coon2</span><span class="p">.</span><span class="nx">setSlaveOk</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>這時你在執行一次搜尋應該就可以看到結果囉~如下。</p>
+<p><img src="http://yixiang8780.com/outImg/20161221-5.png" alt=""></p>
+<h2 id="heading2">~結語~</h2>
+<p>對不起我今天真的想不到結啥語，只能說+u~</p>
+<h2 id="heading3">~參考資料~</h2>
+<ul>
+<li><a href="http://www.cnblogs.com/zhanjindong/p/3251330.html"><a href="http://www.cnblogs.com/zhanjindong/p/3251330.html">http://www.cnblogs.com/zhanjindong/p/3251330.html</a></a></li>
+<li><a href="https://docs.mongodb.com/v3.2/reference/configuration-options/#net.port"><a href="https://docs.mongodb.com/v3.2/reference/configuration-options/#net.port">https://docs.mongodb.com/v3.2/reference/configuration-options/#net.port</a></a></li>
+<li><a href="https://docs.mongodb.com/manual/tutorial/deploy-replica-set/"><a href="https://docs.mongodb.com/manual/tutorial/deploy-replica-set/">https://docs.mongodb.com/manual/tutorial/deploy-replica-set/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-21之MongoDB的副本集 replica set(1)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">~副本集原理~</a></li>
+    <li><a href="#heading1">~副本集建立~</a></li>
+    <li><a href="#-secondary-">~驗證一下有沒有備份到 secondary 節點~</a></li>
+    <li><a href="#heading2">~結語~</a></li>
+    <li><a href="#heading3">~參考資料~</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
