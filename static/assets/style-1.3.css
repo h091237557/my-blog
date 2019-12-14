@@ -167,6 +167,11 @@ span {
   border: none !important;
 }
 
+.pagination a:active {
+  background-color: #57cc8a !important;
+  color: #333;
+}
+
 .logo {
   width: 9em;
   -webkit-transform: rotate(-2.5deg);

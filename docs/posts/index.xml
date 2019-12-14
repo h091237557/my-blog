@@ -49,6 +49,51 @@
     </item>
     
     <item>
+      <title>資料結構---堆積 Heap</title>
+      <link>https://mark-lin.com/posts/20170314/</link>
+      <pubDate>Tue, 14 Mar 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170314/</guid>
+      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆</description>
+    </item>
+    
+    <item>
+      <title>資料結構---圖形結構</title>
+      <link>https://mark-lin.com/posts/20170311/</link>
+      <pubDate>Sat, 11 Mar 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170311/</guid>
+      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe</description>
+    </item>
+    
+    <item>
+      <title>資料結構---樹狀結構與二元樹</title>
+      <link>https://mark-lin.com/posts/20170309/</link>
+      <pubDate>Thu, 09 Mar 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170309/</guid>
+      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們</description>
+    </item>
+    
+    <item>
+      <title>資料結構---串列 Linked List</title>
+      <link>https://mark-lin.com/posts/20170213/</link>
+      <pubDate>Mon, 13 Feb 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170213/</guid>
+      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是</description>
+    </item>
+    
+    <item>
+      <title>資料結構---陣列(Array)、堆疊(Stack)、佇列(Queue)</title>
+      <link>https://mark-lin.com/posts/20170211/</link>
+      <pubDate>Sat, 11 Feb 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170211/</guid>
+      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說</description>
+    </item>
+    
+    <item>
       <title>30-30之MongoDB三十天的學習之旅</title>
       <link>https://mark-lin.com/posts/20160930/</link>
       <pubDate>Fri, 30 Sep 2016 19:51:35 +0800</pubDate>

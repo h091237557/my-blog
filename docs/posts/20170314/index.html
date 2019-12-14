@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  資料結構---堆積 Heap &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="data structure, graph" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="資料結構---堆積 Heap | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">資料結構---堆積 Heap</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/data-structure' class="muted-link">
+  <span class="Label Label--gray">data structure</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-03-14.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>這篇文章中，我們將要來說明<code>堆積(heap)</code>這種資料結構，但在說明這個資料結構前，讀者需要先了解<code>二元樹</code>這種資料結構，如果不了解的話，可以看看筆者的這篇文章。</p>
+<blockquote>
+<p><a href="https://mark-lin.com/posts/20170309/">資料結構&mdash;樹狀結構與二元樹</a></p>
+</blockquote>
+<p>不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合<code>每個節點最多有兩個子樹</code>這個特性，才能稱為二元樹。</p>
+<p>在大概知道了二元樹後，我們就可以開始本篇文章的重點<code>堆積heap</code>。</p>
+<ul>
+<li>堆積的原理</li>
+<li>二元樹轉成堆積</li>
+<li>程式碼實作</li>
+</ul>
+<h2 id="-heap-">堆積 Heap 的原理</h2>
+<p>堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為<code>堆積</code>。</p>
+<ul>
+<li>任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。</li>
+<li>堆積是種完全樹。</li>
+</ul>
+<blockquote>
+<p>完全樹 : 除了最低層外，其它層的節都都被塞滿。</p>
+</blockquote>
+<p>我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。</p>
+<p><img src="http://yixiang8780.com/outImg/20170314-1.png" alt=""></p>
+<h2 id="heading">二元樹轉換成堆積</h2>
+<p>上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。</p>
+<p>傳統上有二種方法，<code>由下而上</code>與<code>由上而下</code>，我們本章節將說明<code>由下而上</code>的方法，不然文章會太長……。</p>
+<p>這個方法的基本流程如下，我們以下說明都以<code>max heap</code>為主，也就是根節點為最大值。</p>
+<ul>
+<li>計算出此棵樹的節點數量，假設為<code>n</code>。</li>
+<li>在從其<code>n/2</code>節點(事實上也就是<code>最後一個父節點</code>)開始進行比較。</li>
+<li>若子節點的值大於父節點，則相互對調。</li>
+<li>若有交換，還比較在去子節點進行比較。</li>
+</ul>
+<p>我們來舉個例子，假設我們有如下圖的二元素。</p>
+<p><img src="http://yixiang8780.com/outImg/20170314-2.png" alt=""></p>
+<p>接下來我們開始說明他的轉換成堆積的流程。</p>
+<p><img src="http://yixiang8780.com/outImg/20170314-3.png" alt="">
+<img src="http://yixiang8780.com/outImg/20170314-4.png" alt="">
+<img src="http://yixiang8780.com/outImg/20170314-5.png" alt="">
+<img src="http://yixiang8780.com/outImg/20170314-6.png" alt=""></p>
+<p>最後下圖就是二元樹轉換成堆積的結果。</p>
+<p><img src="http://yixiang8780.com/outImg/20170314-7.png" alt=""></p>
+<h2 id="heading1">程式碼實作</h2>
+<p>最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">=</span> <span class="nx">index</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">BinaryTree</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們將要新增個方法，可以新增節點到二元樹中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">node</span><span class="p">.</span><span class="nx">index</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">insertNode</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kd">function</span> <span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="kd">let</span> <span class="nx">leftChild</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">leftChild</span><span class="p">.</span><span class="nx">left</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">leftChild</span><span class="p">.</span><span class="nx">right</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>完成上需的新增方法，我們就可以新增節點至二元樹中，使用方法如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BinaryTree</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>接下來才是我們本篇的重點，將二元樹轉換成堆積，我們會直接在<code>BinaryTree</code>這物件下新增方法<code>transToHeap</code>，該方法可以轉換成堆積。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">searchByIndex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">result</span> <span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">postOrderTraverse</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">index</span> <span class="o">===</span> <span class="nx">index</span><span class="p">)</span>
+			<span class="nx">result</span><span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">transToHeap</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">startNodeIndex</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">startNodeIndex</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">startNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">searchByIndex</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">;</span>
+		<span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">startNode</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kd">function</span> <span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">maxNode</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">swap</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
+				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
+			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">swap</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
+				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="nx">maxNode</span> <span class="o">!=</span> <span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">maxNode</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="kd">function</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">nodeA</span><span class="p">,</span> <span class="nx">nodeB</span><span class="p">)</span> <span class="p">{</span>
+		<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">nodeB</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+		<span class="nx">nodeB</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">nodeA</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+		<span class="nx">nodeA</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)"><a href="https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)">https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)</a></a></li>
+<li><a href="https://openhome.cc/Gossip/AlgorithmGossip/HeapSort.htm"><a href="https://openhome.cc/Gossip/AlgorithmGossip/HeapSort.htm">https://openhome.cc/Gossip/AlgorithmGossip/HeapSort.htm</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>資料結構---堆積 Heap</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-heap-">堆積 Heap 的原理</a></li>
+    <li><a href="#heading">二元樹轉換成堆積</a></li>
+    <li><a href="#heading1">程式碼實作</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

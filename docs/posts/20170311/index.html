@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  資料結構---圖形結構 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="data structure, graph" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="資料結構---圖形結構 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">資料結構---圖形結構</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/data-structure' class="muted-link">
+  <span class="Label Label--gray">data structure</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-03-11.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決<code>Koenigsberg bridge</code>問題而發展出來的理論，雖然<code>Koenigsberg bridge</code>問題不是我們這篇的重點，但還是簡單介紹一下這個圖論中的著名問題。</p>
+<p>在某個國家內，有條河經過兩個市區，並且在這條河中心上還有兩個小島，小島與河的兩岸有七條橋連接這，下圖就是該環境的模擬圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20170310-1.png" alt=""></p>
+<p>那麼這個問題是 ~</p>
+<blockquote>
+<p>在所有的橋都只能走一次的前題條件下，如何才能把所有的橋都走過一次。</p>
+</blockquote>
+<p>雖然 LeonHard Euler 並沒有解決這個問題，但卻發現了新的研究領域<code>圖論</code>。</p>
+<h2 id="heading">圖形結構之原理</h2>
+<p>圖<code>(graph)</code>，是一種用來描述點與點關係的資料結構，也可以說是記錄關聯的結構，它和樹狀結構長的得像，而他們的關係在於</p>
+<blockquote>
+<p>樹是一種圖</p>
+</blockquote>
+<p>那什麼時後，它是圖而不是樹呢?</p>
+<ol>
+<li>出現一個環時。</li>
+<li>他沒有連通時。</li>
+</ol>
+<p>一張圖會由數個節點以及數條邊所構成，節點與節點間使用邊來相接，在數學上通常定義成<code>G = (V,E)</code>來表示，其中<code>V</code>是所有節點所成的集合，而<code>E</code>代表所有的邊所成的集合。圖<code>(graph)</code>畫出來長的如下圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20170310-2.png" alt=""></p>
+<p>接下來我們來認識一些名詞。</p>
+<ul>
+<li>頂點<code>(vertex)</code> : 上圖中的<code>A、B、C</code>就為三個項點。</li>
+<li>邊<code>(edge)</code> : 上圖中那個每個項點的連線，就稱為邊。</li>
+<li>相鄰<code>(adjacent)</code> : 例如上圖中的<code>A與B</code>就為相鄰的，其它的項點也都如此。</li>
+<li>附著<code>(incident)</code> : 上圖中，我們可以說明，<code>邊{A,C}</code>與<code>邊{A,B}</code>『附著』在項點 A 。</li>
+<li>路徑<code>(path)</code> : 代表某個項點到某個項點的過程。</li>
+<li>簡單路徑<code>(simple path)</code> : 在上圖中 A 到 D 的路徑可能有<code>ACBD</code>和<code>ABD</code>，這時我們可以稱<code>ABD</code>為簡單路徑。</li>
+<li>長度<code>(length)</code> : 一條路徑上的長度是指該路徑上所有邊的數量。</li>
+<li>分支度<code>(degree)</code> : 例如上圖中，我們可以稱項點 B 的分支度為 3 ，但在有向圖中會分成<code>外分支度</code>與<code>內分支度</code>。</li>
+<li>子圖<code>(Subgraph)</code> : 請看下圖。</li>
+</ul>
+<p><img src="http://yixiang8780.com/outImg/20170310-5.png" alt=""></p>
+<h2 id="heading1">圖的種類</h2>
+<p>基本上圖又可以分成下述幾重，要選擇那種來使用取決於你的問題。</p>
+<h3 id="--directed-graph-">有向圖 ( Directed graph )</h3>
+<p><img src="http://yixiang8780.com/outImg/20170310-4.png" alt=""></p>
+<h3 id="--undirected-graph-">無向圖 ( Undirected graph )</h3>
+<p><img src="http://yixiang8780.com/outImg/20170310-3.png" alt=""></p>
+<h3 id="heading2">權重圖</h3>
+<p>權重圖這種類形你可以在項點或是邊上，加上權重來做其它的用途，下圖是在邊上加權重的圖。</p>
+<p><img src="http://yixiang8780.com/outImg/20170310-6.png" alt=""></p>
+<h2 id="heading3">圖形結構之表示方式</h2>
+<p>基本上，在程式裡要表示圖的方式有分以下兩種。</p>
+<h3 id="--adjacency-matrix-">相鄰矩陣 ( Adjacency Matrix )</h3>
+<p>所謂的相鄰矩陣就是根據項點數，建立一個<code>N X N</code>的矩陣，來表示圖形結構的方法，我們來看看下圖，你可以看到左邊為圖，右邊為矩陣，在矩陣中，每個<code>1</code>就代表該兩個項點有連線。</p>
+<p><img src="http://yixiang8780.com/outImg/20170310-7.png" alt=""></p>
+<h3 id="--adjacency-list-">相鄰串列 ( Adjacency List )</h3>
+<p>而相鄰串列，就是用我們前幾篇有教過的<code>串列</code>來表示圖形結構的方法。可以參考此篇文章來複習複習。<a href="http://marklin-blog.logdown.com/posts/1414090-the-underlying-data-structures-2-serial-links-linked-list">基礎資料結構(2)&mdash;連結串列（Linked list)</a>。</p>
+<p><img src="http://yixiang8780.com/outImg/20170310-8.png" alt=""></p>
+<h3 id="heading4">兩者的優缺點</h3>
+<p>基本上這兩者各有優缺點，我們列出下表來比較一下。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>相鄰矩陣</th>
+<th>相鄰串列</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>判斷邊是否存在</td>
+<td>比較容易</td>
+<td>較麻煩</td>
+</tr>
+<tr>
+<td>若為<code>Complete Graph</code>的空間花費</td>
+<td>較省空間</td>
+<td>較浪費空間，因為要多存<code>link</code>|</td>
+</tr>
+<tr>
+<td>項點個數多，而邊數少時空間花費</td>
+<td>較浪費空間</td>
+<td>較省空間</td>
+</tr>
+<tr>
+<td>某些運作繁雜度</td>
+<td>麻煩，如算邊數或是否相連</td>
+<td>較簡單</td>
+</tr>
+</tbody>
+</table>
+<p>上面列表中有提到一個<code>Complete Graph</code>，它的定義如下。</p>
+<blockquote>
+<p>假設有<code>N</code>個頂點，而每個頂點的邊數有<code>N-1</code>個，它就可以被稱為<code>Complete Graph</code>。</p>
+</blockquote>
+<h2 id="heading5">圖形結構的實作與方法操作方法實作</h2>
+<p>我們這邊的實作都以相鄰串列為主，我們主要會建立三個方法。</p>
+<ul>
+<li><code>AddVertex</code> : 新增頂點至<code>graph</code>中。</li>
+<li><code>AddEdge</code> : 新增邊來連結訂點。</li>
+<li><code>Traveral</code> : 該方法可以走訪<code>graph</code>中所有的頂點。</li>
+</ul>
+<p>首先我們先建立<code>graph</code>所需要使用的物件，<code>graph</code>中會存放所有的頂點<code>(vertex)</code>與邊<code>(edge)</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Graph</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>接下來我們會建立兩個方法<code>AddVertex </code>與<code>AddEdge </code>，讓我們可以新增頂點與邊到<code>graph</code>中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addVertex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addEdge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertexA</span><span class="p">,</span> <span class="nx">vertexB</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertexA</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertexB</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertexB</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertexA</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>最後我們建立一個<code>print</code>方法來看看我們建立出來的圖。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">print</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="p">(</span><span class="nx">vertex</span> <span class="o">+</span> <span class="s2">&#34; -&gt; &#34;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34; , &#34;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>	
+	<span class="p">}</span><span class="p">,</span><span class="k">this</span><span class="p">)</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34; | &#34;</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Graph</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">graph</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">graph</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">,</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">graph</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">,</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">graph</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>我們在上述的程式碼中建立了三個頂點<code>A、B、C</code>，並且將<code>A連結B</code>和<code>A連結C</code>，所以我們簡單用腦袋想一下，畫出來的圖形應該是如下圖。</p>
+<pre><code>   A
+  /	 \
+ B    C
+</code></pre><p>來看看我們輸出的結果，雖然和上圖不一樣，但實際上是一樣的，<code>A -&gt; C,B</code>代表這<code>A</code>這頂點連結這<code>B與C</code>。</p>
+<pre><code>A -&gt; C , B | B -&gt; A | C -&gt; A
+</code></pre><p>接下來我們要建立<code>Traveral</code>，這方法可以讓我們走訪所有的頂點，而且每個頂點只會走訪到一次 ; 傳統上有兩種走訪方式。</p>
+<h4 id="depth-first-search-dfs--">Depth First Search (DFS ; 深度優先搜尋)</h4>
+<p>這個方法主要是使用<code>stack</code>的概念來進行的，如果忘記<code>stack</code>的概念可至這篇文章複習複習。<a href="http://marklin-blog.logdown.com/posts/1406967--basic-data-structures-1-an-array-array-stack-stack-queues-queue">基礎資料結構(1)&mdash;陣列(Array)、堆疊(Stack)、佇列(Queue)</a></p>
+<p>這個方法主要的過程如下。</p>
+<ol>
+<li>把起點丟入<code>stack</code>中。</li>
+<li>若<code>stack</code>不為空，則
+<ul>
+<li>從<code>stack</code>中，取出一個項點(它視為已走訪)，並將此頂點所有相鄰且未走訪的頂點，丟到<code>stack</code>中。</li>
+<li>若所有的頂點階已被走訪過，而<code>stack</code>仍不為空時，則將<code>stack</code>清空。</li>
+</ul>
+</li>
+<li>若<code>stack</code>為空，則完。</li>
+</ol>
+<p>把以上過程說的更白文點就是</p>
+<blockquote>
+<p>走訪起始頂點，然後尋找相鄰且未走訪的頂點，再做<code>dfs</code>，如果從任何已走訪過的頂點，都無法再走訪到一個尚未被走過的頂點時，則結束走訪。</p>
+</blockquote>
+<p>以下就為實作的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">traverseDFS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">startVertex</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="o">~</span><span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">startVertex</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Vertex not found&#34;</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kd">var</span> <span class="nx">visited</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+	<span class="nx">_traverseDFS</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">startVertex</span><span class="p">,</span><span class="nx">visited</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+
+	<span class="kd">function</span> <span class="nx">_traverseDFS</span><span class="p">(</span><span class="nx">vertex</span><span class="p">,</span> <span class="nx">visited</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">visited</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+			<span class="nx">callback</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">visited</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nx">_traverseDFS</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">,</span> <span class="nx">visited</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>而假設我們有如下的圖。</p>
+<pre><code>		 A
+	  /   \
+	 B 		C
+	/ \    /
+D   E   F
+</code></pre><p>然後我們看看執行<code>DFS</code>的結果。</p>
+<pre><code>A
+C
+F
+B
+D
+E
+</code></pre><p>看到了嗎這就是<code>dfs</code>的結果，如同它的名字<code>深度</code>，它會先針對單一個鄰近頂點就行深入的走訪，等到這條支線都走完，就開始走另外一條，<code>Depth First Search </code>這個方法也通時適用於我們前面說的樹狀結構的走訪。</p>
+<h4 id="breadth-first-search-bfs--">Breadth First Search (BFS ; 廣度優先搜尋)</h4>
+<p>而<code>BFS</code>基本上運作流程與<code>DFS</code>差不多，只差在把<code>stack</code>改為<code>queue</code>，我們就直接看程式碼吧。</p>
+<pre><code>Graph.prototype.traverseBFS = function(startVertex,callback){
+	if (!~this.vertexs.indexOf(startVertex)) {
+		return console.log(&quot;Vertex not found&quot;);
+	}
+
+	var queue = [];
+	var visited = [];
+	queue.push(startVertex);
+	visited[startVertex] = true;
+
+	while(queue.length){
+		var vertex = queue.shift();	
+		callback(vertex);
+
+		for (var i=0;i&lt;this.edges[vertex].length;i++){
+			if(!visited[this.edges[vertex][i]]){
+				visited[this.edges[vertex][i]] = true;	
+				queue.push(this.edges[vertex][i]);
+			}
+		}
+	}
+}
+
+</code></pre><p>而假設我們有如下的圖。</p>
+<pre><code>		 A
+	  /   \
+	 B 		C
+	/ \    /
+D   E   F
+</code></pre><p>然後我們看看執行<code>BFS</code>的結果。</p>
+<pre><code>A
+C
+B
+F
+D
+E
+</code></pre><p>它就如同它的名稱<code>Breadth First Search (BFS ; 廣度優先搜尋)</code>，它不是一條子線一直找下去，而是先廣泛的在四周先尋找，然後在尋找更後面一層的頂點。</p>
+<h2 id="tree-">Tree 的基本題</h2>
+<h3 id="leetcode-">Leetcode 判斷是否為樹</h3>
+<pre><code>Example
+Given n = 5 and edges = [[0, 1], [0, 2], [0, 3], [1, 4]], return true.
+
+Given n = 5 and edges = [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]], return false.
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">public</span> <span class="kr">class</span> <span class="nx">Solution</span> <span class="p">{</span>
+    <span class="cm">/*
+</span><span class="cm">     * @param n: An integer
+</span><span class="cm">     * @param edges: a list of undirected edges
+</span><span class="cm">     * @return: true if it&#39;s a valid tree, or false
+</span><span class="cm">     */</span>
+    <span class="kr">public</span> <span class="kr">boolean</span> <span class="nx">validTree</span><span class="p">(</span><span class="kr">int</span> <span class="nx">n</span><span class="p">,</span> <span class="kr">int</span><span class="p">[</span><span class="p">]</span><span class="p">[</span><span class="p">]</span> <span class="nx">edges</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// write your code here
+</span><span class="c1"></span>        
+        <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="nx">edges</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// Integer =&gt; 點
+</span><span class="c1"></span>        <span class="c1">// Set&lt;Interger&gt; =&gt; 點的所有鄰居
+</span><span class="c1"></span>        <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">graph</span> <span class="o">=</span> <span class="nx">initializeGraph</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">edges</span><span class="p">)</span><span class="p">;</span>
+        
+        <span class="c1">// bfs
+</span><span class="c1"></span>        <span class="nx">Queue</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span> <span class="nx">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LinkedList</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span> <span class="nx">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HashSet</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">queue</span><span class="p">.</span><span class="nx">offer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">hash</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+        
+        <span class="k">while</span> <span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
+            <span class="kr">int</span> <span class="nx">current</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">poll</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nx">Integer</span> <span class="nx">neighbor</span> <span class="o">:</span> <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">hash</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">continue</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="nx">hash</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">queue</span><span class="p">.</span><span class="nx">offer</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">(</span><span class="nx">hash</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">==</span> <span class="nx">n</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="kr">private</span> <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">initializeGraph</span><span class="p">(</span><span class="kr">int</span> <span class="nx">n</span><span class="p">,</span> <span class="kr">int</span><span class="p">[</span><span class="p">]</span><span class="p">[</span><span class="p">]</span> <span class="nx">edges</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HashMap</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">graph</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="k">new</span> <span class="nx">HashSet</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">for</span> <span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span> <span class="nx">edges</span><span class="p">.</span><span class="nx">length</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+            <span class="kr">int</span> <span class="nx">u</span> <span class="o">=</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+            <span class="kr">int</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">;</span>
+            <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="nx">graph</span><span class="p">;</span>
+    <span class="p">}</span>   
+<span class="p">}</span>
+</code></pre></div><h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="http://www.csie.ntnu.edu.tw/~u91029/Graph.html"><a href="http://www.csie.ntnu.edu.tw/~u91029/Graph.html">http://www.csie.ntnu.edu.tw/~u91029/Graph.html</a></a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%9B%BE"><a href="https://zh.wikipedia.org/wiki/%E5%9B%BE">https://zh.wikipedia.org/wiki/%E5%9B%BE</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>資料結構---圖形結構</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">圖形結構之原理</a></li>
+    <li><a href="#heading1">圖的種類</a>
+      <ul>
+        <li><a href="#--directed-graph-">有向圖 ( Directed graph )</a></li>
+        <li><a href="#--undirected-graph-">無向圖 ( Undirected graph )</a></li>
+        <li><a href="#heading2">權重圖</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">圖形結構之表示方式</a>
+      <ul>
+        <li><a href="#--adjacency-matrix-">相鄰矩陣 ( Adjacency Matrix )</a></li>
+        <li><a href="#--adjacency-list-">相鄰串列 ( Adjacency List )</a></li>
+        <li><a href="#heading4">兩者的優缺點</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">圖形結構的實作與方法操作方法實作</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#tree-">Tree 的基本題</a>
+      <ul>
+        <li><a href="#leetcode-">Leetcode 判斷是否為樹</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
