@@ -84,7 +84,7 @@ h2 {
 }
 
 h3,h4 {
-  color: lightgreen !important;
+  color: #57cc8a !important;
 }
 
 a {
@@ -130,7 +130,7 @@ span {
 }
 
 .Label {
-  background-color: lightgreen;
+  background-color: #57cc8a;
   color: black;
 }
 
@@ -187,6 +187,10 @@ span {
 
 .tag-span > a {
   max-width: 165px !important;
+}
+
+.Subhead-description > span {
+  color: #afbac4 !important;
 }
 
 /* theme default*/
