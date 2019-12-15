@@ -49,6 +49,15 @@
     </item>
     
     <item>
+      <title>30-25之資料庫層的擴展 - 讀寫分離架構</title>
+      <link>https://mark-lin.com/posts/20190925/</link>
+      <pubDate>Wed, 25 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190925/</guid>
+      <description>正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。 在正式開始章節之前，我們先來想想看一件</description>
+    </item>
+    
+    <item>
       <title>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</title>
       <link>https://mark-lin.com/posts/20190917/</link>
       <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
