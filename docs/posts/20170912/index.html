@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  聊天『室』的設計 ~ 安安你好，要打龍嗎? ~ &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="socket" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="聊天『室』的設計 ~ 安安你好，要打龍嗎? ~ | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-09-12.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明<code>聊天室</code>的架構設計，這東西和上一篇有什麼差別 ?</p>
+<p>通常<code>聊天群</code>是會由用戶提出申請，然後管理者來加入到該群裡，而<code>聊天室</code>則不相同，它是用戶可以自由自在的加入或退出，這也代表這，通常聊天群會限制人數，像 line 好像就限制 500 人，而聊天室則否，他通常不會限制人數。</p>
+<p>那這也代表我們要面對什麼問題呢 ? 我目前想想主要有兩個 :</p>
+<ol>
+<li>由於沒有限制人數，所以通常我們的架構要考慮擴展性。</li>
+<li>訊息的即時性非常的要求，如果一個訊息傳輸慢了，會導致其它人無法理解上下文。</li>
+</ol>
+<h2 id="-v1">最簡單的聊天室架構 V-1</h2>
+<p>基本上和聊天群的架構相同，都是一個<code>Business Server</code>和一個<code>Message Server</code>，其中前者做的事情是為所有需要使用 http 協議的工作，更正確的說是 http 短連接的工作，如新增聊天室、登入、登出、註冊這類事情的，都屬於 Business Server ，而所有使用 websocket 協議的都是屬於 Message Server 的工作。</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-1.png" alt=""></p>
+<h2 id="-v2">聊天室 V-2</h2>
+<p>上面的架構有沒有啥問題呢 ? 有的 ! 請想像一個情境 :</p>
+<blockquote>
+<p>用戶 A 從 business server 登入後，然後再去 message server 建立連線，但問題是 message server 怎麼知道這條連線是用戶 A 呢 ?</p>
+</blockquote>
+<p>在一般的 web 應用中，每當 client 連結 server 時，server 會產生唯一個 sessionId ，並用它來連結 server 內的存放空間，然後會將 sessionId 存放到 cookie 中，這樣每一次 client 進行請求時，server 都會去 cookie 中取得 sessionId 然後再去 session 取得資料。</p>
+<p>從上面的說明可知 session 是存放在 server 中，所以上面的情境變成 business server 產生 session 但問題是 message server 沒有 session。</p>
+<p>所以我們將架構修改成如下 :</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-2.png" alt=""></p>
+<p>我們會新增一個 redis 用來專門存放 session 當使用者登入後產生 session 資訊存放入 redis 中，接下來 client 要與 message server 建立連結時，由於它是使用 http 進行連線，所以它會有包含 cookie ，內含已加密過的 sessionId 進來，最後到 message server 時他會用這個 sessionId 再去 redis 取得使用者資訊。而每當登出時，business server 相同的也會更新 redis 裡面的資料。</p>
+<p>V-2 版本大致上就是如此 ~</p>
+<h2 id="-v3">聊天室 V-3</h2>
+<p>上面的架構理論上基本應該可以運行，但根據我們的要求，用戶數有可能會激增，所以我們這邊的<code>Message Server</code>需要考慮擴展，會優先考慮擴展他主要原因在於，每一個 websocket 都代表這一條 tcp 連線，而由於他是持久連接，白話文就是它會一直佔著一定的資源，它並不像 http 用完一定時間就收，所以如果一個 message server 有 1 萬人在聊天室，就也代表這需要同時維持 1萬條 tcp 連線，會上西天的，所以說我們需要一個代理器來做 Load balance 可以幫助我們將流量分散，架構變成如下 :</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-3.png" alt=""></p>
+<p>其中 Proxy 可以做很多的事情，其中最重要的就是要幫助我們分散流量，它會將我們 http 的請求 (登入、登出) 導到 business server。 websocket 的連接，則導到其中一個<code>message server</code>。</p>
+<p>這時我們來模擬一下，用戶在聊天室時發送訊息的流程 :</p>
+<ol>
+<li>client 發送訊息 。</li>
+<li>proxy 收到請求，並將它導至 message server A 。</li>
+<li>然後 message server A 將該訊息 broadcast 到聊天室的用戶 。</li>
+</ol>
+<p>目前是建議 proxy 使用 nginx 來處理，他本身就提供了 load balance 的功能，而且它也可以幫助我們來防禦一些 ddos 攻擊。</p>
+<p>這邊有一個重點要記得:</p>
+<blockquote>
+<p>它建立websocket 通道是長成:</p>
+<p>client ==== proxy ==== message server
+而不是
+client ==== message server</p>
+</blockquote>
+<h2 id="-v4">聊天室 V-4</h2>
+<p>嗯嗯 ~ 看上去都沒問題。</p>
+<p>但這是有前提假設的，那個假設就是 :</p>
+<blockquote>
+<p>那個聊天室的所有用戶，都在同一個 message server 裡 。</p>
+</blockquote>
+<p>你想想如果有個用戶不在 message server A 裡，那 broadcast 時不就代表那個用戶不會收到訊息 ?</p>
+<p>那這邊要如何解決呢 ? 我目前想到的二個方法就是 :</p>
+<ol>
+<li>在 load balance 時，將同一聊天室的用戶都導到同一個 message server 裡 (QQ)。</li>
+<li>建立一個 pub/sub 的redis 來處理。</li>
+</ol>
+<p>我先說說第一個的方法，我們使用 load balance 根據<code>聊天室</code>來將 websocket 連線導至某台 message server ，也就是說同一個聊天室的用戶都放在相同的 message server 裡，所以當有用戶發訊息到聊天室時，那個特定的 message server 就會自動的 bordcast 出去。</p>
+<p>而當用戶要加入某個聊天室，而想發出<code>xxxx加入聊天室</code>時，因為那個聊天室在那個 message server 所以只要往那個 message server 發送訊息。但這種方法的缺點就在於你要如何分配聊天室在那個 message server ， 分配不好，大部份流量都往那個 message server 去，反而失去我們擴展 message server 的用因。</p>
+<p>這方法我覺得還有一個問題，那就是假設我們其中一台 message server 上西天了，那不就代表該聊天室的用戶都無法進行連線了 ? 除非我們的 load balance 演算法有設計好，不然問題很大。</p>
+<p>目前比較推第二個方法，就是架構個 pub/sub 功能的 redis ，如下圖 :</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-4.png" alt=""></p>
+<p>然後我們來說一下它的運作流程，我們先看看下圖，當用戶 A、B、C 加入某個叫 kkbox 的聊天室時，當在建立連線時 message server 會去 redis 進行 <code>kkbox</code>這個 channel 的訂閱 (subscribe)。</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-5.png" alt=""></p>
+<p>接下來當用戶 A 發送訊息時，會前往 redis 對應的 kkbox channel 進行訊息 pub ，然後存在用戶 B、C 的 message server 收到訂閱的敲門，就會將消息推送到用戶 B、C了。</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-6.png" alt=""></p>
+<h2 id="-v5">聊天室 V-5</h2>
+<p>上圖為我們到目前的架構，基本上可以動，理論上應該運行的不錯，但實際上呢 ?
+不知道 !，現在環境難以預測，所以可能現實環境會發生下面的事情 :</p>
+<blockquote>
+<p>啊 ! proxy gg 了，所有的請求都不能進來了 !</p>
+</blockquote>
+<p>由於我們 proxy 那裡是使用 nginx 來做 load balance ，所以如果我們那裡掛掉，那我們的還有服務事實上就說掰掰了，所以為了避免這種狀況，我們需要用到<code>keepalive</code>的功能。</p>
+<p><code>keepalive</code>是啥 ? 它主要的功用就是如下 :</p>
+<blockquote>
+<p>在一個集群中，會隨時的檢查每一台機器的健康狀態，保證該集群可以服務。</p>
+</blockquote>
+<p>所以說，我們可以在 proxy 建立一個集群，也代表這可能有多個 nginx，然後我們在搭配 使用 keepalive，這樣每當有一台 nginx 上西天後，keepalive 就會檢查到，然後會立即的轉換成另一台可以用的 nginx，這樣也確保了我們的整體服務不會因為一台 nginx 上西天就全死了。</p>
+<p><img src="http://yixiang8780.com/outImg/20170916-7.png" alt=""></p>
+<h2 id="-v6-">聊天室 V-6 (在想想)</h2>
+<p>基本上，上面的架構的確可以運行，但是呢 ~ 我們有沒有辦法確定訊息的即時性是正確的，例如下面的情況 :</p>
+<blockquote>
+<p>聊天室中有 A 然後他發了三句話 :</p>
+<p>A(最早) : 肚子餓了吃啥 ?</p>
+<p>B(第二) : 吃拉麵如何 ?</p>
+<p>C(最後) : 還是吃飯 !</p>
+</blockquote>
+<p>但有沒有可能在實際的聊天室看到的是變成這樣 ?</p>
+<blockquote>
+<p>C(最後) : 還是吃飯 !</p>
+<p>B(第二) : 吃拉麵如何 ?</p>
+<p>A(最早) : 肚子餓了吃啥 ?</p>
+</blockquote>
+<p>會出現這種狀況，最有可能的場景就是分散式的問題，因為每一個服務都是不同的機器上，而不同的機器上會有自已的本地時鐘。</p>
+<p>像假設我們 message server A 在台灣、message server B 在日本，這時他們的本地時鐘就是不相同的，所以我們在判斷訊息的先後順序不能使用 server 端時鐘，同理 client 端的時鐘也不行。</p>
+<p>我這邊簡單的整理一下，很難保證時間順序性的原因 :</p>
+<h3 id="-">時鐘不一致 :</h3>
+<p>就像我們上面說的範例，你放在不同的機器，會有不同的本地時鐘。</p>
+<h3 id="-1">多用戶端 :</h3>
+<p>假設我們有兩個用戶 A、 B ，一個 server，然後 A 先發送訊息，接下來是 B 再發送訊息，但因為網路傳輸的問題，我們不能保證 server 先收到 A 。</p>
+<h3 id="-2">多伺服器端 :</h3>
+<p>假設我們有一個用戶 A ，然後兩個 server A 與 B ，然後先發送訊息到 server A、在發送訊息到 server B ，但因為兩台機器時鐘不一定相同，所以可能會導致時間不正確。這邊你可以想成，假設有 load balance 時，第一次訊息它導至 A，而第二次訊息導至 B。</p>
+<p>不好意思，請參考這篇文章 <a href="http://www.52im.net/thread-714-1-1.html">如何保证IM实时消息的“时序性”与“一致性”？</a> ，不過這篇文章中有幾個解法我是有點疑問的，像它裡面有個在單點 server 上，生成有順序的 id ，但問題在於如果你進來的順序就已經亂掉了(網路問題)，那你生成的這 id 事實上也沒什麼意思，除非你可以確保，你進到 server 時的順序是正確的，這 id 才能使用。</p>
+<h4 id="-3">所以這方面的問題，改天在另生一篇文章出來寫寫，這邊就先降 ~</h4>
+<h2 id="heading">參考資料</h2>
+<p>由於本篇參考不少資料，所以以下只列出所參考資料出處。</p>
+<ul>
+<li><a href="http://www.52im.net/">IM即時通訊網</a></li>
+<li><a href="https://dzone.com/">Dzone</a></li>
+<li><a href="http://blog.jobbole.com/">博客在線</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-v1">最簡單的聊天室架構 V-1</a></li>
+    <li><a href="#-v2">聊天室 V-2</a></li>
+    <li><a href="#-v3">聊天室 V-3</a></li>
+    <li><a href="#-v4">聊天室 V-4</a></li>
+    <li><a href="#-v5">聊天室 V-5</a></li>
+    <li><a href="#-v6-">聊天室 V-6 (在想想)</a>
+      <ul>
+        <li><a href="#-">時鐘不一致 :</a></li>
+        <li><a href="#-1">多用戶端 :</a></li>
+        <li><a href="#-2">多伺服器端 :</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

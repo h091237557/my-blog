@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>instant messaging on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/instant-messaging/</link>
+    <description>Recent content in instant messaging on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Fri, 15 Sep 2017 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/instant-messaging/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Socket.io 原始碼分析之建立連線</title>
+      <link>https://mark-lin.com/posts/20170915/</link>
+      <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170915/</guid>
+      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的說話島</title>
+      <link>https://mark-lin.com/posts/20170914/</link>
+      <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170914/</guid>
+      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的架構</title>
+      <link>https://mark-lin.com/posts/20170913/</link>
+      <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170913/</guid>
+      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成</description>
+    </item>
+    
+    <item>
+      <title>聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</title>
+      <link>https://mark-lin.com/posts/20170912/</link>
+      <pubDate>Tue, 12 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170912/</guid>
+      <description>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由</description>
+    </item>
+    
+    <item>
+      <title>一個像 Line 的聊天群設計 ~ 安安你好 ~</title>
+      <link>https://mark-lin.com/posts/20170911/</link>
+      <pubDate>Mon, 11 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170911/</guid>
+      <description>本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們</description>
+    </item>
+    
+  </channel>
+</rss>

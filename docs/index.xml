@@ -49,6 +49,69 @@
     </item>
     
     <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 ( 加強版 )</title>
+      <link>https://mark-lin.com/posts/20180809/</link>
+      <pubDate>Thu, 09 Aug 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180809/</guid>
+      <description>在之前筆者的這篇文章中： 一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 在們學習了如何使用 AWS 的相關工具來建立一個用戶行為的 LOG 分析系統。 但是這篇文章中所提到的</description>
+    </item>
+    
+    <item>
+      <title>Elasticearch 與 kibana 之日期的愛恨情仇</title>
+      <link>https://mark-lin.com/posts/20180808/</link>
+      <pubDate>Wed, 08 Aug 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180808/</guid>
+      <description>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201</description>
+    </item>
+    
+    <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立</title>
+      <link>https://mark-lin.com/posts/20180629/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180629/</guid>
+      <description>本篇文章中，我們要說明的主題為 : 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。 本篇文章中，我們將分成以下的主題: Log 系統的架構說明 AWS 的工具申請 (Ela</description>
+    </item>
+    
+    <item>
+      <title>如何使用 AWS Athena 去尋找 S3 的資料 (plus kinesis 丟到 S3 的坑)</title>
+      <link>https://mark-lin.com/posts/20180704/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180704/</guid>
+      <description>在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我</description>
+    </item>
+    
+    <item>
+      <title>要如何定期的清除 Elasticsearch 文件 ?</title>
+      <link>https://mark-lin.com/posts/20180702/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180702/</guid>
+      <description>上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch 的 Document 建立原理</title>
+      <link>https://mark-lin.com/posts/20180411/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180411/</guid>
+      <description>在這一篇文章中，我們將要理解兩個問題 : 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ? 在</description>
+    </item>
+    
+    <item>
+      <title>Elasticserach 的操作新手村</title>
+      <link>https://mark-lin.com/posts/20180401/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180401/</guid>
+      <description>本篇文章中，我們將要很快速的學習以下幾個重點: elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 documen</description>
+    </item>
+    
+    <item>
       <title>為什麼伊斯蘭教會分裂呢 ?</title>
       <link>https://mark-lin.com/posts/20171231/</link>
       <pubDate>Sun, 31 Dec 2017 19:51:35 +0800</pubDate>
@@ -58,7 +121,79 @@
     </item>
     
     <item>
-      <title>Node設計模式之策略模式 (Stratgey)</title>
+      <title>如何使用 Prometheus 來優雅的監控 Node Http Server 呢</title>
+      <link>https://mark-lin.com/posts/20171001/</link>
+      <pubDate>Sun, 01 Oct 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20171001/</guid>
+      <description>本篇文章中我們將會學習到以下幾個重點 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ? 什麼是 Prometheus 呢 ? 在我們平常開發完系統時，</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 原始碼分析之建立連線</title>
+      <link>https://mark-lin.com/posts/20170915/</link>
+      <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170915/</guid>
+      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的說話島</title>
+      <link>https://mark-lin.com/posts/20170914/</link>
+      <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170914/</guid>
+      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的架構</title>
+      <link>https://mark-lin.com/posts/20170913/</link>
+      <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170913/</guid>
+      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成</description>
+    </item>
+    
+    <item>
+      <title>聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</title>
+      <link>https://mark-lin.com/posts/20170912/</link>
+      <pubDate>Tue, 12 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170912/</guid>
+      <description>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由</description>
+    </item>
+    
+    <item>
+      <title>一個像 Line 的聊天群設計 ~ 安安你好 ~</title>
+      <link>https://mark-lin.com/posts/20170911/</link>
+      <pubDate>Mon, 11 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170911/</guid>
+      <description>本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們</description>
+    </item>
+    
+    <item>
+      <title>Socket 的哩哩扣扣</title>
+      <link>https://mark-lin.com/posts/20170910/</link>
+      <pubDate>Sun, 10 Sep 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170910/</guid>
+      <description>在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。 在開始說明 socket 前，我</description>
+    </item>
+    
+    <item>
+      <title>Node設計模式之命令模式 ( Command )</title>
+      <link>https://mark-lin.com/posts/20170611/</link>
+      <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20170611/</guid>
+      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能</description>
+    </item>
+    
+    <item>
+      <title>Node設計模式之策略模式 ( Stratgey )</title>
       <link>https://mark-lin.com/posts/20170610/</link>
       <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
       
@@ -121,7 +256,7 @@
     </item>
     
     <item>
-      <title>Node 設計模式之代理器(Proxy)</title>
+      <title>Node 設計模式之代理器 ( Proxy )</title>
       <link>https://mark-lin.com/posts/20170603/</link>
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
       

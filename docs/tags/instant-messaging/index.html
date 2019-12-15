@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  instant messaging &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    
+    <meta name="description" property="og:description" content="Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="instant messaging | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+<div>
+
+  <h1>instant messaging</h1>
+  
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20170915/">
+        <div class="h2 mt-1 mb-1">Socket.io 原始碼分析之建立連線</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/socket.io' class="muted-link">
+  <span class="Label Label--gray">socket.io</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2017-09-15</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client
+    <a class="muted-link" href="/posts/20170915/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20170914/">
+        <div class="h2 mt-1 mb-1">Socket.io 的說話島</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/socket.io' class="muted-link">
+  <span class="Label Label--gray">socket.io</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2017-09-14</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳
+    <a class="muted-link" href="/posts/20170914/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20170913/">
+        <div class="h2 mt-1 mb-1">Socket.io 的架構</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/socket.io' class="muted-link">
+  <span class="Label Label--gray">socket.io</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2017-09-13</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成
+    <a class="muted-link" href="/posts/20170913/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20170912/">
+        <div class="h2 mt-1 mb-1">聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2017-09-12</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由
+    <a class="muted-link" href="/posts/20170912/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20170911/">
+        <div class="h2 mt-1 mb-1">一個像 Line 的聊天群設計 ~ 安安你好 ~</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2017-09-11</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們
+    <a class="muted-link" href="/posts/20170911/">…</a>
+  </div>
+</div>
+
+  
+
+  
+  
+
+
+
+
+</div>
+
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+
+  <div class="Box Box--blue p-2 mb-3 mt-5">
+    
+      <h4>Tags</h4>
+    
+    
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/algorithm" class="link-gray text-emphasized css-truncate-target"><span class="">Algorithm</span></a>
+      <span class="text-right Counter Counter--gray"> 10</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/cordova" class="link-gray text-emphasized css-truncate-target"><span class="">Cordova</span></a>
+      <span class="text-right Counter Counter--gray"> 1</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/css" class="link-gray text-emphasized css-truncate-target"><span class="">Css</span></a>
+      <span class="text-right Counter Counter--gray"> 2</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/c%e4%ba%95%e5%ad%97%e8%99%9f" class="link-gray text-emphasized css-truncate-target"><span class="">C井字號</span></a>
+      <span class="text-right Counter Counter--gray"> 11</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/data-structure" class="link-gray text-emphasized css-truncate-target"><span class="">Data structure</span></a>
+      <span class="text-right Counter Counter--gray"> 6</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/design-pattern" class="link-gray text-emphasized css-truncate-target"><span class="">Design pattern</span></a>
+      <span class="text-right Counter Counter--gray"> 3</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/elasticsearch" class="link-gray text-emphasized css-truncate-target"><span class="">Elasticsearch</span></a>
+      <span class="text-right Counter Counter--gray"> 6</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/history" class="link-gray text-emphasized css-truncate-target"><span class="">History</span></a>
+      <span class="text-right Counter Counter--gray"> 3</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/instant-messaging" class="link-gray text-emphasized css-truncate-target"><span class="">Instant messaging</span></a>
+      <span class="text-right Counter Counter--gray"> 5</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/it-%e9%90%b5%e4%ba%ba%e8%b3%bd-2016" class="link-gray text-emphasized css-truncate-target"><span class="">It 鐵人賽 2016</span></a>
+      <span class="text-right Counter Counter--gray"> 30</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/it-%e9%90%b5%e4%ba%ba%e8%b3%bd-2019" class="link-gray text-emphasized css-truncate-target"><span class="">It 鐵人賽 2019</span></a>
+      <span class="text-right Counter Counter--gray"> 4</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/javascript" class="link-gray text-emphasized css-truncate-target"><span class="">Javascript</span></a>
+      <span class="text-right Counter Counter--gray"> 7</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/mongodb" class="link-gray text-emphasized css-truncate-target"><span class="">Mongodb</span></a>
+      <span class="text-right Counter Counter--gray"> 30</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/mysql" class="link-gray text-emphasized css-truncate-target"><span class="">Mysql</span></a>
+      <span class="text-right Counter Counter--gray"> 4</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/network" class="link-gray text-emphasized css-truncate-target"><span class="">Network</span></a>
+      <span class="text-right Counter Counter--gray"> 1</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/nodejs" class="link-gray text-emphasized css-truncate-target"><span class="">Nodejs</span></a>
+      <span class="text-right Counter Counter--gray"> 11</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/service-monitor" class="link-gray text-emphasized css-truncate-target"><span class="">Service monitor</span></a>
+      <span class="text-right Counter Counter--gray"> 6</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/socket.io" class="link-gray text-emphasized css-truncate-target"><span class="">Socket.io</span></a>
+      <span class="text-right Counter Counter--gray"> 3</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/vim" class="link-gray text-emphasized css-truncate-target"><span class="">Vim</span></a>
+      <span class="text-right Counter Counter--gray"> 1</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/%e7%89%a9%e4%bb%b6%e5%b0%8e%e5%90%91" class="link-gray text-emphasized css-truncate-target"><span class="">物件導向</span></a>
+      <span class="text-right Counter Counter--gray"> 11</span>
+    </span>
+    
+  </div>
+
+
+
+
+
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

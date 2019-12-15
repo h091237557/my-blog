@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Elasticearch 與 kibana 之日期的愛恨情仇 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="elasticsearch, kibana" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Elasticearch 與 kibana 之日期的愛恨情仇 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Elasticearch 與 kibana 之日期的愛恨情仇</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/service-monitor' class="muted-link">
+  <span class="Label Label--gray">service monitor</span>
+</a>
+
+<a href='/tags/elasticsearch' class="muted-link">
+  <span class="Label Label--gray">elasticsearch</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-08-08.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。</p>
+<p>在開始搞前先說說我的簡單需求:</p>
+<blockquote>
+<p>馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如<code>2017-07-16T19:20:30</code>。</p>
+</blockquote>
+<p>這時通常時間的儲法會有兩種選擇:</p>
+<ul>
+<li>Timestamp</li>
+<li>ISO 標準</li>
+</ul>
+<h2 id="-timestamp-">咱們先來看看 Timestamp 的儲法與查找</h2>
+<p>下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。</p>
+<p>其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。</p>
+<pre><code>const streamName = 'mark-stream';
+
+const test = {
+  name: 'Mark III',
+  age: 40,
+  created_at: Date.now() // timestamp 1533634630945 ,
+};
+
+putRecord(streamName, test, (err, res) =&gt; {
+  console.log(err);
+});
+</code></pre><h3 id="elasticsearch-">Elasticsearch 查找</h3>
+<p>然後我們直接下來找找剛剛新增的那一筆。</p>
+<pre><code>curl 127.0.0.1/_search?pretty
+</code></pre><pre><code>{
+        &quot;_index&quot; : &quot;api&quot;,
+        &quot;_type&quot; : &quot;log&quot;,
+        &quot;_id&quot; : &quot;2139103&quot;,
+        &quot;_score&quot; : 1.0,
+        &quot;_source&quot; : {
+          &quot;name&quot; : &quot;Mark III&quot;,
+          &quot;age&quot; : 40,
+          &quot;created_at&quot; : 1533634726145 (2018年08月07日17點38分46秒),
+        }
+      }
+</code></pre><p>那接下來我們在來根據時間區間來進行搜尋會如何呢??</p>
+<pre><code>POST _search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;created_at&quot; : {
+                &quot;gt&quot; : &quot;2018-08-07T17:00:22&quot; ,
+                &quot;lt&quot; : &quot;2018-08-07T18:00:22&quot;,
+            }
+        }
+    },
+    &quot;sort&quot;: [
+    {
+      &quot;created_at&quot;: &quot;asc&quot;
+    }
+  ]
+}
+</code></pre><p><strong>找不到 !!!!</strong></p>
+<p>然後我們如果改成如下的 query，就找的到了……</p>
+<pre><code>POST api/_search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;created_at&quot; : {
+                &quot;gt&quot; : &quot;2018-08-07T09:00:22&quot; ,
+                &quot;lt&quot; : &quot;2018-08-07T10:00:22&quot;
+            }
+        }
+    },
+    &quot;sort&quot;: [
+    {
+      &quot;created_at&quot;: &quot;asc&quot;
+    }
+  ]
+}
+</code></pre><h3 id="-timestamp--8--">為什麼儲 timestamp 的搜尋要將時間減 8 小時呢 ??</h3>
+<p>先來看看 timestamp 的意思為啥 ?</p>
+<blockquote>
+<p>timestamp 是指格林威治時間1970年01月01日00时00分00秒到現在的總秒數。</p>
+</blockquote>
+<p>那格林威治時間離咱(台灣)這裡多遠 ?</p>
+<blockquote>
+<ul>
+<li>8 個小時</li>
+</ul>
+</blockquote>
+<p>所以說 1533634726145 實際上儲放是指<code>2018年08月07日9點38分46秒</code>而不是<code>2018年08月07日17點38分46秒</code>，所以假設我們不給時間區域而直接下 query 就會發生找不到的情況，下面為我們有給時間區域的下法，這樣就找的到了。</p>
+<p>這種下法的意思就是，我們要找這段時間的資料，並且我們的時間區域為<code>+8</code>小時。</p>
+<pre><code>POST api/_search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;created_at&quot; : {
+                &quot;gt&quot; : &quot;2018-08-07T17:00:22&quot;,
+                &quot;lt&quot; : &quot;2018-08-07T18:00:22&quot;,
+                &quot;time_zone&quot;: &quot;+08:00&quot;
+            }
+        }
+    },
+    &quot;sort&quot;: [
+    {
+      &quot;created_at&quot;: &quot;asc&quot;
+    }
+  ]
+}
+</code></pre><h3 id="-kibana--discover--query-">那在 kibana 的 discover 要如何下 query ?</h3>
+<p>在 kibana 如果執行下面的 lucene query 的話，會找到不到。</p>
+<pre><code>created_at: [2018-08-07T17:00:22 TO 2018-08-07T18:00:22]
+</code></pre><p>一樣要和他說明你現在在什麼時區才可以找到。</p>
+<pre><code>created_at: [2018-08-07T17:00:22+08:00 TO 2018-08-07T18:00:22+08:00]
+</code></pre><h2 id="-iso-">再來看看 ISO 標準的儲法</h2>
+<pre><code>const streamName = 'mark-stream';
+
+const test = {
+  name: 'Mark III',
+  age: 40,
+  created_at: &quot;2018-08-07T17:00:22Z&quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&gt; {
+  console.log(err);
+});
+</code></pre><h3 id="-elasticsearch--">先單純的看 Elasticsearch 查找有沒有問題 ~</h3>
+<p>然後我們一樣先用 es 的 search 來找找。</p>
+<pre><code>POST _search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;created_at&quot; : {
+                &quot;gt&quot; : &quot;2018-08-07T16:30:22&quot; ,
+                &quot;lt&quot; : &quot;2018-08-07T17:30:22&quot;,
+            }
+        }
+    },
+    &quot;sort&quot;: [
+    {
+      &quot;created_at&quot;: &quot;asc&quot;
+    }
+  ]
+}
+</code></pre><p>然後發現 <strong>找得到 !!!</strong></p>
+<p>主要原因是我們直接是儲放固定的 ISO 時間，而不像是上面 timestamp 它會幫你先轉一下成 ISO 然後你在查找，它在幫你轉時，會轉成 +0 的時間，所以才會找不到。</p>
+<h3 id="-kibana--">再來看看 kibana 內的顯示與查找有沒有問題 ~</h3>
+<h4 id="-kibana--1">首先 kibana 內顯示會有問題 !</h4>
+<p>首先你只會看到下面這個資料，注意我們上面儲的是<code>2018-08-07T17:00:22Z</code>，WTF 為啥kibana 顯示變成<code>2018-08-08T01:00:22.22</code>。</p>
+<p>問題在於 kibana 認為 Elasticsearch 裡所儲放的時間區段為<code>+0</code>，所以到了 kibana 預設會判斷你的 browser 設定那個時區，然後咱們這是台灣所以會自動的轉換成:</p>
+<blockquote>
+<p>2018-08-07T17:00:22Z + 8 h = 2018-08-08T01:00:22.22</p>
+</blockquote>
+<pre><code>name:Mark III 
+age:40 
+created_at: 2018-08-08T01:00:22.22 
+_id:49585877623136865488831537954762517193201839360268304386.0 _type:log 
+_index:api 
+_score:1
+</code></pre><h4 id="-">搜尋沒問題 !</h4>
+<pre><code>created_at: [2018-08-07T16:30:22 TO 2018-08-07T17:30:22]
+</code></pre><h4 id="-1">那要如何顯示的問題呢 ?</h4>
+<p>建立在 elasticsearch 時，儲 ISO 時和他說時間區段，如下，注意多了<code>+08:00</code>。</p>
+<pre><code>const streamName = 'mark-stream';
+
+const test = {
+  name: 'Mark III',
+  age: 40,
+  created_at: &quot;2018-08-07T17:30:22+08:00&quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&gt; {
+  console.log(err);
+});
+</code></pre><p>然後不論是在 elasticsearch 或 kibana 搜尋時，時間都要多加時間區段:</p>
+<pre><code>created_at: [2018-08-07T16:30:22+08:00 TO 2018-08-07T17:30:22+08:00]
+</code></pre><pre><code>POST _search
+{
+    &quot;query&quot;: {
+        &quot;range&quot; : {
+            &quot;created_at&quot; : {
+                &quot;gt&quot; : &quot;2018-08-07T16:30:22+08:00&quot; ,
+                &quot;lt&quot; : &quot;2018-08-07T17:30:22+08:00&quot;,
+            }
+        }
+    },
+    &quot;sort&quot;: [
+    {
+      &quot;created_at&quot;: &quot;asc&quot;
+    }
+  ]
+}
+</code></pre><h2 id="heading">結論</h2>
+<p>基本上如何一開始就選擇儲 timestamp 那後來只要在查找時，標示你現在是在那個時區，那就都可以搜尋到。但是如果一開始就要儲 ISO 標準時，就要用上面的儲法，這樣在 es 與 kibana 才能查找到你需要的資料。</p>
+<p>順到說一下，我一開始選擇時會選擇 ISO 標準有以下幾個原因:</p>
+<ol>
+<li>服務沒有多時區的問題。</li>
+<li>希望 es 中儲放 iso 標準，有助於直接尋找時，可以很容易知道他的時間點，不需要在透過 kibana 或其它工具來轉換顯示。</li>
+<li>因為同時間還有一份 log 會儲放到 s3，如果是儲 timestamp 我們使用 athena 查找後的顯示，也很難看，而且如果是將檔案抓下來用 grep，就更麻煩了。</li>
+</ol>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Elasticearch 與 kibana 之日期的愛恨情仇</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-timestamp-">咱們先來看看 Timestamp 的儲法與查找</a>
+      <ul>
+        <li><a href="#elasticsearch-">Elasticsearch 查找</a></li>
+        <li><a href="#-timestamp--8--">為什麼儲 timestamp 的搜尋要將時間減 8 小時呢 ??</a></li>
+        <li><a href="#-kibana--discover--query-">那在 kibana 的 discover 要如何下 query ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#-iso-">再來看看 ISO 標準的儲法</a>
+      <ul>
+        <li><a href="#-elasticsearch--">先單純的看 Elasticsearch 查找有沒有問題 ~</a></li>
+        <li><a href="#-kibana--">再來看看 kibana 內的顯示與查找有沒有問題 ~</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">結論</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

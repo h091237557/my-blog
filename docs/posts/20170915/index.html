@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Socket.io 原始碼分析之建立連線 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="socket, socket.io" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Socket.io 原始碼分析之建立連線 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Socket.io 原始碼分析之建立連線</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/socket.io' class="muted-link">
+  <span class="Label Label--gray">socket.io</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-09-15.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">io</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Hello xxxx client&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>接下來我們要從前端開始追蹤它做了那些事情。</p>
+<h2 id="client--">Client 端它做了什麼呢 ??</h2>
+<h3 id="socketioclient-">Socket.io-client 建立連線的地方</h3>
+<p>在最開始時，一定是前端會去進行連線，那我們來看看他在<code>socket.io-client</code>中什麼地方行處理。</p>
+<p>前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行<code>io('xxxx')</code>時，他就會去後端建立連線。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&#34;/socket.io/socket.io.js&#34;</span><span class="o">&gt;</span><span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+  <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
+</code></pre></div><p>然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意<code>newConnection</code>裡面做的事情，因為我們是要建立新的連線。</p>
+<p><a href="https://github.com/socketio/socket.io-client/blob/master/lib/index.js#L36">lookup 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">lookup</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span><span class="p">.</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="nx">newConnection</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;ignoring socket cache for %s&#39;</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">io</span> <span class="o">=</span> <span class="nx">Manager</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;new io instance for %s&#39;</span><span class="p">,</span> <span class="nx">source</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">Manager</span><span class="p">(</span><span class="nx">source</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">io</span> <span class="o">=</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">parsed</span><span class="p">.</span><span class="nx">query</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">opts</span><span class="p">.</span><span class="nx">query</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">opts</span><span class="p">.</span><span class="nx">query</span> <span class="o">=</span> <span class="nx">parsed</span><span class="p">.</span><span class="nx">query</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">io</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="nx">parsed</span><span class="p">.</span><span class="nx">path</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>下面這段程式碼為<code>manager</code>裡面的程式碼，大部份都是在進行屬性初使化，並且還有一些重連機制的設定，這邊我們直接來看最下面的<code>this.open</code>部份。</p>
+<p><a href="https://github.com/socketio/socket.io-client/blob/master/lib/manager.js#L36">Manger 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Manager</span> <span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="k">this</span> <span class="k">instanceof</span> <span class="nx">Manager</span><span class="p">)</span><span class="p">)</span> <span class="k">return</span> <span class="k">new</span> <span class="nx">Manager</span><span class="p">(</span><span class="nx">uri</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">uri</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="s1">&#39;object&#39;</span> <span class="o">===</span> <span class="k">typeof</span> <span class="nx">uri</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">opts</span> <span class="o">=</span> <span class="nx">uri</span><span class="p">;</span>
+    <span class="nx">uri</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">opts</span> <span class="o">=</span> <span class="nx">opts</span> <span class="o">||</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+
+  <span class="p">...</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">autoConnect</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>this.open 裡面的程式碼如下，這段就是<code>socket.io-client</code>建立連線的地方，但這邊要注意，我們實際建立連線的地方為<code>eio(this.uri, this.opts)</code>這段程式碼，所以我們接下來要去看<code>engion.io-client</code>的程式碼。</p>
+<p><a href="https://github.com/socketio/socket.io-client/blob/master/lib/manager.js#L220">Manger.prototype.open 原始碼傳送門</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Manager</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">open</span> <span class="o">=</span>
+<span class="nx">Manager</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">connect</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">fn</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;readyState %s&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">readyState</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">~</span><span class="k">this</span><span class="p">.</span><span class="nx">readyState</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">)</span><span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;opening %s&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">uri</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">engine</span> <span class="o">=</span> <span class="nx">eio</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">uri</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">engine</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">=</span> <span class="s1">&#39;opening&#39;</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">skipReconnect</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+ <span class="p">...</span><span class="p">.</span>
+
+  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="engineioclient-">engine.io-client 實際建立連線的地方</h3>
+<p>這段程式碼是我們實際建立連線的地方，首先他會判斷我們的<code>transport</code>是什麼，是要用<code>websocket</code>還是<code>polling</code>，然後確定好後，就使用<code>this.createTransport</code>來建立實際上要用的<code>transport</code>，最後在將要使用的 transport 開啟，然後他裡面將會建立連線了。</p>
+<p>這裡要注意一下，如果在建立連線時什麼都沒有指定，那他會先使用 polling 來進行連線，並且在升級為 websocket。</p>
+<p><a href="https://github.com/socketio/engine.io-client/blob/master/lib/socket.js#L220"> Socket.prototype.open 原始碼傳送門</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Socket</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">open</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">transport</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">rememberUpgrade</span> <span class="o">&amp;&amp;</span> <span class="nx">Socket</span><span class="p">.</span><span class="nx">priorWebsocketSuccess</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">transports</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;websocket&#39;</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">transport</span> <span class="o">=</span> <span class="s1">&#39;websocket&#39;</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">transports</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Emit error on next tick so it can be listened to
+</span><span class="c1"></span>    <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="s1">&#39;No transports available&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">transport</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">transports</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">=</span> <span class="s1">&#39;opening&#39;</span><span class="p">;</span>
+
+  <span class="c1">// Retry with the next transport if the transport is disabled (jsonp: false)
+</span><span class="c1"></span>  <span class="k">try</span> <span class="p">{</span>
+    <span class="nx">transport</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">createTransport</span><span class="p">(</span><span class="nx">transport</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">transports</span><span class="p">.</span><span class="nx">shift</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">transport</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">// 使用指定的 transport 來建立連線
+</span><span class="c1"></span>  <span class="k">this</span><span class="p">.</span><span class="nx">setTransport</span><span class="p">(</span><span class="nx">transport</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="heading">前端流程圖</h3>
+<p>前端這邊，我們最後補上一張流程圖，好讓各位官爺更好的追 code 。</p>
+<p><img src="http://yixiang8780.com/outImg/20171026-1.png" alt=""></p>
+<h2 id="-">後端接受到請求後，它做了啥 ??</h2>
+<p>每當我們 socket io server 啟動時，會將 engine io server attach 到 http server (srv) 上監聽<code>request</code>事件，下面程式碼的 srv 就是我們 attach 的 server。</p>
+<p><a href="https://github.com/socketio/socket.io/blob/master/lib/index.js#L271">attachServe 傳送門</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Server</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">initEngine</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">srv</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">{</span>
+  <span class="c1">// initialize engine
+</span><span class="c1"></span>  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;creating engine.io instance with opts %j&#39;</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">eio</span> <span class="o">=</span> <span class="nx">engine</span><span class="p">.</span><span class="nx">attach</span><span class="p">(</span><span class="nx">srv</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span><span class="p">;</span>
+
+  <span class="c1">// attach static file serving
+</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_serveClient</span><span class="p">)</span> <span class="k">this</span><span class="p">.</span><span class="nx">attachServe</span><span class="p">(</span><span class="nx">srv</span><span class="p">)</span><span class="p">;</span>
+
+  <span class="c1">// Export http server
+</span><span class="c1"></span>  <span class="k">this</span><span class="p">.</span><span class="nx">httpServer</span> <span class="o">=</span> <span class="nx">srv</span><span class="p">;</span>
+
+  <span class="c1">// bind to engine events
+</span><span class="c1"></span>  <span class="k">this</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">eio</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>當收到一個 http 請求時，會轉到 engine.io 下面這段程式碼中，然後會在<code>handleRequest進行主要處理</code>，它這裡只會簡單的檢查一下 req 這個參數，而這參數就是我們 http request 請求內容。</p>
+<p><a href="https://github.com/socketio/engine.io/blob/master/lib/server.js#L445">server.on 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">check</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;intercepting request for path &#34;%s&#34;&#39;</span><span class="p">,</span> <span class="nx">path</span><span class="p">)</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;OPTIONS&#39;</span> <span class="o">===</span> <span class="nx">req</span><span class="p">.</span><span class="nx">method</span> <span class="o">&amp;&amp;</span> <span class="s1">&#39;function&#39;</span> <span class="o">===</span> <span class="k">typeof</span> <span class="nx">options</span><span class="p">.</span><span class="nx">handlePreflightRequest</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">handlePreflightRequest</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">server</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">handleRequest</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">listeners</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">listeners</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">server</span><span class="p">,</span> <span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>接下來，下面這段程式碼為<code>handleRequest</code>程式碼，主要用來處理這個請求。首先他會先使用<code>verify</code>進行檢查，看看這一次的請求是不是合法的，而它主要檢查兩個點，首先是<code>transport</code>的檢查，我們要先確定<code>req._query.transport</code>這個參數是否合法，因為我們是要用這參數來決定我們要用那種傳輸方式，而第二個檢查為<code>sid check</code>，<code>sid</code>就是每個 client 的 session id，在這邊會檢查該條 sid 是否存在以及如果存在是否合法。</p>
+<p>檢查完這個 request 請求後，接下來就看看這個請求的 client 有沒有建立請起，如果沒有則執行<code>handshake</code>，有的話則執行<code>onRequest</code>。</p>
+<p><a href="https://github.com/socketio/engine.io/blob/master/lib/server.js#L222">handleRequest 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Server</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">handleRequest</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;handling &#34;%s&#34; http request &#34;%s&#34;&#39;</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">prepare</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">req</span><span class="p">.</span><span class="nx">res</span> <span class="o">=</span> <span class="nx">res</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">verify</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">success</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sendErrorMessage</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">_query</span><span class="p">.</span><span class="nx">sid</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;setting new request for existing client&#39;</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">clients</span><span class="p">[</span><span class="nx">req</span><span class="p">.</span><span class="nx">_query</span><span class="p">.</span><span class="nx">sid</span><span class="p">]</span><span class="p">.</span><span class="nx">transport</span><span class="p">.</span><span class="nx">onRequest</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">handshake</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">_query</span><span class="p">.</span><span class="nx">transport</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+</code></pre></div><p>接下來我們來看看，如果這個 client 還沒建立的流程，也就是要進行<code>handshake</code>，
+這個方法最主要的功能就是用來建立一條新的連線，然後最後會發送一個<code>connection</code>事件到<code>socket.io</code>。</p>
+<p><a href="https://github.com/socketio/engine.io/blob/master/lib/server.js#L296">Server.prototype.handshake 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Server</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">handshake</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">transportName</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">generateId</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sendErrorMessage</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">req</span><span class="p">.</span><span class="nx">res</span><span class="p">,</span> <span class="nx">Server</span><span class="p">.</span><span class="nx">errors</span><span class="p">.</span><span class="nx">BAD_REQUEST</span><span class="p">)</span><span class="p">;</span>
+      <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;handshaking client &#34;%s&#34;&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">transport</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">transports</span><span class="p">[</span><span class="nx">transportName</span><span class="p">]</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+      <span class="err">…</span><span class="err">…</span>
+    
+    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Socket</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">self</span><span class="p">,</span> <span class="nx">transport</span><span class="p">,</span> <span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+     <span class="err">…</span><span class="err">…</span>
+   
+
+    <span class="nx">transport</span><span class="p">.</span><span class="nx">onRequest</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">self</span><span class="p">.</span><span class="nx">clients</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">clientsCount</span><span class="o">++</span><span class="p">;</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">self</span><span class="p">.</span><span class="nx">clients</span><span class="p">[</span><span class="nx">id</span><span class="p">]</span><span class="p">;</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">clientsCount</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">self</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>當我們<code>engion.io</code>已經建立好連線後，它會發送<code>connection</code>訊息到<code>socket.io</code>，然後它在下面這段程式碼，會收到這個事件，然後他這邊會建立一個 client，並且處理一些連線的事務。</p>
+<p><a href="https://github.com/socketio/socket.io/blob/master/lib/index.js#L381">bind 與 onconnection 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Server</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">engine</span><span class="p">)</span><span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">engine</span> <span class="o">=</span> <span class="nx">engine</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">engine</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">onconnection</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="k">this</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="nx">Server</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">onconnection</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">conn</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;incoming connection with id %s&#39;</span><span class="p">,</span> <span class="nx">conn</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Client</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>然後我們來看看<code>client.connection</code>這段程式碼做的事情，這裡它主要會將這位<code>client</code>加入到<code>nsp</code>中也就是 io 的 namespace 裡，但這邊 socket 還沒有產生喔。</p>
+<p><a href="https://github.com/socketio/socket.io/blob/master/lib/client.js#L62">Client.prototype.connect 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Client</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">connect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">query</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;connecting to namespace %s&#39;</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">nsp</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">server</span><span class="p">.</span><span class="nx">nsps</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">nsp</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">packet</span><span class="p">(</span><span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">ERROR</span><span class="p">,</span> <span class="nx">nsp</span><span class="o">:</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">data</span> <span class="o">:</span> <span class="s1">&#39;Invalid namespace&#39;</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span> <span class="o">!=</span> <span class="nx">name</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">nsps</span><span class="p">[</span><span class="s1">&#39;/&#39;</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">connectBuffer</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">nsp</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">sockets</span><span class="p">[</span><span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+    <span class="nx">self</span><span class="p">.</span><span class="nx">nsps</span><span class="p">[</span><span class="nx">nsp</span><span class="p">.</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span> <span class="o">==</span> <span class="nx">nsp</span><span class="p">.</span><span class="nx">name</span> <span class="o">&amp;&amp;</span> <span class="nx">self</span><span class="p">.</span><span class="nx">connectBuffer</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">connectBuffer</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">connect</span><span class="p">,</span> <span class="nx">self</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">self</span><span class="p">.</span><span class="nx">connectBuffer</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>然後在<code>add</code>中，會將這個 client 產生一個 socket，然後將這條 socket 進行<code>onconnect</code>，並且在最後，會執行<code>self.emit('connection', socket)</code>這裡也就是我們在最上面，實際上觸發<code>connection</code>事件的地方。</p>
+<p><a href="https://github.com/socketio/socket.io/blob/master/lib/namespace.js#L159">Namespace.prototype.add 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Namespace</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">client</span><span class="p">,</span> <span class="nx">query</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;adding socket to nsp %s&#39;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Socket</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">client</span><span class="p">,</span> <span class="nx">query</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">run</span><span class="p">(</span><span class="nx">socket</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">process</span><span class="p">.</span><span class="nx">nextTick</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;open&#39;</span> <span class="o">==</span> <span class="nx">client</span><span class="p">.</span><span class="nx">conn</span><span class="p">.</span><span class="nx">readyState</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="k">return</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">data</span> <span class="o">||</span> <span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="c1">// track socket
+</span><span class="c1"></span>        <span class="nx">self</span><span class="p">.</span><span class="nx">sockets</span><span class="p">[</span><span class="nx">socket</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">;</span>
+
+        <span class="c1">// it&#39;s paramount that the internal `onconnect` logic
+</span><span class="c1"></span>        <span class="c1">// fires before user-set events to prevent state order
+</span><span class="c1"></span>        <span class="c1">// violations (such as a disconnection before the connection
+</span><span class="c1"></span>        <span class="c1">// logic is complete)
+</span><span class="c1"></span>        <span class="nx">socket</span><span class="p">.</span><span class="nx">onconnect</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="nx">fn</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="c1">// fire user-set events
+</span><span class="c1"></span>        <span class="nx">self</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">self</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;next called after client was closed - ignoring socket&#39;</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">socket</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>我們最後來看一下<code>onconnect</code>實際上做了那些事情，這個方法是當我們 connect 確定建立起來後，會進行的動作，它會將這條 socket 連線加入到 nsp 裡的 connected 這個地方，這個屬性也可以讓我們知道，一個 nsp 中有那些 socket 在進行連線。</p>
+<p>然後並且會將這條 socket ，加入到一個已自已 id 為名的房間，所以假設我們要追蹤某個 client ，也可以選擇加入到該名使用者為名的房間，這樣該名使用者收到的事件，我們也都可以收到，不過這只是變化用法，到不是這邊的重點。</p>
+<p>最後他會執行<code>this.packet</code>就是會將這個訊息，傳送到 client 端。</p>
+<p><a href="https://github.com/socketio/socket.io/blob/master/lib/socket.js#L299">onconnect 原始碼</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Socket</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">onconnect</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;socket connected - writing packet&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">nsp</span><span class="p">.</span><span class="nx">connected</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">skip</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">nsp</span><span class="p">.</span><span class="nx">name</span> <span class="o">===</span> <span class="s1">&#39;/&#39;</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">nsp</span><span class="p">.</span><span class="nx">fns</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">skip</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;packet already sent in initial handshake&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">packet</span><span class="p">(</span><span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">CONNECT</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h3 id="heading1">後端的流程圖</h3>
+<p>最後，這邊將提供後端的流程圖，讓我們更容易的理解它的流程。</p>
+<p><img src="http://yixiang8780.com/outImg/20171026-2.png" alt=""></p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Socket.io 原始碼分析之建立連線</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#client--">Client 端它做了什麼呢 ??</a>
+      <ul>
+        <li><a href="#socketioclient-">Socket.io-client 建立連線的地方</a></li>
+        <li><a href="#engineioclient-">engine.io-client 實際建立連線的地方</a></li>
+        <li><a href="#heading">前端流程圖</a></li>
+      </ul>
+    </li>
+    <li><a href="#-">後端接受到請求後，它做了啥 ??</a>
+      <ul>
+        <li><a href="#heading1">後端的流程圖</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

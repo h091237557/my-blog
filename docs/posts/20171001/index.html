@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  如何使用 Prometheus 來優雅的監控 Node Http Server 呢 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="Prometheus" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章中我們將會學習到以下幾個重點 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ? 什麼是 Prometheus 呢 ? 在我們平常開發完系統時，|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="如何使用 Prometheus 來優雅的監控 Node Http Server 呢 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章中我們將會學習到以下幾個重點 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ? 什麼是 Prometheus 呢 ? 在我們平常開發完系統時，|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">如何使用 Prometheus 來優雅的監控 Node Http Server 呢</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/service-monitor' class="muted-link">
+  <span class="Label Label--gray">service monitor</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-10-01.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章中我們將會學習到以下幾個重點</p>
+<ol>
+<li>什麼是 Prometheus 呢 ?</li>
+<li>要如何監控 node http server 呢 ?</li>
+<li>我想從 Prometheus 監控自訂的資訊，要如何做呢 ?</li>
+</ol>
+<h2 id="-prometheus--">什麼是 Prometheus 呢 ?</h2>
+<p>在我們平常開發完系統時，我們常常會有個需求，那就是要如何監控我們的系統呢 ?
+以確保它 cpu 往上衝時，我們會知道呢。</p>
+<p>當然我們可以很簡單的寫個小程式，定期的去呼叫系統取他的 cpu，這是很淺的東東 ~ 那如果是還要一個 api 的請求次數呢 ? 或是平均的某個 api 的請求次數或圖表呢 ? 這時如果還要自幹一個，那就太麻煩囉，所以這時我們就可以使用<code>Prometheus</code> ~</p>
+<p>Prometheus 官網上面寫了下面這段話 :</p>
+<blockquote>
+<p>Power your metrics and alerting with a leading open-source monitoring solution.</p>
+</blockquote>
+<p>這句話就是 Prometheus 存在的目的。</p>
+<h3 id="prometheus-">Prometheus 的架構</h3>
+<p>太細節的不說囉 ~ 這裡大概列出這個架構的三個重點:</p>
+<ol>
+<li>Prometheus 是用 pull 去取得目標資訊，下面的 pull metrics 就是這個意思，而這裡你只先去記一點，如果你有個 http server ，然後你要用 Prometheus 去監控 server ，那 Prometheus 就會去 xxxx_host/metrics 取得資訊。</li>
+<li>PromQL 是 Prometheus 所提供的查詢語言，利用它可以快速的找到我們想要的資訊 (大概)。</li>
+<li>AlertManager 是一個警告系統，你只要配置好 Prometheus 在某個東東到了報警線時，就自動發送警告到 AlertManager 然後它會使用某些方法通知你，例如 email or slack。</li>
+</ol>
+<p><img src="http://yixiang8780.com/outImg/20180314-1.png" alt=""></p>
+<h3 id="-prometheus">安裝 Prometheus</h3>
+<p>請直接到官網直接下載下來。</p>
+<pre><code>https://prometheus.io/download/
+</code></pre><p>接下來在解壓縮</p>
+<pre><code>tar xvfz prometheus-*.tar.gz
+cd prometheus-*
+</code></pre><p>然後進到解壓縮後的資料夾後，執行以下指令，就可以開啟 Prometheus 。</p>
+<pre><code>./prometheus
+</code></pre><h2 id="-node-http-server--">要如何監控 node http server 呢 ?</h2>
+<p>再開始前我們先去 prometheus server 的資料夾下修改一下 prometheus.yml 這檔案，基本上我們只要先調整 scrape_configs 裡的 scrape_configs，設定 prometheus server 要去監控的目標，如下我們去監控<code>localhost:3000</code>。</p>
+<pre><code># my global config
+global:
+  scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - &quot;first_rules.yml&quot;
+  # - &quot;second_rules.yml&quot;
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.
+  - job_name: 'test'
+
+    static_configs:
+      - targets: ['localhost:3000']
+
+</code></pre><p>然後我們就可以簡單的寫一個 nodejs 的 http server 。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">3000</span>
+
+<span class="kr">const</span> <span class="nx">requestHandler</span> <span class="o">=</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello Node.js Server!&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">requestHandler</span><span class="p">)</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;something bad happened&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">server is listening on </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>接下來，我們需要建立一個 api endpoint 的<code>/metrics</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">requestHandler</span> <span class="o">=</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span> <span class="o">===</span> <span class="s1">&#39;/metrics&#39;</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="p">}</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello Node.js Server!&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">requestHandler</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;something bad happened&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">server is listening on </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後上面有說過 Prometheus 會去監控的目標抓取資訊，而他抓的地方就是<code>/metrics</code>，然後這時我們裡面就要回傳資訊回去。</p>
+<p>這裡我們會使用<code>prom-client</code>套件，這個套件是一個 Prometheus client ，它會幫我們抓取他自訂的資料，並且將資料已 Prometheus 可以接受的格式回傳回去。</p>
+<pre><code>npm install prom-client
+</code></pre><p>然後再將 endpoint 修改成如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;prom-client&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">collectDefaultMetrics</span> <span class="o">=</span> <span class="nx">client</span><span class="p">.</span><span class="nx">collectDefaultMetrics</span><span class="p">;</span>
+<span class="nx">collectDefaultMetrics</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">requestHandler</span> <span class="o">=</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span> <span class="o">===</span> <span class="s1">&#39;/metrics&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">register</span><span class="p">.</span><span class="nx">metrics</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello Node.js Server!&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">requestHandler</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;something bad happened&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">server is listening on </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>那要如何驗證有沒有資料呢 ? 你只要去 chrome 然後打<code>http://localhost:3000/metrics</code>然後你看到下面的資訊，就代表你有在產生資料囉，下面這些是<code>prom-client</code>自已會去抓 process 的一些相關資訊，如果要自訂的資訊請看下一章結 ~</p>
+<pre><code># HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total 0.015771 1520243222641
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total 0.000973 1520243222641
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 0.016744000000000002 1520243222641
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1520243212
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 26382336 1520243222641
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds 0.00048715 1520243222642
+
+# HELP nodejs_active_handles_total Number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total 3 1520243222641
+
+# HELP nodejs_active_requests_total Number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total 0 1520243222641
+</code></pre><p>最後我們先開啟 Prometheus ，然後連線到<code>http://localhost:9090/</code>，最後到 status 裡面的 target 裡面，你如果看到你的 endpoint 的 state 是<code>up</code>就代表 Prometheus 有成功的去那抓資料囉。</p>
+<p><img src="http://yixiang8780.com/outImg/20180314-2.png" alt=""></p>
+<h2 id="-prometheus--1">我想從 Prometheus 監控自訂的資訊，要如何做呢 ?</h2>
+<h3 id="-prometheus--metric">定義好符合 Prometheus 的時序資料格式 metric</h3>
+<p>假設我們想要自訂個內容，然後給 Prometheus server 抓取，第一步我們要先定義好『資料模式』，你把他想成 server 與 client 的協定就好囉，然後他長的如下:</p>
+<pre><code>&lt;metric name&gt;{&lt;label name&gt;=&lt;label value&gt;, ...}
+</code></pre><blockquote>
+<p>注意 ! metric name 只能用 _ 來分割名詞 Ex. chat_room_count</p>
+</blockquote>
+<p>假設我們要定義一個『ID 1 的聊天室用戶人數』那他的定義應該會長下面這樣:</p>
+<pre><code>chatRoomCount{ chat_id=“1”} 100(人數)
+</code></pre><h3 id="heading">決定時序資料的類型</h3>
+<p>在 Prometheus 中有提供四種時序資料的類型</p>
+<h4 id="counter">Counter</h4>
+<p>這種類型用於『累積值』，例如 Prometheus 內建提供的 http 請求數或錯誤量，它的類型就是 Counter 。</p>
+<pre><code>http_response_total{method=&quot;GET&quot;,endpoint=&quot;/api/peoples&quot;} 10
+http_response_total{method=&quot;GET&quot;,endpoint=&quot;/api/peoples&quot;} 20
+http_response_total{method=&quot;GET&quot;,endpoint=&quot;/api/peoples&quot;} 30
+</code></pre><h4 id="gauge">Gauge</h4>
+<p>這種類型用於『常規值』，例如 cpu 使用率或記憶體使用率就是此類型。</p>
+<pre><code>memory_usage_bytes{host=“server-01&quot;} 50
+memory_usage_bytes{host=“server-01&quot;} 100
+memory_usage_bytes{host=“server-01&quot;} 80
+</code></pre><h4 id="histogram">Histogram</h4>
+<p>主要用於一段時間範圍內對資料的採集，並且可針對內容進行分組。</p>
+<pre><code>{小於100毫秒=5次，小於500毫秒=1次，小於100毫秒=2次}
+</code></pre><h4 id="summary">Summary</h4>
+<p>與 Histogram 相同且支持百分比與跟蹤的結果。</p>
+<p>比較詳細的類型說明請參考下篇文章，寫的很詳細的。
+<a href="http://yunlzheng.github.io/2017/07/07/prometheus-exporter-example-go/">傳送門</a></p>
+<h3 id="heading1">實作『用戶使用』人數的自訂內容</h3>
+<p>假設我們希望 Prometheus 可以去指定的<code>聊天室</code> Server，抓取使用人數的資訊，那我們要如何實作呢 ?</p>
+<p>根據上面的教學我們要先定義好資料格式與資料類型。</p>
+<pre><code>//資料格式 =&gt; 代表聊天室`1`的使用人數當下有多少人.
+chatRoomCount{ chat_id=“1”} 100(人數)
+</code></pre><pre><code>//資料類型 =&gt; 會選擇 Gauge 而不選 Counter 是因為聊天室的人數是會上下變動，而不是只增加或減少。
+Gauge
+</code></pre><p>接下來我們就來實作一下，首先做出自訂資料的格式定義與類型。</p>
+<pre><code>// 定義自訂 metric 的格式與類型
+// 格式: chatRoomCount{ chat_id=“1”} 100(人數)
+// 類型: Guage
+const guage = new client.Gauge({
+  name: 'chatRoomCount',
+  help: 'The metric provide the count of chatroom`s people',
+  labelNames: ['chat_id']
+});
+</code></pre><p>然後下面就是所有的程式碼，主要的重點就是定義格式，然後讓 Prometheus 從<code>/metrics</code>這個 api 取得資料前，先將 count 資訊更新到 metric 裡面。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">port</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;prom-client&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">guage</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">client</span><span class="p">.</span><span class="nx">Gauge</span><span class="p">(</span><span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;chatRoomCount&#39;</span><span class="p">,</span>
+  <span class="nx">help</span><span class="o">:</span> <span class="s1">&#39;The metric provide the count of chatroom`s people&#39;</span><span class="p">,</span>
+  <span class="nx">labelNames</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;chat_id&#39;</span><span class="p">]</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">requestHandler</span> <span class="o">=</span> <span class="p">(</span><span class="nx">request</span><span class="p">,</span> <span class="nx">response</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span> <span class="o">===</span> <span class="s1">&#39;/metrics&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// 更新 metric
+</span><span class="c1"></span>    <span class="nx">guage</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="p">{</span>
+      <span class="nx">chat_id</span><span class="o">:</span> <span class="s1">&#39;1&#39;</span>
+    <span class="p">}</span><span class="p">,</span> <span class="nx">count</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">register</span><span class="p">.</span><span class="nx">metrics</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span> <span class="o">===</span> <span class="s1">&#39;/add&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="sb">`</span><span class="sb">now ~ count:</span><span class="si">${</span><span class="nx">count</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">request</span><span class="p">.</span><span class="nx">url</span> <span class="o">===</span> <span class="s1">&#39;/leave&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">count</span><span class="o">--</span><span class="p">;</span>
+    <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="sb">`</span><span class="sb">now ~ count:</span><span class="si">${</span><span class="nx">count</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nx">response</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="s1">&#39;Hello Node.js Server!&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">requestHandler</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">port</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;something bad happened&#39;</span><span class="p">,</span> <span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">server is listening on </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>那我們要如何確認有產生資料呢 ? 你先加幾個用戶幾去，然後再去打<code>/metrics</code>就可以看到結果囉。</p>
+<pre><code>http://localhost:3000/add // 加一人
+http://localhost:3000/add // 加一人
+
+http://localhost:3000/metrics
+</code></pre><p>結果如下。</p>
+<pre><code># HELP chatRoomCount The metric provide the count of chatroom`s people
+# TYPE chatRoomCount gauge
+chatRoomCount{chat_id=&quot;1&quot;} 2
+</code></pre><p>最後你在去<code>http://localhost:9090</code>你就可以看到那個 tab 中會多增加了<code>chatRoomCount</code>的標籤，然後點進去選 graph 你就可以看到你的圖表了。</p>
+<p><img src="http://yixiang8780.com/outImg/20180314-3.png" alt=""></p>
+<p><img src="http://yixiang8780.com/outImg/20180314-4.png" alt=""></p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://blog.frognew.com/2017/05/prometheus-intro.html">开源监控系统Prometheus的基本概念 - 青蛙小白</a></li>
+<li><a href="https://github.com/siimon/prom-client">官網</a></li>
+<li><a href="https://yami.io/golang-prometheus/">用 Golang 實作 Prometheus：服務效能測量監控系統 - 電腦玩瞎咪</a></li>
+<li><a href="https://www.jianshu.com/p/0a4acb61ce35">簡書 Prometheus - YichenWong</a></li>
+<li><a href="https://songjiayang.gitbooks.io/prometheus/content/introduction/">songjiayang gitbook</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>如何使用 Prometheus 來優雅的監控 Node Http Server 呢</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-prometheus--">什麼是 Prometheus 呢 ?</a>
+      <ul>
+        <li><a href="#prometheus-">Prometheus 的架構</a></li>
+        <li><a href="#-prometheus">安裝 Prometheus</a></li>
+      </ul>
+    </li>
+    <li><a href="#-node-http-server--">要如何監控 node http server 呢 ?</a></li>
+    <li><a href="#-prometheus--1">我想從 Prometheus 監控自訂的資訊，要如何做呢 ?</a>
+      <ul>
+        <li><a href="#-prometheus--metric">定義好符合 Prometheus 的時序資料格式 metric</a></li>
+        <li><a href="#heading">決定時序資料的類型</a></li>
+        <li><a href="#heading1">實作『用戶使用』人數的自訂內容</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
