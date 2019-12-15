@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-18 之影音傳輸協議總整理 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, mpeg-dash" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-18 之影音傳輸協議總整理 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-18 之影音傳輸協議總整理</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-18.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p><a href="https://mark-lin.com/posts/20180912/">30-12之 RTP/RTCP 傳輸協議</a>
+<a href="https://mark-lin.com/posts/20180913/">30-13之 RTSP 傳輸協議</a>
+<a href="https://mark-lin.com/posts/20180914/">30-14之 RTMP 傳輸協議</a>
+<a href="https://mark-lin.com/posts/20180915/">30-15之 HLS 傳輸協議</a>
+<a href="https://mark-lin.com/posts/20180916/">30-16之 HTTP-FLV 傳輸協議</a>)
+<a href="https://mark-lin.com/posts/20180917/">30-17之 MPEG-DASH 傳輸協議</a>)</p>
+<p>前面的幾面文章，咱們學習了各種型的影音傳輸媒體，接下來將會在這一篇文章中，進行這些協議的總結。</p>
+<blockquote>
+<p>各種影音傳輸協議之比較與整理</p>
+</blockquote>
+<h2 id="heading1">一張圖來簡單的理解各種協議的運作方式</h2>
+<h3 id="rtsp">RTSP</h3>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181102/20089358ShjNiXqUHZ.png" alt=""></p>
+<h3 id="rtmp">RTMP</h3>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181102/200893585c56Vf8TvA.png" alt=""></p>
+<h3 id="hls">HLS</h3>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181102/20089358MFyBdyD5tf.png" alt=""></p>
+<h3 id="httpflv">HTTP-FLV</h3>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181102/20089358egSRY1y6zS.png" alt=""></p>
+<h3 id="mpegdash">MPEG-DASH</h3>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181102/20089358Mwsa0EDev0.png" alt=""></p>
+<h2 id="heading2">特點整理</h2>
+<table>
+<thead>
+<tr>
+<th>協議</th>
+<th>傳輸層選擇</th>
+<th>聲音編碼</th>
+<th>影像編碼</th>
+<th>延遲性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTSP</td>
+<td>RTP、TCP、UDP</td>
+<td>RTP 可支援的都行</td>
+<td>RTP 可支援的東行</td>
+<td>低</td>
+</tr>
+<tr>
+<td>RTMP</td>
+<td>TCP</td>
+<td>AAC、MP3</td>
+<td>H.26X 系列</td>
+<td>低</td>
+</tr>
+<tr>
+<td>HLS</td>
+<td>TCP (因為它是用 HTTP )</td>
+<td>AAC、MP3</td>
+<td>H.26X 系列</td>
+<td>高</td>
+</tr>
+<tr>
+<td>HTTP-FLV</td>
+<td>TCP (因為它是用 HTTP )</td>
+<td>AAC、MP3</td>
+<td>H.26X 系列</td>
+<td>低</td>
+</tr>
+<tr>
+<td>MEPG-DASH</td>
+<td>TCP (因為它是用 HTTP )</td>
+<td>沒啥限制，不過 AAC 用比較多</td>
+<td>H.26X、VPX 系列</td>
+<td>高</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading3">應用狀況</h2>
+<h3 id="rtsp1">RTSP</h3>
+<p>RTSP 這種協議，大部份都是應用在一些有專線的應用，例如 IPTV 這種 機上盒的應用，比較大的原因我覺得有兩個原因：</p>
+<ol>
+<li>因為 RTSP 的特性就是控制流，也就可以快轉、停止等操作，非常適合 這種類型的應用。</li>
+<li>因為 RTSP 可以基於 UDP 進行傳輸，而在專線上因為網路穩定，所以很適合使用。</li>
+</ol>
+<h3 id="rtmp1">RTMP</h3>
+<p>RTMP 這種協議，目前大部份都使用在網路直播應用中，主要的原因在於：</p>
+<ol>
+<li>因為它的延遲低。</li>
+<li>在直播產業剛起來時，大部份的裝置都有 Flash。</li>
+<li>它支援推流。</li>
+</ol>
+<h3 id="hls1">HLS</h3>
+<p>HLS 這種協議，大部份都應用在直播與點播中，其中直播的應用它是屬於比較不重視延遲 的類型，也就是非互動直播，主要的原因在於：</p>
+<ol>
+<li>非互動直播的原因在於，它的延遲高，所以他只適合那種，比賽直播啊、或是一些轉播的應用。</li>
+<li>而點播，也就是由用戶決定要看啥的，不管延遲，所以他一定適合。</li>
+<li>他也很適合在行動網路上看直播與點播，因為它可以動態的調整畫質，當你網路不好，它就會用較少解析度的影片。</li>
+</ol>
+<h3 id="httpflv1">HTTP-FLV</h3>
+<p>HTTP-FLV 這種應用目前都用於直播，點播事實上也可以使用，而且這個協議也慢慢將 HLS 與 RTMP 也替代掉囉，主要有兩個原因：</p>
+<ol>
+<li>因為它延遲低。</li>
+<li>因為它是用 Http 來傳輸，不會被一些東西擋。</li>
+<li>它也支援動態的調整畫質。</li>
+</ol>
+<h3 id="mpegdash1">MPEG-DASH</h3>
+<p>DASH 基本上於 HLS 相似，基本上 HLS 可以使用的非互動直播與點播都可以選擇。</p>
+<h2 id="heading4">支援度</h2>
+<table>
+<thead>
+<tr>
+<th>協議</th>
+<th align="center">支援度 web html5</th>
+<th align="center">支援度 ios</th>
+<th align="center">支援度 mac</th>
+<th align="center">支援度 android</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTSP</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+</tr>
+<tr>
+<td>RTMP</td>
+<td align="center">html5 不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+</tr>
+<tr>
+<td>HLS</td>
+<td align="center">支援</td>
+<td align="center">支援</td>
+<td align="center">支援</td>
+<td align="center">支援</td>
+</tr>
+<tr>
+<td>HTTP-FLV</td>
+<td align="center">支援 (flv.js)</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+</tr>
+<tr>
+<td>MPEG-DASH</td>
+<td align="center">支援 (dash.js)</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+<td align="center">不支援，需使用套件。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heading5">結論</h2>
+<p>今天這篇文章將這幾個協議進行了簡單的總整理，但只是簡單的整理一下，不過這篇文章還會繼續的更新，包含上面提到的各平台支援度的套件支援，我會去調查清楚，又及更協議在那些實際上應用的項目( ex. Youtube 有在用 dash )這些的到時還會慢慢的補上。</p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-18 之影音傳輸協議總整理</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">一張圖來簡單的理解各種協議的運作方式</a>
+      <ul>
+        <li><a href="#rtsp">RTSP</a></li>
+        <li><a href="#rtmp">RTMP</a></li>
+        <li><a href="#hls">HLS</a></li>
+        <li><a href="#httpflv">HTTP-FLV</a></li>
+        <li><a href="#mpegdash">MPEG-DASH</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">特點整理</a></li>
+    <li><a href="#heading3">應用狀況</a>
+      <ul>
+        <li><a href="#rtsp1">RTSP</a></li>
+        <li><a href="#rtmp1">RTMP</a></li>
+        <li><a href="#hls1">HLS</a></li>
+        <li><a href="#httpflv1">HTTP-FLV</a></li>
+        <li><a href="#mpegdash1">MPEG-DASH</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">支援度</a></li>
+    <li><a href="#heading5">結論</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

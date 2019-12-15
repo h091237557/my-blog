@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-24之直播與點播可動版的改良 ( 正式版 ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。 使用 CDN 來調整可動|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-24之直播與點播可動版的改良 ( 正式版 ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。 使用 CDN 來調整可動|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-24之直播與點播可動版的改良 ( 正式版 )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-24.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。</p>
+<blockquote>
+<p>使用 CDN 來調整可動版的架構</p>
+</blockquote>
+<p><a href="https://mark-lin.com/posts/20180920/">30-20之如何建立像 KKTV 一樣的點播功能呢 ?</a>
+<a href="https://mark-lin.com/posts/20180921/">30-21之如何建立的像 17 一樣的直播功能呢 ?</a></p>
+<h4 id="heading1">點播</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181104/200893585CaXOeE2zc.png" alt=""></p>
+<h4 id="heading2">直播</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/20089358nqLraVoW8t.png" alt=""></p>
+<p>本篇文章會分成以下幾個章節：</p>
+<ul>
+<li>可動版本的問題。</li>
+<li>點播的架構改善版本。</li>
+<li>直播的架構改善版本。</li>
+</ul>
+<h2 id="heading3">可動版本的問題</h2>
+<p>在筆者這篇文章中『<a href="https://mark-lin.com/posts/20180922/">30-22之點播與直播可動版問題探討</a>』，我們探討了可動版有以下的問題：</p>
+<ol>
+<li>人多時連線數限制問題。</li>
+<li>人多時頻寬問題。</li>
+<li>人多時效能消耗問題。</li>
+<li>遠距離看片卡頓的問題。</li>
+</ol>
+<p>基本上 1、3 我們可以用傳統的方法(加機器)來解決，而 2、4 就無法使用加機器來進行解決，因為以 2 的頻寬問題，就算你加了在多的機器，如果你在出去的網路還是在同一條，那頻寬還是沒加大，問題還是沒解決。而 4 的話就更不用說，只能讓使用者離機器更近一點才能解決。</p>
+<h2 id="heading4">點播架構的改善版本</h2>
+<p>基本上點播的架構會改成如下圖，它會將 CDN 加上去，而這樣就可幫助我們解決<code>頻寬</code>與<code>距離看片卡頓</code>的問題。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181108/20089358DW3jQScXM7.png" alt=""></p>
+<p>先來說說頻寬的部份， CDN 基本上分散在不同的地方，這也代表這基本上它們的頻寬是各別獨立的，所以不太會發生搶頻寬的問題，而另一點距離的問題，由於大部份的 CDN 都會搭配使用智能 DNS 來幫助找到最近的 CDN，因此可以解決因為離影片來源太遠，而容易造成封包遺失與封包順序不一致問題。</p>
+<p>而且用了 CDN 事實上還有一個好處，那就是可以保證接近 100 的機率可以看片，你想想如果是自已建的一台 Media Server 來提供看片，如果它倒了，不就不能看片了，而有 CDN 就可以自動的轉到另一個臨近的 CDN 來取得資料。</p>
+<p>接下來說說它的運行流程，基本上如下 (以 HLS 拉流為範例)：</p>
+<ol>
+<li>Media Server 收到新的影片檔，然後它會將他進行切片，分成一小個一小個檔案 .ts。</li>
+<li>接下來會分發到各 CDN 上。</li>
+<li>有個用戶發送 Http 請求到智能 DNS 會給予最近的 CDN 位置。</li>
+<li>用戶在發送請求給 CDN 取得影片，CDN 開始將一小段一小段 .ts 傳送給用戶。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181108/20089358YLGLH7MgT6.png" alt=""></p>
+<h2 id="heading5">直播架構的改善版本</h2>
+<p>首先我們先看加了 CDN 的第一種的改善版如下圖。這種架構基本上一樣可以解決掉頻寬與遠距離觀看會卡頓的問題。</p>
+<p>它的運行流程如下：</p>
+<ol>
+<li>直播主推送 RTMP 到 Media Server。</li>
+<li>Media Server 將 RMTP 依據所需支援的協議，切分成小檔案 (ex. HLS 的 .ts)</li>
+<li>Media Server 推送到 CDN。</li>
+<li>聽眾使用拉流 (ex. HLS、HTTP-FLV、Dash、RTMP) 來觀看直播主。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181108/20089358bELtTTFkiF.png" alt=""></p>
+<h4 id="-">上面這個版本有啥問題嗎 ?</h4>
+<p>如果這是個非互動性要求的直播 (ex. 運動賽事直播) 的話，那問題不大。</p>
+<p>但如果是要求互動性的直播，那就有問題了，因為它的延遲會比沒有使用 CDN 還高，也就說沒使用 CDN 時直播主說話後要 5 秒鐘才能聽的到的話，那用了 CDN 可能就要 10 秒，原因如下圖，因為它要多傳輸不少東西。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181108/20089358bk31OueXm3.png" alt=""></p>
+<p>因此後來有人就提出直接將直播主的聲音丟到 CDN，然後由 CDN 來處理切分這些事情，架構圖與執行流程如下。但是相對的此架構的成本一定會比上述的還高，因為 CDN 要幫你多做不少事情。</p>
+<ol>
+<li>直播主推送 RTMP 到離它最近的 CDN。</li>
+<li>CDN 幫你依據所需支援的協議，切分成小檔案。</li>
+<li>聽眾使用拉流 (ex. HLS、HTTP-FLV、Dash、RTMP) 來去最近的 CDN 觀看直播主。</li>
+<li>離聽眾最近的 CDN 會使用拉流來將直播主所在的 CDN 進行畫面拉去。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181108/20089358ijUWbr7e0K.png" alt=""></p>
+<h2 id="heading6">結論</h2>
+<p>基本上以上的點播與直播的改善版本，應該就是大部份雛形，然後你只要記好，在直播與點播的應用中，沒有 CDN 應該是無法做起來的，所以入深入的理解 CDN 的原因與理解各家 CDN 的應用，相信可以幫助你做出各優質的點播與直播的應用。</p>
+<p>接下來下一篇文章，我們就要來研究看看互動直動的一些挑戰。</p>
+<h2 id="heading7">參考</h2>
+<ul>
+<li><a href="http://www.52im.net/thread-1033-1-1.html">首次披露：快手是如何做到百万观众同场看直播仍能秒开且不卡顿的？</a></li>
+<li><a href="https://www.jianshu.com/p/f86e263187cd">视频直播| 基础原理篇</a></li>
+<li><a href="https://kknews.cc/zh-tw/tech/v42e2l.html">直播CDN相關技術</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-24之直播與點播可動版的改良 ( 正式版 )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">可動版本的問題</a></li>
+    <li><a href="#heading4">點播架構的改善版本</a></li>
+    <li><a href="#heading5">直播架構的改善版本</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">結論</a></li>
+    <li><a href="#heading7">參考</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

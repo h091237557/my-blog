@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-21之如何建立的像 17 一樣的直播功能呢 ? &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-21之如何建立的像 17 一樣的直播功能呢 ? | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-21之如何建立的像 17 一樣的直播功能呢 ?</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-21.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立<code>直播</code>應用。</p>
+<p>在筆者的<a href="https://ithelp.ithome.com.tw/articles/10204764">30-09之別人要如何聽到我的聲音呢 ?</a>有提到三種影音的傳遞方式，分別為：</p>
+<p>將聲音檔案直接丟給對方 ( 方法 1 )
+將聲音檔案以串流的方式傳送給對方 ( 方法 2 )
+像直播或網路電話一樣即時的將聲音傳送給對方 ( 方法 3 )</p>
+<p>接下來我們將來實作方法 3 的選項，而這東西事實上就是直播網站的應用，像 17 就是這種類型的應用，本篇文章將會說明：</p>
+<blockquote>
+<p>如何建立的像 17 一樣的直播功能呢 (可以動就好版) ?</p>
+</blockquote>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/200893581RcXw4huRl.jpg" alt=""></p>
+<p>本篇將分為以下幾個章節：</p>
+<ul>
+<li>直播架構原理。</li>
+<li>實作 - 建立 Media Server。</li>
+<li>實作 - 網頁用戶端取得串流影像。</li>
+</ul>
+<h2 id="heading1">直播架構原理</h2>
+<p>直播的架構最基本的如下圖，基本上和點播很相似，只差了直播主推送聲音到 Media Server 這個步驟。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/20089358nqLraVoW8t.png" alt=""></p>
+<p>然後基本上推流的協議，應該是只有一種選擇<code>RTMP</code>，網路上看到有人說 HLS 這點我還要待調查，我先打個問號，
+然後還有提到 WebRTC 這個可以當推流 (不過它應該不算傳輸協議)，這理論上應該是行，這之後 WebRTC 的文章會來聊聊。</p>
+<p>而拉流就有不少<code>RTMP</code>、<code>HLS</code>、<code>HTTP-FLV</code>、<code>MPEG-DASH</code>。</p>
+<p>老樣子問個問題。</p>
+<h4 id="-">那要選擇那個協議來當拉流呢 ?</h4>
+<p>首先我覺得要先看你的直播應用是否為<code>互動性</code>很要求的，如果是它就只有兩個選擇 RTMP 與 HTTP-FLV。不過 RTMP 拉流應該會有不少設備無法使用(果粉)，所以最後應該會選 HTTP-FLV 吧。</p>
+<p>而如果是不會太在意互動性的直播，例如運動賽事直播這種，那選那個，我覺得就看用戶那的支援度吧。</p>
+<h2 id="---media-server">實作 - 建立 Media Server。</h2>
+<hr>
+<p>這裡的 Media Server 基本上要做兩件事情。</p>
+<ul>
+<li>可以接受直播端的影音推流，通常是 RTMP。</li>
+<li>收到 RTMP 後，可以根據用戶的拉流協議來進行轉換 (ex. 如果是 HLS，那就要轉成 .m3u8 )</li>
+</ul>
+<p>這裡咱們就直接使用這個 nodejs 的 Media Server 套件，這裡我們就不深入探討 Media Server 相關選擇，這裡先只追求可以動就好 ( 改天有空在來討探 )。</p>
+<p><a href="https://github.com/illuspas/Node-Media-Server">nodejs-media-server</a></p>
+<p>使用方法很簡單。</p>
+<p>首先將程式碼抓下來，然後將套件安裝好，接下來執行就好。</p>
+<pre><code>git clone https://github.com/illuspas/Node-Media-Server.git
+cd Node-Media-Server
+npm install
+
+node app.js
+</code></pre><p>執行完，如果你看到如下圖的模樣，那就代表成功了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/20089358Tss5iyF5eU.jpg" alt=""></p>
+<h2 id="--">實作 - 網頁用戶端取得串流影像</h2>
+<p>接下來我們來建立一個簡單的網頁來當聽眾，然後他會使用 HTTP-FLV 拉流來觀看直播主的畫面。這段程式碼很簡單，它就只要載入 flv.js 並且指定你要觀看的 HTTP-FLV 串流位置就完成了。</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p"></span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">head</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p"></span><span class="p">&gt;</span>Test<span class="p">&lt;</span><span class="p">/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdn.bootcss.com/flv.js/1.4.2/flv.min.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">video</span> <span class="na">controls</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;video&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">video</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&#34;text&#34;</span> <span class="p">/</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">id</span><span class="o">=</span><span class="s">&#34;load&#34;</span><span class="p"></span><span class="p">&gt;</span>Load<span class="p">&lt;</span><span class="p">/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">flvjs</span><span class="p">.</span><span class="nx">isSupported</span><span class="p">(</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&#34;#load&#34;</span><span class="p">)</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&#34;click&#34;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kr">const</span> <span class="nx">video</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;video&#39;</span><span class="p">)</span><span class="p">;</span>
+                <span class="kr">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s2">&#34;input&#34;</span><span class="p">)</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+                <span class="kr">const</span> <span class="nx">flvPlayer</span> <span class="o">=</span> <span class="nx">flvjs</span><span class="p">.</span><span class="nx">createPlayer</span><span class="p">(</span><span class="p">{</span>
+                    <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;flv&#39;</span><span class="p">,</span>
+                    <span class="nx">url</span><span class="o">:</span> <span class="sb">`</span><span class="sb">http://localhost:8000/live/</span><span class="si">${</span><span class="nx">target</span><span class="si">}</span><span class="sb">.flv</span><span class="sb">`</span>
+                <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">flvPlayer</span><span class="p">.</span><span class="nx">attachMediaElement</span><span class="p">(</span><span class="nx">video</span><span class="p">)</span>
+                <span class="nx">flvPlayer</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">flvPlayer</span><span class="p">.</span><span class="nx">play</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><h2 id="heading2">最後執行結果</h2>
+<p>在 Server 與 Client 都完成以後，咱們接下來就來執行看看</p>
+<h3 id="heading3">直播端</h3>
+<p>我們使用 ffmpeg 假裝為某個直播主，然後打 RTMP 串流到 Server 中。下面指令中，我使用某個 .mp4 影片來假裝直播主的影音，接下來將它推送 rtmp 到指定的位置。</p>
+<pre><code>ffmpeg -re -i test.mp4 -c copy -f flv rtmp://localhost/live/mark
+</code></pre><h3 id="heading4">聽眾</h3>
+<p>然後直播主已經在開直播了，接下來我們只要指定某個直播主就好，像上面我這個直播主是用 mark 這個串流，你這時就可以使用 http://127.0.0.1:8000/live/mark.flv 就可以觀看了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/20089358Hx7tUZPT1u.jpg" alt=""></p>
+<h2 id="heading5">結論</h2>
+<p>本篇文章中，咱們學習到了如何建立最簡單的 17 直播功能，接下來咱們要來探討一下，現在這種架構有什麼問題。</p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-21之如何建立的像 17 一樣的直播功能呢 ?</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">直播架構原理</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#---media-server">實作 - 建立 Media Server。</a></li>
+    <li><a href="#--">實作 - 網頁用戶端取得串流影像</a></li>
+    <li><a href="#heading2">最後執行結果</a>
+      <ul>
+        <li><a href="#heading3">直播端</a></li>
+        <li><a href="#heading4">聽眾</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">結論</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

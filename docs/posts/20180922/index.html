@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-22之點播與直播可動版問題探討 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-22之點播與直播可動版問題探討 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-22之點播與直播可動版問題探討</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-22.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>前面文章中咱們簡單了可以動的<code>點播 ( like KKTV )</code>與<code>直播 ( like 17 )</code>的功能，那接下來這篇文章主題要探討的目問題為：</p>
+<blockquote>
+<p>這兩篇文章實際上應用會有什麼問題 ?</p>
+</blockquote>
+<p><a href="https://mark-lin.com/posts/20180920/">30-20之如何建立像 KKTV 一樣的點播功能呢 ?</a>
+<a href="https://mark-lin.com/posts/20180921/">30-21之如何建立的像 17 一樣的直播功能呢 ?</a></p>
+<h4 id="heading1">點播可動版架構</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181104/200893585CaXOeE2zc.png" alt=""></p>
+<h4 id="heading2">直播可動版架構</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181105/20089358nqLraVoW8t.png" alt=""></p>
+<p>本篇文章分根據問題分成以下幾個章節：</p>
+<ul>
+<li>人多時連線數限制問題。</li>
+<li>人多時頻寬問題。</li>
+<li>人多時效能消耗問題。</li>
+<li>遠距離看片卡頓的問題。</li>
+</ul>
+<h2 id="heading3">人多時連線數限制問題</h2>
+<p>咱們都知道，每當 Client 要和 Server 要資料時，如果是以 TCP 傳輸為基礎的，那就一定要建立一條連線，那對 Server 而言連線是啥了 ?</p>
+<p>在 unix 中每一個 TCP 連線都要占用一個 file descriptor，而它有一定的限制數量，當使用完後，新的 TCP 連線到來就會發生錯誤以下的錯誤訊息 :</p>
+<pre><code>Socket/File: Can't open so many files。
+</code></pre><p>那一個 process 我們可以開啟幾個檔案呢 ? 我們可以用以下的指令來看看 :</p>
+<pre><code>ulimit -n
+</code></pre><p>那這個最大值為多少呢 ? 這個我不確定，像我家用的 Aws Elasticsearch 就有 128000。</p>
+<p>這個東東傳統上如果真的碰到這個貧頸，那就是開多機器，然後用 Load Balance 來處理。</p>
+<h4 id="-media-server--">那這東東在 Media Server 上會很吃重嗎 ?</h4>
+<p>這個我覺得要看協議。</p>
+<p>首先 RTSP 應該是不會影響太大，因為它主要還是使用 RTP base UDP 這東東不太需要建立連線，所以應該是不會吃到 file descriptor。</p>
+<p>在來以 RTMP 來看，它本身的傳輸是用 RTMP 封包，然後使用 TCP 來進行傳輸，正常來說應該是使用 TCP 長連接來建立連線，所以他在傳輸影片時，應該都是用同一個 TCP 來傳輸，所以不會很吃 file descriptor。</p>
+<p>接下來是使用 HTTP 的 HLS，不知道為啥它本身是使用 HTTP 短連接，所以它會比較消耗 file descriptor，而且如果又把每個 ts 切的很細 ( ex. 1 ~ 2 秒 )，那就真的會吃很多囉。</p>
+<p>而 HTTP-FLV 則是使用長連接，所以不耗太多 file descriptor。</p>
+<p>最後是 MPEG-DASH 找不太到是用長還短連接。</p>
+<p>簡單的結論，如果是使用 HLS 那就要注意你的 file descriptor 限制囉。</p>
+<h2 id="heading4">人多時頻寬問題</h2>
+<p>這裡我想問個問題。</p>
+<h4 id="-media-server--hls--server--">假設我們都是直接從 Media Server 用 HLS 來看影片的話，那一台 Server 可以有幾個人，同時的在線上看片呢 ?</h4>
+<p>假設 Server 頻寬為 1G/600M HiNet 光世代的方案。</p>
+<p>這裡先聊聊頻寬為 1G/600M 。</p>
+<p>首先 1 G 代表下載頻寬，它實際上是指你每秒中的總下載量限制為 125 MB (計算如下)，但事實上還要扣一些系統內部使用的控制封包或啥的，所以你大約能使用的頻寬，簡單的算為 100 MB。這也代表你下載東西時的總限制量。</p>
+<pre><code>1 G = 1000 Mbps (bits per second) = 125 MB (byte per second)
+</code></pre><p>而 600 M 為上傳頻寬，它實際上代表每秒中的總上傳量限制為 75 MB，但咱們實際上能用的算 60 MB 好了 (請別算太細)。</p>
+<h4 id="-60-mb--server--">那 60 MB 的上傳量，咱們的 Server 可以支援幾個人同時看人 ?</h4>
+<p>以看 FHD (1080 P) 這種高畫質的影片來看，基本上 10 分鐘的片子大約就需要 150 MB 左右，所以 1 分鐘大約需要 15 MB，而 1 秒鐘為 0.25 MB。</p>
+<p>那就代表每秒鐘 Server 每位用戶看片我需要花 0.25 MB，因此以 60 MB 的上傳量，我一台大概可以承受約為 240 位使用者，這只是簡單的計算不過誤差應該不太離太遠。</p>
+<p>嗯就 240 位。</p>
+<p>如果超果了就會開始發生有人會非常的卡的在看片，然後就怒關了。</p>
+<h2 id="heading5">人多時效能消耗問題</h2>
+<p>以現階段原始的架構，在直播時 Media Server 要做的事情就是接受直播主的 RTMP 串流，並且將之轉換成 client 所要求的協議內容，例如 Server 如果有提供 HLS 觀看，那就需要轉換成 .m3u8 與 .ts 檔，而 Http-FLV 也要轉換成.flv 流容器格式。</p>
+<p>另外如果聽眾人多時，這台 Server 還要一直的計算要發出去的串流封包，那這樣他遲早會 hold 不住的。</p>
+<h2 id="heading6">遠距離看片卡頓的問題</h2>
+<p>在點播中，如果有一位使用者馬克人在國外例如美國，然後咱們的 Server 架設在台灣，那這時馬克要看片時會發生什麼事情呢 ?</p>
+<p>馬克會發現卡卡 der。</p>
+<p>基本上最主要的原因就在於距離，距離遠了就代表你傳輸資料時間需要比較久，然後傳輸時間久了就代表發生問題的機率增加了，例如封包掉了或是封包順序不對，這些都需要花費時間來處理，這也是為啥會卡頓的原因之一。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181106/200893589MbEQJgfGa.png" alt=""></p>
+<h2 id="heading7">總結問題與解法</h2>
+<p>總結以下的問題：</p>
+<ol>
+<li>人多時連線數限制問題。</li>
+<li>人多時頻寬問題。</li>
+<li>人多時效能消耗問題。</li>
+<li>遠距離看片卡頓的問題。</li>
+</ol>
+<p>那這些要如何解決呢 ?</p>
+<p>基本上傳統面對人多的時後，咱們可以將架構改成如下，就是基本的增加機台 Server，然後外面來個 Load Balance ，這樣基本上可以解決掉 1、3 的問題。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181106/20089358VuSkqmyJZx.png" alt=""></p>
+<p>但是如果是在 Media Server 這種類型的應用那就無法解決 2、4 。</p>
+<p>因此接下來一篇文章，咱們要先介紹一個可以解決 2、4 問題的技術，那就是<code>CDN</code>。</p>
+<h2 id="heading8">參考資料</h2>
+<ul>
+<li><a href="https://www.dcard.tw/f/ncue/p/226266645">科普小知識：網路速度多少撥網路影片才會順？</a></li>
+<li><a href="http://0123456789.tw/?p=3467">網路速度多少撥網路影片才會順？(youtube,pps,justin,twitch),光纖網路價格比較</a></li>
+<li><a href="https://kknews.cc/zh-tw/tech/v42e2l.html">直播CDN相關技術</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-22之點播與直播可動版問題探討</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">人多時連線數限制問題</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">人多時頻寬問題</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">人多時效能消耗問題</a></li>
+    <li><a href="#heading6">遠距離看片卡頓的問題</a></li>
+    <li><a href="#heading7">總結問題與解法</a></li>
+    <li><a href="#heading8">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

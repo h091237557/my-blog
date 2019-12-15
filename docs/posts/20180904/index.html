@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-04之影像的採集與原理 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="圖片來源:馬克 正文開始 影像的產生與採集 在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-04之影像的採集與原理 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="圖片來源:馬克 正文開始 影像的產生與採集 在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-04之影像的採集與原理</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-04.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181019/20089358kJIDUGidW6.png" alt="">
+圖片來源:馬克</p>
+<h2 id="heading">正文開始</h2>
+<blockquote>
+<p>影像的產生與採集</p>
+</blockquote>
+<p>在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習對電腦來說影像到底是如何組成的。</p>
+<ul>
+<li>對電腦來說圖片是啥呢 ?</li>
+<li>那對電腦來說影像又是啥呢 ?</li>
+<li>那一個連續的影像有多大呢 ?</li>
+</ul>
+<h2 id="-">對電腦來說圖片是啥呢 ?</h2>
+<blockquote>
+<p>它是一堆像素 (Pixel) 的組合體，白話文就是一堆顏色格子的合體。</p>
+</blockquote>
+<p>數位影像(點陣圖)是由一堆方塊所組成，然後每一個方塊中都有一些顏色，這個每一個方塊我們就稱它為<code>像素 (Pixel)</code>。</p>
+<p>然後通常我們說 1024 X 1024 的圖片就是代表這張圖，有 1024 X 1024 個像素。</p>
+<p>對電腦來說，一張圖片就是包含了一塊顏色方塊的資訊，例如方塊位置、顏色、亮度等，這就是一張圖片在電腦中的基本組成。然後當然它和聲音一樣，都是有規則的二進位。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181019/20089358XThftiXru2.png" alt="">
+圖片來源: <a href="http://www.52im.net/thread-229-1-1.html">http://www.52im.net/thread-229-1-1.html</a></p>
+<h3 id="heading1">每一格像素的色彩顏色編碼</h3>
+<p>基本上可以分為以下兩類 RGB 與 YUV.</p>
+<h4 id="rgb">RGB</h4>
+<p>它就是由紅綠藍(Red、Green、Blue)三原色所組成顏色，然後每一種顏色咱們可以用 8 bit 來表示，也就是 255 種。</p>
+<p>然後咱們常見的色彩類型說明如下：</p>
+<ul>
+<li>黑白：只有黑與白，所以只要 1 bit。</li>
+<li>灰階：還是黑與白，但最黑到最白有 255 種的選擇，所以只要 8 bit，也就是 1 byte。</li>
+<li>全彩：就是每個三原色都有 255 種選擇，然後有三原色，所以要 3 x 8 bit 等於 24 bit，也就是 3 byte。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181019/20089358g452S1k410.jpg" alt="">
+圖片來源:<a href="https://www.google.com.tw/url?sa=i&amp;source=images&amp;cd=&amp;ved=2ahUKEwi_7Nzco5LeAhWCbbwKHUJRDxIQjRx6BAgBEAU&amp;url=https%3A%2F%2Fwww.techbang.com%2Fposts%2F58336-rgb-lighting-effect-how-can-it-become-a-popular-among-the-gaming-players&amp;psig=AOvVaw31HLGPUjZvoFIa0R-9cJ-q&amp;ust=1540030731332811">網路</a></p>
+<h4 id="yuv">YUV</h4>
+<p>它是由以下二個東東所組成而成的，其中 Y 代表這明亮度，而 UV 用來表示顏色，我自已覺得有點難理解，反正咱們只要知道幾個重點：</p>
+<ul>
+<li>它也是另一種用來表視顏色的編碼。</li>
+<li>比較符合咱們小眼晴的敏感度。</li>
+<li>所需的空間比 RGB 還小。</li>
+<li>目前視頻比較常用它。</li>
+</ul>
+<p>想更了解 YUV 的細節可以參考此篇文章<a href="http://notes.maxwi.com/2017/12/05/yuv/">YUV 数据格式详解</a></p>
+<h2 id="-1">影像又是啥 ?</h2>
+<blockquote>
+<p>影像 = 連續的圖片</p>
+</blockquote>
+<p>影像就是一堆連續的圖片，如下圖：</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181019/2008935830IZGLj94E.png" alt="">
+圖片來源:<a href="http://www.52im.net/thread-229-1-1.html">即时通讯音视频开发（二）：视频编解码之数字视频介绍</a></p>
+<p>然後這裡我們要介紹一個名詞<code>幀</code>。</p>
+<p>幀它就是影像動畫中最小的圖片單位，一幀就是一張靜止的圖片，連續的幀就是會變成動畫。</p>
+<p>如果我們形容一個影像的<code>幀數</code>為 30 ，則代表這個影像 1 秒鐘是由 30 張圖片所組合，通常會用 FPS (Frames Per Second) 來當單位， FPS 越高相對的動畫更流暢，但相對的所需要的空間就更多囉。</p>
+<p>順到一提電視或電影大約都使用 20 ~ 30 FPS。</p>
+<p>然後在一個連續動作會由幾個幀組成，而在這些幀中其中一個幀叫<code>關鍵幀</code>。</p>
+<h3 id="heading2">關鍵幀</h3>
+<blockquote>
+<p>在動畫中，一個 move ! 所定義的起點與終點。</p>
+</blockquote>
+<p>假設有一個簡單的動作有四個幀如下:</p>
+<pre><code>A: 關鍵幀
+B: 幀
+C: 幀
+D: 關鍵幀
+</code></pre><p>那基本上 B、C 幀就是一定會根據 A 關鍵幀來為主題進行變化，而 D 關鍵幀就是另外一個動作的開始幀。</p>
+<p>這個關鍵幀在未來進行影像壓縮時會起到不小作用，因為上面有說有其它的幀都是只針對關鍵幀進行小幅度的變動，那這不就代表其它不會變動的地方可以拿掉，這樣就可以省下不少空間了。</p>
+<h3 id="youtube--720p1080p--">youtube 上面看到的畫質 720p、1080p 是什麼意思呢 ?</h3>
+<p>首先我們來看看數字，它的 720、1080 所代表的意思為<code>垂直解析度</code>。</p>
+<blockquote>
+<p>所以 1080P 所代表的解析度為 1920 X 1080 (寬 x 高)</p>
+<p>螢幕通常為 16:9</p>
+</blockquote>
+<p>理論上值越高代表畫質越好(不考慮壓縮情況)，因為 1080P 也代表這影片的每一張圖是由 1920 x 1080 個方塊像素所組合成，越多的像素就越能描述顏色。</p>
+<h2 id="-2">那一個連續的影像有多大呢 ?</h2>
+<p>上面有提到影像是由連續的圖片所組成，所以我們就先從圖片來開始計算它有多大，這裡以簡單的由 RGB 色彩編碼為範例。</p>
+<p>每個方塊都是一組顏色，假設一個方塊只是黑與白，那就代表它也只需要用 0 和 1 來表示這格子是啥顏色，而這也代表只要 1 bit 。</p>
+<p>假設咱們有一張 300 X 300 的黑白圖片 (1位元)，那咱們需要用到的空間就是：</p>
+<pre><code>300 X 300 X 1 = 90000 bit = 11260 byte = 11 KB
+</code></pre><p>然後假設咱們有一張 300 X 300 的全彩圖片(RGB) 24位元，那咱們需要用到的空間就是：</p>
+<pre><code>300 X 300 X 24 = 2160000 bit = 270000 byte = 270 KB
+</code></pre><p>上面簡單的說明圖片的大小計算後，咱們接下來簡單的計算純影像有多大。</p>
+<h3 id="heading3">範例</h3>
+<p>影像長度: 10 秒
+解析度: 1080P
+圖像色素: 全彩
+FPS: 30</p>
+<pre><code>10 X 30 X 1920 X 1080 X 24 = 14929920000 bit = 1866 MB
+</code></pre><p>才 10 秒鐘就要 1 GB 以上，這也是為什麼後來一堆神人發明了壓縮編碼的原因。</p>
+<p>而 YUV 因為有點兒複雜這裡就不多解釋了，反正你只要想它比 RGB 小。</p>
+<h2 id="heading4">結論</h2>
+<p>這張文章中咱們學習到幾個重點：</p>
+<ul>
+<li>圖片是啥呢 ? 就是一堆顏色區塊所組合而成，每一格顏色至少要 1 bit 來存放(黑與白)</li>
+<li>影像又是啥呢 ? 就是一堆連續的圖片所組成。</li>
+<li>一個連續的影像有多大呢 ? 請看上面。</li>
+</ul>
+<p>對了上面說的這些事情都是攝影機與照相機會幫咱們做好的事情，這兩個東西就是在做採集。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="http://www.52im.net/thread-229-1-1.html">即时通讯音视频开发（二）：视频编解码之数字视频介绍</a></li>
+<li><a href="https://hojenjen.com/%E8%81%8A%E6%94%9D%E5%BD%B157-%E6%84%9F%E5%85%89%E5%85%83%E4%BB%B6%E8%A6%8F%E6%A0%BC%E3%80%81%E5%83%8F%E7%B4%A0%E3%80%81%E7%95%AB%E8%B3%AA-%E7%B6%9C%E5%90%88%E6%A6%82%E8%AB%96%E8%88%87%E8%AA%8D/">[聊攝影57] 感光元件規格、像素、畫質 綜合概論與認識</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-04之影像的採集與原理</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">對電腦來說圖片是啥呢 ?</a>
+      <ul>
+        <li><a href="#heading1">每一格像素的色彩顏色編碼</a></li>
+      </ul>
+    </li>
+    <li><a href="#-1">影像又是啥 ?</a>
+      <ul>
+        <li><a href="#heading2">關鍵幀</a></li>
+        <li><a href="#youtube--720p1080p--">youtube 上面看到的畫質 720p、1080p 是什麼意思呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#-2">那一個連續的影像有多大呢 ?</a>
+      <ul>
+        <li><a href="#heading3">範例</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論</a></li>
+    <li><a href="#heading5">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

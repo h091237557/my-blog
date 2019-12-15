@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-25之直播連麥的挑戰與方案 ( P2P ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用文字，也就是所謂的聊天室，而這篇文章咱們將要介紹另|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-25之直播連麥的挑戰與方案 ( P2P ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用文字，也就是所謂的聊天室，而這篇文章咱們將要介紹另|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-25之直播連麥的挑戰與方案 ( P2P )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-25.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用<code>文字</code>，也就是所謂的聊天室，而這篇文章咱們將要介紹另一種互動方式，那就是直播連麥，也就是直播主與聽眾可以進行語音溝通，更白話文的是說可以和漂亮姐姐進行語音聊天。這也就是本篇文章的主題。</p>
+<blockquote>
+<p>可以和漂亮姐姐進行語音聊天的難題與方案。</p>
+</blockquote>
+<p>本篇文章將分成兩個章節：</p>
+<ul>
+<li>直播連麥的挑戰</li>
+<li>直播連麥的架構</li>
+</ul>
+<h2 id="heading1">直播連麥的挑戰</h2>
+<blockquote>
+<p>直播連麥最大的難題就是『 延遲 』問題。</p>
+</blockquote>
+<p>假設我們在一般直播時，以比較低的延遲 2 秒來計算的話 ( 就是主播說話聽眾 2 秒鐘後才能聽到 )，那這樣在直播連麥時會發生什麼事情呢 ?</p>
+<p>如下圖所示，直播主說話以後，要經過 4 秒以後才會聽到連麥者的回復，而連麥者也相同的要等 4 秒後才能聽到直播主的回應，你覺得這樣還可以對話嗎 ?</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181109/20089358SiGQeCGGnc.png" alt=""></p>
+<p>這裡來問個問題。</p>
+<h3 id="-">為什麼直播會延遲呢 ?</h3>
+<p>基本上可以分四個部份，如下圖。呃下面兩個箭頭算一部份，所以分別為<code>直播主處理</code>、<code>網路傳輸</code>、<code>CDN 與 Media Server 處理</code>、<code>聽眾端處理</code>。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181109/20089358GVjNKU5P7r.png" alt=""></p>
+<h4 id="-client">首先第一個部份是直播主 Client</h4>
+<p>它需要花時間來進行聲音與影像的採集，接下來進行編碼，最後就準備封裝然後準備送貨。</p>
+<p>這部份有沒有可以優化的地方呢 ?</p>
+<p>基本上可以在編碼上加速，網路上有提到說<code>硬編碼</code>與<code>軟編碼</code>這兩個聽起來很硬東西，其中軟編碼就是使用 CPU 來編碼，而硬編碼就是使用非 CPU 來進行編碼，例如使用 GPU。</p>
+<p>而硬編碼效能優於軟編碼，不過需要硬體支援，這方面我沒很熟，請當參考。</p>
+<h4 id="heading2">第二部份為網路傳輸</h4>
+<p>只要實用網路進行傳輸，基本上都一定會發生延遲問題，而最主要產生的原因有兩個：</p>
+<ul>
+<li>距離。</li>
+<li>傳輸時的封包維護。</li>
+</ul>
+<p>首先距離是不用說的，直播主離你越遠，它的聲音要傳到你的小耳朵裡，一定比較花時間。</p>
+<p>然後第二點是傳輸時的封包維護，在網路傳輸時基本上會發生兩件事情<code>網路抖動</code>與<code>網路掉包</code>。</p>
+<p><code>網路抖動</code>就是你傳送 A、B、C 封包給某個人，但某個人收到的封包為 C、B、A，那這時就要針對這狀態做一些處理，方法可能是緩存等到某段時間後，在根據封包裡面的時間來依順序播放，但緩存那邊就會產生延遲時間囉。</p>
+<p>而<code>網路掉包</code>就是你傳送 A、B、C 但實際上對方只收到 A、B，而這時如果是 TCP 的話，它就會一段時間後，會在發送一次封包 C，然後這段時間也就產生延遲囉。</p>
+<p>那這部份有沒有啥解法 ?</p>
+<p>就是使用 CDN 只要離的越近，當然越快，而且發生網路網路抖動與網路掉包機率更低，當然如果你們公司夠強，那就自已開發一個基於 UDP 的協議吧。</p>
+<h4 id="-cdn--media-server-">第三部份為 CDN 或 Media Server 處理</h4>
+<p>在這一部份，它們可能會需要將 RTMP 推流轉成相對應其它協議的東西，例如 HLS 就需要產生 .m3u8 而 HTTP-FLV 就需要產生 .flv。</p>
+<p>那這部份有沒有啥解法 ?</p>
+<p>我不知道。</p>
+<h4 id="-client1">第三部份為聽眾 Client</h4>
+<p>當聽眾的設備收到直播主傳送來的聲音後，會開始進行解碼，然後進行播放，這裡也會需要花費時間。</p>
+<p>然後有一些播放器會有緩存的機制，為了防止看片卡頓的問題，所以它可能會在本地端，先緩存個 1 秒鐘的影像，然後在播出，因此這部份也會產生延遲囉。</p>
+<p>那這部份有沒有啥解法 ?</p>
+<p>基本上就看解碼器的能力吧……</p>
+<h2 id="heading3">直播連麥的架構</h2>
+<h3 id="v1-">V1 可動版</h3>
+<p>請看下圖，基本上就是直播主與連麥者發送一條 RTMP 到 CDN，然後雙方同時會去最近的 CDN 拉取對對方的 RTMP，最後聽眾端就同時去 CDN 抓兩條流回來。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181109/20089358OpjfjSA99b.png" alt=""></p>
+<h4 id="-v1--">上面這種 V1 有啥問題 ?</h4>
+<p>如下所列，雖然它實現的方式比較簡單，但是有很多問題，基本上應該是沒啥商業價值。</p>
+<ul>
+<li>主播與連麥者在互動時，延遲性較高。</li>
+<li>主播與連麥者聲音會互相干擾，也就是所謂的迴音。</li>
+<li>延遲性非常的依賴 CDN 的效能。</li>
+</ul>
+<h3 id="v2--p2p-">V2 基於 P2P 架構版</h3>
+<p>請看下圖，基本就是主播主與連麥者進行 P2P 的連線，然後通常會在主播端那將兩條聲音進行合流，然後在用 RTMP 推流將到丟到 CDN 那，然後聽眾在去用拉流去將這它抓下來。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181109/20089358EMvde2VH8s.png" alt=""></p>
+<p>這種架構有以下特點:</p>
+<ul>
+<li>延遲性低。</li>
+<li>但 P2P 打洞成功機率不是 100 % (也就是說主播與連麥者不一定可以連到)</li>
+<li>這種方法在行動端網路會很受限制。</li>
+<li>主播端上傳 Loading 會很重 (而且如果連麥多人的話)</li>
+</ul>
+<p>雖然使用 P2P 的連麥架構還是有缺點，但是相比之下，連麥互動的根本，低延遲至少有解。這個版本基本上 P2P 這方面應該是有辦法使用 WebRTC 來方便實作，但如果 mobile 端要建立這個架構，如果無法使用 WebRTC 的話，那難度就比較高點兒，這就還要在調查了。</p>
+<h2 id="heading4">結論</h2>
+<p>本篇文章中，咱們探討了直播連麥的一些挑戰，基本上最主要是延遲的問題，如果這個能解，那基本上直播連麥應該就可以做到用戶不會冒火的水準，不過這裡說一下，寫到這邊以後發覺，某些方面這產業真的非常的燒錢，因為 CDN 真的很重要，好的 CDN 帶你上天堂，爛的 CDN 帶你下地獄。</p>
+<p>接下來下一篇文章，咱們將要來理解一下 WebRTC 是如何處理 P2P 連線的，這也有助於未來在想開發 Mobile 端 P2P 連線的幫助。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="https://kknews.cc/zh-tw/tech/5a8qv6l.html">最火直播連麥技術大揭秘！內附技術詳解~</a></li>
+<li><a href="https://kknews.cc/tech/4oyx4m2.html">RTMP、WebRTC、UDP 三種互動直播方案的優劣比較</a></li>
+<li><a href="https://cloud.tencent.com/document/product/454/8092">騰訊雲-如何实现连麦功能</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/22663282">视频直播技术详解」系列之五：延迟优化</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-25之直播連麥的挑戰與方案 ( P2P )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">直播連麥的挑戰</a>
+      <ul>
+        <li><a href="#-">為什麼直播會延遲呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">直播連麥的架構</a>
+      <ul>
+        <li><a href="#v1-">V1 可動版</a></li>
+        <li><a href="#v2--p2p-">V2 基於 P2P 架構版</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論</a></li>
+    <li><a href="#heading5">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

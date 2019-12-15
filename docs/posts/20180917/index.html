@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-17之 MPEG-DASH 傳輸協議 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, mpeg-dash" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-17之 MPEG-DASH 傳輸協議 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-17之 MPEG-DASH 傳輸協議</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-17.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181101/20089358FiJhMsd2NL.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>接下來咱們要來介紹 MPEG-DASH協議。</p>
+<blockquote>
+<p>MPEG-DASH 協議</p>
+</blockquote>
+<p>本篇文章將會分成幾個章節來理解 MPEG-DASH 協議：</p>
+<ul>
+<li>MPEG-DASH 協議是要用來完成什麼事情呢 ?</li>
+<li>MPEG-DASH 協議如何完成它想做的事情呢 ?</li>
+<li>建立 MPEG-DASH 的串流傳輸流程。</li>
+<li>MPEG-DASH 的特點總結。</li>
+</ul>
+<h2 id="mpegdash--">MPEG-DASH 協議是要用來完成什麼事情呢 ?</h2>
+<blockquote>
+<p>讓 client 與 server 可以透過 Http 來進行流媒體的傳輸</p>
+</blockquote>
+<p>嗯事實上它想完成的事情和 HLS 事實上是相同的，那為啥他會誕生出來呢 ? 比較大的問題是</p>
+<blockquote>
+<p>HLS 是由蘋果所主導的協議，而不是國際通用協議，這也代表蘋果怎麼改，其它人也要一起動，也就是說一切蘋果說的算。</p>
+</blockquote>
+<p>因此在 MPEG 的主導下在與一些大廠合作下 MPEG-DASH 這種國際標準的協議就誕生了。</p>
+<p><a href="">ISO/IEC 23009-1:2012</a></p>
+<h2 id="mpegdash--1">MPEG-DASH 協議如何完成它想做的事情呢 ?</h2>
+<blockquote>
+<p>它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。</p>
+</blockquote>
+<p>就如同 HLS 一樣。</p>
+<h2 id="-mpegdash-">建立 MPEG-DASH 的串流傳輸流程</h2>
+<p>它的基本流程如下圖。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181101/20089358PAq07DPhjL.png" alt=""></p>
+<h3 id="1--server">1. 直播主將聲音或影像傳輸到 Server</h3>
+<p>這裡可以使用 RTMP 來將聲音推收到 Server，又或是如果不是直播情況可以直接將聲音檔例如 .mp4 直接丟到 Server。</p>
+<h3 id="2-server-">2. Server 將收到的聲音進行處理</h3>
+<p>這裡它基本上會將做兩件事情。</p>
+<h4 id="-mp4--ts-">將聲音切分成多個 .mp4 或 .ts 檔案</h4>
+<p>DASH 它可以支援動態調整碼率，因此它會將聲音根據不同碼率來切分，如下。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181101/20089358FAnQeDaImv.png" alt=""></p>
+<h4 id="-mpd-">產生 .mpd 檔</h4>
+<p>.mpd 檔就有點像是索引檔，裡面存放了這一段聲音的總共由那些小檔案所組成，然後 client 就是去看這個檔案來決定要抓那些影片影。它的內容如下圖。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181101/20089358Ti8F4Pj2Ur.png" alt="">
+圖片來源 : <a href="https://blog.csdn.net/qq_27582179/article/details/51598208">CSDN-MPEG-DASH介绍</a></p>
+<ul>
+<li>Period : 這個會有多個，這也代表一個場景或是一段歌曲，並用來表示這段場景的長度，而用多個就代表你可以穿插廣告或啥的。</li>
+<li>AdaptationSet : 它是用來說明這個媒體流的資訊，例如一個影像流或一個聲音流。</li>
+<li>Representation : 用來表示不同的螢幕大小或碼率。也就是說 Dash 會根據使用者現在的狀態來決定要去抓那一種影片 ( ex. 1080p or 720p )</li>
+<li>SegmentBase : 實際聲音的聲音或影像檔案。</li>
+</ul>
+<p>然後下面為某一段實際的 .mpd 檔，從這檔案可以知道它提供了 1080p 與 720p 的 mp4 影像。全部的檔案請拉到最下面的備註。</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;MPD</span> <span class="na">xmlns=</span><span class="s">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span class="na">mediaPresentationDuration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">minBufferTime=</span><span class="s">&#34;PT1.5S&#34;</span> <span class="na">profiles=</span><span class="s">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
+<span class="na">type=</span><span class="s">&#34;static&#34;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Period</span> <span class="na">duration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">start=</span><span class="s">&#34;PT0S&#34;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;video&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;4190760&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.640028&#34;</span> <span class="na">height=</span><span class="s">&#34;1080&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1920&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-89.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;674-1149&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-673&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;2073921&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401f&#34;</span> <span class="na">height=</span><span class="s">&#34;720&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1280&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-88.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+</code></pre></div><h3 id="3--http-server--mpd-">3. 聽眾向 HTTP Server 請求 .mpd 檔</h3>
+<h3 id="4--mpd--mp4-">4. 然後根據 .mpd 開始去請求一小段一小段的 .mp4 檔。</h3>
+<h2 id="mpegdash-">MPEG-DASH 特點總結</h2>
+<ul>
+<li>它的概念基本上與 HLS 差不多，因此延遲度也差不多。</li>
+<li>它有提供動態選擇碼率 ( ex. 1080p or 720p )。</li>
+<li>它可以支持任何的編碼格式 (ex. H.26X or VPX )。</li>
+<li>以 HTTP 為基礎，所以看影片暢通無比。</li>
+<li>Youtube、Facebook 是他的愛用者。</li>
+</ul>
+<p>目前現在還是比較多 HLS 使用者，推測主要的原因是因為它先出來，而且又有大蘋果這個靠山，你想想蘋果的設備在這世界佔了多少。</p>
+<h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%9F%BA%E4%BA%8EHTTP%E7%9A%84%E5%8A%A8%E6%80%81%E8%87%AA%E9%80%82%E5%BA%94%E6%B5%81">wiki</a></li>
+<li><a href="https://blog.csdn.net/qq_27582179/article/details/51598208">MPEG-DASH介绍</a></li>
+</ul>
+<h2 id="heading2">備註</h2>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;MPD</span> <span class="na">xmlns=</span><span class="s">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span class="na">mediaPresentationDuration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">minBufferTime=</span><span class="s">&#34;PT1.5S&#34;</span> <span class="na">profiles=</span><span class="s">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
+<span class="na">type=</span><span class="s">&#34;static&#34;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;Period</span> <span class="na">duration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">start=</span><span class="s">&#34;PT0S&#34;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;video&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;4190760&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.640028&#34;</span> <span class="na">height=</span><span class="s">&#34;1080&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1920&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-89.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;674-1149&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-673&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;2073921&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401f&#34;</span> <span class="na">height=</span><span class="s">&#34;720&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1280&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-88.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;869460&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401e&#34;</span> <span class="na">height=</span><span class="s">&#34;480&#34;</span> <span class="na">id=</span><span class="s">&#34;3&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;854&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-87.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;686521&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401e&#34;</span> <span class="na">height=</span><span class="s">&#34;360&#34;</span> <span class="na">id=</span><span class="s">&#34;4&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;640&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-86.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;264835&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d4015&#34;</span> <span class="na">height=</span><span class="s">&#34;240&#34;</span> <span class="na">id=</span><span class="s">&#34;5&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;426&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-85.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;672-1147&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-671&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;100000&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d4015&#34;</span> <span class="na">height=</span><span class="s">&#34;144&#34;</span> <span class="na">id=</span><span class="s">&#34;5&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;256&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-160.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;671-1146&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-670&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+    <span class="nt">&lt;/AdaptationSet&gt;</span>
+    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
+      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;audio&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;127236&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.2&#34;</span> <span class="na">id=</span><span class="s">&#34;6&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;2&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;44100&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8c.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;255236&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.2&#34;</span> <span class="na">id=</span><span class="s">&#34;7&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;2&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;44100&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8d.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;31749&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.5&#34;</span> <span class="na">id=</span><span class="s">&#34;8&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;1&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;22050&#34;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8b.mp4<span class="nt">&lt;/BaseURL&gt;</span>
+        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;/SegmentBase&gt;</span>
+      <span class="nt">&lt;/Representation&gt;</span>
+    <span class="nt">&lt;/AdaptationSet&gt;</span>
+  <span class="nt">&lt;/Period&gt;</span>
+<span class="nt">&lt;/MPD&gt;</span>
+
+</code></pre></div>
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-17之 MPEG-DASH 傳輸協議</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#mpegdash--">MPEG-DASH 協議是要用來完成什麼事情呢 ?</a></li>
+    <li><a href="#mpegdash--1">MPEG-DASH 協議如何完成它想做的事情呢 ?</a></li>
+    <li><a href="#-mpegdash-">建立 MPEG-DASH 的串流傳輸流程</a>
+      <ul>
+        <li><a href="#1--server">1. 直播主將聲音或影像傳輸到 Server</a></li>
+        <li><a href="#2-server-">2. Server 將收到的聲音進行處理</a></li>
+        <li><a href="#3--http-server--mpd-">3. 聽眾向 HTTP Server 請求 .mpd 檔</a></li>
+        <li><a href="#4--mpd--mp4-">4. 然後根據 .mpd 開始去請求一小段一小段的 .mp4 檔。</a></li>
+      </ul>
+    </li>
+    <li><a href="#mpegdash-">MPEG-DASH 特點總結</a></li>
+    <li><a href="#heading1">參考資料</a></li>
+    <li><a href="#heading2">備註</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-06之聲音與影像的封裝 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-06之聲音與影像的封裝 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-06之聲音與影像的封裝</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-06.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181021/20089358zkxJdcGgAw.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時輕鬆些，接下來咱們要學習將這些東東<code>封裝</code>在一個容器中。</p>
+<blockquote>
+<p>聲音與影像的封裝</p>
+</blockquote>
+<p>本篇文章中我們將會分為以下章節，來探討這個主題：</p>
+<ul>
+<li>什麼是封裝呢 ?</li>
+<li>常見的容器(文件、格式)</li>
+<li>容器的實際模樣 ( 以 wav 為範例 )</li>
+</ul>
+<h2 id="-">什麼是封裝呢 ?</h2>
+<blockquote>
+<p>封裝就是將聲音與影像編碼丟到一個容器中的過程。</p>
+</blockquote>
+<p>簡而言之如下圖：</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181021/20089358f1cLzZ9ITK.png" alt=""></p>
+<h3 id="-1">那為啥要封裝到容器呢 ?</h3>
+<p>基本上有以下幾個理由：</p>
+<ul>
+<li>可以讓不同的媒體內容同步變的方便，例如聲音與影像。</li>
+<li>可以提供索引內容，讓用戶可以決定想要看或聽什麼地方。</li>
+<li>如果沒有容器，只傳送一串影像編碼，那你還要在傳送聲音編碼才會有聲音。</li>
+<li>如果只傳送編碼，如果沒有一些編碼資訊，那接受要如何解碼呢 ?</li>
+</ul>
+<h3 id="heading1">編碼與容器是一對多的關係</h3>
+<p>有些東西需要先搞個清楚一下，不然我一開始研究時常常在混亂中。</p>
+<p>例如咱們很常說的 MP3 編碼、文件、格式，它到底是指啥 ? 編碼還是容器 ?</p>
+<blockquote>
+<p>咱們常看到的 .mp3 檔是個容器(文件、格式)，然後它裡面放了 MP3 編碼，再外加一些資訊。</p>
+</blockquote>
+<p>那 mp3 編碼可以放到其它容器裡嗎 ? 當然可以 ! 像他就可以放到 .mp4 或 .avi 容器中。</p>
+<p>所以說基本上一種音頻編碼是可以有多種容器選擇的。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181021/20089358KVUpsQ1Asu.png" alt=""></p>
+<h2 id="heading2">常見的容器(文件、格式)</h2>
+<p>接下來將介紹一些常見的容器，這也先說一下網路上在說明容器時有很多種名稱，例如音頻文件、音頻格式、音頻檔這些，它們指的都是容器的概念。</p>
+<h3 id="wav--">.wav  (聲音)</h3>
+<p>WAV (Waveform Audio File Format) 它是微軟開發出來的聲音容器，雖然它是微軟開發出來的，但在其它的平台也廣泛的支持，基本上它就是聲音 raw data 容器，就是用來儲放 PCM 編碼的。</p>
+<p>備註：
+它符合 RIFF 文件規範格式標準。<a href="https://zh.wikipedia.org/wiki/%E8%B3%87%E6%BA%90%E4%BA%A4%E6%8F%9B%E6%AA%94%E6%A1%88%E6%A0%BC%E5%BC%8F">wiki-RIFF</a></p>
+<h3 id="mp4--">.mp4  (混合、串流)</h3>
+<p>MP4（MPEG-4 Part 14），它是一種影片的多媒體容器，除了聲音與影像外，它還可以儲放字幕，由於它也有支持串流的播放，所以也可以在網路上支援流傳輸。</p>
+<p>它可以支援的編碼如下：</p>
+<ul>
+<li>影像編碼：H.26X、MPEG4 Part 2、VP9 (VP8 不確定有沒有)</li>
+<li>聲音編碼：AAC、MPEG-4 Part3 (包含 MP3)</li>
+</ul>
+<h3 id="ogg--">.ogg  (混合、串流)</h3>
+<p>OGG，它也是一種可以裝這影像或聲音的容器，同時也屬於流媒體，可支持串流播放，它比較特殊的是它是自由開源項目，它並沒有軟體專利的限制(MPEG4 就有)。</p>
+<p>它可以支援的編碼如下：</p>
+<ul>
+<li>影像編碼：Theora、Daala</li>
+<li>聲音編碼：Vorbis、Opus、Flac、PCM</li>
+</ul>
+<h3 id="flvf4v--">.flv/.f4v  (混合、串流)</h3>
+<p>FLV (Flash video)，它是由 Adobe 所開發的網路串流容器，基本上常用於 RTMP、HTTP-FLV 這兩個協議上，這個之後會詳細說明，然後 .f4v 是它的進化版，最後直播很常用它。</p>
+<p>它可以支援的編碼如下：</p>
+<ul>
+<li>影像編碼：H264</li>
+<li>聲音編碼：MP3、AAC、PCM</li>
+</ul>
+<h3 id="webm--">.webm  (混合、串流)</h3>
+<p>WebM 它是由 Google 支援的影像檔容器，它裡面使用的封裝格式為 Matroska，基本上這個容器開發出來是專門給 HTML5 使用的，它們們家的 Youtube 也都支持這種格式。</p>
+<p>它可以支援的編碼如下：</p>
+<ul>
+<li>影像編碼：VP8、VP9</li>
+<li>聲音編碼：Vorbis、Opus</li>
+</ul>
+<h3 id="ts--">.ts  (混合、串流)</h3>
+<p>TS (MPEG-2 Transport Stream)，它是一種影像容器，目前 HLS 協議中專門的使用它，這也在之後會詳細的說明，最後直播也很常用它。</p>
+<p>它可以支援的編碼如下：</p>
+<ul>
+<li>影像編碼：H264、MPEG4 part 2</li>
+<li>聲音編碼：MP3、AAC</li>
+</ul>
+<h2 id="---wav--">容器的產生與實際樣子 ( 以 .wav 為範例 )</h2>
+<p>首先聲音會由麥克風採集到，接下來再透過 PCM 將聲音轉換成 PCM 編碼，然後會將這個編碼包裝成一個檔案，這個檔案中包含了這個音訊的資訊與 PCM 編碼，最後就是我們看到的檔案。</p>
+<p>以 .wav 容器為例，我們來看看它裡面實際上包裝了啥。</p>
+<blockquote>
+<p>.wav = 表頭 (聲音資訊) + 表身 (聲音編碼)</p>
+</blockquote>
+<p>下圖就是實際上長的樣子，根據資源交換檔案格式 (RIFF)，在檔案的前 44 或 46 個位元組當做表頭，用來記錄音訊相關資訊，內容如下，它會記錄音訊格式、取樣頻率與取樣大小，然後表頭以後的表身就是放置咱們剛剛聲音PCM 編碼。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181021/200893581WoYXnQdBC.png" alt="">
+圖片來源: <a href="https://zh.wikipedia.org/wiki/WAV">維基-wav</a></p>
+<h2 id="heading3">結論</h2>
+<p>本篇文章中咱們學習了以下的重點：</p>
+<ul>
+<li>什麼是封裝呢？就是將聲音與影像編碼丟到一個容器中的過程。</li>
+<li>常見的容器。自已往上拉。不過有分的清楚那些是聲音容器、那些又是影像容器、還有另一種是流容器(這之後會在詳細說)</li>
+<li>容器的產生與實際樣子( 以 .wav 為範例 )。</li>
+</ul>
+<p>目前基本上咱們已經學完了編碼與封裝，其中這裡有個重點要記得：</p>
+<blockquote>
+<p>要理的清楚什麼是『編碼』與什麼是『容器』。</p>
+</blockquote>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/Ogg">wiki-ogg</a></li>
+<li><a href="https://baike.baidu.com/item/%E9%9F%B3%E9%A2%91%E6%96%87%E4%BB%B6">百度百科-音頻文件</a></li>
+<li><a href="https://baike.baidu.com/item/%E8%A7%86%E9%A2%91%E6%A0%BC%E5%BC%8F">百度百科-視頻文件</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-06之聲音與影像的封裝</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">什麼是封裝呢 ?</a>
+      <ul>
+        <li><a href="#-1">那為啥要封裝到容器呢 ?</a></li>
+        <li><a href="#heading1">編碼與容器是一對多的關係</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">常見的容器(文件、格式)</a>
+      <ul>
+        <li><a href="#wav--">.wav  (聲音)</a></li>
+        <li><a href="#mp4--">.mp4  (混合、串流)</a></li>
+        <li><a href="#ogg--">.ogg  (混合、串流)</a></li>
+        <li><a href="#flvf4v--">.flv/.f4v  (混合、串流)</a></li>
+        <li><a href="#webm--">.webm  (混合、串流)</a></li>
+        <li><a href="#ts--">.ts  (混合、串流)</a></li>
+      </ul>
+    </li>
+    <li><a href="#---wav--">容器的產生與實際樣子 ( 以 .wav 為範例 )</a></li>
+    <li><a href="#heading3">結論</a></li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

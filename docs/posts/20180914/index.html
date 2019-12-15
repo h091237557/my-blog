@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-14之 RTMP 傳輸協議 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, rtmp" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-14之 RTMP 傳輸協議 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-14之 RTMP 傳輸協議</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-14.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358qubqhcvKOT.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>接下來咱們要來介紹 RTMP 協議。</p>
+<blockquote>
+<p>RTMP 協議</p>
+</blockquote>
+<p>本篇文章將會分成幾個章節來理解 RTMP 協議：</p>
+<ul>
+<li>RTMP 協議是要用來完成什麼事情呢 ?</li>
+<li>RTMP 協議如何完成它想做的事情呢 ?</li>
+<li>建立 RTMP 的串流傳輸流程。</li>
+<li>RTMP 的特點總結。</li>
+</ul>
+<h2 id="rtmp--">RTMP 協議是要用來完成什麼事情呢 ?</h2>
+<p>它當初的動機為：</p>
+<blockquote>
+<p>在 Flash 平台與伺服器進行串流媒體傳輸的協議</p>
+</blockquote>
+<p>RTMP( Real-Time Messaging Protocol )，為 Adode 所開發，它就是要用來讓 Server 可以與 Flash 平台進行串流傳輸。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358P4e1TTnNwr.png" alt=""></p>
+<p>這裡問個問題。</p>
+<h4 id="-rtsp--">為什麼不要用 RTSP 來進行傳輸呢 ?</h4>
+<p>這裡我覺得有兩個原因：</p>
+<ol>
+<li>因為 RTSP 大部份還是基於 RTP over UDP 上，由於當時 RTSP 大部份都用在 IPTV 或 VOD 上這些都是有專門一條線給它用，所以網路很穩定。但是 RTMP 當初是希望開發在互聯網上，所以不能保證網路很穩定，因此它選擇用 TCP 來傳輸。2. 因為想建立一個更符合 Flash 用途的協議。我猜的。</li>
+</ol>
+<p>更多有支援的請參考<a href="http://wwwimages.adobe.com/www.adobe.com/content/dam/acom/en/devnet/rtmp/pdf/rtmp_specification_1.0.pdf">RTMP Spec</a>在 31、32 頁。</p>
+<h2 id="rtmp--1">RTMP 協議如何完成它想做的事情呢 ?</h2>
+<blockquote>
+<p>事實上就是一樣定義一些連線標準</p>
+</blockquote>
+<p>不過這裡有個比較特殊的東西要說明一下，那就是 RTMP 傳輸的結構，如下圖，假設你有一段聲音要進行傳遞，它會將它封裝成<code>message</code>，然後再實際要傳輸時，會將它分成更小的<code>chunk</code>。對了注意一下 message 不是只有聲音與影像這樣類型，還有一些控制或調整的類型，但這裡就不細說明了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358dYZ9bFSILu.png" alt=""></p>
+<p>分割成較小的 chunk 有個好處，這樣更能有助於調解傳輸的效率，例如假設因為某些原因導致影像的傳輸低於聲音，這時就可以自動增加影像的 chunk 傳輸量。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358dQ6DyKPKWL.png" alt=""></p>
+<p>這裡咱們問個問題。</p>
+<h4 id="-chunk--">那一個 Chunk 是多大呢 ?</h4>
+<p>基本上預設為<code>128 byte</code>，當然這個大小可以進行調整。</p>
+<h4 id="-chunk--1">那 Chunk 大一點好還是小一點好 ?</h4>
+<p>都有優缺點。</p>
+<p>大一點的 chunk 可以節省傳輸的內容，並且減少 cpu 的計算時間(因為要計算每個 chunk 的關係)，但缺點就在於越大就越不容易進行調整傳輸效率，就會有比較高的機率發生影像卡彈。</p>
+<p>而相對的小一點的 chunk 則比較不會發生影像卡彈，但缺點在於它要傳的資訊會比較多，因為每個 chunk 都會有 header 附加額外資訊。</p>
+<p>所以這可能要根據你所在的網路環境來進行 chunk 的大小調整。</p>
+<h2 id="-rtmp-">建立 RTMP 的串流傳輸流程。</h2>
+<p>要建立 RTMP 來進行串流媒體的傳輸基本上有以下幾個步驟。接下來我們來理一下每一個步驟在做啥。</p>
+<p>備註：</p>
+<p>下面的封包資訊是使用 wireshake 與 ffmpeg 打 rtmp 所產的，有興趣的友人可以試試。</p>
+<pre><code>ffmpeg rtmp://184.72.239.149/vod/mp4:bigbuckbunny_1500.mp4
+</code></pre><h3 id="-handshake">握手 (Handshake）</h3>
+<blockquote>
+<p>這階段事實上只是確認兩件事情 1. RTMP 版本 2. 網路是否正常</p>
+</blockquote>
+<p>流程如下圖。172 為我的電腦，而 184 則為 RTMP Server 位置。</p>
+<ul>
+<li>Client 發送 C0 + C1 Chunks 給 Server。</li>
+<li>Server 回傳 S0 + S1 + S2 Chunks 給 Client。</li>
+<li>Client 發送 C2 給 Client。</li>
+</ul>
+<p>這裡 RMTP Spec 裡面這些 Chunk 裡面只要求帶版本號而以，其它裡面帶的都是由實作端自已決定，它沒有強制要求。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358y8d4DCgzhD.png" alt=""></p>
+<h3 id="heading1">建立網路連接</h3>
+<blockquote>
+<p>設定一些這個連接的參數</p>
+</blockquote>
+<p>在使用 Handshake 確認可以建立連接以後，接下來就是設定一些參數，例如 Chunk 大小、頻寬大小等，如下圖 289 ~ 318。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358TpgnYYpe37.png" alt=""></p>
+<h3 id="heading2">然後就是開始傳輸資料囉。</h3>
+<p>如同下圖的 323 開始，然後你會看到每個封包裡面都多包含多個 chunk，像 323 的最左邊那寫的 audio data 與 video data 這樣。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181029/20089358TpgnYYpe37.png" alt=""></p>
+<h2 id="rtmp-">RTMP 的特點總結</h2>
+<p>它有以下特點：</p>
+<ul>
+<li>基於 TCP 的雙向傳輸。</li>
+<li>RTMP 串流目前只能由 Flash 播放器來播出 ( 這也代表開始不支援 Flash 的東東都無法執行 ex. 蘋果的東東，還有一些瀏覽器 ex. chrome)</li>
+<li>默認 Port 為 1935。</li>
+<li>它可以使用 AMF 與 FLV 流容器。</li>
+<li>它可以支援聲音編碼主要的為 AAC、MP3。</li>
+<li>而支援的影像編碼為 H.264。 (它好像沒支援 VPX 系列的呢)</li>
+<li>它支援推流與拉流，也就是所謂的你可以推聲音到 Server，你也可以去 Server 將聲音拉回來。 (之後會詳細說明)</li>
+<li>目前大部份的 PC 都有 Flash，但手機端就 QQ 了。</li>
+<li>它的延遲時間大約 3 ~ 5 秒或更低，如果處理的好的話，這裡的延遲的意思就是主播說話後，你大約 3 ~ 5 秒才能聽到。</li>
+</ul>
+<h2 id="heading3">參考資料</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol">wiki-rtmp</a></li>
+<li><a href="https://www.jianshu.com/p/5ce11c20a9df">RTMP协议解析（一） —— 基本了解</a></li>
+<li><a href="https://www.jianshu.com/p/9459606c2025">RTMP协议 03 RTMP设计思想</a></li>
+<li><a href="https://blog.csdn.net/shangmingyang/article/details/50837852">带你吃透RTMP</a></li>
+<li><a href="https://blog.csdn.net/mm792261167/article/details/69499590?utm_source=blogxgwz1">流媒体-RTMP交互过程及协议解析</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-14之 RTMP 傳輸協議</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#rtmp--">RTMP 協議是要用來完成什麼事情呢 ?</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#rtmp--1">RTMP 協議如何完成它想做的事情呢 ?</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#-rtmp-">建立 RTMP 的串流傳輸流程。</a>
+      <ul>
+        <li><a href="#-handshake">握手 (Handshake）</a></li>
+        <li><a href="#heading1">建立網路連接</a></li>
+        <li><a href="#heading2">然後就是開始傳輸資料囉。</a></li>
+      </ul>
+    </li>
+    <li><a href="#rtmp-">RTMP 的特點總結</a></li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

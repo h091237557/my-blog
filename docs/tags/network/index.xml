@@ -7,10 +7,109 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>&amp;copy;Your Name 2019</copyright>
-    <lastBuildDate>Sun, 10 Sep 2017 19:51:35 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 28 Sep 2018 19:51:35 +0800</lastBuildDate>
     
 	<atom:link href="https://mark-lin.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</title>
+      <link>https://mark-lin.com/posts/20180928/</link>
+      <pubDate>Fri, 28 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180928/</guid>
+      <description>正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章</description>
+    </item>
+    
+    <item>
+      <title>30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 )</title>
+      <link>https://mark-lin.com/posts/20180923/</link>
+      <pubDate>Sun, 23 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180923/</guid>
+      <description>正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片</description>
+    </item>
+    
+    <item>
+      <title>30-18 之影音傳輸協議總整理</title>
+      <link>https://mark-lin.com/posts/20180918/</link>
+      <pubDate>Tue, 18 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180918/</guid>
+      <description>正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協</description>
+    </item>
+    
+    <item>
+      <title>30-17之 MPEG-DASH 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180917/</link>
+      <pubDate>Mon, 17 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180917/</guid>
+      <description>正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它</description>
+    </item>
+    
+    <item>
+      <title>30-16之 HTTP-FLV 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180916/</link>
+      <pubDate>Sun, 16 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180916/</guid>
+      <description>正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建</description>
+    </item>
+    
+    <item>
+      <title>30-15之 HLS 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180915/</link>
+      <pubDate>Sat, 15 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180915/</guid>
+      <description>正文開始 接下來咱們要來介紹 HLS 協議。 HLS 協議 本篇文章將會分成幾個章節來理解 HLS 協議： HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建</description>
+    </item>
+    
+    <item>
+      <title>30-14之 RTMP 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180914/</link>
+      <pubDate>Fri, 14 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180914/</guid>
+      <description>正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建</description>
+    </item>
+    
+    <item>
+      <title>30-13之 RTSP 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180913/</link>
+      <pubDate>Thu, 13 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180913/</guid>
+      <description>正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：</description>
+    </item>
+    
+    <item>
+      <title>30-12之 RTP/RTCP 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180912/</link>
+      <pubDate>Wed, 12 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180912/</guid>
+      <description>正文開始 在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議： RTP 協議 (RTCP 後來會提到) 本篇文章將會分成幾個章節來理解 RTP 協議： RTP 協議是要用來</description>
+    </item>
+    
+    <item>
+      <title>30-11之 TCP 與 UDP 協議</title>
+      <link>https://mark-lin.com/posts/20180911/</link>
+      <pubDate>Tue, 11 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180911/</guid>
+      <description>正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這</description>
+    </item>
+    
+    <item>
+      <title>30-10之通訊協議的基本常識</title>
+      <link>https://mark-lin.com/posts/20180910/</link>
+      <pubDate>Mon, 10 Sep 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20180910/</guid>
+      <description>正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是</description>
+    </item>
     
     <item>
       <title>Socket 的哩哩扣扣</title>

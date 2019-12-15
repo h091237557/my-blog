@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-28.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章要探討的主題：</p>
+<blockquote>
+<p>為什麼 P2P 連線很麻煩呢 ?</p>
+</blockquote>
+<p>因為如果你理解了這個問題，你就會知道為什麼 WebRTC 要使用怎麼多的技術來進行 P2P 連線囉，這也是為什麼我們會先說明這篇文章。</p>
+<p>本篇文章的問題，為什麼 P2P 的連線會很麻煩呢 ? 最主要的問題在於：</p>
+<blockquote>
+<p>NAT 與防火牆的存在。</p>
+</blockquote>
+<p>因此本篇文章將針對這兩個東西來理解</p>
+<ul>
+<li>NAT 與防火牆是啥 ?</li>
+<li>NAT 的運作原理。</li>
+<li>為什麼有了 NAT 後 P2P 會很麻煩 ?</li>
+<li>NAT 的分類。</li>
+</ul>
+<h2 id="nat--">NAT 與防火牆是啥 ?</h2>
+<h3 id="nat">NAT</h3>
+<p>NAT (Network Address Translation) 中文就做網路位置轉換，它是用來將私網 IP 轉換成公網 IP 的技術。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181112/20089358uIvytHQF4j.png" alt=""></p>
+<h4 id="-nat-">為啥會有 NAT ?</h4>
+<p>先說說它的起源。</p>
+<p>在咱們世界裡有個叫 IPV4 的地址規則，由於它數量稀少，不可能讓每一台電腦都有一個地址，因此就有了以下的解法如下圖，就是每個家庭或公司只有一組地址，然後公司內的電腦就使用這位置來上網。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181112/20089358LoYXoAE97j.png" alt=""></p>
+<p>其中常用的私有 IP 段為：</p>
+<ul>
+<li>10.0.0.0 ~ 10.255.255.255</li>
+<li>172.16.0.0 ~ 172.31.255.255</li>
+<li>192.168.0.0 ~ 192.168.255.255</li>
+</ul>
+<p>這樣的確就可以解決 IPV4 位置不足的問題，那這裡問個問題。</p>
+<h4 id="-ip--">那這樣私有 IP 要如何連到外面上網呢 ?</h4>
+<p>因為假設一台外網的 Server 收到一個從 192.168.0.1 來的請求，那他在回覆時要送給誰呢 ? 說不定在那台 Server 所在的網路中也有一個 192.168.0.1，那這樣回覆就會送錯人囉。</p>
+<p>而這就是 NAT 最主要的功能，將內網的 IP 對應到外網的 IP。</p>
+<h3 id="heading1">防火牆</h3>
+<p>防火牆基本上所處的位置如下圖，它就是外網與內網的守門員，它最主要職則就是：</p>
+<blockquote>
+<p>決定誰可以通過我 (防火牆)</p>
+</blockquote>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181112/2008935889mzadtVYm.png" alt=""></p>
+<h3 id="heading2">兩者差異</h3>
+<p>基本上你會發現防火牆所在的位置與 NAT 所在的位置很相似，但是記好他們兩個的職則不太一樣：</p>
+<ul>
+<li>NAT：負責外網 IP 與 內網 IP 的映射。</li>
+<li>防火牆：負責維護內網的安全。</li>
+</ul>
+<p>不過現在很多情況下 NAT 事實上會包含了一些防火牆在做的事情，所以接下來我們就專心的來研究 NAT。</p>
+<h2 id="nat-">NAT 的運作原理</h2>
+<p>接下來這章節我們來詳細的理解一下 NAT 的實際運作原理。</p>
+<p>假設：</p>
+<p>A 在馬克公司內，想連到外部網站 B</p>
+<p>A 的 IP：192.168.1.1
+B 的 IP : 210.110.1.1
+馬克公司 IP：310.110.1.1</p>
+<p>NAT 對映表</p>
+<table>
+<thead>
+<tr>
+<th align="center">內網 IP</th>
+<th align="center">外網 IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">192.168.1.1</td>
+<td align="center">310.110.1.1:9000</td>
+</tr>
+<tr>
+<td align="center">192.168.1.2</td>
+<td align="center">310.110.1.1:9001</td>
+</tr>
+<tr>
+<td align="center">192.168.1.3</td>
+<td align="center">310.110.1.1:9002</td>
+</tr>
+</tbody>
+</table>
+<p>那這樣連線流程如下圖。</p>
+<ol>
+<li>A (192.168.1.1) 的封包抵達 NAT。</li>
+<li>NAT 將封包內的 source ip 修改成 310.110.1.1:9000 (根據對映表)。</li>
+<li>NAT 將 A 的封包(310.110.1.1:9000) 發送到 B (210.110.1.1)。</li>
+<li>B (210.110.1.1) 的回應抵達 NAT。</li>
+<li>NAT 將 B 發的封包根據對映表，來決定此幫包該發給誰。</li>
+<li>NAT 將 B 的封包發送到 A (192.168.1.1)。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181112/20089358HCusgn8TNn.png" alt=""></p>
+<h2 id="-nat--p2p--">為什麼有了 NAT 後 P2P 會很麻煩 ?</h2>
+<p>為什麼有了 NAT 後 P2P 連線會很麻煩 ?</p>
+<p>最主要的原因在於：</p>
+<blockquote>
+<p>NAT 不允許外網主機直接訪問內網</p>
+</blockquote>
+<p>當然這不是完全不行，假設如果你要在內網中架台 Server 給外部使用，那的確可以特別設置讓外部的人可以連線進來。</p>
+<p>但是正常來說大部份都是無法直接連進來的，如果可以就代表你公司內部的電腦被外人看光光，但是 P2P 連線就是需要雙方都可以主動建立連線，這也是為什麼要建立 P2P 連線會很麻煩的關係。</p>
+<p>還有另一個原因在於，就算你知道了對方的 IP 與 Port 以後，你要進行連線還是一定要經過 NAT 這時如果你不在 NAT 的允許進來名單裡面，那你就一定進不來的。</p>
+<h2 id="nat-1">NAT 的分類</h2>
+<p>NAT 事實上有分很多類型，如果要學習 NAT 穿洞技術，那第一個條件就是要先了解你要穿的洞是什麼類型，這樣才能做相對應對策略，其本上分為以下四種類型</p>
+<h3 id="full-cone-nat">Full Cone NAT</h3>
+<p>當內部主機(Aip, Aport)被 NAT 映射外部(Eip, Eport)。</p>
+<ul>
+<li>所有之後 A 出去的請求都會轉換成(Eip, Eport)</li>
+<li>所有外部主機發送(Eip, Eport)的都會轉換成(Aip, Aport)</li>
+</ul>
+<h3 id="restricted-cone-nat">Restricted Cone NAT</h3>
+<p>當內部主機(Aip, Aport)被 NAT 映射外部(Eip, Eport)。</p>
+<ul>
+<li>所有之後 A 出去的請求都會轉換成(Eip, Eport)</li>
+<li>所有外部主機發送(Eip, Eport)的都會轉換成(Aip, Aport)</li>
+<li>但可以設定限制的外部主機，也就是只有它發進來的才可以轉為(Aip, Aport)。</li>
+</ul>
+<h3 id="port-restricted-cone-nat">Port Restricted Cone NAT</h3>
+<p>當內部主機(Aip, Aport)被 NAT 映射外部(Eip, Eport)。</p>
+<ul>
+<li>所有之後 A 出去的請求都會轉換成(Eip, Eport)</li>
+<li>所有外部主機發送(Eip, Eport)的都會轉換成(Aip, Aport)</li>
+<li>但可以設定限制的外部主機與 Port，也就是只有它(ip 與 port)發進來的才可以轉為(Aip, Aport)。</li>
+</ul>
+<h3 id="symmetric-nat---p2p--">Symmetric NAT ( 無法進行 P2P 串透 )</h3>
+<ul>
+<li>A 出去針對某個『特定』的位置的請求才會轉換成(Eip, Eport)，不然 NAT 都會轉成不同的 Port。</li>
+</ul>
+<p>這裡的意思是指，假設內網 A 傳給封包給外網 B，那 NAT 會分配 Port 50000。而如果 A 要傳給 C 那 NAT 會分配 Port 50001。</p>
+<p>這種類型的 NAT 是無法實現 P2P 的，最主要的問題就在於它的 Port 會變。</p>
+<h4 id="heading3">備註：</h4>
+<p>在 Mobile 端如果使用 Wifi 來上網的大部份都是屬於前三種類型的，所以可以實現 P2P 穿透，而使用 3G 或 4G 的就是屬於 Symmetric NAT，所以它無法進行 P2P 穿透。(這未來會開篇文章來探討)</p>
+<h2 id="heading4">結論</h2>
+<p>本篇文章中，咱們理解了為什麼要建立 P2P 連線很麻煩的原因，最主要就是 NAT 的問題，因此我們下一文章就要來說明 WebRTC 是如何來穿透 NAT 這東東。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="http://www.52im.net/thread-50-1-1.html">P2P技术详解(一)：NAT详解——详细原理、P2P简介</a></li>
+<li><a href="http://www.cs.nccu.edu.tw/~lien/Writing/NGN/firewall.htm">穿越防火牆技術</a></li>
+<li><a href="http://linux.vbird.org/linux_server/0250simple_firewall/0320nat.php">鳥哥的 Linux-NAT</a></li>
+<li><a href="https://www.zhihu.com/question/30269820">知乎-请问目前可否实现手机上的NAT穿透，建立P2P链接？</a></li>
+<li><a href="https://www.jianshu.com/p/84e8c78ca61d">ICE协议下NAT穿越的实现（STUN&amp;TURN）</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#nat--">NAT 與防火牆是啥 ?</a>
+      <ul>
+        <li><a href="#nat">NAT</a></li>
+        <li><a href="#heading1">防火牆</a></li>
+        <li><a href="#heading2">兩者差異</a></li>
+      </ul>
+    </li>
+    <li><a href="#nat-">NAT 的運作原理</a></li>
+    <li><a href="#-nat--p2p--">為什麼有了 NAT 後 P2P 會很麻煩 ?</a></li>
+    <li><a href="#nat-1">NAT 的分類</a>
+      <ul>
+        <li><a href="#full-cone-nat">Full Cone NAT</a></li>
+        <li><a href="#restricted-cone-nat">Restricted Cone NAT</a></li>
+        <li><a href="#port-restricted-cone-nat">Port Restricted Cone NAT</a></li>
+        <li><a href="#symmetric-nat---p2p--">Symmetric NAT ( 無法進行 P2P 串透 )</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論</a></li>
+    <li><a href="#heading5">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

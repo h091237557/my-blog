@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-08之 WebRTC 採集的詳細說明與聲音的加工 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-08之 WebRTC 採集的詳細說明與聲音的加工 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-08之 WebRTC 採集的詳細說明與聲音的加工</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-08.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181023/20089358qhkO9UHBxW.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>前一篇文章『<a href="https://mark-lin.com/posts/20180907/">30-07 Web 如何進行語音與影像採集 ?</a>』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。</p>
+<blockquote>
+<p>採集的詳細說明與聲音的加工。</p>
+</blockquote>
+<p>本篇文章會將之分成以下幾個章節：</p>
+<ul>
+<li>WebRTC 的 Stream (Media Stream) 組成。</li>
+<li>如何對 Media Stream 的聲音進行加工 ？</li>
+</ul>
+<h2 id="webrtc--stream--media-stream--">WebRTC 的 Stream ( Media Stream ) 組成</h2>
+<blockquote>
+<p>stream = track A + track B</p>
+</blockquote>
+<p>前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。</p>
+<pre><code>const constraints = { audio: true, video: true }
+navigator.mediaDevices.getUserMedia(constraints)
+.then((stream) =&gt; {
+    // stream 就是咱們的聲音與影像
+})
+.catch((err) =&gt; {
+    // 錯誤處理
+})
+</code></pre><p>然後咱們這裡來問個問題：</p>
+<blockquote>
+<p>stream 是由什麼組合的 ?</p>
+</blockquote>
+<p>大部份的人應該會說不就是聲音與影像嗎 ? 嗯某些方面的對，但這是抽象的說法，在研究程式碼時我覺得要儘可能的去討探它裡面實際的做法，這樣出現問題了咱們可以才可以理解為啥。</p>
+<p>在 WebRTC 中，咱們使用 getUserMedia 來取得聲音與影像的 stream，它就是一個通道，會不斷的將聲音與影像編碼，然後 stream 裡面實際上是由 track 所組成，它就是每一個媒體來源，用下面的圖會更容易的理解。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181023/20089358IGYWCPXNbe.png" alt=""></p>
+<p>然後轉換成 WebRTC 的物件關係圖會如下：</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181023/20089358LXXIFDIkg9.png" alt=""></p>
+<p>知道了它的組合以後，基本上我們就可以針對那個 Track 進行操作。假設我們想操作麥克風或攝影機，那我們可以使用以下的程式碼，那將該個 track 取出來。</p>
+<pre><code>MediaStream.getAudioTracks()
+
+MediaStream.getVideoTracks()
+</code></pre><p>然後咱們就可以針對 track 做些事情，例如在某段時間將聲音禁止然後影像繼續錄，又或是在某段時間將採集的影像變小，然後在某段時間回復過來，這些就都可以做到囉。這裡就不寫範例囉。</p>
+<h3 id="heading1">備註</h3>
+<p>MediaStream.getAudioTracks 這方法是會回傳多個 track 沒錯，因為不同的麥克風就會有不同的 track。</p>
+<h2 id="-media-stream--">如何對 Media stream 的聲音進行加工 ？</h2>
+<blockquote>
+<p>使用 AudioContext 就可以對聲音做點喝喝喝的事情</p>
+</blockquote>
+<p>在某些時後，咱們希望將採集到的聲音進行一些加工，例如讓別人聽不出來聲音是誰，又或是想讓原本採集的聲音大聲些，這時咱們就需要使用 Web Audio API 的 AudioContext。</p>
+<p>Web Audio API 是一個用來專門在 Web 上進行音源處理的東東，它的基本核心如下圖，第一個是 AudioContext，這東東你可以想成它是一個聲音世界的神。然後第二個是 AudioNode  它就是每個處理聲音的實體，它裡面的聲音可以從外部檔案、麥克風採集或是用 AudioContext 裡面所提供的東西來產生聲音。相對的它也可以將他的聲音丟給其它 AudioNode 來進行加工。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181023/20089358IP2GPbHMNQ.png" alt=""></p>
+<p>上面這樣說或需還有點兒抽像，接下來咱們簡單的來實作一段程式碼。</p>
+<h3 id="-webrtc-">將 WebRTC 所採集的聲音進行放大，然後在直接輸出給喇叭</h3>
+<p>首先這段程式碼首先會先創造 AudioContext，接下來透過 createMediaStreamSource 來將 WebRTC 所採集的聲音流，轉換成 AudioContext 世界的 AudioNode。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"> <span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+
+      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
+      <span class="err">…</span><span class="err">…</span>
+    <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>接下來我們在產生另一個 AudioNode 它是用來將我們來源聲音，音量加大的加工師。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+
+      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 產生音量加工師，用來將來源聲音加大
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">processNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createGain</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">processNode</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+      <span class="nx">sourceNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">processNode</span><span class="p">)</span><span class="p">;</span>
+      <span class="err">…</span><span class="err">…</span>
+    <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>最後在將加工完的聲音丟到終端麥克風。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+      
+      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 產生音量加工師，用來將來源聲音加大
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">processNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createGain</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">processNode</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+      <span class="nx">sourceNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">processNode</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 將加工完的聲音丟給終端麥克風
+</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">destinationNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">destination</span><span class="p">;</span>
+      <span class="nx">processNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">destinationNode</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="heading2">結論</h2>
+<p>本篇文章中咱們學習到了以下的重點：</p>
+<ul>
+<li>WebRTC 的 Stream ( Media Stream )。每一條 stream 都是由多個 track 所組成，每一個 track 就是一個媒體源( ex. 麥克風 A 、麥克風 B 、攝影機 )</li>
+<li>如何對 Media Stream 的聲音進行加工？ 使用 Web Audio API 就可以處理囉。</li>
+</ul>
+<h2 id="heading3">參考資料</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/MediaStream">MDN-MediaStream</a></li>
+<li><a href="http://javascript.ruanyifeng.com/htmlapi/webrtc.html">JavaScript 标准参考教程（alpha）by 阮一峰</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-08之 WebRTC 採集的詳細說明與聲音的加工</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#webrtc--stream--media-stream--">WebRTC 的 Stream ( Media Stream ) 組成</a>
+      <ul>
+        <li><a href="#heading1">備註</a></li>
+      </ul>
+    </li>
+    <li><a href="#-media-stream--">如何對 Media stream 的聲音進行加工 ？</a>
+      <ul>
+        <li><a href="#-webrtc-">將 WebRTC 所採集的聲音進行放大，然後在直接輸出給喇叭</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">結論</a></li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

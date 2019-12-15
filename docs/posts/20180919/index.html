@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-19 之收到聲音後要如何的播出呢 ?  ( FFMpeg ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, ffmpeg" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-19 之收到聲音後要如何的播出呢 ?  ( FFMpeg ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-19 之收到聲音後要如何的播出呢 ?  ( FFMpeg )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-19.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181103/200893588407ZJYvCD.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習</p>
+<blockquote>
+<p>收到了聲音已後，要如何的播出呢 ?</p>
+</blockquote>
+<p>咱們收到聲音以後(檔案或串流) 那接下來要如何播出了 ?</p>
+<p>答案就是使用<code>播放器</code>，而接下來我們就要來介紹大部份播放器的內核<code>ffmpeg</code>。</p>
+<p>基本上本篇分成以下的章節來理解 ffmpeg 這好用的東東：</p>
+<ul>
+<li>ffmpeg 是啥 ?</li>
+<li>ffmpeg 的基本架構。</li>
+<li>ffmpeg 的簡單使用範例。</li>
+</ul>
+<h2 id="ffmpeg--">FFMpeg 是啥 ?</h2>
+<blockquote>
+<p>它就是可以幫咱們進行一些影音的奇技淫巧 (ex. 解碼、編碼、轉碼、抽取、串流)</p>
+</blockquote>
+<p>FFmpeg (Fast Forward MPEG) 它是一個開源的影音多媒體的火藥庫，有了它我們可以很簡單的將前面幾個章節中提到的採集、編碼、封裝內容給串連起來。</p>
+<p>它最核心的應用是當播放器的核心。</p>
+<p>前面的章節有提到，我們將一段聲音從麥克風採集下來後，先經過編碼將它縮小，然後在封裝成一個容器，最後在透過網路傳輸協議，將它丟到對方的電腦後，接下要如何處理呢 ?</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181103/200893580NxANWk869.png" alt=""></p>
+<p>對方電腦的處理過程如下圖，它會先解析容器，然後進行解碼，最後在輸出聲音到對方的耳機或啥的。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181103/20089358EHwTGLmJKo.png" alt=""></p>
+<p>其中處理解析容器與協定，然後再進行解碼的就是咱們電腦中所使用的播放器，像是 KMPlayer、千千靜聽、QuickTime Player，而有不少的播放器裡面都是以 ffmpeg 為內核，像是 KMPlayer 與 QQ 影音。</p>
+<p>當然 ffmpeg 還有很多的使用功能，下面簡單的列幾個例子：</p>
+<ul>
+<li>它可以將一個影音檔，轉換成多張的圖片與分割出聲音。</li>
+<li>它將某個影音檔的編碼轉換成其它的編碼。</li>
+<li>它可以將影音檔使用 RTMP 推送到 Server ( 就是可以模擬直播主推聲音到 Server )</li>
+<li>它可以使用 HLS、RTMP 這些傳輸協議將聲音拉下來。</li>
+</ul>
+<p>總而言之，它就是個影音軍火庫。</p>
+<h2 id="ffmpeg-">FFMpeg 的基本架構</h2>
+<hr>
+<p>它事實上是一系列的工具，基本上是由以下幾個組合而成。</p>
+<h3 id="ffmpeg">ffmpeg</h3>
+<p>這東東基本上就是用於轉碼用的工具。</p>
+<p>例如下面官網上的範例，它就是將 input.avi 檔案強制轉成 fps 為 24 的 output.avi 。</p>
+<pre><code>ffmpeg -i input.avi -r 24 output.avi
+</code></pre><h4 id="heading1">複習</h4>
+<p><code>fps</code>指的是一段畫面，每秒鐘有幾張畫面，以上面的範例 24 就代表這部影像每秒鐘
+由 24 張圖片組成。</p>
+<h3 id="ffplay">ffplay</h3>
+<p>這個就是可以用來直接播放某部影片或串流的工具。</p>
+<p>Ex. 播放 rtmp 串流</p>
+<pre><code>ffplay rtmp://184.72.239.149/vod/mp4:bigbuckbunny_1500.mp4
+</code></pre><p>Ex. 播放 .mp4 檔案</p>
+<pre><code>ffplay big_buck_bunny.mp4
+</code></pre><h3 id="ffprobe">ffprobe</h3>
+<p>它是一個用來串流或檔案內容的工具。</p>
+<p>Ex. 查看 rtmp 串流</p>
+<pre><code>ffprobe rtmp://184.72.239.149/vod/mp4:bigbuckbunny_1500.mp4
+</code></pre><p>從下圖的 metadata 可以知道這個 rtmp 串流的相關資訊，包含這部片的長度、fps、聲音編碼與影像編碼。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181103/20089358xaesSZF393.jpg" alt=""></p>
+<h2 id="ffmpeg-1">FFMpeg 的簡單使用範例</h2>
+<p>下面我們來學一下它的一些簡單的範例，這些都會在後面的實作章節中會需要傳用到。</p>
+<h3 id="-server">模擬直播主將聲音推送到 Server</h3>
+<p>在這裡我們會先將聲音存放到 .mp4 檔案，然後在將這個檔案以 rtmp 的方式，推送到 Server 。</p>
+<pre><code>ffmpeg -re -i big_buck_bunny.mp4 -c copy -f flv rtmp://localhost/live/test
+</code></pre><p>簡單的說明一下上面這段指令的意思：</p>
+<p>-re : 這個是只有在模擬本機採機設備才需要參數 ( 因為我們是用檔案來模擬採集 )
+-i : 後面跟者輸入的檔案。
+big_buck_bunny.mp4：模擬直播主畫面的檔案。
+-c : 選擇 decoder 與 encoder，但這裡我們不用選所以使用 copy。
+-f : 強制轉換成指定的格式，像上面我們就將它轉成 flv。
+rtmp://localhost/live/test：要推送到的目的。</p>
+<h3 id="-h264--aac">將指定的檔案內的影像編碼轉為 h.264 與聲音編碼 AAC</h3>
+<p>由於現在很多的傳輸媒體都限制需要使用 h.264 與 AAC 的編碼，所以需要進行轉。下面的範例我們會將 .wav 檔轉成 aac 與 h264 的 test.mp4 檔。</p>
+<pre><code>ffmpeg -i test.wav -c:a aac -ar 44100 -c:v libx264 -preset superfast -tune zerolatency -f mp4 test.mp4
+</code></pre><p>-i : 後面跟者輸入的檔案。
+-c:a aac -ar 44100 : 將聲音轉成成 aac 編碼，並且頻率為 44100。
+-c:v libx264 -preset superfast -tune zerolatency  : 將它轉成 h.264 影像編碼，然後面用 tune 類型。</p>
+<p>執行完以後可以使用以下指令，來查看有沒有轉好。</p>
+<pre><code>ffprobe test.mp4
+</code></pre><p>內容如下，聲音與影像已經轉成了 aac 與 h.264</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181103/20089358iiYi5H7Ypy.jpg" alt=""></p>
+<h3 id="heading2">模擬聽眾端用戶，來拉取串流，然後播放出。</h3>
+<p>事實上就是非常簡單的使用 ffplay。</p>
+<pre><code>ffplay rtmp://184.72.239.149/vod/mp4:bigbuckbunny_1500.mp4
+</code></pre><h2 id="heading3">結論</h2>
+<p>本篇文章咱們簡單的學習了一些 ffmpeg 的相關知識與應用，在接下來的實作文章中，咱們會很常的使用到它。</p>
+<p>這篇文章結束以後，基本上完整的將聲音傳送到遠方的某個人耳裡，基本理論方面大概都學習完了，接下來的章節就開始進行一些實作，並且在往一些更進階的東西前進囉。</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://blog.csdn.net/leixiaohua1020/article/details/15811977">[总结]FFMPEG视音频编解码零基础学习方法</a></li>
+<li><a href="https://ffmpeg.org/documentation.html"> ffmpeg 官網</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-19 之收到聲音後要如何的播出呢 ?  ( FFMpeg )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#ffmpeg--">FFMpeg 是啥 ?</a></li>
+    <li><a href="#ffmpeg-">FFMpeg 的基本架構</a>
+      <ul>
+        <li><a href="#ffmpeg">ffmpeg</a></li>
+        <li><a href="#ffplay">ffplay</a></li>
+        <li><a href="#ffprobe">ffprobe</a></li>
+      </ul>
+    </li>
+    <li><a href="#ffmpeg-1">FFMpeg 的簡單使用範例</a>
+      <ul>
+        <li><a href="#-server">模擬直播主將聲音推送到 Server</a></li>
+        <li><a href="#-h264--aac">將指定的檔案內的影像編碼轉為 h.264 與聲音編碼 AAC</a></li>
+        <li><a href="#heading2">模擬聽眾端用戶，來拉取串流，然後播放出。</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論</a></li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-23.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。</p>
+<ol>
+<li>人多時連線數限制問題。</li>
+<li>人多時頻寬問題。</li>
+<li>人多時效能消耗問題。</li>
+<li>遠距離看片卡頓的問題。</li>
+</ol>
+<p>接下來咱們要來理解一下，解這上述問題的關鍵技術 CDN 是什麼東西 ?</p>
+<p>本編文章將分為以下幾個章節：</p>
+<ul>
+<li>什麼是 CDN 呢 ? 它又是用來解決啥呢 ?</li>
+<li>CDN 的請求運作方式。</li>
+<li>使用 AWS CloudFront 來建立 CDN。</li>
+</ul>
+<h2 id="-cdn----">什麽是 CDN 呢 ? 它又是用來解決啥呢 ?</h2>
+<p>在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。</p>
+<p>首先看看下面這張圖，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳
+html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358L394w8r0oh.png" alt=""></p>
+<p>然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358WIYfHP7ksn.png" alt=""></p>
+<p>然後開始了有以下的對話 :</p>
+<p>老大：回應時間怎麼回事 ?
+碼農仔：老大你叫我架到美國啊 !?
+老大：我要的不是這回答，而是問你為啥回應時間你沒修改回來 ?
+老大：你是專家對吧 ?
+碼農仔：(深深的吸口氣) 沒錯，我是專家 ( I am an expert ! )</p>
+<p>回到正題。</p>
+<p>CDN ( Content Delivery Network )，它存在的目的就是讓你接近取得網路資料的方法，咱們如果將上圖加入 CDN 後就會長的如下圖，所以 client 要取得的一些資源 (html、css、js) 都會去 CDN 那取得。這樣就算你的網站架在美國，但只要 CDN 是在台灣，那回應速度應該也不會有太大的差距。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358NZ2rYxVuzs.png" alt=""></p>
+<h2 id="cdn-">CDN 的請求運作原理。</h2>
+<p>首先 CDN 基本上會分為三個部份。</p>
+<ul>
+<li>智能 DNS (Intelligent DNS)：事實上是 DNS 的某個功能，它的主要功用就是可以幫用戶找到最近的 Edge CDN，這樣用戶就可以去最近的 CDN 拿資料了。</li>
+<li>邊緣 CDN ( Edge CDN )：就是散布在不同地方的 CDN 節點。</li>
+<li>來源 Server ( Origin Server )：就是原始資料存放地。</li>
+</ul>
+<p>然後基本一個圖片的請求，會變的如下圖所示。</p>
+<ol>
+<li>Client 發送一個 HTTP 請求來取得圖片。</li>
+<li>DNS 收到後，會去請求智能 DNS。</li>
+<li>智能 DNS 會回傳給 DNS 最近 CDN 的 IP 位置。</li>
+<li>Client 收到 IP 以後，在發送請求去那個 CDN。</li>
+<li>CDN 收到請求後，會先判斷有沒有緩存此圖片，如果有就直接回傳，沒有則在去來源 Server 取得圖片，然後緩存此圖片，最後在送去給 Client。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/200893580n0UPwlTOG.png" alt=""></p>
+<h2 id="-aws-cloudfront--cdn">使用 AWS CloudFront 來建立 CDN</h2>
+<p>接下來我們來簡單的看看如何使用 AWS CloudFront 來建立一個 CDN 範例。</p>
+<p>這個範例我們會使用 AWS S3 來存放一張圖片，然後再使用 AWS CloudFront 來建立 CDN 希望能提升圖片讀取速度。</p>
+<h3 id="-s3">資料來源 S3</h3>
+<p>首先我們會在 S3 先建立一個 bucket，為了測試需要我們將 region 設定在『EU (London)』</p>
+<pre><code>https://s3.eu-west-2.amazonaws.com/marklin-images-test-s3/1442041544.jpg
+</code></pre><p>然後我們可以直接在 chrome 上執行上面的網址，來取得一張圖片，咱們先來看看在還沒使用 CDN 時的回應時間為多少，如下圖，超久的快 7 秒鐘。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/200893580dE7gsX2wM.jpg" alt=""></p>
+<h3 id="-aws-cloudfront">設定 AWS CloudFront</h3>
+<p>接下來咱們來設定 AWS CloudFront。</p>
+<h4 id="-cdn-">選擇 CDN 類型</h4>
+<p>首先第一個一開始 AWS CloudFront 有提供兩種類型服務的 CDN，分別為<code>WEB</code>與<code>RTMP</code>，此篇文章咱們先來學習 web 這裡的設定。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358N3oz0A4xkF.png" alt=""></p>
+<h4 id="--origin-settings-">設定資料來源 ( Origin Settings )</h4>
+<p>Origin Domain Name：這裡就是你資料來源的 domain ，基本上有以下的來源可以選擇:</p>
+<ul>
+<li>你自已的網站</li>
+<li>AWS S3</li>
+<li>AWS EC2</li>
+<li>AWS Elastic Load Balancing</li>
+<li>MediaStore 容器與節點</li>
+</ul>
+<p>Origin Path：路徑源，像如果 S3 有要指定到某個資料夾，就是在這設定。
+Origin ID：此來源的唯一編號。
+Restrict Bucket Access：選擇了 YES，代表你不能在用 S3 的連結路徑，而只能用 CloudFont 的連結路行。
+Origin Custom Headers：如果希望將 CloudFont 將請求轉發給來源時，包含自訂表頭，那就這設定。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358Ln84SMygQ2.png" alt=""></p>
+<h4 id="-cache---default-cache-behavior-settings-">設定 cache 行為 ( Default Cache Behavior Settings )</h4>
+<p>在來是要設定 cache 行為的地方，這裡的設定基本上都用預設就可以動，不過還是簡單說明幾個比較常用的設定。</p>
+<p>Viewer Protocol Policy：這裡是要設定要訪問 CloudFont 的策略，看是要選只能 https 連結還是 http 也行。</p>
+<p>Allowed HTTP Methods：允許訪問的 http 方法設定。</p>
+<p>Minimum TTL: 這裡是設定在 CloudFont 中保持緩存的最小時間，假設設定 5 秒，那就代表 5 秒過後就會去來源端判斷是否有無更新。(預設為 0)</p>
+<p>Maximum TTL：緩存的最大時間。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358ldQJtMMlfJ.png" alt="">
+<img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358wQAI4nBRjM.png" alt=""></p>
+<h4 id="-distribution-settings">分配設定 Distribution Settings</h4>
+<p>最後就是分配設定，基本上只是測試用可以都 Default 值。</p>
+<p>Price Class：預設情況下可以使用所有 CloudFront 所提供的地方，當然你可以只選擇只使用特別地方的 CloudFront 如果你的用戶大部份都集中在某個區域。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358OafV2aTTUJ.png" alt="">
+<img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358pzptztsJQn.png" alt=""></p>
+<h3 id="-s3-">設定完後讀取 S3 圖片的速度</h3>
+<p>設置完 CloudFont 後，你會知道它的 domain name。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358IOYiVYODfm.jpg" alt=""></p>
+<p>然後你再將原本的圖片網址替換成 cdn 網址。</p>
+<pre><code>https://s3.eu-west-2.amazonaws.com/marklin-images-test-s3/1442041544.jpg ( 原 )
+
+https://d3oh771a3zmb3v.cloudfront.net/1442041544.jpg ( CDN )
+</code></pre><p>最後咱們使用以上兩個分別為未使用與使用 CDN 的網址來取得圖片，你會發現超快 der ~</p>
+<h4 id="-cdn">未使用 CDN</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/200893580dE7gsX2wM.jpg" alt=""></p>
+<h4 id="-cdn1">使用 CDN</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358zPgJF8DMQK.jpg" alt=""></p>
+<h2 id="heading1">結論</h2>
+<p>本篇文章中咱們學習到 CDN 的一些基本知識，接下來的文章，咱們將要加上 CDN 來重新的考量我們的點播與直播網路的架構。</p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/29468624">CDN缓存策略解读和配置策略</a></li>
+<li><a href="https://docs.aws.amazon.com/zh_cn/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValuesOriginCustomHeaders"> AWS CloudFront 官網</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-cdn----">什麽是 CDN 呢 ? 它又是用來解決啥呢 ?</a></li>
+    <li><a href="#cdn-">CDN 的請求運作原理。</a></li>
+    <li><a href="#-aws-cloudfront--cdn">使用 AWS CloudFront 來建立 CDN</a>
+      <ul>
+        <li><a href="#-s3">資料來源 S3</a></li>
+        <li><a href="#-aws-cloudfront">設定 AWS CloudFront</a></li>
+        <li><a href="#-s3-">設定完後讀取 S3 圖片的速度</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

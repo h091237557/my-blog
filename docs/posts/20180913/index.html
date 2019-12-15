@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-13之 RTSP 傳輸協議 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, rtsp" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-13之 RTSP 傳輸協議 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-13之 RTSP 傳輸協議</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-13.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181028/20089358yRyPKEWLRg.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。</p>
+<blockquote>
+<p>RTSP 協議</p>
+</blockquote>
+<p>本篇文章將會分成幾個章節來理解 RTSP 協議：</p>
+<ul>
+<li>RTSP 協議是要用來完成什麼事情呢 ?</li>
+<li>RTSP 協議如何完成它想做的事情呢 ?</li>
+<li>建立 RTSP 的串流傳輸流程。</li>
+<li>RTSP 的特點。</li>
+</ul>
+<h2 id="rtsp--">RTSP 協議是要用來完成什麼事情呢 ?</h2>
+<blockquote>
+<p>它是被設計出來為，為了控制串流媒體 Sever 的協議 (ex. 快轉、暫停影片之類)</p>
+</blockquote>
+<p>RTSP 它被設計出來是為了可以控制串流媒體伺服器的協議 (所以他是 C/S 架構)，例如我們先發送一個觀看影片的請求給 Server，然後它就開始以串流型式來傳輸影片，然後這時我們可以用 RTSP 所提供的一些方法，來進行影片的快轉或暫停，為了能控制串流就是它被設計出來的原理。</p>
+<p>就如同下圖所示，RTSP 讓我們可以操控串流媒體。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181028/20089358BxhJvtZP0F.png" alt=""></p>
+<h2 id="rtsp--1">RTSP 協議如何完成它想做的事情呢 ?</h2>
+<p>那它要如何控制呢串流呢 ?</p>
+<blockquote>
+<p>它定義了控制的方法與參數</p>
+</blockquote>
+<p>就如同 HTTP 一樣，它定義了一些方法可以給我們控制，例如 Play 這個動作，當串流 Server 看到這個動詞後，就會開始傳輸影片給請求者。</p>
+<h2 id="-rtsp-">建立 RTSP 的串流傳輸流程</h2>
+<p>我們直接去使用網路上所提供的 RTSP 進行請求看看。這個連結你可以使用 ffplay 來開啟 (ffplay 之後會提)。</p>
+<pre><code>rtsp://184.72.239.149/vod/mp4:BigBuckBunny_115k.mov
+</code></pre><p>接下來我們下面說明，如果 client 端發送一條 rtsp 請求後，實際上的封包產生流程會長的什麼樣子 ?</p>
+<h4 id="1--client--rtsp--options--client-server--rtsp-">1. 首先第一步 client 會發送 rtsp 的 options 方法給 client，然後 server 會回傳他可以支援什麼 RTSP 的方法。</h4>
+<pre><code>C -&gt; S
+CSeq: 1
+Request: OPTIONS rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov RTSP/1.0
+
+S -&gt; C
+CSeq: 1
+Response: RTSP/1.0 200 OK
+Public: DESCRIBE, SETUP, TEARDOWN, PLAY, PAUSE, OPTIONS, ANNOUNCE, RECORD, GET_PARAMETER
+</code></pre><h4 id="2--describe-">2. 接下來會發送 DESCRIBE 請求來進行類似登入的動作，用來確保你可不可以建立線或加入這個會話。</h4>
+<pre><code>C -&gt; S
+Request: DESCRIBE rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov RTSP/1.0
+Accept: application/sdp
+CSeq: 2
+
+S -&gt; C
+Response: RTSP/1.0 200 OK
+CSeq: 2
+Server: Wowza Streaming Engine 4.7.5.01 build21752
+Cache-Control: no-cache
+Expires: Sat, 25 Aug 2018 14:16:23 UTC
+Content-length: 589
+Content-Base: rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov
+Date: Sat, 25 Aug 2018 14:16:23 UTC
+Content-type: application/sdp
+Session: 1305852487;timeout=60
+
+包在 RTSP 封包的 SDP
+Session Description Protocol Version (v): 0
+Owner/Creator, Session Id (o): - 1305852487 1305852487 IN IP4 184.72.239.149
+Session Name (s): BigBuckBunny_115k.mov
+Session Attribute (a): range:npt=0- 596.48
+Time Description, active time (t): 0 0
+Media Description, name and address (m): audio 0 RTP/AVP 96
+Media Attribute (a): rtpmap:97 H264/90000
+Media Attribute (a): fmtp:96 profile-level-id=1;mode=AAC-hbr;sizelength=13;indexlength=3;indexdeltalength=3;config=1490
+</code></pre><h4 id="3--server--rtp-over-udp--rtp-3012-rtprtcp-httpsithelpithomecomtwarticles10205715">3. 接下來和 server 詢問要用什麼傳輸協議來進行這個資源的傳輸，如下範例它是會使用 RTP over UDP 來進行傳輸，不熟悉 RTP 的可以至筆者的『<a href="https://ithelp.ithome.com.tw/articles/10205715">30-12之 RTP/RTCP 傳輸協議</a>』來學習學習。</h4>
+<pre><code>C -&gt; S
+Request: SETUP rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov/trackID=1 RTSP/1.0
+Transport: RTP/AVP/UDP;unicast;client_port=22610-22611
+CSeq: 3
+Session: 1305852487
+
+S -&gt; C
+Response: RTSP/1.0 200 OK
+Transport: RTP/AVP/UDP;unicast;client_port=22610-22611;source=184.72.239.149;server_port=8880-8881;ssrc=372D3B76
+Session: 1305852487;timeout=60
+</code></pre><h4 id="4---">4 .  最後就開始進行影像傳輸囉。</h4>
+<pre><code>C -&gt;
+Request: PLAY rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov/ RTSP/1.0\r\n
+Range: npt=0.000-
+CSeq: 5
+Session: 1305852487
+
+S -&gt; C
+Response: RTSP/1.0 200 OK
+RTP-Info: url=rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov/trackID=1;seq=1;rtptime=0,url=rtsp://184.72.239.149:554/vod/mp4:BigBuckBunny_115k.mov/trackID=2;seq=1;rtptime=0
+CSeq: 5
+Range: npt=0.0-596.48
+Session: 1305852487;timeout=60
+</code></pre><h2 id="rtsp-">RTSP 的特點總結</h2>
+<p>最後來說明一下 RTSP 的幾個特點。</p>
+<ul>
+<li>RTSP 是屬於雙向協議，你可以將它想成 client 與 server 雙方都可以發出請求。</li>
+<li>RTSP 只處理串流的控制，但用什麼傳輸不算他管，基本上他是使用 RTP base UDP 或 UDP 來進行傳輸。</li>
+<li>目前多用於 VOD ( Video On Demand ) 與視訊會議。</li>
+<li>比較悲哀的事，目前不多東西支援它。</li>
+</ul>
+<p>最後這裡問個問題。</p>
+<h4 id="rtsp--audio--video--">RTSP 支援什麼 audio 或 video 的編碼呢 ?</h4>
+<p>這個問題事實上有點兒不算問題。</p>
+<p>基本上不是看它可不可以支持，而是看傳輸層的協議可不以支持，像如果使用 RTP 那基本上大部份都可以，因為 RTP 會將這些編碼自動轉成 RTP 容器，然後接受端在收到 RTP 時就可以根據他的表頭來知道它是什麼編碼，然後在解碼播歌。</p>
+<h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="https://www.ietf.org/rfc/rfc2326.txt">RTC2326</a></li>
+<li><a href="https://meson.tian.yam.com/posts/106583744">Streaming 通訊協定 RTP RTCP RTSP RTMP HLS 介紹</a></li>
+<li><a href="https://blog.csdn.net/tq08g2z/article/details/77773129">Wireshark 抓包分析 RTSP/RTP/RTCP 基本工作过程</a></li>
+<li><a href="http://www.itread01.com/articles/1476115529.html">流媒體傳輸協議系列之&ndash;RTSP協議詳解</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-13之 RTSP 傳輸協議</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#rtsp--">RTSP 協議是要用來完成什麼事情呢 ?</a></li>
+    <li><a href="#rtsp--1">RTSP 協議如何完成它想做的事情呢 ?</a></li>
+    <li><a href="#-rtsp-">建立 RTSP 的串流傳輸流程</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#rtsp-">RTSP 的特點總結</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

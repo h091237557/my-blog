@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-10之通訊協議的基本常識 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-10之通訊協議的基本常識 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-10之通訊協議的基本常識</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-10.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181025/20089358VJAH3J4u4V.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是當你碰到問題時，或是想要追求更高的效能時，一定卡關。</p>
+<blockquote>
+<p>通訊協議的基本常識</p>
+</blockquote>
+<p>接下來本篇文章會分成以下的章節，為了來理解上面的主題：</p>
+<ul>
+<li>什麼是通訊協議呢 ?</li>
+<li>TCP/IP 通訊協議架構。</li>
+<li>從 A 到 B 發送數據的流程。</li>
+</ul>
+<h2 id="-">什麼是通訊協議呢 ?</h2>
+<p>我相信很多人都已經有使用過很多 http、tcp、udp 這些東東，但是我相信還是有人應該只是懂的在瀏覽器打個 http 網址而以，然後說這就是通訊協議，某些方面不能說錯，但是我相信你這樣說給一個初學者聽一定很難理解的。接下來咱們來理一理到底什麼是通訊協議。</p>
+<p>先來理理什麼是<code>協議</code>呢 ? 簡單的用白話文就是：</p>
+<blockquote>
+<p>協議就是 A 與 B 雙方要完成某件事情，所約定好的處理流程。</p>
+</blockquote>
+<p>咱們來舉個例子，假設有位仁兄，雙方住在一間屋子裡面，然後他們只有一把鑰匙，所以這時他們就在思考，一個人已經在房子裡面了，然後另一個回來以後就要敲門，然後在家的人就打開來。</p>
+<p>但這時要如何確保敲門的人是室友呢 (先假設看不到外面) ? 如果是壞人敲門你直接開門，那你就準備呵呵呵了，所以 A 與 B 就約定好了一個<code>確認室友協議</code>，這個協議如下：</p>
+<p>協議想完成事項：確認對方是不是室友</p>
+<pre><code>協議標準：
+假設 B 在家，A 在外面。
+
+A 敲 3 下門。
+B 聽到後，要求 A 說暗語 (你今天真帥)
+A 說暗語(你今天真帥)
+B 收到後，就開門。
+</code></pre><p>先不管上面的協議是否真的實用，只要知道它就是個協議就好囉。</p>
+<p>最後所謂的通訊協議就是：</p>
+<blockquote>
+<p>所謂的『 通訊協議 』就是網路上 A 與 B 雙方要進行溝通所約定好流程。</p>
+</blockquote>
+<h2 id="tcpip-">TCP/IP 通訊協議組</h2>
+<p>TCP/IP 它是一組協議組，它主要想完成的事情為：</p>
+<blockquote>
+<p>在網路上可以進行端點對端點的溝通</p>
+</blockquote>
+<p>但因為要完成這件事情要完成的工作太多囉，所以將之拆分成幾個層，不同層級專注於解決某項事件，就像咱們在開發專案一些，有時會將他拆分 service 層、model 層與 view 層，每一層都專門處理某件事情。</p>
+<p>TCP/IP 總共分成了四個層級，如下圖，每個層級都有各別的協議，來幫助完成某件事情。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181025/20089358yT7om2CWSM.png" alt=""></p>
+<p>接下來咱們來理一理每一層級要做的事情。</p>
+<h3 id="---link-layer">第一層 - 網路介面層 (Link layer)</h3>
+<p>假設你想要將資料傳輸到對方電腦中，你要做的第一件事情是啥 ?</p>
+<p>答案是要將電腦的方式連結起來啊 (光纖或電纜或電磁波)，都沒連起來要如何傳輸 ? 通靈嗎 ?</p>
+<p>接下來這層級事實上還有做另外一件事情，上面咱們已經將電腦連結在一起以後，這樣基本上可以傳送 0 與 1 的資訊，但是問題這是沒意義的，誰知道你傳這一組 0 與 1 是想表達什麼意思。</p>
+<p>在這層有個叫<code>Ethernet</code>的協議，它規定了一個<code>幀 (Frame)</code>的概念(不是封包喔)。幀基本上的組成如下：</p>
+<pre><code>幀 = 表頭 (Head) + 數據 (Data)
+</code></pre><p>表頭基本上就是放某個層級所必須的相關資訊，而數據就是你所要傳輸的東西。</p>
+<p>它有以下幾個限制:</p>
+<ul>
+<li>表頭的長度固定為 18 byte。</li>
+<li>數據最短為 46 byte 最長為 1500 byte。</li>
+<li>如果超過這個長度就會分成多個幀。</li>
+</ul>
+<h4 id="heading1">表頭</h4>
+<p>在這個層級，它的表頭基本上會放二種資訊：</p>
+<ul>
+<li>發送者的 MAC 地址</li>
+<li>接受者的 MAC 地址</li>
+</ul>
+<p>BTW 順到一提　MAC 就是每台電腦獨一獨二的位置。</p>
+<h4 id="-mac--">這裡有一個問題，要如何知道對方的 MAC 地址呢 ?</h4>
+<p>這裡簡單的說使用 ARP 協議(它是網路層的東西)可以取得<code>同一子網路</code>的 MAC 地址，那不同的子網路呢? 那就只能丟到 gateway 在來處理囉。</p>
+<h4 id="-mac-">那另外一個問題，就算知道 MAC 地址後，我要如何將資料丟給它呢?</h4>
+<p>答案是使用<code>廣播</code>，就是往這個世界(子網路)的每個人都敲敲門，然後問他這個信上面的地址(MAC)是不是你家的，嗯真的是這樣。</p>
+<h4 id="heading2">最後總結此層級功用：</h4>
+<blockquote>
+<ol>
+<li>
+<p>定義如何使用物理方式將電腦與電腦連結起來。</p>
+</li>
+<li>
+<p>定義最基本如何讓某台電腦收到我傳的資料 (MAC 地址與廣播)。</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="---network-layer">第二層 - 網路層 (Network Layer)</h3>
+<p>在第一層時咱們有提到每一台電腦都有一個獨立 MAC 地址，然後想要找到對方就是使用廣播來找到對方，但是如果每一次發送，都是給世界上每一台電腦那保證一定會天下大亂的，因此才會出現所謂的子網路，只有在子網路內的才會使用擴播。</p>
+<p>但這有個問題，咱們 MAC 地址長的如下，共用 48 個位元來與十六進位來表示，前 24 個為廠商編碼，後 24 個為廠商的網卡流水號。</p>
+<pre><code>a4-5e-60-d0-bb-ff
+</code></pre><p>那這裡有個問題想問一下 ~</p>
+<h4 id="-mac--1">從 MAC 地址要如何知道他是屬於那個子網路呢 ?</h4>
+<p>答案是不可能，因為它就只有上面說的那些資訊，因此這個層級就誕生囉。</p>
+<h4 id="ip-">IP 協議</h4>
+<p>它提出一個新的地址架構，就是咱們常使用的 IP。</p>
+<pre><code>124.108.131.31
+</code></pre><p>IP 協議的細節我就懶的說，你只要知道它有以下二個功能就行:</p>
+<ul>
+<li>為每一台電腦分配 IP 位置。</li>
+<li>並且可以知道此位置，是在那個子網路內。</li>
+</ul>
+<h4 id="heading3">表頭</h4>
+<p>在這個層級，它的表頭基本上會放二種資訊：</p>
+<ul>
+<li>來源端 IP 位置</li>
+<li>目的端 IP 位置</li>
+</ul>
+<p>以上兩個資訊主要是為了讓送貨員知道，要送到那個子網路去。</p>
+<h4 id="heading4">最後總結此層級功用：</h4>
+<blockquote>
+<p>定義 IP 地址架構，並且讓送貨員知道要送到那個子網路世界去。</p>
+</blockquote>
+<h3 id="--">第三層 - 傳輸層</h3>
+<h4 id="heading5">誕生源由</h4>
+<p>第二層咱們已經可以成功的找到目標電腦囉，也可以將資料丟到目標電腦上，但這裡有一個問題要問問。</p>
+<h4 id="-1">電腦上有很多要用到網路的應用程式，我怎知道要丟給誰 ?</h4>
+<p>為了解決這個問題，所以產生了<code>Port</code>的概念，也就是每一個需要用到網路的應用程式都給他個 Port ，只要知道要發到對方電腦上的那個 Port，那就知道會丟到那個應用程式。</p>
+<p>Port 基本是由 16 個二進位組成，總共提供 0 ~ 65535 個編碼使用，其中前 0 ~ 1023 已經被系統占用囉。</p>
+<p>到裡這一層基本上咱們就能實現應用程式與應用程式的資料交換囉，因為你已經知道確切要傳輸的位置囉。</p>
+<h4 id="heading6">表頭</h4>
+<p>在這個層級，它的表頭基本上會放二種資訊：</p>
+<ul>
+<li>來源端 Port</li>
+<li>目的端 Port</li>
+</ul>
+<p>要讓送貨員知道，要送去那個應用程式。</p>
+<h4 id="-tcp--udp">常用協議 TCP 與 UDP</h4>
+<p>下篇文章會詳細說明。</p>
+<h4 id="heading7">此層總結</h4>
+<blockquote>
+<p>建立應用程式與應用程式的傳輸方式。</p>
+</blockquote>
+<p>所以基本上這一層所新增的最基本的表頭就是 Port，讓我們知道丟到那個應用程式。</p>
+<p>BTW 在這個層級發送的東西，就被稱為『封包』</p>
+<h3 id="--1">第四層 - 應用層</h3>
+<h4 id="heading8">誕生源由</h4>
+<p>在第三層時，我們已經可以進行應用程式對應用程式的傳輸，但是網路世界的應用程式種類非常的多(ex. 網站、郵件、語音傳輸)，假設我們丟的資料分別如下給網站、郵件:</p>
+<pre><code>網站:
+
+{
+  method: POST,
+  data: ‘babababa’
+}
+
+郵件:
+
+{
+  sender: ‘Mark’,
+  receiver: ‘Mark II’,
+  data: ‘HI I am Mark'
+}
+</code></pre><p>那我問你，收到這兩個資料者，要如何判斷它是網站用，還是郵件用 ? 有人說用 schema 來知道誰是誰，那如果網站的少了一個欄位怎麼辦 ?</p>
+<p>所以呢 ~ 這時咱們就定一個<code>標準</code>，像如果是傳送給網站應用與郵件應用的就會變成如下，其中 http 與 smtp 就是一項標準，每當我們看到 http 時就知道要用什麼格式來解析他囉，並且也知道他是用來做啥的，因為 http 都定義好了。</p>
+<pre><code>http
+
+{
+  method: POST,
+  data: ‘bababab'
+}
+
+smtp:
+
+{
+  sender: ‘Mark’,
+  receiver: ‘Mark II’,
+  data: ‘HI I am Mark'
+}
+</code></pre><h4 id="heading9">表頭</h4>
+<p>看個應用的定義。</p>
+<h4 id="heading10">此層結論</h4>
+<blockquote>
+<p>定義各種類型應用的標準，不然誰知道要如何做啥事情 ?</p>
+</blockquote>
+<h2 id="-a--b-">從 A 到 B 發送數據的流程</h2>
+<p>最後咱們來看看實際上從 A 發送一則資料到 B 的實際流程，由於上面有提到在第三層時事實上就可以發送數據到指定的應用程式囉，所以咱們就直接來看看如果直接從第三層發送數據會是如何處理。</p>
+<p>下圖來源為<a href="https://www.jianshu.com/p/9f3e879a4c9c">一篇文章带你熟悉 TCP/IP 协议（网络协议篇二)</a> ，這篇文章是我看過寫的超完整又優質的好文，而且下面這張圖畫的超容易理解，然後我有點懶的在畫一張，我就借來簡單的解說一下，詳細可以去文章中看。</p>
+<ol>
+<li>A 用戶發送了 “Im Deeson” 數據。</li>
+<li>A 在傳輸層時加入 TCP 表頭 (為了知道傳送到那一個電腦中那個應用)</li>
+<li>A 在網站層時加入 IP 表頭 (為了要知道傳送到那一個子網站，外加知道上一層是 TCP)，然後同時間會使用 ARP 協定，來取得這個 IP 所對應的 MAC 地址，然後帶入下一層。</li>
+<li>A 在網路介面層(數據連結層)加入 Ethernet 表頭 (為了要知道傳送到那一台電腦，外加知道是用 IPv4 or 6)</li>
+<li>B 在網路介面層收到，查看 Ethernet 表頭的 MAC 地址是不是我家的。</li>
+<li>B 在網路層解析 IP 包，也在看看 IP 是不是我家的，並且看看上一層要用 TCP 還是 UDP 解析。</li>
+<li>B 在傳輸層解析 TCP 包，然後看到 Port 為那個應用程式的，就丟給他。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181025/20089358mNPaXGgMXY.png" alt="">
+圖片來源: <a href="https://www.jianshu.com/p/9f3e879a4c9c">一篇文章带你熟悉 TCP/IP 协议（网络协议篇二)</a></p>
+<h2 id="heading11">結論</h2>
+<p>本篇文章中，咱們學習了以下的重點：</p>
+<h4 id="-2">什麼是通訊協議呢 ?</h4>
+<p>它就是網路上 A 與 B 雙方要進行溝通所約定好流程。</p>
+<h4 id="tcpip-1">TCP/IP 通訊協議架構</h4>
+<p>它總共有四層，每一層所要完成的事情如下：</p>
+<ul>
+<li>網路介面層：建立實體的連線，讓電腦與電腦間可以連在一起，並且給它個 MAC 來當門牌。</li>
+<li>網路層：定義 IP 協定，當要找門牌時，可以先以 IP 知道它是那一國家的。</li>
+<li>傳輸層：定義要傳輸到電腦的那一個應用程式。</li>
+<li>應用層：定義好每個應用的標準。</li>
+</ul>
+<h4 id="-a--b-1">從 A 到 B 發送數據的流程</h4>
+<p>請看上面。</p>
+<h2 id="heading12">參考資料</h2>
+<ul>
+<li><a href="http://www.52im.net/thread-1095-1-1.html"><a href="http://www.52im.net/thread-1095-1-1.html">http://www.52im.net/thread-1095-1-1.html</a></a></li>
+<li><a href="https://www.jianshu.com/p/9f3e879a4c9c"><a href="https://www.jianshu.com/p/9f3e879a4c9c">https://www.jianshu.com/p/9f3e879a4c9c</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-10之通訊協議的基本常識</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">什麼是通訊協議呢 ?</a></li>
+    <li><a href="#tcpip-">TCP/IP 通訊協議組</a>
+      <ul>
+        <li><a href="#---link-layer">第一層 - 網路介面層 (Link layer)</a></li>
+        <li><a href="#---network-layer">第二層 - 網路層 (Network Layer)</a></li>
+        <li><a href="#--">第三層 - 傳輸層</a></li>
+        <li><a href="#--1">第四層 - 應用層</a></li>
+      </ul>
+    </li>
+    <li><a href="#-a--b-">從 A 到 B 發送數據的流程</a></li>
+    <li><a href="#heading11">結論</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading12">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-29之 WebRTC 的 P2P 打洞術 ( ICE ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-29之 WebRTC 的 P2P 打洞術 ( ICE ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-29之 WebRTC 的 P2P 打洞術 ( ICE )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-29.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習：</p>
+<blockquote>
+<p>WebRTC 是如何進行打洞與連線呢 ?</p>
+</blockquote>
+<h2 id="webrtc--ice">WebRTC 的打洞流程 ICE</h2>
+<p>WebRTC 它主要使用一個名為<code>ICE</code> ( Interactive Connectivity Establishment ) 的框架來進行打洞，它內部整合了 STUN 與 TURN 協議，下面簡單的說明一下這兩個協議。</p>
+<p><code>STUN</code> ( Session Traversal Utilities for NAT ) 中文為 NAT 對談穿透應用程式，它的最主要用處就是幫助在 NAT 內的用戶找到可以連到它的位置。</p>
+<p><a href="https://tools.ietf.org/html/rfc3489">STUN-RFC3489</a>
+<a href="https://tools.ietf.org/html/rfc5389">STUN-RFC5389</a></p>
+<p><code>TURN</code> ( Traversal Using Relay NAT )，它也是一種穿透 NAT 的一樣協議，不過它是使用中繼的方式來進行，通常都是 STUN 的候選位置都無法連線時，才會使用它。</p>
+<p><a href="https://tools.ietf.org/html/rfc5766">TURN-RFC5766</a></p>
+<h3 id="webrtc-">WebRTC 連線流程</h3>
+<p>假設目前要連線的雙方情況如下：</p>
+<pre><code>A 內網位置：192.168.1.1:5555
+B 內網位置：10.10.1.1:7777
+A 外網位置(經過 NAT 轉換)：310.110.1.1:9000
+B 外網位置(經過 NAT 轉換)：210.210.1.1:7000
+TURN Server：111.111.111.111
+</code></pre><p>下圖為示意圖。表示雙方去外部連 Server 時對外的的位置。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358jucEGcOLeY.png" alt=""></p>
+<p>接下來咱們就開始進行 ICE 打洞流程。</p>
+<blockquote>
+<p>A 想和 B 進行 P2P 連線</p>
+</blockquote>
+<h3 id="step1--a--stun-server-">Step1. 用戶 A 準備發起請求前，先至 STUN Server 收集候選位置。</h3>
+<p>在向 Signaling Server 建立連線請求前前，會先去 STUN Server 收集本機用戶 A 的<code>候選位置</code>，這個位置就是用來給別人可以連到我的位置。</p>
+<p>其中候選位置如下 :</p>
+<ul>
+<li>主機候選項：如果本機在 NAT 裡面，則為私有位置(192.168.1.1:5555)。</li>
+<li>STUN 反射候選項：如果本機在 NAT 裡面，則為最外層 NAT 的外網位置。(310.110.1.1:9000)</li>
+<li>對等反射候選項：這是在進行檢查候選項連線期間發現新的才會有。</li>
+<li>中繼後候項：就是 TURN Server 位置。(111.111.111.111)</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358dkXJ33lujB.png" alt=""></p>
+<h3 id="step2--a--signaling-server--a--sdp">Step2. 用戶 A 向 Signaling Server 提交 A 的 SDP</h3>
+<p>上面收集完以候選位置以後 A 就會向 Signaling Server 請求和 B 進行連線，並且附加包含 A 的候選位置的 SDP 給 Server。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358uZ6br6Jn3C.png" alt=""></p>
+<h3 id="step3--b--signaling-server--stun-server-">Step3. 用戶 B 收到 Signaling Server 請求後，也至 STUN Server 收集候選位置</h3>
+<p>用戶 B 從 Signaling Server  收到 A 的連線請求與 SDP 後，也前往 STUN 收集 B 自已的候選位置，為了讓 用戶 A 可以連自已。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358zYrlyHsYlA.png" alt=""></p>
+<h3 id="step4--b--signaling-server-">Step4. 用戶 B 回覆 Signaling Server 答應請求</h3>
+<p>用戶 B 取得完自已的候選位置後，它會將這些資訊包含在 SDP 內，回覆給 Signaling Server，然後 Server 在將 B 的 SDP 回覆給用戶 A 。</p>
+<blockquote>
+<p>這時雙方都有了對方的候選位置了。</p>
+</blockquote>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358fifTOPoqEn.png" alt=""></p>
+<h3 id="step5--sdp-">Step5. 雙方開始使用 SDP 內的候選位置嘗試連線。</h3>
+<p>然後這時雙方 ICE 就會開始使用後選位置來進行嘗試連線。</p>
+<p>這裡有件事情要注意：</p>
+<h4 id="ice-">ICE 會根據下圖的順序來嘗試</h4>
+<p>ICE 會先從本機候選位開始來嘗試，因為如果嘗試成功了，就代表雙方在同一個 NAT 後面，這樣就會直接的使用這個本機候選位來進行 P2P 連線，因為這樣是效能最好的</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358dHnIVW525h.png" alt=""></p>
+<h3 id="step61--p2p-">Step6-1. 嘗試成功，開始進行 P2P 連線。</h3>
+<p>如果其中一個有成功，那就會開始進行 P2P 連線，然後就可以開始傳送聲音囉。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358J0odRGWh0S.png" alt=""></p>
+<h3 id="step62--turn---p2p-">Step6-2. 嘗試失敗，轉成使用 TURN 開始進行中介連線 (這時就不是 P2P 了)</h3>
+<p>但如果前三個都失敗了，那就只能選擇備案，那就是使用 TURN Server 那進行中繼連線了，但這樣的確就不算是 P2P 連線了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181113/20089358RjpcmlOvXI.png" alt=""></p>
+<h4 id="-turn-">通常需要用到 TURN 的原因</h4>
+<p>通常需要用到 TURN Server 來進行的原因在於：</p>
+<blockquote>
+<p>雙方其中一邊是使用 Symmetric NAT，也就是所謂的對稱形 NAT</p>
+</blockquote>
+<p>最主要的問題就是，這種對稱形的 NAT 它所配置的 PORT 會變。</p>
+<h2 id="heading1">結論</h2>
+<p>本篇文章中咱們學到了 WebRTC 的 P2P 打洞技術 ICE，它是一個包含了 STUN 與 TURN 的 NAT 打洞框架，某些情況下，ICE 幾乎可以說是 100 % 的打洞率，因為它最後還有一個 TURN，但是如果真的需要到使用 TURN 的話那就不是 P2P 連線了，這種時後在連麥直播時就會出問題了。</p>
+<p>至於有沒有什麼解決方法呢 ? 目前還真想不到呢 ~ 這之後在來研究吧 ~</p>
+<h4 id="heading2">備註</h4>
+<p>上面的一些圖片中 IP 有用到 310 的那個，那是錯的，範例應該只到 255，不過我懶的改了，反正只是範例。</p>
+<h2 id="heading3">參考資料</h2>
+<ul>
+<li><a href="https://blog.gtwang.org/web-development/webrtc-peer-connection/">WebRTC 入門教學（二）：以 RTCPeerConnection 建立 Peer-to-peer 連線</a></li>
+<li><a href="https://github.com/rainzhaojy/blogs/issues/4">WebRTC下的网络连接: STUN, TURN, ICE, TCP</a></li>
+<li><a href="https://www.jianshu.com/p/002c06b48b98?utm_campaign=maleskine&amp;utm_content=note&amp;utm_medium=seo_notes&amp;utm_source=recommendation">[转]STUN/TURN/ICE协议在P2P SIP中的应用</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-29之 WebRTC 的 P2P 打洞術 ( ICE )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#webrtc--ice">WebRTC 的打洞流程 ICE</a>
+      <ul>
+        <li><a href="#webrtc-">WebRTC 連線流程</a></li>
+        <li><a href="#step1--a--stun-server-">Step1. 用戶 A 準備發起請求前，先至 STUN Server 收集候選位置。</a></li>
+        <li><a href="#step2--a--signaling-server--a--sdp">Step2. 用戶 A 向 Signaling Server 提交 A 的 SDP</a></li>
+        <li><a href="#step3--b--signaling-server--stun-server-">Step3. 用戶 B 收到 Signaling Server 請求後，也至 STUN Server 收集候選位置</a></li>
+        <li><a href="#step4--b--signaling-server-">Step4. 用戶 B 回覆 Signaling Server 答應請求</a></li>
+        <li><a href="#step5--sdp-">Step5. 雙方開始使用 SDP 內的候選位置嘗試連線。</a></li>
+        <li><a href="#step61--p2p-">Step6-1. 嘗試成功，開始進行 P2P 連線。</a></li>
+        <li><a href="#step62--turn---p2p-">Step6-2. 嘗試失敗，轉成使用 TURN 開始進行中介連線 (這時就不是 P2P 了)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

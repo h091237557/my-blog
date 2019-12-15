@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-26之 WebRTC 的 P2P 即時通信與小範例 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-26之 WebRTC 的 P2P 即時通信與小範例 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-26之 WebRTC 的 P2P 即時通信與小範例</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-26.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <h2 id="heading">正文開始</h2>
+<p>在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的了解 WebRTC。</p>
+<p>這篇文章將要介紹幾個 WebRTC 的基概念，大約分成以下幾個章節:</p>
+<ul>
+<li>WebRTC 的誕生與內部架構。</li>
+<li>WebRTC 所支援的語音視編碼與傳輸協議。</li>
+<li>WebRTC 提供的基本 P2P 功能。</li>
+<li>WebRTC 的簡單通訊實作。</li>
+</ul>
+<h2 id="webrtc-">WebRTC 的誕生與內部架構</h2>
+<p>首先在 Web 通信的世界中，基本上都是所謂的 C/S 架構，也就是所謂的 client 與 server 架構，通常 client 要取資料時就是發送一個請求給 server 然後它會回傳資料回去，其中 ajax 的出現讓我們更能以少量的資源來取得資料，在這階段時都部份都是單向溝通，也就是 client 請求 server。</p>
+<p>而在二階段能，人們開始有種需求，例如股票報價網站，人們希望可以看到當有股價變動時，網頁可以也同時更動，這時如果用上面那種模式，那就只能 client 定時的去 server 拿資料，也就是咱們所謂的<code>輪詢</code>，但這種方法很明顯的非常的浪費資源，你可以呼叫 server 十次，但只有一次才真的有新的資料。而這時<code>webSocket</code>就用來解決這向事情，它提供了雙向溝通功能，server 就可以透過它，來將資料推給 client。</p>
+<p>基本上以上已經解決了 client 與 server 的雙向互動，但這時人們又在想，假設我是做個一對一的聊天工具，那為什麼還需要 server 呢? 不能直接 client 與 client 進行溝通就好呢 ? WebRTC 就是可以幫助我們完成的工具，它就是用來專門處理瀏覽器與瀏覽器之間的即時溝通。</p>
+<p>備註：雖然說是 cleint 與 client 直接進行溝通，但不是說不需要 server，後面會說明。</p>
+<blockquote>
+<p>WebRTC 的存在目的，就是為了讓瀏覽器不需要認何 plugin 就可以快速的開發出 P2P 語音或視頻對話 。</p>
+</blockquote>
+<h3 id="webrtc--api">WebRTC 的內部架構與所提供的 API</h3>
+<p>首先在咱們來看看 WebRTC 的基本架構，如下圖。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181110/20089358srwDhi67JS.png" alt="">
+圖片來源:<a href="https://webrtc.org/architecture/">官網</a></p>
+<p>最外層<code>紫色</code>的地方就是我們所使用的 API 部份，基本上可以分三種:</p>
+<ul>
+<li>getUserMedia: 用來處理音視串流採集。 (採集聲音或影像)。</li>
+<li>RTCPeerConnection: 用來建立兩個瀏覽器之間的直接通訊。 (建立與管理 p2p 連線)</li>
+<li>RTCDataChannel: 負責用來傳送資料。(操作那條 p2p 連線)</li>
+</ul>
+<p>然後<code>藍色實線</code>那層的 WebRTC C++ API 是專門給瀏覽器開發商更容易的實作 WebRTC 標準的 WebAPI。</p>
+<p>最後<code>藍色虛線</code>那層由各瀏覽器開發商自行定義實作。</p>
+<h4 id="heading1">備註</h4>
+<p>關於 getUserMedia 的相關使用，可以參考筆者的以下兩篇文章。</p>
+<p><a href="https://mark-lin.com/posts/20180907/">30-07之Web 如何進行語音與影像採集 ?</a>
+<a href="https://mark-lin.com/posts/20180908/">30-08之 WebRTC 採集的詳細說明與聲音的加工</a></p>
+<h2 id="webrtc-1">WebRTC 所支援的語音視編碼與傳輸協議</h2>
+<p>在開始傳輸聲音之前，我們需要先進行編碼，接下來就是進行封裝，而封裝時也需要據傳輸協議才能決定要封裝成什麼型式來送貨。接下來這章節就簡單的說明一下 WebRTC 所支援的編碼與傳輸協議。</p>
+<h3 id="heading2">語音編碼</h3>
+<p>比較詳細的說明可至筆者的這篇文章『<a href="https://mark-lin.com/posts/20180903/">30-03之聲音的編碼與壓縮</a>』</p>
+<h4 id="opus">Opus</h4>
+<p>這個編碼只要記得他是瑞士刀就好。</p>
+<h4 id="isac">iSac</h4>
+<p>它是一個提供寬帶 (wideband) 與超寬帶 (wideband) 的語音編碼器，大部份使用在 VoIP 與串流應用中，為 WebRTC 預設的語音編碼器。(目前是屬於 google 的)</p>
+<p>備註：
+上面說的寬帶與超寬帶的意思是指他的採樣率的意思，寬帶是指 16KHz 與超寬帶指的是 32KHz。</p>
+<h4 id="ilbc">iLBC</h4>
+<p>它是一個提供窄帶的語音編碼器，也是大部都使用在 VoIP 與串流應用中，它的採樣率為 8HZ。</p>
+<h3 id="heading3">視頻編碼</h3>
+<p>比較詳細的說明可至筆者的這篇文章『<a href="https://mark-lin.com/posts/20180905/">30-05之影像的編碼與壓縮</a>』</p>
+<h3 id="vp8">VP8</h3>
+<p>它是 Google 收購的 On2 所開發的視頻編碼，它基本上會封裝在 .webm 格式中</p>
+<h3 id="vp9">VP9</h3>
+<p>它就是 VP8 的進化版。</p>
+<h3 id="webrtc-2">WebRTC 所使用的通訊協議</h3>
+<blockquote>
+<p>它使用 RTP/RTCP 協議</p>
+</blockquote>
+<p>此協議詳細內容請看筆者的此篇文章『<a href="https://mark-lin.com/posts/20180912/">30-12之 RTP/RTCP 傳輸協議</a>』。</p>
+<p>備註: 別忘了它是傳輸層協議
+備註: 它可以選擇用 UDP(預設) 或 TCP</p>
+<p>這裡問一個問題。</p>
+<h4 id="-webrtc--rtp--">為什麼 WebRTC 要使用 RTP 協議呢 ?</h4>
+<ul>
+<li>RTSP：RTSP 大部份是為了控制串流而使用它，而 WebRTC 目的是建立 P2P 的即時影音溝通，所以不太會選擇使用 RTSP。</li>
+<li>RTMP：Web 現在大部份不支援 Flash，所以這也不用，而且真要要幹的話，就代表雙方的瀏覽器都要可以解析 RTMP，那這樣只是找麻煩。</li>
+<li>HTTP 系列：如果有使用就代表雙方瀏覽器要有 HTTP Server 功能，不然對方收到我的 HTTP 請求如何解析，而且 HTTP 本來就是 C/S 架構的設計，要拿來用 C/C 架構，找自已的麻煩。</li>
+</ul>
+<p>不過我覺得最大的理由在於，某此方面來說 WebRTC 已經可以算是應用層的協議，它讓雙方的瀏覽器都定義好了一定的流程來完成 P2P 溝通這件事情，因此它接下來應該只要在選擇使用什麼傳輸層協議來進行溝通就行了。</p>
+<h2 id="webrtc--p2p-">WebRTC 提供的基本 P2P 功能</h2>
+<hr>
+<p>要建立一個 WebRTC 的 P2P 基本應用如下圖，你會發現事實上還有一個 Server，但它不是說是 P2P 連線嗎 ?</p>
+<p>嗯沒錯，但它是指聲音或影像直接的進行 P2P 傳送，而不是需要經過 Server 來將聲音傳出去。</p>
+<p>那這個 Server 是要做什麼用的 ? 在 WebRTC 雙方要建立連線前，誰都不認識對方，這也代表雙方都不知對方在那，而這個 Server 就是讓他們互相認識的交誼廳 ，這在 WebRTC 中又被稱為 Signaling Server 。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181110/20089358k4ZIrtsGBB.png" alt=""></p>
+<p>建立連線的過程如下圖。</p>
+<ol>
+<li>用戶 A 向 Server 發送與 B 進行會話。</li>
+<li>Server 將會話請求發送給用戶 B。</li>
+<li>用戶 B 向 Server 進行應答，並回報 OK。</li>
+<li>Server 向用戶 A 發送 用戶 B 的相關資訊。</li>
+<li>雙方開始建立連線。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181110/20089358K4kVBXUaXn.png" alt=""></p>
+<h2 id="webrtc-3">WebRTC 的簡單通訊實作</h2>
+<p>這裡基本上分為兩部份程式碼，一段是 client 端的，另一端為 server 端的。</p>
+<h3 id="server">Server</h3>
+<p>這一段是建立 Signaling Server，我們使用 nodejs 的 express 來建立，然後我們還有使用到<code>peer</code>這個套件來幫助我們可以更輕鬆的使用 WebRTC 的 P2P 操作。</p>
+<p>下面這段程式碼中，事實上只做了兩件事。</p>
+<ol>
+<li>建立 client 的頁面 (註：這裡使用<code>/a</code>與<code>/b</code>不同的頁面來模擬不同的用戶)</li>
+<li>建立 client 的對話 (註：事實上詳細處理的都已經包在 peer 套件裡面了)</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">expressPeerServer</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;peer&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">ExpressPeerServer</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">9000</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">peerserver</span> <span class="o">=</span> <span class="nx">expressPeerServer</span><span class="p">(</span><span class="nx">server</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;/api&#39;</span><span class="p">,</span> <span class="nx">peerserver</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/a&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">sendfile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s2">&#34;/index-clientA.html&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/b&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">sendfile</span><span class="p">(</span><span class="nx">__dirname</span> <span class="o">+</span> <span class="s2">&#34;/index-clientB.html&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">peerserver</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">A client connected : </span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+
+<span class="nx">peerserver</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;disconnect&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">A client say ~ bye bye : </span><span class="si">${</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><h3 id="client">Client</h3>
+<h4 id="a-">A 用戶</h4>
+<p>其中比較需要注意的是在使用<code>new Peer(‘A’)</code>時，這裡面所代的 A 就代表你這用戶的編碼，別人如果要和你進行連線時，就需要使用這個編碼，但是這不是說任何人都可以和你連線，必須是要在此會話中，才能進行連線。</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p"></span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">head</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&#34;X-UA-Compatible&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;ie=edge&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p"></span><span class="p">&gt;</span>Document<span class="p">&lt;</span><span class="p">/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.9/peer.min.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span>
+        <span class="kr">const</span> <span class="nx">peer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Peer</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="nx">port</span><span class="o">:</span> <span class="mi">9000</span><span class="p">,</span> <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;/api&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">peer</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;My peer ID is: &#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">peer</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">conn</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">conn</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+                <span class="c1">// 有任何人加入這個會話時，就會觸發
+</span><span class="c1"></span>                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">conn</span><span class="p">.</span><span class="nx">peer</span><span class="si">}</span><span class="sb"> is connected with me</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">conn</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// 當收到訊息時會執行
+</span><span class="c1"></span>                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">conn</span><span class="p">.</span><span class="nx">peer</span><span class="si">}</span><span class="sb"> : </span><span class="sb">`</span> <span class="o">+</span> <span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">conn</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;HI I am A&#39;</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><h4 id="b-">B 用戶</h4>
+<p>這個是 B 用戶，一但它建立連線後，就會發送與 A 會話的請求<code>peer.connect(‘A’)</code>，然後連線成功後會在發送一段訊息給 A。</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p"></span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">head</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&#34;UTF-8&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&#34;viewport&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;width=device-width, initial-scale=1.0&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">http-equiv</span><span class="o">=</span><span class="s">&#34;X-UA-Compatible&#34;</span> <span class="na">content</span><span class="o">=</span><span class="s">&#34;ie=edge&#34;</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p"></span><span class="p">&gt;</span>Document<span class="p">&lt;</span><span class="p">/</span><span class="nt">title</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p"></span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.9/peer.min.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span>
+        <span class="kd">var</span> <span class="nx">peer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Peer</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="nx">port</span><span class="o">:</span> <span class="mi">9000</span><span class="p">,</span> <span class="nx">path</span><span class="o">:</span> <span class="s1">&#39;/api&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">conn</span> <span class="o">=</span> <span class="nx">peer</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">peer</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;My peer ID is: &#39;</span> <span class="o">+</span> <span class="nx">id</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">conn</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// 與 A 連線後，會發送以下訊息給 A。    
+</span><span class="c1"></span>            <span class="nx">conn</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hi I am B&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">conn</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="c1">// 送到某人發送的訊息。
+</span><span class="c1"></span>            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">conn</span><span class="p">.</span><span class="nx">peer</span><span class="si">}</span><span class="sb"> : </span><span class="sb">`</span> <span class="o">+</span> <span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="p">/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre></div><h3 id="heading4">執行</h3>
+<p>全部程式碼中此『<a href="https://github.com/h091237557/30-audio-video/tree/master/code/webRTC-p2p-audio">傳送門</a>』</p>
+<h4 id="1--npm-">1. 安裝 npm 套件</h4>
+<pre><code>npm install
+</code></pre><h4 id="2--server">2. 執行 server</h4>
+<pre><code>node broker-server.js
+</code></pre><h4 id="3--a--b-">3. 在瀏覽器先開啟 A 與在開啟 B 用戶</h4>
+<pre><code>127.0.0.1:9000/a
+127.0.0.1:9000/b
+</code></pre><h4 id="4-">4. 執行結果</h4>
+<h4 id="a-1">A 用戶的畫面</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181110/200893587Df9ZCzkpl.png" alt=""></p>
+<h4 id="b-1">B 用戶的畫面</h4>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181110/2008935867ojtrgktH.png" alt=""></p>
+<h2 id="heading5">結論</h2>
+<p>本篇文章中咱們學習了 WebRTC 的基本概念與架構，並且在簡單的實作一個 P2P 通信範例，而接下來的文章中，咱們要來討探一下上面有說到的 Signaling Server 的一些事情。</p>
+<h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/RTCDataChannel">官網-RTCDataChannel</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/RTCPeerConnection">官網-RTCPeerConnection</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-26之 WebRTC 的 P2P 即時通信與小範例</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#webrtc-">WebRTC 的誕生與內部架構</a>
+      <ul>
+        <li><a href="#webrtc--api">WebRTC 的內部架構與所提供的 API</a></li>
+      </ul>
+    </li>
+    <li><a href="#webrtc-1">WebRTC 所支援的語音視編碼與傳輸協議</a>
+      <ul>
+        <li><a href="#heading2">語音編碼</a></li>
+        <li><a href="#heading3">視頻編碼</a></li>
+        <li><a href="#vp8">VP8</a></li>
+        <li><a href="#vp9">VP9</a></li>
+        <li><a href="#webrtc-2">WebRTC 所使用的通訊協議</a></li>
+      </ul>
+    </li>
+    <li><a href="#webrtc--p2p-">WebRTC 提供的基本 P2P 功能</a></li>
+    <li><a href="#webrtc-3">WebRTC 的簡單通訊實作</a>
+      <ul>
+        <li><a href="#server">Server</a></li>
+        <li><a href="#client">Client</a></li>
+        <li><a href="#heading4">執行</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">結論</a></li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

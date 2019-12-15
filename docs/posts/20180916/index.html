@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-16之 HTTP-FLV 傳輸協議 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, http-flv" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-16之 HTTP-FLV 傳輸協議 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-16之 HTTP-FLV 傳輸協議</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-16.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181031/20089358F4oFL2rQ0I.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>接下來咱們要來介紹 HTTP-FLV 協議。</p>
+<blockquote>
+<p>HTTP-FLV 協議</p>
+</blockquote>
+<p>本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：</p>
+<ul>
+<li>HTTP-FLV 協議是要用來完成什麼事情呢 ?</li>
+<li>HTTP-FLV 協議如何完成它想做的事情呢 ?</li>
+<li>建立 HTTP-FLV 的串流傳輸流程。</li>
+<li>HTTP-FLV 的特點總結。</li>
+</ul>
+<h2 id="httpflv--">HTTP-FLV 協議是要用來完成什麼事情呢 ?</h2>
+<blockquote>
+<p>可以使用 HTTP 來完成低延遲的串流媒體傳輸。</p>
+</blockquote>
+<p>那為啥他想使用 HTTP 呢 ?</p>
+<p>先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。</p>
+<p>那為啥不用 HLS 呢 ?</p>
+<p>使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。</p>
+<h2 id="httpflv--1">HTTP-FLV 協議如何完成它想做的事情呢 ?</h2>
+<blockquote>
+<p>將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。</p>
+</blockquote>
+<p>以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。</p>
+<p>這裡問個問題。</p>
+<h4 id="http--">http 流式傳輸是啥 ?</h4>
+<p>一般的 http 請求都會對應一個 http 回應這點是沒錯，http 流傳輸就是一個請求，會回應一堆小封包，然後最後才是一個 http 回應。</p>
+<p>而 http 流式傳輸需要使用<code>chunk</code>這個東西，它的使用方法如下，就是在 http response header 加上下面的欄位，這樣 http 的回應就會變成一段一段的。</p>
+<pre><code>Transfer-Encoding: chunked
+</code></pre><p>這裡簡單使用 nodejs 簡單寫個 http chunk 的使用，如下範例，不過下面的程式碼沒有在 http 加 header 欄位是因為 nodejs 的 http 本身如果不執行 res.end() 這一段，它就會自動的幫你加 chunked。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// test.js
+</span><span class="c1"></span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">sleep</span> <span class="o">=</span> <span class="nx">ms</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">r</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="s1">&#39;charset&#39;</span><span class="o">:</span> <span class="s1">&#39;utf-8&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  
+  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;loading...
+</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;wait: 2000ms
+</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;wait: 5000ms
+</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>接下來咱們來執行它看看。</p>
+<pre><code>node test.js
+</code></pre><p>執果如下圖，你可以看到這個 http response 的 header 的 Transfer-Encoding 為 chunked 。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181031/20089358j5o7rP3qQn.png" alt=""></p>
+<h4 id="-">那實際的封包是跑什麼樣子呢 ?</h4>
+<p>簡單的畫張圖如下，它的基本概念就是會將資料分成一包一包的 tcp 傳回去，然後在判斷是最後一包時，就會回傳一個 http response 然後它裡面的 tcp 就有包含最後一段的資料。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181031/200893587zxUFjkXsr.png" alt=""></p>
+<h2 id="-httpflv-">建立 HTTP-FLV 的串流傳輸流程</h2>
+<p>事實上概念還蠻簡單的請看下圖，基本上直播主丟過去的聲音或影像的方法，可以選擇使用 RTMP (比較多人選)，然後聽眾就會發個 http 請求給 server，然後 server 就會開始進行 http 串流傳輸，基本上就是這樣。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181031/20089358S6O1t9H2FA.png" alt=""></p>
+<h2 id="httpflv-">HTTP-FLV 的特點總結</h2>
+<ul>
+<li>HTTP-FLV 目前在 HTML5 支援比較好，其它平台要找找看有沒有 player 可以播放它。</li>
+<li>HTTP-FLV 延遲性優於 HLS，並且大約和 RTMP 差不多。</li>
+<li>HTTP-FLV 支援影像編碼為 H.264 (VP8 好像某)。</li>
+<li>HTTP-FLV 支援聲音編碼為 AAC、MP3。</li>
+<li>使用 .flv 流容器。</li>
+<li>使用 http 串流傳輸 (chunked)。</li>
+</ul>
+<p>目前大部份如果要做互動類型的直播，比較會選擇 HTTP-FLV，因為它們延遲低，而 RTMP 延遲雖然也低，但是因為不是用 http 而且要用 flash 播放器，所以優先度比較低點兒。</p>
+<h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="https://www.apowersoft.tw/what-is-flv-format.html">什麼是FLV格式</a></li>
+<li><a href="https://github.com/gwuhaolin/blog/issues/3">使用flv.js做直播</a></li>
+<li><a href="https://www.jianshu.com/p/bfdba8ab903a">直播协议 HTTP-FLV 详解</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-16之 HTTP-FLV 傳輸協議</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#httpflv--">HTTP-FLV 協議是要用來完成什麼事情呢 ?</a></li>
+    <li><a href="#httpflv--1">HTTP-FLV 協議如何完成它想做的事情呢 ?</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#-httpflv-">建立 HTTP-FLV 的串流傳輸流程</a></li>
+    <li><a href="#httpflv-">HTTP-FLV 的特點總結</a></li>
+    <li><a href="#heading1">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

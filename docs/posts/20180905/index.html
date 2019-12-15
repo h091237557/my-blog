@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-05之影像的編碼與壓縮 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 本篇文章中我們將要學習以下的主題: 影像編碼 接下來我們會分以下三個章節來進行學習: 什麼是影像編碼呢 ? 如何進行壓縮呢 ? 常用的編碼 什麼是影|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-05之影像的編碼與壓縮 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 本篇文章中我們將要學習以下的主題: 影像編碼 接下來我們會分以下三個章節來進行學習: 什麼是影像編碼呢 ? 如何進行壓縮呢 ? 常用的編碼 什麼是影|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-05之影像的編碼與壓縮</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-05.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181020/20089358YuRqHRGtpE.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>本篇文章中我們將要學習以下的主題:</p>
+<blockquote>
+<p>影像編碼</p>
+</blockquote>
+<p>接下來我們會分以下三個章節來進行學習:</p>
+<ul>
+<li>什麼是影像編碼呢 ?</li>
+<li>如何進行壓縮呢 ?</li>
+<li>常用的編碼</li>
+</ul>
+<h2 id="-">什麼是影像編碼呢 ?</h2>
+<blockquote>
+<p>用來描敘影像的有規則二進位。</p>
+</blockquote>
+<p>這個東西事實上就和音頻編碼一樣，都是使用電腦看的懂的東西(二進位)來說明一部影像，並且希望儘可能的在不損失畫質的前提下，將它弄小，可以方便我們傳輸與儲放。</p>
+<p>但是為什麼要弄小呢 ? 它會很大嗎 ?</p>
+<p>嗯超大。</p>
+<p>我們來看看一個例子，假設有一部影像的資訊如下：</p>
+<p>FPS：30 fps
+每幀大小：1024 x 768
+每個像素所用的 bit：10 bit
+影像長度：10 分鐘</p>
+<p>所以我們這部 10 分鐘的影像所需的空間為如下:</p>
+<pre><code> 30 X 1024 X 768 X 10 X 60 X 10 = 大約等於 18 GB
+</code></pre><p>嗯哼， 10 分鐘的影片如果什麼都沒處理，那就需要 18 GB，你覺得你的小電腦可以儲放幾部迷片呢 ?</p>
+<p>所以才會一堆人研究了各種的編碼。</p>
+<h2 id="-1">如何將影像變小呢 ?</h2>
+<blockquote>
+<p>就是用一些奇技淫巧來壓縮。</p>
+</blockquote>
+<p>接下來我們來簡單的看一下壓縮的原理，比較白話文的是說可以去除影像中的什麼。</p>
+<p>主要有以下幾個冗餘點(Redundancy)可以處理:</p>
+<ul>
+<li>圖像冗餘：圖像是由像素所組成，但是每個相鄰的像素，相似性非常的高，所以這裡可以動點手腳兒。</li>
+<li>時間冗餘：影像是由連續的圖片組成，但每個相鄰的圖片，相似性非常的高，所以這裡也可以動點手腳兒。</li>
+<li>視覺冗餘：人的小眼晴事實上不是很敏感的，所以你動點小手腳事實上也看不出來。</li>
+<li>編碼冗餘：就是某些時後會不小心用到多餘的編碼來描述某個事物，所以這裡也可動手腳。</li>
+</ul>
+<p>這個地方主要是參考<a href="https://wiki.mbalib.com/wiki/%E6%95%B0%E6%8D%AE%E5%86%97%E4%BD%99">智庫百科的數據冗餘</a></p>
+<h2 id="heading1">常用的編碼</h2>
+<blockquote>
+<p>基本上就分為兩大派<code>H26X</code>與<code>VPX</code>。</p>
+</blockquote>
+<h3 id="h264">H.264</h3>
+<p>它是由 ITU-T 與 ISO/IEC MPEG 所共同合作的 JVT 小組開發的影像壓縮編碼，它目前可以說是公認效率最高的編碼，咱們來看看它到底壓到多驚人。</p>
+<p>假設有個原始影像為 100 GB，那使用 H.264 編碼技術所壓縮後約為 1 GB 左右幾乎是 1:100。</p>
+<p>大約在 2012 ~ 2014 年時影像編碼的主流還是都在使用 H.264，無論是手機、平板或是網路串流 (Ex. YouTube)，完全就是一個老大樣子，而且蘋果公司是它的完全支持者，所有設備都支援它。</p>
+<p>這裡就不多解釋它的技術細節囉，反正只是要讓你知道它是現在影像編碼的主流之一。</p>
+<h4 id="heading2">備註</h4>
+<ul>
+<li>硬體上它需要取得授權</li>
+<li>初始版日為 2003 年 5 月</li>
+<li>和蘋果有關的都支持</li>
+</ul>
+<h3 id="h265">H.265</h3>
+<p>它就是 H.265 的進化版，細節就不說明，反正壓縮效率更高就對了，不過這東東到現在還是不算很普及，聽說是授權的問題，目前好像只有在蘋果的圈子才有支持。</p>
+<p>P.S 初始版日為 2013 年 2 月</p>
+<h3 id="vp8">VP8</h3>
+<p>VP8 是由 On2 所開發，並且在 2010 年時被 Google 所收購。VP8 當初在開發時就選擇以網路為主戰場，由於在網路的世界有頻寬的限制，所以選擇以較低的品質來處理頻寬的問題。基本上它以低頻寬的壓縮能力來看，屌打 H.264，而一般情況下也不會輸它太多。</p>
+<p>大約 2012 年左右那時 H.264 還是影像編碼的老大，然後 Google 想藉由 VP8 與 HTML5 的與運算能力較弱手機的整合來將 H.264 從龍頭給接下來。然後首當其衝的當然是 Google 旗下影像最大用戶為 Youtube，它在那時開始將大量的影像改用 VP8。</p>
+<h4 id="heading3">備註</h4>
+<ul>
+<li>Chrome、Android、Youtube、WebRTC 都絕對的支持。</li>
+<li>硬體上它不需要授權。</li>
+<li>初始版日為 2008 年 9 月。</li>
+</ul>
+<h3 id="vp9">VP9</h3>
+<p>VP9 它是 Google 用來開發出來未了替代老舊的 VP8 影像編碼。</p>
+<h4 id="heading4">備註</h4>
+<ul>
+<li>初始版日為 2012 年 12 月。</li>
+<li>目前 ( 2018 ) 大部份的瀏覽器都有支援 VP9，除了 safari。</li>
+<li>WebRTC 在 2016 年時就支持囉。</li>
+</ul>
+<h3 id="-html5-">雙方在 HTML5 的狀況</h3>
+<p>咱們直接從<a href="http://www.w3school.com.cn/html5/html_5_video.asp"> w3school</a>抓來看看。</p>
+<p>先說明一下，下面說的格式會在後面的封裝章節進行更多的說明。</p>
+<p>接下來咱們來看看下表，咱們可以說蘋果就是霸氣，只選擇支援 H.264 編碼，而 Firefox 與 Opera 就選擇站在支援 VP8 這陣營，你也可以將它們倆想成 Google 派。而 IE 反正沒啥人用別理他。</p>
+<p>Ogg = Theora 影像編碼 + Vorbis 聲音編碼
+MPEG 4 = H.264 影像編碼 + AAC 聲音編碼
+WebM = VP8 影像編碼 + Vorbis 聲音編碼</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181020/20089358wT0Kc7fUJK.png" alt="">
+圖片來源：<a href="https://www.evernote.com/OutboundRedirect.action?dest=http%3A%2F%2Fwww.w3school.com.cn%2Fhtml5%2Fhtml_5_video.asp">w3school</a></p>
+<h2 id="heading5">結論</h2>
+<p>本編文章中咱們學到了以下幾個重點：</p>
+<ul>
+<li>什麼是影像編碼呢 ? 就是一段有規則用來說明影像的二進位。</li>
+<li>如何將影像變小呢 ? 請參考這篇<a href="https://wiki.mbalib.com/wiki/%E6%95%B0%E6%8D%AE%E5%86%97%E4%BD%99">智庫百科的數據冗餘</a></li>
+<li>常用的編碼。這裡就只要記得 H26X 派 ( 蘋果 ) 與 VPX 派 ( Google )</li>
+</ul>
+<p>事實上這一篇我寫的有點心虛，原本想要深入的理解 VP8 與 H.264 編碼的差異，但發覺裡面的內容超硬的 ~ 未來有緣份在來寫寫。</p>
+<h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="http://www.52im.net/thread-228-1-1.html">即时通讯音视频开发（一）：视频编解码之理论概述</a></li>
+<li><a href="http://www.52im.net/thread-274-1-1.html">视频编码H.264、VP8的前世今生</a></li>
+<li><a href="https://www.techbang.com/posts/23050-vp9-image-coding-so-that-youtube-plays-hd-videos-without-buffering-time">VP9影像編碼格式是什麼？為何能讓YouTube播高畫質影片不需緩衝</a></li>
+<li><a href="https://www.zhihu.com/question/23194589">知乎</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-05之影像的編碼與壓縮</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">什麼是影像編碼呢 ?</a></li>
+    <li><a href="#-1">如何將影像變小呢 ?</a></li>
+    <li><a href="#heading1">常用的編碼</a>
+      <ul>
+        <li><a href="#h264">H.264</a></li>
+        <li><a href="#h265">H.265</a></li>
+        <li><a href="#vp8">VP8</a></li>
+        <li><a href="#vp9">VP9</a></li>
+        <li><a href="#-html5-">雙方在 HTML5 的狀況</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">結論</a></li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

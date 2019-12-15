@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-12之 RTP/RTCP 傳輸協議 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="instant messaging, 鐵人賽, rtp, rtcp" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議： RTP 協議 (RTCP 後來會提到) 本篇文章將會分成幾個章節來理解 RTP 協議： RTP 協議是要用來|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-12之 RTP/RTCP 傳輸協議 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議： RTP 協議 (RTCP 後來會提到) 本篇文章將會分成幾個章節來理解 RTP 協議： RTP 協議是要用來|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-12之 RTP/RTCP 傳輸協議</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">instant messaging</span>
+</a>
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2018</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-09-12.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20181027/20089358g2vH5LnW2k.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議：</p>
+<blockquote>
+<p>RTP 協議 (RTCP 後來會提到)</p>
+</blockquote>
+<p>本篇文章將會分成幾個章節來理解 RTP 協議：</p>
+<ul>
+<li>RTP 協議是要用來完成什麼事情呢 ?</li>
+<li>RTP 協議如何完成它想做的事情呢 ?</li>
+<li>RTP 協議的基本概念與封包組成。</li>
+<li>RTP 要如何進行 Qos 的保證呢 ?</li>
+</ul>
+<h2 id="rtp--">RTP 協議是要用來完成什麼事情呢 ?</h2>
+<blockquote>
+<p>RTP 協議想可以完成『 端點到端點的串流媒體傳輸 』 (ex. 聲音、影像)</p>
+</blockquote>
+<p>它目前廣泛的使用於流通訊領域，例如 VOIP、網路會議，網路電視等。</p>
+<h3 id="-rtp--">這裡問個問題，為什麼 RTP 是傳輸層的呢 ?</h3>
+<p>因為它只是專門用來傳輸串流媒體的協議，而不管實際如何應用。你列出幾個傳輸層應用想完成的事情，大概就可以理解為啥它是傳輸層的。</p>
+<pre><code>傳輸層
+UDP：傳輸資料
+TCP：可靠的傳輸資料
+RTP：傳輸多媒體資料
+
+應用層
+HTTP：HTTP server 與客戶端的表準應答
+</code></pre><h2 id="rtp--1">RTP 協議如何完成它想做的事情呢 ?</h2>
+<blockquote>
+<p>它定義了要傳輸串流媒體的參數標準 (封包標準)</p>
+</blockquote>
+<p>RTP 協議它定議好了多媒體傳輸的參數標準，咱們來思考一下，如果直接使用 UDP 或 TCP 來傳送媒體資料會發生什麼事情。</p>
+<p>先以簡單的 UDP 為例子，它的封包大約會長的如下：</p>
+<pre><code>標頭
+來源端 port： 5555
+目的端 port： 7777 
+
+標身
+一堆聲音的二進位編碼
+</code></pre><h4 id="-">這樣的話我要如何知道這個聲音編碼要用什麼解碼器來解 ?</h4>
+<p>那這時有人就說，那不就在標頭多加一個編碼類型就好了麻 ? 嗯對沒錯，說實話就是這樣，但這就已經不能算是 UDP 標準了，因為你多了一個標頭欄位，而且這不是所有類型傳輸都需要，例如我只是要傳普通的資料。</p>
+<p>因此後來就產生了 RTP 協議。</p>
+<h4 id="-1">那為什麼它可以處理串流傳輸呢 ?</h4>
+<p>前面的文章中有提到，所謂的串流傳輸就是將聲音一段一段的傳，然後一邊傳就可以一邊聽。</p>
+<p>然後在筆者這篇文章『<a href="https://ithelp.ithome.com.tw/articles/10204764">30-09之別人要如何聽到我的聲音呢 ?</a>』中有提到，要進行串流傳輸，要執行的流程如下：</p>
+<pre><code>採集 -&gt; 編碼 -&gt; 轉換成流容器 -&gt; 網路 -&gt; 聽眾可以邊下載邊聽
+</code></pre><p>而剛剛上面有說到，它是直接傳輸聲音編碼的，那它為何不用轉成流容容呢 ?</p>
+<p>答案是 RTP 本身就算是一種流容器，不過它有個前提，那就是編碼為無損編碼，因為這樣代表每次傳進來的聲音都可以直接解碼，而如果是有損的就無法，因為會依賴前後的資料。</p>
+<h2 id="rtp-">RTP 協議的基本概念與封包組成</h2>
+<h3 id="rtp-1">RTP 的基本概念</h3>
+<p>RTP 基本上可以選擇 UDP 或 TCP 來進行傳輸，但奇怪這它們三個不是都是在傳輸層嗎 ?</p>
+<p>嗯對的，但只是因為他們處理的層級是相同的，不代表不能一起使用。</p>
+<p>基本上你可以將它的封包想成：</p>
+<pre><code>RTP 表頭 + UDP/TCP 表頭 + 表身(就是資料)
+</code></pre><p>這也代表在使用 RTP 時你有兩種選擇：</p>
+<ul>
+<li>RTP over UDP：這樣類型的多媒體傳輸效能較優，但品質比較不優。 ( 但如果是在專線上，就不一定了 )</li>
+<li>RTP over TCP：這樣類型的多媒體傳輸效能差，但品質較優。</li>
+</ul>
+<p>不過現階段 RTP 大部份都還是使用 UDP。</p>
+<h3 id="rtp-2">RTP 的封包組成</h3>
+<p>咱們來簡單的看一下它定義好的封包表頭結構。</p>
+<table>
+<thead>
+<tr>
+<th>bit</th>
+<th>field</th>
+<th>describe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>V (Version)</td>
+<td>用來說明使用的 RTP 版本 (default 為 2)。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>P (Padding)</td>
+<td>為 1 的話，就會在最後面的 payload 後面加填充位置。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>X (Extenstion)</td>
+<td>為 1 的話，就代表存在 header 的擴展。</td>
+</tr>
+<tr>
+<td>4</td>
+<td>CC (CSRC count)</td>
+<td>用來記錄 CSRC 的數量。(csrc 後面會說)。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>M (Marker)</td>
+<td>配置文件定義。</td>
+</tr>
+<tr>
+<td>7</td>
+<td>PT (payload type)</td>
+<td>就是說明你要傳輸的語音視頻的編碼是啥 (ex. H.264, PCM)。</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Sequence Number</td>
+<td>每發送一個封包就 + 1 ，接受端可以用它來判斷封包順序。</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Timestamp</td>
+<td>時間戳，用來記錄採樣第一個 bit 資料(音視頻)的時間。</td>
+</tr>
+<tr>
+<td>32</td>
+<td>SSRC (Synchronization source)</td>
+<td>記錄封包的發送方，它只是隨機的從 md5 隨機演算法中選取，然後在同一個視頻會議中，不會有相同的 ssrc 值。</td>
+</tr>
+<tr>
+<td>(0~15) X 32</td>
+<td>CSRC (Contributing source)</td>
+<td>記錄這所有參於方的來源之 ssrc。</td>
+</tr>
+</tbody>
+</table>
+<p>其中有兩個比較重要的我們拉出來說明一下。</p>
+<p>首先是 SSRC 它的中文為同步來源，而其中來源就是建立這個媒體的來源，例如麥克風、攝影機等，然後就算是同一個 IP 位置，但是不同的兩個麥克風說話，還是會有不同的 SSRC 值。</p>
+<p>然後另一個為 CSRC，它裡面存放了組成這個 RTP 流的所有同步來源，也就是說這個 RTP 可以是有多個麥克風或攝影機所共同組成的一個 RTP，然後 CSRC 就是存放所有這些來源的 SSRC。</p>
+<p>事實上概念上就如下圖：</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181027/20089358u4AJuWTKK8.png" alt=""></p>
+<h2 id="rtp--qos-quality-of-service---">RTP 要如何進行 Qos (Quality of Service 服務品質) 的保證呢 ?</h2>
+<blockquote>
+<p>使用 RTCP 協議 ( 它是 RTP 的姐妹協議 )</p>
+</blockquote>
+<p>RTP 是用來傳送串流媒體的東西，但它並且沒提供<code>Qos (Quality of Service)</code>也就是服務品質，也就是傳 RTP 它不保證這個串流中間有沒有掉封包或是有沒有傳送到，它只負責丟就對了。</p>
+<p>而 RTCP 就是專門用來處理服務品質這件事情，它會在來源端與目的端定時的交換統計資訊，例如送出封包數與遺失封包數，並且根據這些數字，那改善 RTP 的傳輸率之類的事情，使得 RTP 傳輸更有品質。</p>
+<p>接下來咱們來看看它的封包結構。</p>
+<table>
+<thead>
+<tr>
+<th>bit</th>
+<th>field</th>
+<th>describe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2</td>
+<td>Version</td>
+<td>RTP 的版本號，預設為 2 。</td>
+</tr>
+<tr>
+<td>3</td>
+<td>P (padding)</td>
+<td>在最後的位置增加空間，大部份都是給加密使用的地方。</td>
+</tr>
+<tr>
+<td>8</td>
+<td>RC</td>
+<td>接受方報告的數量。</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Packet Type</td>
+<td>用來判斷這個封包是那一種 RTCP 類型。</td>
+</tr>
+</tbody>
+</table>
+<p>上面的表頭中，我們有看到每個 packet 都有分類型，然後下面是類型種類。</p>
+<table>
+<thead>
+<tr>
+<th>code</th>
+<th>type</th>
+<th>describe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>200</td>
+<td>SR（Sender Report）</td>
+<td>發送方的報告</td>
+</tr>
+<tr>
+<td>201</td>
+<td>RR（Receiver Roport）</td>
+<td>接受方的報告</td>
+</tr>
+<tr>
+<td>202</td>
+<td>SDES（Source Descripition Items）</td>
+<td>來源端</td>
+</tr>
+<tr>
+<td>203</td>
+<td>BYE</td>
+<td>結束</td>
+</tr>
+<tr>
+<td>204</td>
+<td>APP（Application）</td>
+<td>特定應用</td>
+</tr>
+</tbody>
+</table>
+<p>接受方每收到一次 RTP 封包時，就產生一次接受方的報告 RR。(內容為 RTP 流的 SSRC、丟失率)</p>
+<p>發送端每發送一次 RTP 封包時，就會發送一次 SR。用來給接受方知道發送端的資訊。</p>
+<p>SEDS 會給出會議的參於者的描述，它包含了參於者的<code>CNAME（Canonical NAME)</code>，CNAME 被稱規範名稱，也就給一台機器設定別名的概念，用戶使用別名就可以找到你，然後一台機器可以設定多個別名。</p>
+<h2 id="heading1">結論</h2>
+<p>本篇文章中咱們學習到了以下幾個重點：</p>
+<h3 id="rtp--2">RTP 協議是要用來完成什麼事情呢 ?</h3>
+<p>RTP 協議想可以完成『 端點到端點的串流媒體傳輸 』 (ex. 聲音、影像)</p>
+<h3 id="rtp--3">RTP 協議如何完成它想做的事情呢 ?</h3>
+<p>它定義好了要傳輸封包的參數標準。</p>
+<p>BTW RTP 本身可以算是個流容器。</p>
+<h3 id="rtp-3">RTP 協議的基本概念與封包組成</h3>
+<p>RTP 本身是基於 TCP 與 UDP 來進行傳輸，其它它的封包裡面的參數大部份是在描述這個媒體流的相關資訊，例如從那裡來，編碼又是啥之類的。</p>
+<h3 id="rtp--qos--">RTP 要如何進行 Qos 的保證呢 ?</h3>
+<p>使用 RTCP 協議，它會在來源端與目的端定時的發送 RTCP 封包，內容包含傳輸品質資訊，然後在依據這些資訊來優化 RTP 傳輸。</p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://tools.ietf.org/html/rfc3550#section-5.1">RFC3350</a></li>
+<li><a href="https://tools.ietf.org/html/rfc3550#section-5.1">RFC3350</a></li>
+<li><a href="https://blog.csdn.net/zhushentian/article/details/79804742">RTP报文头中的SSRC和CSRC</a></li>
+<li><a href="https://blog.csdn.net/zqj6893/article/details/14455457">RTSP学习之RTP(实时传输协议)简介【整理】</a></li>
+<li><a href="http://albert-oma.blogspot.com/2012/05/rtp.html">RTP閱讀心得整理</a></li>
+<li><a href="http://speed.cis.nctu.edu.tw/~ydlin/miscpub/streaming.pdf">多媒體串流應用：產品比較與實例分析</a></li>
+<li><a href="https://github.com/EasyDarwin/Course/blob/master/%E6%B5%81%E5%AA%92%E4%BD%93%E4%BC%A0%E8%BE%93%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%AE%AE(RTSP%20RTP%20SDP)%E8%AF%A6%E8%A7%A3/rtp.md">流媒体传输控制协议(RTSP RTP SDP)详解</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-12之 RTP/RTCP 傳輸協議</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#rtp--">RTP 協議是要用來完成什麼事情呢 ?</a>
+      <ul>
+        <li><a href="#-rtp--">這裡問個問題，為什麼 RTP 是傳輸層的呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#rtp--1">RTP 協議如何完成它想做的事情呢 ?</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#rtp-">RTP 協議的基本概念與封包組成</a>
+      <ul>
+        <li><a href="#rtp-1">RTP 的基本概念</a></li>
+        <li><a href="#rtp-2">RTP 的封包組成</a></li>
+      </ul>
+    </li>
+    <li><a href="#rtp--qos-quality-of-service---">RTP 要如何進行 Qos (Quality of Service 服務品質) 的保證呢 ?</a></li>
+    <li><a href="#heading1">結論</a>
+      <ul>
+        <li><a href="#rtp--2">RTP 協議是要用來完成什麼事情呢 ?</a></li>
+        <li><a href="#rtp--3">RTP 協議如何完成它想做的事情呢 ?</a></li>
+        <li><a href="#rtp-3">RTP 協議的基本概念與封包組成</a></li>
+        <li><a href="#rtp--qos--">RTP 要如何進行 Qos 的保證呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
