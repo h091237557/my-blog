@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  30-14 之資料庫層的優化 - 表的設計 &ndash; 拿鐵派的馬克 Blog
+  30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談 &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
-    <meta content="mysql, 鐵人賽" name="keywords">
+    <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -37,8 +37,8 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="30-14 之資料庫層的優化 - 表的設計 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時|Describe what your web page is about">
+    <meta name="twitter:title" content="30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
 
@@ -77,7 +77,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">30-14 之資料庫層的優化 - 表的設計</div>
+    <div class="h1 mt-3 mb-1">30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</div>
   </div>
   <div class="Subhead-description">
     
@@ -89,17 +89,17 @@
   <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/mysql' class="muted-link">
-  <span class="Label Label--gray">mysql</span>
+<a href='/tags/musql' class="muted-link">
+  <span class="Label Label--gray">musql</span>
 </a>
 
 
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-12. Published at: 2019-09-29.">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-29.">
         
-          Lastmod: 2019-12-12
+          Lastmod: 2019-12-15
         
       </span>
     </div>
@@ -109,347 +109,292 @@
 <article>
   
   <section class="pb-6 mb-3 border-bottom">
-    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ZPcBZlbJcf.png" alt=""></p>
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358vvYv5IdCqA.png" alt=""></p>
 <h2 id="heading">正文開始</h2>
-<p>本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。</p>
-<ul>
-<li>表設計的幾個小建議</li>
-<li>正規與非正規的小戰爭</li>
-</ul>
-<h2 id="heading1">表設計的幾個小建議</h2>
-<p>這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。</p>
-<h3 id="-1--------">建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + )</h3>
-<p>基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :</p>
-<ul>
-<li>char</li>
-<li>varchar</li>
-<li>text</li>
-<li>blob</li>
-</ul>
-<h4 id="char-vs-varchar">char vs varchar</h4>
-<p>char 的特點 :</p>
-<ul>
-<li>最大 255 byte</li>
-<li>不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。</li>
-<li>用 char 需要處理空白。</li>
-</ul>
-<p>varchar 特色 :</p>
-<ul>
-<li>存幾個字就是需花費 n+1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 + 1 = 2 byte。</li>
-<li>65535 為最大，實際為 65532。</li>
-<li>當 varchar 大於一定字數時，會自動轉成 text。</li>
-</ul>
-<pre><code>varchar (255+) 轉成 tinytext
-varchar (500+) 轉成 text
-varchar (20000+) 轉成 mediumtext
-</code></pre><p>下表為 char 與 varchar 的實際存儲空間比較。</p>
-<table>
-<thead>
-<tr>
-<th>值</th>
-<th>char(4)</th>
-<th>花費空間</th>
-<th>varchar(4)</th>
-<th>花費空間</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>'&rsquo;</td>
-<td>&ldquo;白白&rdquo;</td>
-<td>4 bytes</td>
-<td>'&rsquo;</td>
-<td>1 bytes</td>
-</tr>
-<tr>
-<td>&lsquo;ab&rsquo;</td>
-<td>&lsquo;ab白白&rsquo;</td>
-<td>4 bytes</td>
-<td>&lsquo;ab&rsquo;</td>
-<td>3 bytes</td>
-</tr>
-<tr>
-<td>&lsquo;abcd&rsquo;</td>
-<td>&lsquo;abcd&rsquo;</td>
-<td>4 bytes</td>
-<td>&lsquo;abcd&rsquo;</td>
-<td>5 bytes</td>
-</tr>
-<tr>
-<td>&lsquo;abcdefgh&rsquo;</td>
-<td>&lsquo;abcd&rsquo;</td>
-<td>4 bytes</td>
-<td>&lsquo;abcd&rsquo;</td>
-<td>5 bytes</td>
-</tr>
-</tbody>
-</table>
-<p>表格來源: <a href="https://dev.mysql.com/doc/refman/5.6/en/char.html">MySQL 5.6 Reference Manual</a></p>
-<p>注意一下，上面中的白代表為空白的意思，因為 markdown table 在轉換時，有些轉換器會將空白移除，所以上表以白替代。</p>
-<p><strong>那什麼時後選 char 什麼時後選 varchar 呢 ?</strong></p>
-<p>比較簡單的選擇基準為 :</p>
-<ul>
-<li>變動、長、不常更新 =&gt; 選 varchar，</li>
-<li>固定、短、常更新 =&gt; 選 char。</li>
-</ul>
-<p>char 適合常更新的原因在於它比較沒有碎片化的問題，因為它長度是固定的。</p>
-<h4 id="text-vs-blob">text vs blob</h4>
-<ul>
-<li>text: 可儲 0 ~ 65536 字元，儲文字。</li>
-<li>blob: 可儲 0 ~ 65536 字元，儲二進位。</li>
-</ul>
-<p>這兩個基本上都是用來儲大量文字的東西，但是看了不少篇的文章，它們都建議儘可能的不要使用它，不過我覺得比較準備一點的說法在於，不要在表內，存太長的字串 ( 包含 varchar )，真的要的話建另一張表來儲。</p>
-<p>原因在於，它可能會多使用一些空間與 i/o 來處理，在前幾篇文章中，咱們知道一張表會使用 pk 來建立 b+ 樹，然後最下面的節點才能儲放每一行的資料，但是 text 的內容是例外，它不會儲在那一行，而會另外開空間來儲。</p>
-<h3 id="-2-------">建議 2. 選擇適當的欄位類型 - 數字 ( 性能 + )</h3>
-<p>在 mysql 中所提供的整數數字類型如下 :</p>
-<ul>
-<li>tinyint: -128 ~ 127 (1 bytes)</li>
-<li>smallint: -32768 ~ 32767 (2 bytes)</li>
-<li>mediumint: -8388608 ~ 8388607 (3 bytes)</li>
-<li>int: -2147483648 ~ 2147483647 (4 bytes )</li>
-<li>bigint: -2^63 ~ 2^63-1 (8 bytes)</li>
-</ul>
-<p>而它所提供的浮點數字型(也就是有小數點)如下 :</p>
-<ul>
-<li>float: -3.402823466E+38 ~ 3.402823466E+38 (4 bytes)</li>
-<li>double: -1.7976931348623157E+308 ~ 1.7976931348623157E+308 (8 bytes)</li>
-<li>decimal: ~ -1E+66 ~ ~ 1E+66 (它比較特別，上述兩個是近似值，而它是完全精準值，每 9 個數字 4 bytes)</li>
-</ul>
-<p><strong>數字的選擇基本就是以下兩個準則 :</strong></p>
-<ul>
-<li>選擇適合的大小，能用 int 就不要用 bigint。</li>
-<li>選擇適合的類型，例如錢錢請用 decimal。</li>
-<li>選擇使用 unsigned，它的功用就是就儲放負數的空間全移到正數位置，也就是說可儲放空間 * 2。</li>
-</ul>
-<p>簡單說以下 unsigned。假設我們在 tinyint (-128 ~ 128) 設 unsigned，就代表此欄位變成可以儲 (0 ~ 256) 多了一倍的空間。像編號這種就很適合。</p>
-<h3 id="-3-------or---">建議 3. 選擇適當的欄位類型 - 日期 ( 性能 + or 維護性 + )</h3>
-<p>日期基本上有以下三種選擇 :</p>
-<ul>
-<li>datetime: 以 &lsquo;YYYY-MM-DD HH:MM:SS&rsquo; 格式儲放(8 bytes)。</li>
-<li>timestamp: 以 timestamp 格式儲放 (但它只到 2038 年) 4 bytes。</li>
-<li>unsigned int: 將 timestamp 格式儲成 int 格式 (4 bytes)。</li>
-</ul>
-<h4 id="datetime">datetime</h4>
-<ul>
-<li>以 &lsquo;YYYY-MM-DD HH:MM:SS&rsquo; 格式。</li>
-<li>跨時區不適用，因為它只儲當地時間。</li>
-<li>佔 8 bytes。</li>
-<li>時間可儲到世界末日。</li>
-<li>可直接使用預設時間(現在)。</li>
-<li>可讀性高(你看一眼就知道時間)。</li>
-</ul>
-<h4 id="timestamp">timestamp</h4>
-<ul>
-<li>以 UTC timestamp 格式儲放。</li>
-<li>適用於時區轉換。</li>
-<li>排序與索引效率優於 datetime。</li>
-<li>佔 4 bytes。</li>
-<li>時間可儲到 2038 年。</li>
-<li>mysql 提供不少可操作它的函數。</li>
-<li>可直接使用預設時間(現在)。</li>
-</ul>
-<h4 id="unsigned-int">unsigned int</h4>
-<ul>
-<li>以 UTC timestamp 格式儲成 unsigned int 欄位</li>
-<li>佔 4 bytes</li>
-<li>適用於時區轉換。</li>
-<li>排序與索引效率優於 datetime。</li>
-<li>時間大概可儲到 2106 年。</li>
-</ul>
-<h4 id="-">選那個呢 ?</h4>
-<p>基本上第一個還是先看你的需求，如果是有跨時間儲資料庫情況，那 datetime 可以移掉了，因為它是直接儲你 local 的時間。</p>
-<p>在假設沒時區的問題下，要選那個呢 ?</p>
-<p>目前我是比較建議用 unsigned int，但這真的沒有什麼標準答案。我會選擇的原因如下 :</p>
-<ul>
-<li>unsigned int 嚴格來說可以解 2038 問題，債不要留給子孫 (100 年後的就先別管)。</li>
-<li>unsigned int 在 mysql 沒辦法給它預設值，但事實上不少 ORM 都有提供 (sql 魔人請別嘴我)。</li>
-<li>mysql 提供的 timestamp 函數，我真不常用到它，基本上大部份的轉換，我都選擇在應用層處理，別讓資料庫做太多事。</li>
-<li>性能較好點兒與 datetime 相比。</li>
-</ul>
-<p>在選擇時，我還會考慮公司的規範，因為假設公司內一個資料庫儲 datetime、一個儲 timestamp，那你想想應用層的程式會長什麼樣子 ?</p>
-<p><strong>~ 備註參考用 ~</strong></p>
-<p>基本上有對 mysql 進行深入研究的，大概都有讀過這個書<a href="https://www.books.com.tw/products/CN10991137">高性能 MySQL</a>，它裡面是建議別用 int 來儲放日期，它說沒什麼好處。但是它沒說理由，所以我就先不理它。</p>
-<h3 id="-4---pk---">建議 4 : 請別選擇太長值當 PK ( 性能+ )</h3>
-<p>在索引那篇文章中，咱們有提到在 innodb 中，每一張表都會建立 clustered Index b+ 樹，而它是根據以下準則來決定這顆樹的索引值。</p>
-<p>它的選擇如下 :</p>
-<ol>
-<li>primary key ( PK )。</li>
-<li>如果沒有 pk 則選擇一個非空的 unique 索引來當 pk。</li>
-<li>如果還是沒有，innodb 會自動產生一個隱藏的欄位來建立。</li>
-</ol>
-<p>沒有必要的話，請直接使用 auto increment 的 id 編號當 pk，儘可能不要用一些 guid 或啥長長的東東來當 pk。</p>
-<p>主要的原因在於，這真的會影響性能。</p>
-<p>前面幾篇文章說過，在 innodb 裡，它會使用 pk 來建立一個 b+ 樹的索引結構，如下圖，除了最小面的節點有實際上存行資料外，其它的都是放 pk 索引值 :</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190929/20089358AhIPHUQdsP.png" alt="">
-圖 1 : clustered Index b+</p>
-<p>問題就出在其它儲 pk 索引值的那些節點，如下圖紅色區塊，一個紅色區塊裡面會包含索引用的節點，假設我們一個區塊限定為 4 kb，下圖咱們每個索引節點大小為 2 kb，所以可以儲兩個，但是如果索引節點大小變為 4 kb 的話，你覺得會如何 ?</p>
-<p>它會變成只能儲一個，這也代表區塊變多，也代表 i/o 要更多次。</p>
-<p>這也是為什麼不建議用太長值當 pk，因為太長值代表它需要多花點空間來儲，這導致它會增加區塊的數量，最後導致 i/o 次數更多。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190929/200893581eAsrIT9v7.png" alt="">
-圖 2 : 索引值太大問題</p>
-<h3 id="-5------">建議 5 : 新增一些特殊用欄位 ( 維護性 + )</h3>
-<h4 id="-1--">特殊欄位 1 : 邏輯刪除欄位</h4>
-<p>在某些重要的表上，可以新增一個欄位來代表它是否被『 移除 』，但這裡不是只真的移除，只是給它下個 tag，這種好處在於預防萬一。目前應該有不少公司是這樣搞的。</p>
-<h4 id="-2--">特殊欄位 2 : 建立、修改時間欄位</h4>
-<p>而這個就是會在每個表新增『建立』與『修改』的時間欄位，雖然會耗用一些資源，但是這樣真的有助於於 debug 用。像當你發現某一行改了，然後你有了修改時間，那這時你就可以用這時間去查查應用層一些 log 它到底做了什麼事情，真的好用真心不騙。</p>
-<p>有時後多儲點東西減少點性能，增加維護性事實上未來也可以省不少錢錢。</p>
-<h3 id="-6---null----">建議 6 : 儘量的不允需 NULL ( 性能 + )</h3>
-<p>基本上有兩個問題 :</p>
-<ul>
-<li>儲 null 耗的空間比一般的還多。</li>
-<li>count 有可能會出現 bug。</li>
-</ul>
-<pre><code>索引欄位　{name} 
-
-假設資料為:
-{'mark',18}
-{ null, 17}
-
-
-SELECT count(*) FROM user;  =&gt; 2 筆
-SELECT count(name) FROM user; =&gt; 1 筆
-</code></pre><p>最後簡單說一下，null 事實上不太會影響到索引查詢，你只要在索引欄位下的是 is null 這種語法，那都會打中索引，不會變全掃。而如果你會變全掃，基本上不是 null 的關係，而是你下的 sql 關係。</p>
-<h3 id="-6------">建議 6 : 最後一點請註解 ( 維護性 + )</h3>
-<p>當你看到資料表裡面一堆欄位的註解是空的時，你會哭的，尤其是在看不懂欄位名的情況且你主管叫你去應用層看程式碼來推時，你真會哭到想拿起刀。咱真有看過。</p>
-<h2 id="heading2">正規化與反正規的小戰爭</h2>
-<p>正規與反正規是兩種資料儲放的型式，比較簡單且白話文的分法為 :</p>
-<ul>
-<li>正規化 : 分層多張表儲放。</li>
-<li>反正規化 : 全部都儲在一張表。</li>
-</ul>
-<p>咱們簡單的來看一下範例。</p>
-<p>假設咱們要儲放部門人員資訊。</p>
-<h4 id="heading3">正規化所建立的表</h4>
-<p>交易單 table</p>
-<table>
-<thead>
-<tr>
-<th>trade_id</th>
-<th>user_id</th>
-<th>volume</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>001</td>
-<td>10</td>
-</tr>
-<tr>
-<td>2</td>
-<td>002</td>
-<td>20</td>
-</tr>
-<tr>
-<td>3</td>
-<td>003</td>
-<td>30</td>
-</tr>
-</tbody>
-</table>
-<p>交易人 table</p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>name</th>
-<th>age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>001</td>
-<td>mark</td>
-<td>20</td>
-</tr>
-<tr>
-<td>002</td>
-<td>jiro</td>
-<td>35</td>
-</tr>
-<tr>
-<td>003</td>
-<td>ian</td>
-<td>55</td>
-</tr>
-</tbody>
-</table>
-<h4 id="heading4">反正規化所建立的表</h4>
-<p>而反正化則只會建立一張票，如下，交易人的資料會放在同一張裡面。</p>
-<table>
-<thead>
-<tr>
-<th>id</th>
-<th>volume</th>
-<th>user_id</th>
-<th>user_name</th>
-<th>user_age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>1</td>
-<td>10</td>
-<td>001</td>
-<td>mark</td>
-<td>20</td>
-</tr>
-<tr>
-<td>2</td>
-<td>20</td>
-<td>002</td>
-<td>jiro</td>
-<td>35</td>
-</tr>
-<tr>
-<td>3</td>
-<td>30</td>
-<td>003</td>
-<td>ian</td>
-<td>55</td>
-</tr>
-</tbody>
-</table>
-<h3 id="heading5">正規化與反正規化的比較</h3>
-<p>正規化的特點如下 :</p>
-<ul>
-<li>更新操作一定優於反正規化。</li>
-<li>較少重複的數據。</li>
-<li>每個表較小，比較容易使用緩存池。</li>
-<li>某一些操作比較方便。( 例如在非正規化要取得所群組資訊，那就一定要用 group，而在正規化可能就是一張票資訊 )</li>
-</ul>
-<p>反正規化:</p>
-<ul>
-<li>查詢操作優於正規化，因為不用 join，而且也可以更簡單的設計索引策略。</li>
-<li>但更新會很麻煩，而且還要考慮競爭的問題 ( 這之後的章節會說 )。</li>
-<li>表可能會很大，不適合未來擴展與分家。</li>
-</ul>
-<h4 id="-1">選那個呢 ?</h4>
-<p>先說一下兩種模式的主軸 :</p>
-<ul>
-<li>反正規化: 追求最高效率的查詢。</li>
-<li>正規化 : 追求穩定。</li>
-</ul>
-<p>基本上可以的話請選正規化，原因在於穩定，除非你很有自信，系統現在至未來都會很少更新需求，並且你也知道更新時可能會有那些雷，不然的話，還是請選正規化。</p>
-<h3 id="-2">何謂合格或好的正規化呢 ?</h3>
-<p>基本上就是所謂的『 第 n 正規化型式 』，基本上咱覺得到第三層就夠了。</p>
-<p>然後這裡詳細的正規化型式可以去看筆者以前寫的文章應該就夠了，雖然是 3 年前寫的，但是回過頭看還是覺得寫的算清楚。</p>
-<p><a href="http://marklin-blog.logdown.com/posts/1394159-mongodb-30-17-design-the-formal-war-with-anti-normalization">30-17之MongoDB的設計&mdash;正規與反正規化的戰爭</a></p>
-<h2 id="heading6">結論與心得</h2>
-<p>本篇文章我稍微簡單的整理一些，咱們平常開發時，要建立一個表時的需要注意事項，並且也順到的探談了一下正規化與反正化規化的問題。</p>
-<p>不過這些準則上，不全然是為了性能的準則，有一些是會為了維護性而增加的一些東西，這 30 天的文章主題是『 從 0 至 1 儘可能的建立好的系統 ( 性能 ) 』，然後主題是性能，但別忘了我們的目的是好的系統。</p>
+<p>前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :</p>
 <blockquote>
-<p>一個好的性統的要點是『 平衡 』喔</p>
+<p>MyCAT</p>
 </blockquote>
-<h2 id="heading7">參考資料</h2>
+<p>本篇文章分為以下幾個章節 :</p>
 <ul>
-<li><a href="https://zhuanlan.zhihu.com/p/32382274">浅谈MySQL表结构设计</a></li>
-<li><a href="https://mp.weixin.qq.com/s?__biz=MzI2NDU3OTg5Nw==&amp;mid=2247483799&amp;idx=1&amp;sn=4d1f45ab7d5bc9655a8fef2601171e52&amp;chksm=eaab3fc1dddcb6d794dde2ee8e71a56a9b71fdc207efc033c56d1b53c7dc05b096e7cbc3482b&amp;scene=21#wechat_redirect">MySQL表设计踩过的坑！</a></li>
-<li><a href="https://stackoverflow.com/questions/7029127/using-mysqls-timestamp-vs-storing-timestamps-directly">stackover-Using MySQL's TIMESTAMP vs storing timestamps directly</a></li>
-<li><a href="http://gpshumano.blogs.dri.pt/2009/07/06/mysql-datetime-vs-timestamp-vs-int-performance-and-benchmarking-with-myisam/">MySQL DATETIME vs TIMESTAMP vs INT performance and benchmarking with MyISAM</a></li>
-<li><a href="https://stackoverflow.com/questions/4594229/mysql-integer-vs-datetime-index">MySQL Integer vs DateTime index</a></li>
-<li><a href="http://n.sfs.tw/content/index/10266">[Mysql] 資料型態int, float, double, text, char, varchar, blob大小</a></li>
-<li><a href="http://wubx.net/varchar-vs-text/">varchar和text说不清的那些事</a></li>
+<li>MyCAT 基本概念</li>
+<li>MyCAT 的各種架構實現配置</li>
+<li>使用 Docker 來實現 MyCAT 讀寫分離</li>
+</ul>
+<h2 id="mycat-">MyCAT 基本概念</h2>
+<p>在資料庫中間件中，事實上分為兩種類型 :</p>
+<ul>
+<li>proxy</li>
+<li>smart-client</li>
+</ul>
+<p>它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。</p>
+<p>而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358Ud8qBybBEg.png" alt="">
+圖 1 : proxy vs smart-client</p>
+<p>而其中 mycat 就是屬於 proxy 的其中一種應用。</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p>現在幾個比較可以說的出名字的中間件有 :</p>
+<p>proxy : cobar、mycat、mysql-router、atlas、vitess
+smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。</p>
+<p>有興趣的友人可以自已查查來比較看看。</p>
+<h4 id="-">這裡問一下，那一種比較好呢 ?</h4>
+<p>首先咱們先說說 smart-client 的優點 :</p>
+<ul>
+<li>實現簡單 : 大部份的語言都有相對應簡單的實現套件，例如大部份 orm 套都只要設定好 master 與 slave 然後開啟讀寫分離，就會自動的處理 ( ex. django orm、laravel eloquent model )。</li>
+<li>沒有服務壞掉風險 : proxy 是一個服務，所以你需要考慮到它是否有高可用，而 smart-client 則否，它只是個 sdk。</li>
+</ul>
+<p>Smart-client 缺點 :</p>
+<ul>
+<li>比較深入的功能需自已實現 : 例如分散式事務、負載平衡這些，大部份的套件都沒有，真想要只能自已在這些套件上，在封裝一個層級來自已實現。</li>
+<li>版本問題 : 有可能不同服務上，有不同的版本，這也代表如果一個版本有 bug，那就所有的應用都要升級，當服務多時，你要如何確保所有服務都有升級呢 ?</li>
+<li>語言問題 : 只有與中間件 sdk 同語言的才能使用。</li>
+</ul>
+<p>總結來說，如果你的資料庫層級只到了『 讀寫分離 』的情境，那建議是只要使用 smart-client 模式，而是是直接使用各語言有提供的套件就好，而如果到了『 分庫分表 』而且公司內有很多人會使用，那就真的要考慮 proxy 了。</p>
+<h3 id="mycat-1">MyCat 特性</h3>
+<p>mycat 是一個由阿里開發的 cobar 演變來的資料庫的中間件服務，它是屬於『 proxy 類型 』，它基本上有以下的特點 :</p>
+<ul>
+<li>支持讀寫分離、分庫分表。</li>
+<li>NIO 的實現。</li>
+<li>支持分散式事務 ( XA 協議的協調者 )</li>
+<li>支持跨庫 join，但是限兩表</li>
+</ul>
+<p>首先第一點 mycat 支持讀寫分離、分庫分表，寫讓咱們應用端一樣照常的寫一樣 sql，然後內部會自動幫處理這些事情。</p>
+<p>第二點 mycat 他本身是 nio 也就所謂的 non-blocking i/o 機制，就是咱們下面這篇文章中所提到的 reactor 模式，這也代表太可以處理大量的請求。</p>
+<p><a href="https://mark-lin.com/posts/20190907/">30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor</a></p>
+<p>第三點支持分散式事務，也就是咱們應用端一樣像往常一樣使用事務，而 mycat 就會自動幫咱們變成分散式事務。</p>
+<p><a href="https://mark-lin.com/posts/20190928/">30-28 之資料庫層擴展難題 - MySQL 分散式事務處理</a></p>
+<p>第四點跟庫 join，這可以讓咱們應用端寫 join 和平常一樣，但是注意，它只限兩表。</p>
+<h2 id="mycat-2">MyCAT 的各種架構實現配置</h2>
+<h3 id="heading1">基本配置</h3>
+<ol>
+<li>這個部份定義了 mycat 的邏輯資料庫，像咱們下 sql 時有時後需要補一個 use xxxdb 的這種語句時，以下範例來看，咱們下的就是 use masterdb 這樣。</li>
+<li>定義 mycat 的邏輯資料節點，它會使用連到對應對 dataHost 與 database。</li>
+<li>定義 mycat 的邏輯 host，並且也定義好這個 host 的模式，例如是不是負載均衡等。</li>
+<li>定義實際使用的資料庫位置。</li>
+</ol>
+<p>其中 dataHost 有些參數注意一下。</p>
+<ul>
+<li>maxCon : 代表最大連線量，某些方面這個可以說是一個連線池。</li>
+<li>balance : 負載均衡的類型</li>
+<li>0 : 不開啟讀寫分離，就都寫到 writeHost。</li>
+<li>1 : 雙主重模式用，這個有點複雜。</li>
+<li>2 : 所有讀操作，都隨機分配在 writeHost 與 readHost。</li>
+<li>3 : 所有讀操作，都送到 read，writeHost 只處理寫操作。</li>
+<li>writeType : 寫的負載均衡類型</li>
+<li>0 : 所有寫操作都送到第一台 writeHost，當它掛了，會自動切換為第二台。</li>
+<li>1 : 所有寫操作隨機送到某台 writeHost。</li>
+<li>2 : 不執行寫的操作。</li>
+<li>switchType : 主從切換模式，但是有點看不太懂它的類型</li>
+<li>slaveThreshold : 主從延遲 hreshold，也就是說主從的延遲超過這個時間，這此從庫不會參於這次分配。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+
+	<span class="c">&lt;!--</span><span class="c"> 1. 定義 mycat 邏輯資料庫 </span><span class="c">--&gt;</span>
+	<span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;masterdb&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;db1&#34;</span> <span class="nt">/&gt;</span>
+
+	<span class="c">&lt;!--</span><span class="c"> 2. 定義 mycat 邏輯資料操作節點 </span><span class="c">--&gt;</span>
+    <span class="c">&lt;!--</span><span class="c"> 不過比較特別的是 database 它是指實際要連到的預設資料庫 </span><span class="c">--&gt;</span>
+	<span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;db1&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;xxx-db&#34;</span> <span class="na">database=</span><span class="s">&#34;test&#34;</span> <span class="nt">/&gt;</span>
+
+	<span class="c">&lt;!--</span><span class="c"> 3. 定義 mycat 邏輯 host   </span><span class="c">--&gt;</span>
+	<span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;xxx-db&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;1&#34;</span>
+			  <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;-1&#34;</span> <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
+		<span class="c">&lt;!--</span><span class="c"> 4. 定義實際使用資料庫位置 </span><span class="c">--&gt;</span>
+		<span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;m1&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.10:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span>
+		<span class="err">&lt;</span><span class="err">/</span><span class="err">w</span><span class="err">r</span><span class="err">i</span><span class="err">t</span><span class="err">e</span><span class="err">H</span><span class="err">o</span><span class="err">s</span><span class="err">t</span><span class="nt">&gt;</span>
+	<span class="nt">&lt;/dataHost&gt;</span>
+
+<span class="nt">&lt;/mycat:schema&gt;</span>
+</code></pre></div><p>這裡簡單畫一下配置的關係圖，如下圖 2 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358sPVF5WeBJR.png" alt="">
+圖 2 : mycat 配置圖關係</p>
+<h3 id="mycat-3">MyCAT 讀寫分離實現</h3>
+<p>下面為讀寫分離的配置，差別在於 dataHost 的的設定。</p>
+<ul>
+<li>balance 改為 3 : 代表所有讀的操作，會送到 wrtie 裡面的 read 機讀取。</li>
+<li>增加 readHost 配置。</li>
+</ul>
+<p>當要使用時，你可以下以下的 sql 來取得資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+
+	<span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;db&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;db-node&#34;</span> <span class="nt">/&gt;</span>
+
+	<span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;db-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;db-host&#34;</span> <span class="na">database=</span><span class="s">&#34;test&#34;</span> <span class="nt">/&gt;</span>
+
+    <span class="c">&lt;!--</span><span class="c"> 以下有變  </span><span class="c">--&gt;</span>
+	<span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;db-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;3&#34;</span>
+			  <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;-1&#34;</span> <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
+		<span class="c">&lt;!--</span><span class="c"> !. 定義實際使用資料庫位置 (寫)  </span><span class="c">--&gt;</span>
+		<span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;writer&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.10:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;pass&#34;</span><span class="nt">&gt;</span>
+			<span class="c">&lt;!--</span><span class="c"> !. 定義實際使用資料庫位置 (讀)  </span><span class="c">--&gt;</span>
+			<span class="nt">&lt;readHost</span> <span class="na">host=</span><span class="s">&#34;reader&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.20:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;pass&#34;</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;/writeHost&gt;</span>
+	<span class="nt">&lt;/dataHost&gt;</span>
+
+<span class="nt">&lt;/mycat:schema&gt;</span>
+</code></pre></div><p>下圖 3 為 mycat 讀寫分離的配置概念圖。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358ExN78AQM1s.png" alt="">
+圖 3 : mycat 讀寫分離的配置概念圖</p>
+<p><strong>~ 注意事項 ~</strong>
+有個東西要注意一下，mysql 的資料同步是要自已實現，mycat 不能會幫你處理喔。</p>
+<h3 id="mycat-4">MyCAT 分庫實現</h3>
+<p>分庫的配置就是什麼都建立兩組，然後用戶端要打時，自已決定去打那一個位置。</p>
+<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+        
+        <span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;Order&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;order-node&#34;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;User&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;user-node&#34;</span><span class="nt">/&gt;</span>
+        
+        <span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;order-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;order-host&#34;</span> <span class="na">database=</span><span class="s">&#34;db1&#34;</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;user-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;user-host&#34;</span> <span class="na">database=</span><span class="s">&#34;db2&#34;</span> <span class="nt">/&gt;</span>
+        
+        <span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;order-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;2&#34;</span>
+                          <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;1&#34;</span>  <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
+                <span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;host1&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.1.199:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;123456&#34;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dataHost&gt;</span>
+        <span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;user-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;2&#34;</span>
+                          <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;1&#34;</span>  <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
+                <span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;host2&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.1.166:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;123456&#34;</span><span class="nt">/&gt;</span>
+        <span class="nt">&lt;/dataHost&gt;</span>
+<span class="nt">&lt;/mycat:schema&gt;</span>
+</code></pre></div><p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358cu2pPkzWjr.png" alt="">
+圖 4 : 分庫分表 mycat 配置概念圖</p>
+<h2 id="-docker--mycat-">使用 Docker 來實現 MyCAT 讀寫分離</h2>
+<p>請至筆者的 github 抓取這個專案，不過先說一下，這個 docker-compose 是抓了其它 mycat 的配置來修修改改，改改修修，雖然可以動，不過裡面還很亂，閒時會慢慢的用乾淨點。</p>
+<p><a href="https://github.com/h091237557/docker-composer-tools">馬克的 github-docker-tools</a></p>
+<p>其中需要注意看的檔案如下 :</p>
+<ul>
+<li>docker-compose : 所有服務的配置。</li>
+<li>config/hosts : 將服務的 host 進行指定。</li>
+<li>config/mycat/server.xml : mycat 實際服務的權限配置。</li>
+<li>config/mycat/schema.xml : mycat 資料庫配置</li>
+</ul>
+<h3 id="heading2">基本使用</h3>
+<p>移至 mycat-master-slave 這個資料夾裡面，然後在執行以下指令。</p>
+<pre><code>docker-compose up
+</code></pre><p>等待一段時間以後，你可以使用以下的指令進行連線，正常應該是可以成功的連進去，其中這個位置是連到 mycat 喔。</p>
+<pre><code>mysql -h127.0.0.1 -P8066 -uroot -ppass
+
+host: 127.0.0.1:8066
+username: root
+password: pass
+</code></pre><p>然後你就可以在裡面下指令了，一開始應該是空的，那你可以使用以下指令建立一下測試資訊。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="n">use</span> <span class="n">db</span><span class="p">;</span>
+<span class="k">create</span> <span class="k">table</span> <span class="k">user</span><span class="p">(</span>
+   <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
+   <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+   <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+   <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span> <span class="n">id</span> <span class="p">)</span>
+<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="n">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">1</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="p">;</span>
+
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">A-Mark</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">B-Jack</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">C-Ian</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">E-Jiro</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">D-Fucc</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">C-Mark</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">46</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後你就可以正常的執行 sql 操作囉。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">user</span><span class="p">;</span>
+</code></pre></div><h3 id="dockercompose-">Docker-Compose 檔說明</h3>
+<p>這裡使用 docker-compose 來配置一個模擬的 mycat 讀寫分離情境，其中有三個服務 :</p>
+<ul>
+<li>mysql_write : 用來專門寫入的 mysql</li>
+<li>mysql_read : 用來專門讀取的 mysql</li>
+<li>mycat : 就是資料庫中件間服務</li>
+</ul>
+<p>有幾個重點說一下。</p>
+<p>首先讀與寫的 mysql 服務都是使用 bitnami/mysql:5.7 ，是因為它可以很簡單的讓我可以使用兩台資料庫資料同步的功能，不然用原生的很配置要寫很常。</p>
+<p>然後這裡還有設置 db 的 docker network，不知道為什麼嘗試的時後直接使用 link 會失敗，詳細原因就待查，反正這只是淺淺的範例。</p>
+<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w">
+</span><span class="w">
+</span><span class="w"></span>services<span class="p">:</span><span class="w">
+</span><span class="w">  </span>mysql_write<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;bitnami/mysql:5.7&#39;</span><span class="w"> 
+</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="m">33061</span><span class="p">:</span><span class="m">3306</span><span class="w">
+</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
+</span><span class="w">      </span>db<span class="p">:</span><span class="w">
+</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.10</span><span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_MODE=master<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_USER=repl_user<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_USER=mark<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_DATABASE=test<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>ALLOW_EMPTY_PASSWORD=yes<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_ROOT_PASSWORD=pass<span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./mysql/write/<span class="p">:</span>/etc/mysql/conf.d<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./config/hosts<span class="p">:</span>/etc/hosts<span class="p">:</span>ro<span class="w">
+</span><span class="w">  </span>mysql_read<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;bitnami/mysql:5.7&#39;</span><span class="w"> 
+</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="m">33062</span><span class="p">:</span><span class="m">3306</span><span class="w">
+</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
+</span><span class="w">      </span>db<span class="p">:</span><span class="w">
+</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.20</span><span class="w">
+</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_MODE=slave<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_USER=repl_user<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_USER=mark<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_DATABASE=test<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_HOST=<span class="m">192.168</span><span class="m">.0</span><span class="m">.10</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_PORT_NUMBER=<span class="m">3306</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_ROOT_PASSWORD=pass<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>ALLOW_EMPTY_PASSWORD=yes<span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./mysql/read/<span class="p">:</span>/etc/mysql/conf.d<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./config/hosts<span class="p">:</span>/etc/hosts<span class="p">:</span>ro<span class="w">
+</span><span class="w">  </span>mycat<span class="p">:</span><span class="w">
+</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;qiyue/mycat:1.6.5&#39;</span><span class="w">
+</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./config/mycat/<span class="p">:</span>/usr/local/mycat/conf/<span class="w">
+</span><span class="w">      </span>-<span class="w"> </span>./log/mycat-logs/<span class="p">:</span>/mycat/logs/<span class="p">:</span>rw<span class="w">
+</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;8066:8066&#34;</span><span class="w">
+</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;9066:9066&#34;</span><span class="w">
+</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
+</span><span class="w">      </span>db<span class="p">:</span><span class="w">
+</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.5</span><span class="w">
+</span><span class="w">    </span>ulimits<span class="p">:</span><span class="w">
+</span><span class="w">      </span>nproc<span class="p">:</span><span class="w"> </span><span class="m">65535</span><span class="w">
+</span><span class="w">    </span>hostname<span class="p">:</span><span class="w"> </span>mycat<span class="w">
+</span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
+</span><span class="w"></span>networks<span class="p">:</span><span class="w">
+</span><span class="w">    </span>db<span class="p">:</span><span class="w">
+</span><span class="w">      </span>driver<span class="p">:</span><span class="w"> </span>bridge<span class="w">
+</span><span class="w">      </span>ipam<span class="p">:</span><span class="w">
+</span><span class="w">        </span>driver<span class="p">:</span><span class="w"> </span>default<span class="w">
+</span><span class="w">        </span>config<span class="p">:</span><span class="w">
+</span><span class="w">          </span>-<span class="w"> </span>subnet<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.0</span>/<span class="m">24</span><span class="w">
+</span></code></pre></div><p>然後還有這三個服務都配置在 db 這個 network 內網中，然後這裡比較特別的是，會將這三台服務配置 config/hosts 也就是讓人在內網中打 writer 就會對應到 192.168.0.10 這個位置，概念就像是 localhost 指向。</p>
+<p>原本想嘗試在 mycat 中直接配置 ip，但嘗試了一下不太行，原因還是待查，難怪看起他人的配置都是要配置 config/hosts。</p>
+<pre><code>127.0.0.1	localhost
+192.168.0.10	writer
+192.168.0.20	reader
+192.168.0.5	mycat
+</code></pre><p>這裡就淺淡到這囉。詳細的內容自已去 github 看 code 吧，因為嚴格來說算最後的一天，我疲勞了。</p>
+<h2 id="heading3">結論與心得</h2>
+<p>本篇文章咱們介紹了其中一種資料庫中件間『 MyCAT 』。然後咱們非常淺的理解一下它的使用範例，與使用 docker 來實際上將它建立出來。</p>
+<p>那為啥會選他來介紹，只因為它資料比較多…… 到了今天已經沒有多餘的體力可以更深入的調查與研究了，未來如果有機會在開篇來真的詳細談談這東西。</p>
+<p>雖然才 29 天，但基本上就和最後一天沒差多少了，雖然參加過不少次，但是真的最後寫到很疲勞，終於要結束了……</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://segmentfault.com/a/1190000010208682">MyCat简单使用与配置</a></li>
+<li><a href="https://kknews.cc/zh-tw/tech/2kq6xjr.html">資料庫中間件詳解 | 珍藏版</a></li>
+<li><a href="https://kknews.cc/zh-tw/tech/m3zqqk6.html">MySQL中間件盤點</a></li>
+<li><a href="https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/186229/">MySQL 5.7: 使用MySQL Router實現應用程式的高可用</a></li>
+<li><a href="https://blog.csdn.net/jeikerxiao/article/details/81107105">Mycat单库分表</a></li>
+<li><a href="https://www.twblogs.net/a/5d5f4748bd9eee5327fdf731">數據庫中間件 MyCat 的使用</a></li>
+<li><a href="https://github.com/liuwel/docker-mycat">github-liuwel/docker-mycat</a></li>
 </ul>
 
   </section>
@@ -506,29 +451,30 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>30-14 之資料庫層的優化 - 表的設計</b><nav id="TableOfContents">
+      <b>30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</b><nav id="TableOfContents">
   <ul>
     <li><a href="#heading">正文開始</a></li>
-    <li><a href="#heading1">表設計的幾個小建議</a>
-      <ul>
-        <li><a href="#-1--------">建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + )</a></li>
-        <li><a href="#-2-------">建議 2. 選擇適當的欄位類型 - 數字 ( 性能 + )</a></li>
-        <li><a href="#-3-------or---">建議 3. 選擇適當的欄位類型 - 日期 ( 性能 + or 維護性 + )</a></li>
-        <li><a href="#-4---pk---">建議 4 : 請別選擇太長值當 PK ( 性能+ )</a></li>
-        <li><a href="#-5------">建議 5 : 新增一些特殊用欄位 ( 維護性 + )</a></li>
-        <li><a href="#-6---null----">建議 6 : 儘量的不允需 NULL ( 性能 + )</a></li>
-        <li><a href="#-6------">建議 6 : 最後一點請註解 ( 維護性 + )</a></li>
-      </ul>
-    </li>
-    <li><a href="#heading2">正規化與反正規的小戰爭</a>
+    <li><a href="#mycat-">MyCAT 基本概念</a>
       <ul>
         <li></li>
-        <li><a href="#heading5">正規化與反正規化的比較</a></li>
-        <li><a href="#-2">何謂合格或好的正規化呢 ?</a></li>
+        <li><a href="#mycat-1">MyCat 特性</a></li>
       </ul>
     </li>
-    <li><a href="#heading6">結論與心得</a></li>
-    <li><a href="#heading7">參考資料</a></li>
+    <li><a href="#mycat-2">MyCAT 的各種架構實現配置</a>
+      <ul>
+        <li><a href="#heading1">基本配置</a></li>
+        <li><a href="#mycat-3">MyCAT 讀寫分離實現</a></li>
+        <li><a href="#mycat-4">MyCAT 分庫實現</a></li>
+      </ul>
+    </li>
+    <li><a href="#-docker--mycat-">使用 Docker 來實現 MyCAT 讀寫分離</a>
+      <ul>
+        <li><a href="#heading2">基本使用</a></li>
+        <li><a href="#dockercompose-">Docker-Compose 檔說明</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a></li>
+    <li><a href="#heading4">參考資料</a></li>
   </ul>
 </nav></div>
   

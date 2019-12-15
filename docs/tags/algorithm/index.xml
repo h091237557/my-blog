@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>&amp;copy;Your Name 2019</copyright>
-    <lastBuildDate>Thu, 27 Apr 2017 19:51:35 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 03 Sep 2019 19:51:35 +0800</lastBuildDate>
     
 	<atom:link href="https://mark-lin.com/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>30-03 之應用層的運算加速 - 演算法</title>
+      <link>https://mark-lin.com/posts/20190903/</link>
+      <pubDate>Tue, 03 Sep 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190903/</guid>
+      <description>正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能</description>
+    </item>
     
     <item>
       <title>排序之桶子排序法(Bucket Sort)</title>

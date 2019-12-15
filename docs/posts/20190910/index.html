@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理 &ndash; 拿鐵派的馬克 Blog
+  30-10 之資料庫層架構與優化方向 &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
-    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。 在這裡先說一下一個重點|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -37,15 +37,15 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    <meta name="twitter:title" content="30-10 之資料庫層架構與優化方向 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。 在這裡先說一下一個重點|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
 
 
     <link rel="stylesheet" href="/assets/syntax-1.0.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.2.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
   </head>
 
 
@@ -77,7 +77,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</div>
+    <div class="h1 mt-3 mb-1">30-10 之資料庫層架構與優化方向</div>
   </div>
   <div class="Subhead-description">
     
@@ -85,21 +85,17 @@
 
 
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
-  <span class="Label Label--gray">IT 鐵人賽 2016</span>
-</a>
-
-<a href='/tags/mongodb' class="muted-link">
-  <span class="Label Label--gray">mongodb</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
 </a>
 
 
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-13. Published at: 2016-09-10.">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-10.">
         
-          Lastmod: 2019-12-13
+          Lastmod: 2019-12-15
         
       </span>
     </div>
@@ -109,76 +105,144 @@
 <article>
   
   <section class="pb-6 mb-3 border-bottom">
-    <p>本篇文章將要說明<code>cursor</code>的用法以及一些<code>curosr</code>的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮<code>索引</code>情況下<code>find</code>的搜尋原理。</p>
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190925/20089358OB0WUwZvhl.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<hr>
+<p>前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。</p>
+<p>在這裡先說一下一個重點 :</p>
+<blockquote>
+<p>資料庫絕對是一個系統的性能核心，請把優質的 DBA 們當寶來餵食</p>
+</blockquote>
+<p>接下來幾篇資料庫層文章將會以『 MySQL 』來進行說明，雖然不同的資料庫可能實作上會有些不同，但是大致上原理不會差距太大。</p>
+<p>開始第一篇文章，咱們將要先理解一些 MySQL 的基本架構，接下來才能理解那些地方可能可以進行性能優化，又是那一些地方可能是會拖後腿，但是又是必要存在的地方，這篇也算是資料庫篇的小目錄。</p>
+<p>本篇文章分成以下幾個章節 :</p>
 <ul>
-<li><code>Cursor</code>是啥</li>
-<li><code>Cursor</code>的方法</li>
-<li>搜尋的原理</li>
+<li>MySQL 基本架構。</li>
+<li>資料庫層的優化方向。</li>
+<li>資料庫層會拖性能後腿，但是又必須處理的地方。</li>
 </ul>
-<p><code>P.S</code> 三分之一囉，也代表基本的<code>mongodb</code>的<code>crud</code>要<code>Ending</code>囉。</p>
-<h2 id="-cursor--">~ Cursor 是啥 ~</h2>
-<p><code>cursor</code>是<code>find</code>時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是<code>Iterator 模式</code>的實作。</p>
-<p>除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前<code>insertMany</code>時，他會一次回傳全部的結果，<code>mongodb shell</code>就會自動一直輸出，結果看不到後來執行的東西。</p>
-<p>我們實際來看一下<code>cursor</code>的用法，首先我們還是要先新增一些資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>然後進行搜尋，並用一個變數<code>cursor</code>存放。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">cursor</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-
-<span class="k">while</span> <span class="p">(</span><span class="nx">cursor</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">obj</span> <span class="o">=</span> <span class="nx">cursor</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">print</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="s2">&#34; ~呼呼~&#34;</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>結行結果如下圖。</p>
-<p><img src="http://yixiang8780.com/outImg/20161208-1.png" alt=""></p>
-<h2 id="-cursor--1">~ Cursor 的方法 ~</h2>
-<p><code>limit、skip、sort</code>這三個是很常用的<code>cursor</code>方法，主要功能就是限制、忽略、排序。</p>
-<h3 id="limit">limit</h3>
-<p>要限制<code>find</code>結果的數量可以用<code>limit</code>，不過注意<code>limit</code>是指定上限而不是指定下限，
-使用方法如下，<code>limit(10)</code>就是代表最多只回傳<code>10</code>筆資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</code></pre></div><h3 id="skip">skip</h3>
-<p>當你想要忽略前面幾筆，在開始回傳值時，就是可以用<code>skip</code>，使用方法如下，<code>skip(10)</code>，代表忽略前十筆，然後在開始回傳，不過注意『 <code>skip</code>如果數量很多時速度會變很慢 』。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-</code></pre></div><h3 id="sort">sort</h3>
-<p><code>sort</code>它主要就是將<code>find</code>出的資料，根據條件，進行排序。</p>
-<p>例如假設我們有以下的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">25</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">10</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">40</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">5</span><span class="p">}</span>
-</code></pre></div><p>然後我們希望可以根據<code>age</code>排序，由小到大，<code>{age:1}</code>代表由小到大，而<code>{age:-1}</code>則相反由大到小。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">age</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
-</code></pre></div><p>結果如下~</p>
-<p><img src="http://yixiang8780.com/outImg/20161208-2.png" alt=""></p>
-<h3 id="heading">三個都可以一起使用</h3>
-<p>這三個條件我們都可以一起使用，例如，你希望尋找先忽略前10筆，並且數量限制為50筆，最後在進行排序，則指令如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
-</code></pre></div><h2 id="--">~ 搜尋的原理 ~</h2>
-<p>在不考慮有索引<code>(下一篇會開始說)</code>的條件下，<code>mongodb</code>會如下圖一樣開始搜尋。</p>
-<p><img src="http://yixiang8780.com/outImg/20161208-4.png" alt=""></p>
-<p>所以說如果你要找的值是放在資料的最後面，你找到的時間會最久，給個程式實驗看看。</p>
-<p>首先來個測試資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
-</code></pre></div><p>來我們來測試看看找到<code>{&quot;x&quot; : 1}</code>和<code>{&quot;x&quot;: 999999}</code>速度會差多少，其中加<code>limit(1)</code>是因為只讓它尋找第一個，如果沒限制它會一直繼續找，看還有沒有符合的，這樣兩者速度是相等的，因為都是全文掃描，而<code>explain(&quot;executionStats&quot;)</code>是叫<code>mongodb</code>列出詳細的執行結果。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
-
-<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">999999</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
-</code></pre></div><p>首先看看下圖，是 <code>{ &quot;x&quot; : 1 }</code>的，可以看到執行時間幾乎沒有，而掃描的<code>document</code>之有<code>2</code>，也就是只找兩個<code>document</code>就找到<code>{ &quot;x&quot; :1 }</code>，而那兩個就是<code> { &quot;x&quot; : 0 } 和 { &quot;x&quot; : 1 }</code>。</p>
-<p><img src="http://yixiang8780.com/outImg/20161208-5.png" alt=""></p>
-<p>然後我們在來看看 <code>{ &quot;x&quot; : 999999 }</code>的結果，執行時間<code>413ms</code>差距和<code>{&quot;x&quot;:1}</code>差距實在很大，而它幾乎要全部掃描完<code>document</code>才找到 <code>{ &quot;x&quot; : 999999 } </code>，難怪會著麼慢。</p>
-<p><img src="http://yixiang8780.com/outImg/20161208-6.png" alt=""></p>
-<h2 id="--1">~ 結語 ~</h2>
-<p>或許會有人問我，為什麼要把搜尋原理放在搜尋的最後才講，這個麻，因為突然想到…… ， 不過我個人是比較喜好先寫的出來，在來想它的原理，這種道理就像大學如果一開始先教資料庫的正規化，然後才開始學著麼用資料庫的道理是一樣 ~ 不過這也只是個人的想法 ~</p>
-<p>呼 ~ 今天鐵人賽總於進行了三分之一了，也終於將<code>mongodb</code>的基本<code>CRUD</code>都『簡單』的說明一下，記好是『簡單』，如果是『詳細』的話那大概30天都在寫它了，這樣太無趣了。</p>
-<h2 id="--2">~ 參考資料 ~</h2>
+<h2 id="mysql-">MySQL 基本架構與運行</h2>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190925/20089358HQjYEuz0NQ.png" alt="">
+圖 1 : mysql 的基本架構</p>
+<p>基本上分為以下幾個部份 :</p>
 <ul>
-<li><a href="http://www.mongoing.com/eshu_explain3"><a href="http://www.mongoing.com/eshu_explain3">http://www.mongoing.com/eshu_explain3</a></a></li>
-<li><a href="https://docs.mongodb.com/v3.0/reference/method/js-cursor/"><a href="https://docs.mongodb.com/v3.0/reference/method/js-cursor/">https://docs.mongodb.com/v3.0/reference/method/js-cursor/</a></a></li>
+<li>應用層 ( 紅色 )</li>
+<li>服務層 ( 綠色 )</li>
+<li>存儲引擎層 ( 藍色 )</li>
+</ul>
+<h4 id="heading1">應用層</h4>
+<p>應用層主要處理兩個工作 :</p>
+<ul>
+<li>連接處理任務</li>
+<li>權限管理</li>
+</ul>
+<p>其中連接處理任務就是每當一個 client 端發送一個請求到 mysql 時，它會在從 thread poll 中分配一個 thread 來處理此請求，然後之後從此 client 來的任務，都會由此 thread 來處理。</p>
+<p>mysql 並沒有使用之前說的非阻塞 I/O 模型 ( reactor ) 來處理請求的，原因可能在於，mysql 的任務是屬於 cpu 運算密集與磁碟 I/O 密集任務，因此比較不適合使用 reactor 這種使用 epoll 的模型。</p>
+<p>另一種可能原因為當時 mysql 出來時間很早，那個時空背景的確沒有很好的 i/o 處理模式，所以到了現在真的支援非常的困難。</p>
+<h4 id="heading2">服務層</h4>
+<p>服務層最重要的有以下幾個部份，這幾個部份與我們操作 sql 性能習習相關。</p>
+<ul>
+<li>SQL Parser</li>
+<li>Optimizer</li>
+<li>SQL Cache</li>
+</ul>
+<p>首先來說說『 SQL Parser 』，它會將你所下達的 sql 指令，依據規則，將它轉化成抽象語法樹（ Abstract Syntax Tree，AST )。</p>
+<pre><code>SQL -&gt; PARSER -&gt; AST
+</code></pre><p>ast 基本上是用來描述語法的資料結構，像一些 ids 所提供的工具，都需要將你寫的語法產生 AST 才能幫你進行程式碼的 style 修改或啥的。</p>
+<p>接下來『 Optimizer 』部份。這裡會將你的 AST 進行優化，比較白話文的說法就是 mysql 會自動將你的 sql，以它覺得最有效率的方法來處理。</p>
+<p>最後是 『 SQL Cache 』。每當進行搜尋時，都會先至此處理看看有沒有緩存命中，有的話就直接取得，無的話，則將進行 Parser、Optimizer、執行。</p>
+<pre><code>有 : 回傳 Cache
+無 : SQL -&gt; Parser -&gt; Optimizer -&gt; 執行
+</code></pre><h4 id="heading3">存儲引擎層</h4>
+<p>這裡就是實際上要決定，如何處理與儲放你的資料，而用什麼儲存手法就由各種不同的存儲引擎來決定。</p>
+<p>Mysql 基本的預設存儲引擎為 :</p>
+<ul>
+<li>5.5 以下 : MyISAM</li>
+<li>5.6 以上 : InnoDB</li>
+</ul>
+<h4 id="--mysql-cache-">題外話 : MySQL Cache 的問題</h4>
+<p>Mysql 事實上內部有一個 cache，它叫『 query search 』，但看了不少篇文章都是建議，如果是 99% 以上的任務都是讀取相關的，才建議開啟，否則不要開啟。</p>
+<p>會有這樣的結論有兩個原因 :</p>
+<ul>
+<li>緩存很難觸發，原因之一在於需完全相同的 sql 才會中，像如果你多用了 NOW() 的內建方法就掰了。</li>
+<li>開啟緩存成本高。因為需要更新緩存，以及它會鎖住緩存區，這些都會耗費不少資源。</li>
+</ul>
+<p>BTW 如果你們公司本來就已經打開緩存了，那可以使用以下的指令看看，你們 cache hit 到底是多少，來決定要不要繼續開這查詢緩存。</p>
+<pre><code>SHOW GLOBAL STATUS WHERE Variable_name='Qcache_hits' OR Variable_name='Com_select';
+</code></pre><h3 id="mysql-1">MySQL 的運行流程</h3>
+<p>接下來咱們簡單的看一下一個 sql 它在 mysql 中是會如何運行的。</p>
+<p>如下圖 2 所示 :</p>
+<ol>
+<li>client 傳送一個 sql 請求。</li>
+<li>應用層權限驗證與開啟一個 thread 後，丟給解析器。</li>
+<li>接下解析器會先看看緩存區中有沒有相同的 sql，有則回傳。</li>
+<li>無則根據這 sql 建立執行計畫提交給優化器。</li>
+<li>優化器這時會根據一些統計資料，來優化一下執行計畫，最後在打儲存引擎的 api 來處理它。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190925/20089358KIHIdRZqzM.png" alt="">
+圖 2 : mysql 的運行流程。</p>
+<h2 id="mysql-2">MySQL 性能優化方向</h2>
+<p>咱們基本上理解完 MySQL 基本架構以後，接下來咱們要來看看性能優化的方向，與有沒有什麼地方是性能的減項，但是又一定是需要它的地方。</p>
+<p>基本上在下圖的兩個地方 :</p>
+<ul>
+<li>存儲引擎</li>
+<li>優化器</li>
+</ul>
+<h3 id="heading4">存儲引擎</h3>
+<p>首先咱們最重要的地方在於存儲引擎，雖然咱們應用端不太會直接和他接觸，但是如果你不理解它，會完全的無法理解，為什麼要進行之後要說的優化，因此咱們這個部份會往以下幾個地方探討。</p>
+<ul>
+<li>索引原理</li>
+</ul>
+<p>索引基本上就是資料庫的心臟，索引設計好，帶你上天堂，設計不好，帶你下地獄。而在 mysql 中，就是描述你的資料如何儲的方法，當然不是儲一般檔案那麼簡單，而是需要設計一套規則，來加速查詢，這才是索引真正要做的事情。</p>
+<h3 id="heading5">優化器</h3>
+<p>基本上咱們理解完資料如何儲以後，就可以來理解一些咱們實際上如何的優化 sql 性能的技巧，基本上分為以下幾個部份，然後這一些都是會在優化器裡面處理掉。</p>
+<ul>
+<li>索引設計</li>
+<li>表的設計</li>
+<li>優化器優化原理</li>
+</ul>
+<h2 id="heading6">資料庫層會拖性能後腿，但是又必須處理的地方</h2>
+<p>資料庫性能大敵就是 :</p>
+<blockquote>
+<p>一致性難題</p>
+</blockquote>
+<p>咱們先簡單的看兩個簡單例子，基本上以下兩個例子，就是咱們資料庫最常見的問題，但這只是冰山一角，之後的文章會更詳細的說明，然後你會發現，下面兩個真的只是個小角落。</p>
+<p>在之後的文章中咱們詳細的說明 mysql 它到底是如何的處理『 一致性 』這難題的呢 ?</p>
+<h4 id="-1--">問題 1 : 銀行轉帳問題</h4>
+<p>這是一個老掉牙的範例，但是也是最真實的範例。</p>
+<p>假設有一個情境要實作 :</p>
+<p>帳戶 A 轉帳 1000 元至帳戶 B</p>
+<p>而基本上你的操作步驟為:</p>
+<ol>
+<li>帳戶 A 減 1000 元</li>
+<li>帳戶 B 加 1000 元</li>
+</ol>
+<p>但如果在進行完 1 後，資料庫掛了，你要如何處理呢 ? 這就是咱們的第一個問題。</p>
+<h4 id="-2--">問題 2 : 投票問題</h4>
+<p>假設有一個情境要實作 :</p>
+<p>用戶 A 投了 Z 一票，用戶 B 也投了 Z 一票</p>
+<p>而基本上你的操作驟為 :</p>
+<ol>
+<li>取出原本 Z 的票數加一 ( 用戶 A )。</li>
+<li>取出原本 Z 的票數加一 ( 用戶 B )。</li>
+</ol>
+<p>但問題來了，如果 1、2 是幾乎同時間取出 Z 的票數，要如何處理呢 ?</p>
+<h2 id="heading7">結論與心得</h2>
+<p>本篇文章咱們簡單的理解一下 mysql 的架構與一些性能優化的方向，這方向也就是咱們接下來幾篇的重點，接下來資料庫篇要正式的開始囉。</p>
+<p>最後咱們重複說一句話 :</p>
+<blockquote>
+<p>資料庫絕對是一個系統的性能核心，請把優質的 DBA 們當寶來餵食</p>
+</blockquote>
+<p>這點真的很重要。</p>
+<h2 id="heading8">參考資料</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/43736857">[玩转MySQL之一]MySQL体系架构简介</a></li>
+<li><a href="https://blog.csdn.net/livelylittlefish/article/details/80672550">MySQL多线程并发调优</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/34770765">TiDB 源码阅读系列文章（五）TiDB SQL Parser 的实现</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/56790651">[玩转MySQL之六]MySQL查询优化器</a></li>
+<li><a href="https://blog.toright.com/posts/4912/%E6%B7%BA%E8%AB%87-mysql-%E6%95%88%E8%83%BD%E9%81%8B%E4%BD%9C%E6%A9%9F%E5%88%B6.html">淺談 MySQL InnoDB 效能運作機制</a></li>
+<li><a href="https://kknews.cc/code/2kmlxby.html">MySQL執行過程以及查詢緩存的詳細介紹</a></li>
+<li><a href="https://www.kancloud.cn/thinkphp/mysql-faq/47450">线上环境到底要不要开启query cache</a></li>
 </ul>
 
   </section>
@@ -235,20 +299,28 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</b><nav id="TableOfContents">
+      <b>30-10 之資料庫層架構與優化方向</b><nav id="TableOfContents">
   <ul>
-    <li><a href="#-cursor--">~ Cursor 是啥 ~</a></li>
-    <li><a href="#-cursor--1">~ Cursor 的方法 ~</a>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#mysql-">MySQL 基本架構與運行</a>
       <ul>
-        <li><a href="#limit">limit</a></li>
-        <li><a href="#skip">skip</a></li>
-        <li><a href="#sort">sort</a></li>
-        <li><a href="#heading">三個都可以一起使用</a></li>
+        <li></li>
+        <li><a href="#mysql-1">MySQL 的運行流程</a></li>
       </ul>
     </li>
-    <li><a href="#--">~ 搜尋的原理 ~</a></li>
-    <li><a href="#--1">~ 結語 ~</a></li>
-    <li><a href="#--2">~ 參考資料 ~</a></li>
+    <li><a href="#mysql-2">MySQL 性能優化方向</a>
+      <ul>
+        <li><a href="#heading4">存儲引擎</a></li>
+        <li><a href="#heading5">優化器</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">資料庫層會拖性能後腿，但是又必須處理的地方</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading7">結論與心得</a></li>
+    <li><a href="#heading8">參考資料</a></li>
   </ul>
 </nav></div>
   

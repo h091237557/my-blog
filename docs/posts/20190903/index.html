@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-03 之應用層的運算加速 - 演算法 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-03 之應用層的運算加速 - 演算法 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-03 之應用層的運算加速 - 演算法</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-03.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190918/20089358YWcXuY0jDd.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<hr>
+<p>本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?</p>
+<p>這首先第一部份，我們要探討以下主題 :</p>
+<blockquote>
+<p>在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?</p>
+</blockquote>
+<p>而這一題的主要的答案就是不少人面試很排斥的『演算法』。</p>
+<p>本篇文章會分為以下幾段 :</p>
+<ul>
+<li>一個好與不好的演算法性能差距多大呢 ?</li>
+<li>演算法運算時間的分類</li>
+<li>演算法優化建議</li>
+</ul>
+<p>接下來正文開始。</p>
+<h2 id="-">一個好與不好的演算法性能差距多大呢 ?</h2>
+<hr>
+<p>一個演算法的效能基本上有兩個東東 :</p>
+<ul>
+<li>時間複雜度: 你可以把它想成演算法的運行時間。</li>
+<li>空間複雜度: 這個可以想成你這個演算法需要花多少的空間來處理。</li>
+</ul>
+<p>上面只是簡單說明它的代表概念，比較實際的運算方法直接去 wiki 看就夠囉。</p>
+<p>那麼拉回拉，一個好與不好的演算法性能差距有多大呢 ?</p>
+<p>呵 !</p>
+<p>我們以一個最簡單的演算法『費波那契數列』來看看。</p>
+<p>首先這是好的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// good
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">fib</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="nx">n</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">n</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kd">let</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">res</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="kd">let</span> <span class="nx">temp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mi">2</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">temp</span> <span class="o">=</span> <span class="nx">res</span><span class="p">;</span>
+    <span class="nx">res</span> <span class="o">=</span> <span class="nx">a</span> <span class="o">+</span> <span class="nx">res</span><span class="p">;</span>
+    <span class="nx">a</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">fib</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>再來這是爛的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// bad
+</span><span class="c1"></span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">fib</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="nx">n</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">n</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">fib</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後咱們簡單的測試運行時間，你看看這兩個差多少倍，嗯好幾千倍。</p>
+<pre><code>good time: 2.609ms
+bad time: 17315.706ms
+</code></pre><p>這裡應該是有些人會想說，這種費波那契數列演算法或是很多演算法上網抓就好了，工作上又不太會自已寫，學演算法要幹啥呢 ?</p>
+<p>某些方面是沒錯，但這裡問題在於 :</p>
+<blockquote>
+<p>如果你抓成 bad 版本呢 ? 會發生什麼事情呢 ?</p>
+</blockquote>
+<p>很多演算法的確不需要自已在寫，但如果有演算法概念與能力，至少不太會抓錯程式碼，抓錯這事咱真看過這慘況。</p>
+<p><strong>~ 小備註 ~</strong>
+原本想順到印出 stack 記憶體使用量，但是好像沒啥方法可以印出……。如果不太分的清楚 stack 與 heap 的差別可以參考此篇文章。</p>
+<p><a href="https://www.valentinog.com/blog/memory-usage-node-js/">How to inspect the memory usage of a process in Node.Js</a></p>
+<h2 id="heading1">演算法運算時間的分類</h2>
+<hr>
+<p>這裡最重要的重點就在於，你要知道你寫的程式碼時間複雜度是屬於那個分級，如果你分不起來，然後寫到 O(2^n) 分級的演算法，那明眼人應該知道會發生什麼事情。</p>
+<p>比較常見的分類，分為以下幾種，花費時間由小到大 :</p>
+<ul>
+<li>O ( 1 )</li>
+<li>O ( log n )</li>
+<li>O ( n )</li>
+<li>O ( n log n )</li>
+<li>O ( n ^ 2 )</li>
+<li>O ( 2 ^ n )</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190918/20089358qU18wx916P.jpg" alt="">
+圖 1 : 時間複雜度的分級 (圖片來源: <a href="https://medium.com/appworks-school/%E5%88%9D%E5%AD%B8%E8%80%85%E5%AD%B8%E6%BC%94%E7%AE%97%E6%B3%95-%E8%AB%87%E4%BB%80%E9%BA%BC%E6%98%AF%E6%BC%94%E7%AE%97%E6%B3%95%E5%92%8C%E6%99%82%E9%96%93%E8%A4%87%E9%9B%9C%E5%BA%A6-b1f6908e4b80">初學者學演算法｜談什麼是演算法和時間複雜度</a>)</p>
+<h4 id="o--1-">O ( 1 )</h4>
+<p>例如這種常見的，兩數交換，就是屬於 O(1) 操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">
+<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">b</span><span class="p">;</span>
+<span class="nx">b</span> <span class="o">=</span> <span class="nx">a</span><span class="p">;</span>
+<span class="nx">a</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+</code></pre></div><h4 id="o--log-n-">O ( log n )</h4>
+<p>這個最常見的操作就是所謂的<code>二分搜尋法</code>，簡單的概念如下圖 2 所示，就是一半一半的找，但這個有個前提假設，那就是數組是要<code>有規則</code>或<code>已排序</code>的才能使用這招。</p>
+<p><img src="http://yixiang8780.com/outImg/20170421-1.png" alt="">
+圖 2 : 二分搜尋概念圖</p>
+<h4 id="o--n-">O ( n )</h4>
+<p>只要有用一個 for 迴圈，那它基本上就屬於 O(n) 的時間複雜度。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+   <span class="p">...</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="o--n-log-n-">O ( n log n )</h4>
+<p>這裡只要記好，不管是任何的語言，你只要用到它內建的排序功能，那基本上就是 O(nlogn) 的時間複雜度，平均而言喔。</p>
+<h4 id="o--n--2-">O ( n ^ 2 )</h4>
+<p>這個也非常的常見，就是內外兩個 for 回圈。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">j</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+        <span class="p">...</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="o--2--n-">O ( 2 ^ n )</h4>
+<p>這種時間複雜度很容易出現在一種情境下，那就是<code>選</code>與<code>不選</code>的情境，不過這種情況比較常在考演算法題時看到，實務應該是不常看到。</p>
+<h2 id="-cpu--memory-">實務上 CPU 與 Memory 優化建議</h2>
+<hr>
+<p>這裡我覺得要讓應用層以最少的 cpu 與 memory 做最多事情的要幾個要點 :</p>
+<h3 id="-1--">小建議 1 : 可以理解你寫的程式碼的時間與空間複雜度</h3>
+<p>簡單的說，你要可以知道你寫的程式碼的時間與空間複雜度，不要寫到了 n^5 的迴圈程式都不知道。然後當寫到這種多層迴圈的情況下，你要仔細的想想兩件事 :</p>
+<ul>
+<li>是否真的有必要 ? 有沒有其它寫法呢 ?</li>
+<li>如果真的有必要，在多少個數量可能會是臨界點呢 ?</li>
+</ul>
+<h3 id="-2--">小建議 2 : 熟悉各種工具所提供的方法</h3>
+<p>例如我們很常使用 redis，它裡面提供了一些資料結構來進行操作，這裡要使用好的要點，就是你要熟悉裡面每個資料結構所提供的操作方法，它的時間複雜度與空間複雜度，這裡如果你選錯了使用方法，那們你可能會耗費不少資源在做事情。</p>
+<h3 id="-3--">小建議 3 : 熟悉資料結構</h3>
+<p>現在不少的語言都有提供一些資料結構的操作，但是我相信不少人就是一個陣列幹到底，功能可以出來沒錯，但事實上有些情況下，選擇適當的資料結構使用，你會省下不少力氣並且性能也提升不少。</p>
+<p>如果你不知道要學那些資料結構，就乖乖的買本資料結構的書吧。接下來再搭配你會的語言所提供的資料結構，像如果是 c++ 你就可以參考 STL，然後 Java 可以看看 Collection 等，而 js 呢 ? 你就先理解看看它的 Array 到底是啥鬼，並且看看它所提供的方法。</p>
+<p><strong>~ 學習小心得 ~</strong></p>
+<p>開始或許會覺得很困難，但久了就覺得還好了，畢竟痛久了，就習慣了。</p>
+<h3 id="-4--">小建議 4 : 熟悉一些演算法的套路</h3>
+<p>俗話說的好，不要重複做輪子。</p>
+<p>多去理解一些演算法，或許會有小收穫，有時後你接到一項工作時，有可能事實上，已有人做過相同的事情了，有的人解決這項任務可能已經有 O(logn) 的寫法，但你偏偏自已寫，然後寫出一個 O(n^2) 的寫法，然後當系統快不行了，就和老闆說只能加機器來處理，這樣有點而不是很好呢</p>
+<p><strong>~ 學習小心得 ~</strong></p>
+<p>演算法學習也是個很困難的一條路，也同時是很容易讓人放棄的路，但是當你想繼續往上時，演算法就是基本了。建議這一條路找個伴一起學，真的比較不容易放棄，如果最後還是和伴一起放棄了，只能說無緣囉 ~</p>
+<p>這裡順到提供一些我的演算法軍火庫，通常在碰到一個問題時，如果沒啥想法就會拿這些方法來思考看看有沒有適合的，而這些方法事實上也可以當成刷題用的分類……</p>
+<ul>
+<li>BFS</li>
+<li>DFS</li>
+<li>Two-Points</li>
+<li>DP</li>
+<li>Binary Search</li>
+<li>Sort</li>
+<li>資料結構 (tree、set、hash、prefix tree、binary tree)</li>
+<li>BitManipulation</li>
+<li>Recursion</li>
+<li>Divid And Conquer</li>
+<li>Greedy</li>
+<li>歸納法 (思考方法)</li>
+<li>演繹法 (思考方法)</li>
+</ul>
+<p>請服用。</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p><code>歸納法</code>與<code>演繹法</code>這兩種嚴格來說在 leetcode 沒有這種分門別類，但是它卻是所有演算法的核心思考方法。</p>
+<ul>
+<li>歸納法 : 就是將相同特性的東西歸納出來，例如這個吃漢堡、吃便當，這就可以歸納出吃東西這個概念</li>
+<li>演繹法 : 就是一種依順序的推導，例如人會死，孔子是人，所以孔子會死。</li>
+</ul>
+<p>這裡只是很淺淺的說明，未來有機會希望可以開篇來詳談。</p>
+<h2 id="heading2">結論與心得</h2>
+<hr>
+<p>這一篇文章中，咱們討論如何以最少的 CPU 與 Memory 來做最多事情的一個重點，那就是 :</p>
+<blockquote>
+<p>演算法</p>
+</blockquote>
+<p>而且我們也知道，一個好的演算法與爛的算法，運行時間差了幾百倍都有可能，而這個影響在比較大的公司就有可能是百台以上的成本差異，雖然在小公司效果比較不顯著，但是如果寫的爛的話，也有可能少少的使用量下，你的機器就掰了。</p>
+<p>然後這裡建議一般的開發者，演算法可以不用刷的要死要活，但至少要有演算法的概念，這樣才對得起付錢給你的人(不過如果你討厭老闆那就無所謂)，但是如果你追求的對是一般，那就乖乖刷吧。</p>
+<p>最後簡單的淺淡一下面試演算法這東西。基本上普通的公司，我不太贊成考演算法題目(我說題目喔)。主要的原因有下 :</p>
+<ul>
+<li>工作時用不到(比較準確的說法是，用了也不見得看得到效果)。</li>
+<li>有可能會錯失一些在其它方面很強的人。</li>
+<li>香蕉的問題。</li>
+</ul>
+<p>但是我覺得可以簡單的考一些演算法的概念當參考評分比較用，但請不要第一關演算法題目沒過就刷人，除非公司是萬人想進那種類型，或是開得起 $$ 的則例外。</p>
+<h2 id="heading3">參考資料</h2>
+<hr>
+<ul>
+<li><a href="https://kknews.cc/zh-tw/tech/38yyl3g.html">時間複雜度 講解- 簡單易懂</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-03 之應用層的運算加速 - 演算法</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">一個好與不好的演算法性能差距多大呢 ?</a></li>
+    <li><a href="#heading1">演算法運算時間的分類</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#-cpu--memory-">實務上 CPU 與 Memory 優化建議</a>
+      <ul>
+        <li><a href="#-1--">小建議 1 : 可以理解你寫的程式碼的時間與空間複雜度</a></li>
+        <li><a href="#-2--">小建議 2 : 熟悉各種工具所提供的方法</a></li>
+        <li><a href="#-3--">小建議 3 : 熟悉資料結構</a></li>
+        <li><a href="#-4--">小建議 4 : 熟悉一些演算法的套路</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">結論與心得</a></li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

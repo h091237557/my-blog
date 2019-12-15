@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-02 之單機架構的性能優化方向與目標 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-02 之單機架構的性能優化方向與目標 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-02 之單機架構的性能優化方向與目標</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-02.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>接下來咱們會從最基本的開始 :</p>
+<blockquote>
+<p>儘可能的優化單機性能</p>
+</blockquote>
+<p>基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信他開發出來的分散式架構是高性能的。</p>
+<blockquote>
+<p>單機處理的好，才是高性能的前提。</p>
+</blockquote>
+<p>本篇會分為以下幾個章節，來探討單機領域的優化方向，這個方向也就是之後文章的目錄。</p>
+<ul>
+<li>單機系統的優化路線 Step 1 (應用服務、資料庫服務)。</li>
+<li>單機系統的優化路線 Step 2 (快取服務、CDN 服務)。</li>
+<li>一個系統效能的評估指標。</li>
+</ul>
+<h2 id="-step-1-">單機系統的優化路線 Step 1 (應用服務、資料庫服務)</h2>
+<p>單機系統的最基本最基本架構應該長的如下圖 1，就是最簡單的應用服務與資料庫服務，咱們這裡先以最大眾的 web 服務為主 :</p>
+<ul>
+<li>應用層服務</li>
+<li>資料庫層服務</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358eS2O1xAAvC.png" alt="">
+圖 1 : 最簡單的應用架構。</p>
+<h3 id="heading">單機應用層的性能優化方向</h3>
+<p>基本上單機應用層的優化目標如下 :</p>
+<blockquote>
+<p>以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。</p>
+</blockquote>
+<p>而要完成這件事情，基本上有幾個方向可以研究。</p>
+<ul>
+<li>以最少的資源進行運算，這裡比較白話文的來說就，用最少的 CPU 與 Memeory 來完成工作。</li>
+<li>I/O 處理，大部份的 Web 應用都是讀取資料庫或啥的，這裡如果沒處理好，你的系統絕對只能做很少的事情。</li>
+<li>I/O 的一些加速技術例如 stream、零拷貝、線程、連線池。</li>
+</ul>
+<p>不過簡單來說就分兩種『運算』與『I/O』。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358stShAbkxTf.png" alt="">
+圖 2 : 應用服務性能重點。</p>
+<h3 id="heading1">資料庫層的性能優化方向</h3>
+<p>資料庫層是的優化目標基本上如上應用層一樣:</p>
+<blockquote>
+<p>以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。</p>
+</blockquote>
+<p>基本上在性能方向會有幾個方向可以研究 :</p>
+<ul>
+<li>索引與表</li>
+</ul>
+<p>它就是影響性能的最大變數，用的好上天堂，用不好下地獄，所以在們之後會花不少篇的文章來說明索引這個主題。</p>
+<p>但是在資料庫世界中，事實上有幾個是會拖性能後腿，但是它又是不可少的東西，那就是 :</p>
+<ul>
+<li>鎖與事務</li>
+</ul>
+<p>而這兩個就是要處理所謂的『一致性難題』，這問題非常的複雜，而且這也於分散式相關，這個地方如果沒搞懂，直接上分散式系統只是死路一條。</p>
+<p>在資料庫世界中，如果沒有鎖與事務，那你的系統就不能讓用戶感到『愉悅』，因為它會錯誤百出，所以我們必須熟悉的理解它為什麼是拖後後腿，並且它為什麼又是必要的，這種才能儘可能的讓它們不要拖太多。</p>
+<p>之後的文章我們將以『MySQL』這個資料庫服務來進行說明與研究，雖然不同的資料庫服務有些實作細節或啥的會不相同，它是他們的基本原理都差不多。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358wLkjR5nXfy.png" alt="">
+圖 3 : 資料庫服務性能重點。</p>
+<h2 id="-step-2-">單機系統的優化路線 Step 2 (緩存服務)</h2>
+<p>然後通常上述兩個最基本的性能優化結束以下，會有另外兩個部份的優化服務會加入變成如下圖 4 :</p>
+<ul>
+<li>Cache 服務</li>
+<li>CDN 服務</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358qGUQklvSQL.png" alt="">
+圖 4 : 加上緩存服務的架構</p>
+<p>這張圖基本上就是咱們這世界 80 % 以上的最基本的系統架構，之後文章咱們將會一個部份一個部份的來慢慢深入研究。</p>
+<h3 id="cache-">Cache 服務</h3>
+<p>Cache 服務，最主要用來將資料庫的一些常用查詢結果，先放在 Cache 服務中，為了能提升讀取性能。但它是個雙刃劍，用的好，性能升級強無敵，但是用的爛，用戶會不愉悅的。</p>
+<p>這個地方基本上我們會以 redis 這種最多人在使用的 Cache 服務應用來進行深入研究。</p>
+<h3 id="cdn-">CDN 服務</h3>
+<p>這個東西基本上是會放在用戶與應用層之間，它和上面的 Cache 服務相同，都是預先將某些東西放在 CDN 上，然後用戶在直接去 CDN 拿就好。</p>
+<p>CDN 服務的提供者非常的多，這裡我們會簡單使用 AWS Cloudfront 來進行說明，因為我只用過它。</p>
+<h2 id="heading2">一個系統效能的評估指標</h2>
+<blockquote>
+<p>這個就是我們的目標</p>
+</blockquote>
+<p>基本上可以分成兩個角度來看『用戶』與『開發者』。</p>
+<ul>
+<li>用戶: 用戶最基本的效能感受一定是所謂的『回應時間』，如果用戶做了某一件簡單的事情，但是他確需要等段會讓人不耐煩的時間，那基本上這個系統就是被用戶稱為『效能差』。</li>
+<li>開發者: 身為一個開發者，除了回應時間以外，咱們還會注意一個系統可以 hold 的住多少用戶與請求，假設同時間有 10 個請求進來，然後這時第 11 個請求進來就只能排隊會倒站，那這個系統就會被稱為『效能差』。</li>
+</ul>
+<p>根據上述的兩個角度來看，基本上有兩種指標可以來滿足兩方想看的重點。</p>
+<h3 id="-response-time">用戶重點-回應時間 (Response Time)</h3>
+<p>有時後也稱為延遲(Latency)，概念如下。</p>
+<blockquote>
+<p>Latency 就是你發送一個請求以後，你收到這個結果的時間 ( 越低越好 )。</p>
+</blockquote>
+<p>實際上我們這三十天的其中一個目標就是『最少的延遲時間』。</p>
+<p>延遲時間公式，就是下面這張圖，基本上可以包含幾個部份 (這裡先以最基本的 web db 系統來看)。</p>
+<ol>
+<li>client 傳送請求至 web 服務的時間。</li>
+<li>web 服務處理請求時間。</li>
+<li>web 服務發送至 db 的時間。</li>
+<li>db 處理時間。</li>
+<li>db 處理結果回傳時間。</li>
+<li>web 服務處理 db 回應的時間。</li>
+<li>web 服務回傳請求結果時間。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358PvDjMSqDBa.png" alt="">
+圖 5 : 簡單版回應時間圖</p>
+<h3 id="-throughput">開發者重點-吞吐量 (Throughput)</h3>
+<p>它的定義如下 :</p>
+<blockquote>
+<p>在一段時間單位內，所能處理的資料量(單位請求或事務) (越高越好)。</p>
+</blockquote>
+<p>基本這個指標，就代表你的系統可以 hold 多少使用量。</p>
+<p>它有很多種單位 QPS、TPS，而你的系統用那種單位取決於是那一種服務，假設如果你是資料庫的服務，那基本上就是以 TPS(Transaction Per Second) 來當你的指標，而如果是一般的 Web 服務，那就是用  QPS (Query Per Second) 或是 HPS(Http Per Second)。</p>
+<p>基本上這幾個的基本單位會解釋為 :</p>
+<blockquote>
+<p>每秒鐘可以處理 n 個 Http request 或 Query 或 Transaction</p>
+</blockquote>
+<p>基本計算公式如下 :</p>
+<blockquote>
+<p>QPS = 併發數/平均回應時間</p>
+</blockquote>
+<p>所以假設你的系統同一個時間內可以處理 1000 併發數，而平均回應時間為 1 秒，這就代表你系統在 1 秒內可以處理 1000 個請求。</p>
+<h2 id="heading3">結論與心得</h2>
+<p>本篇文章簡單的說明以單機為範圍，咱們最基本的系統藍圖如下圖 6 所示 :</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190917/20089358YlZz8u6Eqv.png" alt="">
+圖 6 : 單機基本架構圖</p>
+<p>並且也介紹了兩種性能指標 :</p>
+<ul>
+<li>用戶重點-回應時間 (Response Time)</li>
+<li>開發者重點-吞吐量 (Throughput)</li>
+</ul>
+<p>而只要這兩個指標越好，基本上也就達成咱們所希望的 :</p>
+<blockquote>
+<p>以最少的資源做最多的事情，這樣才叫高性系統。</p>
+</blockquote>
+<p>而接下來的文章，咱們將要針對每一個地方，一個一個的深入進行深入的探討吧。</p>
+<p>那們就正式的開始吧。</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://www.itread01.com/content/1542356104.html">系統吞吐量（TPS）、使用者併發量、效能測試概念和公式</a></li>
+<li><a href="https://www.zhihu.com/question/50176445/answer/119975361">服务器性能测试中有哪些常用的性能指标？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/38253500">常见性能测试指标</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-02 之單機架構的性能優化方向與目標</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-step-1-">單機系統的優化路線 Step 1 (應用服務、資料庫服務)</a>
+      <ul>
+        <li><a href="#heading">單機應用層的性能優化方向</a></li>
+        <li><a href="#heading1">資料庫層的性能優化方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#-step-2-">單機系統的優化路線 Step 2 (緩存服務)</a>
+      <ul>
+        <li><a href="#cache-">Cache 服務</a></li>
+        <li><a href="#cdn-">CDN 服務</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">一個系統效能的評估指標</a>
+      <ul>
+        <li><a href="#-response-time">用戶重點-回應時間 (Response Time)</a></li>
+        <li><a href="#-throughput">開發者重點-吞吐量 (Throughput)</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a></li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

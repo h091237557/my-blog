@@ -7,10 +7,28 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>&amp;copy;Your Name 2019</copyright>
-    <lastBuildDate>Fri, 28 Sep 2018 19:51:35 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 22 Sep 2019 20:16:57 +0800</lastBuildDate>
     
 	<atom:link href="https://mark-lin.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</title>
+      <link>https://mark-lin.com/posts/20190922/</link>
+      <pubDate>Sun, 22 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190922/</guid>
+      <description>正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一</description>
+    </item>
+    
+    <item>
+      <title>30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</title>
+      <link>https://mark-lin.com/posts/20190921/</link>
+      <pubDate>Sat, 21 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190921/</guid>
+      <description>正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行</description>
+    </item>
     
     <item>
       <title>30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</title>

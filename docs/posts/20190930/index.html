@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-30 之馬克版的一個好的系統攻略本 - 性能基礎篇 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="這漫長辛苦的 30 天總於結束囉 ~ 接下來依慣例第 30 天都是總結篇。 這 30 天的過程咱們都在追求『 一個好的系統 』中的其中一個重點 : 性能 性能越高的系統，可以|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-30 之馬克版的一個好的系統攻略本 - 性能基礎篇 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="這漫長辛苦的 30 天總於結束囉 ~ 接下來依慣例第 30 天都是總結篇。 這 30 天的過程咱們都在追求『 一個好的系統 』中的其中一個重點 : 性能 性能越高的系統，可以|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-30 之馬克版的一個好的系統攻略本 - 性能基礎篇</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-30.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>這漫長辛苦的 30 天總於結束囉 ~ 接下來依慣例第 30 天都是總結篇。</p>
+<p>這 30 天的過程咱們都在追求『 一個好的系統 』中的其中一個重點 :</p>
+<blockquote>
+<p>性能</p>
+</blockquote>
+<p>性能越高的系統，可以帶給『 公司 』與『 用戶 』雙方都達到愉悅的情況。</p>
+<p>咱們先看看第一階段最基本系統的樣子。</p>
+<h2 id="heading">單機的優化方向</h2>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191015/20089358Eg6WOiXPRS.png" alt=""></p>
+<h4 id="heading1">應用層方面性能優化重點知識</h4>
+<p>這下面 7 篇文章，應該涵蓋住了應用層性能方面所需要注意的重點，雖然有分 cpu 與 i/o 優化，但是我是覺得也不用分到那麼清楚，只要記得，你是要儘可能的以最少資源來做事情就對囉。</p>
+<blockquote>
+<p>運算與 i/o 是重點，但總結來說就是『 儘可能的以最少資源來做最多的事情 』</p>
+</blockquote>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190903/">30-03 之應用層的運算加速 - 演算法</a></li>
+<li><a href="https://mark-lin.com/posts/20190904/">30-04 之應用層的運算加速 - 並行運算</a></li>
+<li><a href="https://mark-lin.com/posts/20190905/">30-05 之應用層的 I / O 加速 - 零拷貝 ( Zero Copy )</a></li>
+<li><a href="https://mark-lin.com/posts/20190906/">30-06 之應用層的 I / O 優化 - Stream ( 與一些 IPC 知識 )</a></li>
+<li><a href="https://mark-lin.com/posts/20190907/">30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor</a></li>
+<li><a href="https://mark-lin.com/posts/20190908/">30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine</a></li>
+<li><a href="https://mark-lin.com/posts/20190909/">30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池</a></li>
+</ul>
+<h4 id="heading2">資料庫層優化重點知識</h4>
+<p>接下來到一個系統的命脈『 資料庫層 』的性能優化知識。這裡的最大重點在於 :</p>
+<blockquote>
+<p>索引</p>
+</blockquote>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190910/">30-10 之資料庫層架構與優化方向</a></li>
+<li><a href="https://mark-lin.com/posts/20190911/">30-11 之資料庫層的核心 - 索引結構演化論 B+樹</a></li>
+<li><a href="https://mark-lin.com/posts/20190912/">30-12 之資料庫層的核心 - MySQL 的索引實現</a></li>
+<li><a href="https://mark-lin.com/posts/20190913/">30-13 之資料庫層的優化 - 索引設計與雷區</a></li>
+<li><a href="https://mark-lin.com/posts/20190914/">30-14 之資料庫層的優化 - 表的設計</a></li>
+</ul>
+<p>但在追求性能的路上一定會碰到的大敵『 一致性難題 』，要追求高性能，就要理解它的敵人，才能在兩者間抓取『 平衡 』。</p>
+<blockquote>
+<p>性能大敵，一致性問題</p>
+</blockquote>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190915/">30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</a></li>
+<li><a href="https://mark-lin.com/posts/20190916/">30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</a></li>
+<li><a href="https://mark-lin.com/posts/20190917/">30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</a></li>
+</ul>
+<p>資料庫層的應用一定會碰到貧頸因此接下來，第一個建議不是開多個資料庫，而是建立緩存服務。</p>
+<blockquote>
+<p>資料庫的好夥伴，緩存服務</p>
+</blockquote>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190918/">30-18 之資料緩存層的服務 - Redis 概念與一致性難題</a></li>
+<li><a href="https://mark-lin.com/posts/20190919/">30-19 之資料庫層的優化 - 資料緩存策略</a></li>
+<li><a href="https://mark-lin.com/posts/20190920/">30-20 之資料緩存失效問題</a></li>
+</ul>
+<h4 id="heading3">網路傳輸優化知識點</h4>
+<p>咱們每台機器裡面的東西能優化完的都優化完以後，我覺得可以往『 網路傳輸 』方面儘可能的優化。其中咱們這裡以『 http 』為主，因為這個傳輸協議基本上是這世界上最多人使用的應用層協議，就算不是寫網頁的系統，也都是會使用 http 來打 api 之類的，所以理解它是非常重要的。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190921/">30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</a></li>
+<li><a href="https://mark-lin.com/posts/20190922/">30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0</a></li>
+</ul>
+<h2 id="heading4">分散式優化方向</h2>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191015/20089358OUo7uOI3re.png" alt=""></p>
+<p>這裡要記好，單機沒搞好前，不要有事沒事為了『 性能 』而建立分散式系統，會有非常多的坑等這你。</p>
+<p>這裡簡單說一下，事實上這 30 天，我的分散式篇說的不多，因為我認為高性能的基礎在於單機，單機處理的好，我覺得才有資格往分散式前進。</p>
+<h3 id="heading5">應用層分散式擴展</h3>
+<p>應用層擴展基本上沒什麼毛病，只要記得每個應用都是無狀態的就好，如果是有狀態就難處理囉。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190923/">30-23 之應用層的擴展 - 負載均衡服務</a></li>
+<li><a href="https://mark-lin.com/posts/20190924/">30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑</a></li>
+</ul>
+<h3 id="heading6">資料庫層分散式擴展</h3>
+<p>最大的坑是在這，這裡又會出現性能大敵 :</p>
+<blockquote>
+<p>一致性難題</p>
+</blockquote>
+<p>首先資料庫層的擴展第一個建議的架構為『 讀寫分離 』，這個坑會比較小一點。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190925/">30-25之資料庫層的擴展 - 讀寫分離架構</a></li>
+</ul>
+<p>接下來的模式，除非上述架構真的已經到了貧頸，否則不建議實作，坑很多。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190926/">30-26之資料庫層的擴展 - 分庫分表架構</a></li>
+<li><a href="https://mark-lin.com/posts/20190927/">30-27之資料庫層的擴展 - 分區表</a></li>
+</ul>
+<p>然後就是咱們的大敵。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190928/">30-28 之資料庫層擴展難題 - MySQL 分散式事務處理</a></li>
+</ul>
+<p>最後這裡簡單的介紹一下資料庫的中間件。</p>
+<ul>
+<li><a href="https://mark-lin.com/posts/20190929/">30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</a></li>
+</ul>
+<h2 id="heading7">最後心得與結論</h2>
+<p>總於要結束囉，這裡總結一下心得，這 30 天寫完，我覺得要建立一個好的系統的有重點在於 :</p>
+<blockquote>
+<p>平衡</p>
+</blockquote>
+<p>在這 30 天雖然副主題是高性能，但是在這條路上，常常會需要損失一些性能來增加『 維護性 』與『 可用性 』，為啥 ?</p>
+<blockquote>
+<p>因為咱們是追求『 好的系統 』</p>
+</blockquote>
+<p>如果要完全的追求高性能的系統，那就會損失不少東西，可能會導致用戶不愉悅或老闆不愉悅。</p>
+<p><strong>但要如何儘可能的做到平衡呢 ?</strong></p>
+<blockquote>
+<p>儘可能做好每個地方</p>
+</blockquote>
+<p>這應該不用多說，每一個地方都做好，基本上我就覺得這個系統有達到『 一個好的系統重點 』。但是要做到這件事情，就需要每個地方都深入的理解，這樣才能達到『 平衡 』，不然你想想你專精於高性能，但是對一致性難題一知半解，你覺得做出來的東西如何呢 ? 我會怕啊……</p>
+<p>最後也因為上述理由，這也是為什麼這三十天的主題為 :</p>
+<blockquote>
+<p>30天之從 0 至 1 盡可能的建立一個好的系統 ( 性能基礎篇 )</p>
+</blockquote>
+<p>別忘了咱們追求的是『 好的系統 』，『 性能 』只是其中一部份，好系統才是根本。</p>
+<h4 id="----">最後希望這個攻略本，可以讓各位友人可以在探索一個好的系統中，找到性能方面一些根本方向 ~ 有了根你就能理解散發出去的不同系統囉  ~</h4>
+<p>希望明年可以寫性能進階篇，應該是有可能，寫完這 30 篇我的小腦袋又冒出好多條進階支線可寫。</p>
+<h4 id="-">完賽囉 ~</h4>
+<h2 id="heading8">參考書籍與網站</h2>
+<ul>
+<li><a href="https://www.tenlong.com.tw/products/9787121356032?list_name=lv">軟件架構設計：大型網站技術架構與業務架構融合之道</a> ( 首推 )</li>
+<li><a href="https://www.tenlong.com.tw/products/9787121212000">大型網站技術架構－核心原理與案例分析 大型网站技术架构:核心原理与案例分析</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121350023">大型網站性能優化實戰：從前端、網絡、CDN到後端、大促的全鏈路性能優化詳解</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121347917?list_name=p-b-zh_cn">從零開始學架構：照著做，你也能成為架構師 从零开始学架构：照着做，你也能成为架构师</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787111539964">分佈式實時處理系統:原理、架構與實現 分布式实时处理系统:原理、架构与实现</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787111625063?list_name=srh">並發模式與應用實踐 (Concurrent Patterns and Best Practices: Build scalable apps with patterns in multithreading, synchronization, and functional programming)</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787111422068?list_name=srh">MySQL 技術內幕－InnoDB 存儲引擎, 2/e 数据库技术丛书·MySQL技术内幕:InnoDB存储引擎(第2版)</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121266881?list_name=srh">高可用MySQL（第2版） 高可用MySQL(第2版)</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121198854">高性能 MySQL (第3版) (High Performance MySQL: Optimization, Backups, and Replication, 3/e) 高性能MySQL(第3版)</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121323621">高性能SQL調優精要與案例解析 高性能SQL调优精要与案例解析</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121315091">高性能服務系統構建與實戰 高性能服务系统构建与实战</a></li>
+<li><a href="https://www.tenlong.com.tw/products/9787121350030">實戰 Java 高並發程序設計, 2/e 实战Java高并发程序设计(第2版)</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-30 之馬克版的一個好的系統攻略本 - 性能基礎篇</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">單機的優化方向</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">分散式優化方向</a>
+      <ul>
+        <li><a href="#heading5">應用層分散式擴展</a></li>
+        <li><a href="#heading6">資料庫層分散式擴展</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading7">最後心得與結論</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading8">參考書籍與網站</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

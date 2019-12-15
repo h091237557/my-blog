@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mysql, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-17.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/200893583XNdu76MIf.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。</p>
+<p>雖然 innodb 已經儘可能的解決上述這些問題，但是如果要完全解決，性能代價太大，因此後來有了一些折衷方案，這個東西就叫做 :</p>
+<blockquote>
+<p>事務隔離級別</p>
+</blockquote>
+<p>接下來本篇文章將要談談這東西，並且整理一下 innodb 預設的一些鎖的設定。</p>
+<ul>
+<li>MySQL 的折衷解法 - 事務隔離級別</li>
+<li>預設 RR 級別 - 鎖的操作總結</li>
+<li>死鎖的小分析</li>
+</ul>
+<h2 id="mysql---">MySQL 的折衷解法 - 事務隔離級別</h2>
+<p>資料庫在並行運行時，通常會發生以下幾種問題，並且也探討過這幾種問題的解法 :</p>
+<ul>
+<li>更新不一致 : 鎖</li>
+<li>髒讀、不可重複讀 : mvcc</li>
+<li>幻讀 : mvcc + next-key locking ( 有一些幻讀情境無解 )</li>
+</ul>
+<p>而在 innodb 事實上可以『 完全簡單 』的處理上面幾種現象，解決方法如下圖 5 所示，也就是同一個時間，只能執行同一個事務，如下圖所示。也就是把發生問題的根本原因『 並行 』給移除。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191002/20089358u3mS3nHFla.png" alt="">
+圖 1 : 一致性的根本解法</p>
+<p><strong>但這會嚴重的影響到效能的問題，因此才有了『 隔離層級 』這東西。</strong></p>
+<blockquote>
+<p>隔離層級可以讓你決定需要處理到什麼層級的一致性問題</p>
+</blockquote>
+<p>也就是說上面四個問題，它可以讓你根據性能的要求，來決定你要處理幾個問題，處理的越多代表性能越差，處理越少個則代表性能越好，但反之不一致性機率更高。</p>
+<h3 id="heading1">事務隔離級別</h3>
+<p>mysql 總共提供以下四個層級，不過比較準確的說，這是所有資料庫共有的層級，性能從高至低排序，而反之資料一致性性由低至高。</p>
+<ul>
+<li>Read Uncommitted ( RU )</li>
+<li>Read Committed ( RC )</li>
+<li>Repeatable Read ( RR ) ( 預設 )</li>
+<li>Serializable</li>
+</ul>
+<p>它們可以解決的難題如下列表，其中有個地方要注意一下，那就是 RR 級別的幻影讀解決，在 innodb 只能算是部份解決，不能說完解，上一章節幻讀情境 3 就是無法解。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>更新不一致</th>
+<th>髒讀</th>
+<th>不可重複讀</th>
+<th>幻影讀</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>read uncommitted</td>
+<td>v</td>
+<td>x</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td>read committed</td>
+<td>v</td>
+<td>v</td>
+<td>x</td>
+<td>x</td>
+</tr>
+<tr>
+<td>repeatable read</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v or ?</td>
+</tr>
+<tr>
+<td>serializable</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+<td>v</td>
+</tr>
+</tbody>
+</table>
+<p><strong>~ 小知識 1 ~</strong></p>
+<p>在大部份的資料庫世界中，都有用這個事務隔離級別來處理以上幾個難題，但比較不同的在於 mysql 預設是使用 repeatable read ( RR ) 來當預設，而其它資料庫例如 orcale、ms sql server 是使用 read committed ( RC ) 來當預設。</p>
+<p>會有這樣的差別在於，RC 級別所會碰到的『不可重複讀』問題事實上還算可以接受。因為它是讀到已經 commit 的資料。</p>
+<p><strong>~ 小知識 2 ~</strong>
+你可以執行以下 sql 來看看你系統的隔離層級</p>
+<pre><code>SHOW VARIABLES LIKE '%transaction_isolation%';  
+</code></pre><p><strong>~ 小知識 3 ~</strong>
+你可以執行以下指令來修改隔離級別，但是你要很明確的知道，如果降低或增加級別可能會產生的風險。</p>
+<pre><code>SET SESSION TRANSACTION ISOLATION LEVEL {level};
+
+Ex.
+SET SESSION TRANSACTION ISOLATION LEVEL read committed;
+</code></pre><h2 id="-rr---">預設 RR 級別 - 鎖的操作總結</h2>
+<p>innodb 基本上它的預設為 repeatable read (RR)，咱們要在這裡總結一下，在這個級別的所有操作預設是會如何處理，如何的上鎖。</p>
+<h3 id="-1--">小總結 1 : 基本操作加鎖總結</h3>
+<h4 id="select-">Select 重點</h4>
+<p>select 有三個重點要記得 :</p>
+<ul>
+<li>select 預設不會加上任何鎖。</li>
+<li>select 時，它會使用快照讀，也就是說會讀取事務開始前的最新一個 commit 版本，即時其它事務有上鎖，它仍然不會被卡住，而會讀取舊版本資料 ( 備 1 )。</li>
+<li>select 不會讀取到另一個事務『 已 commit 』或是『 未 commit 』的值。</li>
+</ul>
+<p>其中解釋一下第二點，如下圖 2 所示，事務 b 的 select 操作都不會被卡住，原因在於有 mvcc 機制，它讀取時都會讀，事務開始前的最新一個版本。</p>
+<p>那有人會問，事務 a 不是在 update 時會上鎖嗎 ? 那不是應該不能有人讀嗎 ? nono ~ 不是的</p>
+<p>它上是有上鎖，它上的鎖是所謂的『 排它鎖 』，它不是指上了就不讓人讀，而是上了，別人無法在加鎖，而由於 select 本身不加任何鎖，所以 ok 可以讀。等等後面有這鎖更詳細的說明。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191002/20089358v9u8YvmwRz.png" alt="">
+圖 2 : select 在 rr 級別不會卡</p>
+<h4 id="updateinsertdelete-">Update、Insert、Delete 重點</h4>
+<ul>
+<li>預設在進行上述操作時，如果有使用『 索引 』，會上『 行 』鎖，沒有則上『 表 』鎖。</li>
+<li>預設這些操作會上『 排它鎖 』，等等下面有解釋。</li>
+<li>這些操作都會更新 mvcc 的版本號，也就是每次執行時，會將修改的變成最新版本。</li>
+<li>在 RR 級別它們都是『 當前讀 』，也就是會讀取最新版本的資訊。</li>
+<li>有範圍的操作會上範圍鎖。</li>
+</ul>
+<p><strong>~ 小備註 1 ~</strong></p>
+<p>上述操作看起來和 select 沒啥關係，但實際上是會隱性的用到 select，例如上述當前讀操作的 update 或 delete 它們實際上會用 select 先去找找要修改的欄位在不在，而這時它用的就是『 當前讀 』，也就是直接取得最新版本。</p>
+<p><strong>~ 小備註 2 ~</strong></p>
+<p>關於上述提到的『 mvcc 』與『 當前讀 』什麼的可以連到前一篇文章來看看，傳送門如下。</p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10223427">30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</a></p>
+<h3 id="-2--select-">總結 2 : Select 手動加鎖的總結</h3>
+<p>上面是基本 select 的行為，它預設不上鎖。</p>
+<p>但是 mysql 有提供兩種方法可以給我們手動在 select 上鎖。</p>
+<ul>
+<li>select xxx lock in share mode ( 共享鎖 )</li>
+<li>select xxx for update ( 排它鎖 )</li>
+</ul>
+<p>其中要注意，它們兩個上的鎖是不同的。</p>
+<ul>
+<li>共享鎖 ( 讀鎖、S 鎖 ) : 不允許其它事務進行修改，且其它事務可以上『 共享鎖 』。</li>
+<li>排它鎖 ( 寫鎖、X 鎖 ) : 不允許其它事務進行修改，且其它事務不能上鎖 ( 排它或共享 )。</li>
+</ul>
+<p>共享鎖當執行以下範例時會被卡住 :</p>
+<pre><code>-- 範例 1 --
+
+事務 A
+(1) SELECT * FROM user WHERE  age = 20 LOCK IN SHARE MODEL; ( 上共享鎖 )
+事務 B
+(2) UPDATE user SET name = 'mark' WHERE age = 20; ( 想加排它鎖，會失敗卡住 )
+
+-- 範例 2 --
+
+事務 A
+(1) SELECT * FROM user WHERE age = 20 LOCK IN SHARE MODEL; ( 上共享鎖 )
+事務 B
+(2) SELECT * FROM user WHERE age = 20 FOR UPDATE; ( 想加排它鎖，會失敗卡住 )
+</code></pre><p>而當上排它鎖時，以下幾個範例會被卡住。</p>
+<pre><code>
+-- 範例 1 --
+事務 A
+(1) SELECT * FROM user WHERE age = 20 FOR UPDATE ( 上排它鎖 );
+事務 B
+(2) UPDATE user SET name = 'mark' WHERE age = 20; ( 想加排它鎖，會失敗卡住 )
+
+-- 範例 2 --
+事務 A
+(1) SELECT * FROM user WHERE age = 20 FOR UPDATE ( 上排它鎖 );
+事務 B
+(2) SELECT * FROM user WHERE age = 20 FOR UPDATE; ( 想加排它鎖，會失敗卡住 )
+
+-- 範例 3 --
+事務 A
+(1) SELECT * FROM user WHERE age = 20 FOR UPDATE ( 上排它鎖) ;
+事務 B
+(2) SELECT * FROM user WHERE age = 20 LOCK IN SHARE MODEL; ( 想加共享鎖，會失敗卡住 )
+</code></pre><p>根據上幾個範例可以整理出下述這張表，它的 ok 表示可以上鎖成功。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>排它</th>
+<th>共享</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>排它</td>
+<td>失敗</td>
+<td>失敗</td>
+</tr>
+<tr>
+<td>共享</td>
+<td>失敗</td>
+<td>OK</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注意事項</strong></p>
+<p>最後手動加鎖有個注意事項，如果是查詢條件為範圍的如下範例，那它的鎖會變成範圍的，也就是會不會只鎖單行，而會鎖某個範圍的行數。( next-key locking 上篇有說 )。</p>
+<pre><code>SELECT * FROM user WHERE age &gt; 20 FOR UPDATE;
+</code></pre><h3 id="-3--">總結 3 : 表鎖與意向鎖的總結</h3>
+<p>上面有提到，如果有一段操作沒有命中索引，那它就會變成表鎖，例如下面範例 :</p>
+<pre><code>UPDATE user SET name = 'mark';
+</code></pre><p>同時上面還是有提到，如果在進行 update 時會針對『 行 』上『 排它鎖 』，但是這種情況會變成將『 表 』上『 排它鎖 』。</p>
+<p>但是這裡有一個問題，那就是如果這張表要上『 排它鎖 』，那前提就是這張表裡面『 不能有上排它鎖的行 』，對吧 ? 不可能會在已經上排它鎖的，在上一次吧 ?</p>
+<p>所以在上鎖前，可能就會去那張表一行一行慢慢找有沒有上鎖，但是用小腦袋想想，你覺得有可能這樣做嗎 ? 一行一行慢慢找，會找到天荒地老的。</p>
+<p>也因為這個問題，所以就有了所謂的『 意向鎖 』機制。</p>
+<p>它的上鎖機制如下 :</p>
+<ol>
+<li>當在表中的某一行上了鎖 ( 排它或共享 )。</li>
+<li>在表上加『 意向鎖 』。</li>
+</ol>
+<p>然後當要上表鎖時它的運行如下 :</p>
+<ol>
+<li>去表上看看有沒有『 意向鎖 』。</li>
+<li>有，就代表表內某一行有上鎖，所以無法上表鎖，卡住。</li>
+<li>無，上表鎖。</li>
+</ol>
+<h2 id="heading2">死鎖的小分析</h2>
+<p>接下來咱們要來簡單的談談『 死鎖 』的問題，它的定義如下 :</p>
+<blockquote>
+<p>兩個事務或以下，因爭搶『 鎖 』資源，而產生的『 相互 』等待行為。</p>
+</blockquote>
+<p>白話文就是，我在等你完成，你也在等我完成，結果兩個人都等到天荒地老。</p>
+<p><strong>~ 小知識 ~</strong>
+死鎖只會出現在 RR 級別以下，如果是在 serializable 級別是不會發生的，因為它就是一個一個完成，它們要搶啥呢 ?</p>
+<h3 id="heading3">死鎖的情況範例</h3>
+<p>下述為最明顯的例子，事務 A 與 事務 B 的更新操作都在等對方釋方鎖，不過在 innodb 中碰到這種死鎖時，它會在事務 A 的更新 ( 最後更新 ) 的操作，會產生錯誤訊息，並且會進行回滾，所以嚴格來說不會一直鎖到天荒地老。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191002/200893581GmNLUtZIn.png" alt="">
+圖 3 : 死鎖範例</p>
+<p>順到說一下，如果真的碰到這種死鎖錯誤訊息時，可以執行以下執令來看看詳細的狀況，來理解這個死鎖是如何產生的，雖然說會 rollback，但也代表這個操作是失敗了，所以還是要理解一下原因。</p>
+<pre><code>SHOW ENGINE INNODB STATUS
+</code></pre><h2 id="heading4">結論與心得</h2>
+<p>本篇文章學習了不少會讓人頭昏的東西，咱們來總結一下。</p>
+<h4 id="heading5">事務隔離級別</h4>
+<p>基本上有提供以下幾個級別，由上往下，從輕到重，越重的隔離級別性能越差，但相對的一致性問題越少。</p>
+<ul>
+<li>read uncommitted ( RU )</li>
+<li>read committed ( RC )</li>
+<li>repeatable read ( RR ) ( 預設 )</li>
+<li>serializable</li>
+</ul>
+<h4 id="-rr-">預設 RR 級別的操作總結</h4>
+<p>這裡基本上還是請拉到上面看，然後這裡的學習重點就是，你要很清楚的知道，不同的操作指令，在 RR 實際上它是上了什麼鎖，懂了這些基本上就很夠了，因此這樣基本上你就有很高的機率可以避開一直等待鎖所浪費的時間。</p>
+<h4 id="heading6">一些死鎖的探討與分析</h4>
+<p>這裡簡單的學習一些可能會碰到死鎖的場景，但大部份的情況碰到都會 rollback，但實嚴謹一點還是要去查查死鎖原因是什麼。</p>
+<h4 id="acid-">ACID 的小關連</h4>
+<p>最後一致性的難題在這個章節就差不多結束了，而到了這裡事實上咱們就全部理解了 mysql innodb 它是如何實現事務的 ACID。</p>
+<p>而本章節與上章節所介紹的併發一致性問題與解法，ACID 中的實現 :</p>
+<ul>
+<li>隔離性 Isolation</li>
+</ul>
+<p>而包含在 30-15 的文章所提到固障問題的兩個事務特性 :</p>
+<ul>
+<li>原子性 Atomic</li>
+<li>持久性 Durability</li>
+</ul>
+<p>這三個完成，才能符合 ACID 的最後一個特性 :</p>
+<ul>
+<li>一致性 consistency</li>
+</ul>
+<p>所以事實上咱們可以說 ACID 四個特性關係如下 :</p>
+<blockquote>
+<p>一致性 = 原子性 + 持久性 + 隔離性</p>
+</blockquote>
+<p>要完成後面三個，才能說這個事務有一致性的特性。</p>
+<h3 id="heading7">最後的心得</h3>
+<p><a href="https://mark-lin.com/posts/20190915/">30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</a>
+<a href="https://mark-lin.com/posts/20190916/">30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</a>
+<a href="">30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 ) ( 本篇文章 )</a></p>
+<p>從以上三篇文章探討一致性的難題文章，事實上已經可以理解，併發事實上是非常複雜與難處理的事情，它所產生的資料不一致性的情境非常多種，而如果這個情境又提升到分散式系統或資料庫上的話，其難度真的非常高非常高。</p>
+<p>這裡良心的建議 :</p>
+<blockquote>
+<p>真的不要有事沒事為了『 性能 』而『 分散式 』，單機併發不一致性的情境都搞不清楚的情況，升到分散式資料庫會死的很慘，如果還沒死，那也有可能是因為你性能事實上根本不需要到『 分散式 』。</p>
+</blockquote>
+<h2 id="heading8">參考資料</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/70701037">MYSQL事务和隔离级别</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/33189897">常用的分布式事务解决方案介绍有多少种？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/52098102">MySQL事务ACID实现详解</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/66676020">MySQL探秘(七):InnoDB行锁算法</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#mysql---">MySQL 的折衷解法 - 事務隔離級別</a>
+      <ul>
+        <li><a href="#heading1">事務隔離級別</a></li>
+      </ul>
+    </li>
+    <li><a href="#-rr---">預設 RR 級別 - 鎖的操作總結</a>
+      <ul>
+        <li><a href="#-1--">小總結 1 : 基本操作加鎖總結</a></li>
+        <li><a href="#-2--select-">總結 2 : Select 手動加鎖的總結</a></li>
+        <li><a href="#-3--">總結 3 : 表鎖與意向鎖的總結</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">死鎖的小分析</a>
+      <ul>
+        <li><a href="#heading3">死鎖的情況範例</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論與心得</a>
+      <ul>
+        <li></li>
+        <li><a href="#heading7">最後的心得</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading8">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-20 之資料緩存失效問題 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="redis, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-20 之資料緩存失效問題 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-20 之資料緩存失效問題</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-20.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/20089358IRjIjOjHB9.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :</p>
+<blockquote>
+<p>如果緩存失效的情況，與可能會發生什麼事情呢 ?</p>
+</blockquote>
+<p>基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/20089358iSAyY62hsU.png" alt="">
+圖 1 : 緩存失效圖</p>
+<p>而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :</p>
+<ul>
+<li>緩存失效情況 - 緩存穿透</li>
+<li>緩存失效情況 - 緩存雪崩</li>
+<li>緩存失效情況 - 緩存服務炸了</li>
+</ul>
+<h2 id="--">緩存失效情況 - 緩存穿透</h2>
+<p>這個的主要情境如下 :</p>
+<blockquote>
+<p>查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。</p>
+</blockquote>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/20089358HcNMiF23QA.png" alt="">
+圖 2 : 緩存穿透</p>
+<p>通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。</p>
+<h3 id="-1--">解法 1 : 硬處理</h3>
+<p>這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。</p>
+<p>這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 概念碼
+</span><span class="c1"></span>
+<span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+  <span class="k">return</span> <span class="nx">getCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">cacheValue</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span> <span class="nx">user</span> <span class="o">===</span> <span class="kc">null</span> <span class="p">)</span><span class="p">{</span>
+  <span class="nx">cacheValue</span> <span class="o">=</span> <span class="nx">getDefaultEmptyValue</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">setCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">cacheValue</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p><strong>不過這種方案還是有缺點</strong></p>
+<blockquote>
+<p>它無法防護隨機編號的攻擊，因為每一次都是不同的</p>
+</blockquote>
+<h3 id="-2----bloom-filter-">解法 2 : 布隆過濾器 ( Bloom Filter )</h3>
+<p>它的基本解法概念為 :</p>
+<blockquote>
+<p>建立一個很大的 hash 來『 存放值 』，當如果是『 不存在的值 』則會再檢查時被過濾掉。</p>
+</blockquote>
+<p><strong>問個問題 ~ 這裡用 hash 感覺就可以處理了，為啥要用啥布隆過濾器概念不是很像嗎 ?</strong></p>
+<p>咱們寫來說說 hash 的處理方案。</p>
+<p>首先 hash 就是一個 key 與 value 的對應，然後 key 會通過 hash 函數來進行轉換，如下圖 3 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/20089358k9asK77cRH.png" alt="">
+圖 3 : hash</p>
+<p>這裡順到說一下，上圖 3 的 jack 與 jiro 這兩個 key 通過 hash 有可能會指到相同的 value 4，那這樣如何處理呢 ?</p>
+<p>比較常見有兩種方案 :</p>
+<ul>
+<li>拉鍊法 : 就是 value 裡面實際上是存 linklist，但是這種要很注意 hash function 的設計，因為一不小心就會變成一個很長的 linklist。</li>
+<li>尋址法 : 就是第一個 key 放到某個位置後，如果第二個 key 還是到這個位置，它發現有人了，那它就會再找下一個位置，有可能是往前或往後走。</li>
+</ul>
+<p>在補充一下 hash 的新增與抓取操作時間複雜都是 o(1)，然後 linklist 新增是 o(1)，但是抓取就是 o(n)，而如果變成太長的 linklist，你要抓值時，就代表要一個一個看看，也就是 o(n) 的操作。</p>
+<p><strong>那 hash 又與布隆過濾器有啥差別 ?</strong></p>
+<p>兩則概念很相似，但問題出在 :</p>
+<blockquote>
+<p>如果 key 非常多的情況下</p>
+</blockquote>
+<p>hash 有可能會爆，因為你可以想成它是每一個 key，就會花個空間來儲，而布隆過濾器就是可以解決這一點。</p>
+<p>簡單來說它可以花少少的空間來判斷，一個 key 是否存在，但然後它的缺點就在於 :</p>
+<blockquote>
+<p>有誤判率</p>
+</blockquote>
+<p>所以這個演算法不適合用在 100% 確定的場景，而是只能用在大約有 70 ~ 80 % 左右的準確度就夠了，例如緩存穿透、垃圾郵件過濾、爬蟲 url 去除重複。</p>
+<p>詳細的布隆過濾器原理，這裡就不說了，有興趣的友人請自行查查。</p>
+<h4 id="heading1">實現</h4>
+<p>好然後拉回來，如果要用布隆過濾器來處理緩存穿透時，咱們大概會用以下程式碼來實現 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="s1">&#39;Mark&#39;</span><span class="p">;</span>
+
+<span class="c1">// 這裡會先判斷 target 有沒有存在，透布隆過濾器表來判斷
+</span><span class="c1"></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">isExistBoolFilter</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+   <span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">rturn</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後我覺得比較重要的點在於，<strong>你的 boolFilter 要如何維護呢 ?</strong></p>
+<p>目前想到比較簡單的處理是，當 target 被新增的時後，則更新一次記憶體中的 boolFilter，而如果是移除了，則不理它，反正 cache 那會防。</p>
+<p>別忘了這裡是為了達到 :</p>
+<blockquote>
+<p>儘可能的過濾資料，別讓緩存服務爆了。</p>
+</blockquote>
+<p>所以你要確保，即使 boolFilter 誤判了，那業務運行還是不會出錯。</p>
+<p><strong>對了，那這個 boolFilter 要存那呢 ?</strong></p>
+<p>比較建議是存在緩存服務外的另一個 redis 上。</p>
+<p>在單機時存記憶體上還沒啥毛病，就算機器重開了，那也項多是去 db 重拉一份資料然後再存入記憶體，但多機時你還要考慮每台機器 boolFilter 更新的問題。</p>
+<h2 id="--1">緩存失效情況 - 緩存雪崩</h2>
+<p>這個的主要情境如下 :</p>
+<blockquote>
+<p>當緩存在同一個時間內大量失效時(因為到期或啥的)。</p>
+</blockquote>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/200893583QKDEJmJ3g.png" alt="">
+圖 4 : 緩存雪崩</p>
+<p>這種情況基本上分為以下兩個情境 :</p>
+<h3 id="-1--1">雪崩情況 1 : 緩存的到期時間到期，而自動清除緩存</h3>
+<p>首先說說第一個，上一章節有提到，通常會建議，在寫入緩存時，會給它設置一個到期時間，免得上面殘留太多的那些忘記寫清除程式，或因系統故障導致沒有清除的不需要的緩存。下面為 redis 設定 key 的到期時間小範例。</p>
+<pre><code>redis&gt; SET mykey &quot;Hello&quot;
+&quot;OK&quot;
+redis&gt; EXPIRE mykey 10
+(integer) 1
+</code></pre><p>而這時如果有大量的 key，它們到期時間設置相同，那失效的那個瞬間就會產生所謂的緩存雪崩。</p>
+<h4 id="heading2">解法</h4>
+<p>這種方案的解法通常為，給它設置一個隨機變數 :</p>
+<pre><code>EXPIRE mykey 10 + random
+</code></pre><h3 id="-2--">雪崩情況 2 : 瞬間大量的寫入</h3>
+<p>而至於第二種情況，瞬間的大量寫入，上一章節咱們要有說在緩存最少是使用『 淘汰 』，而不是用『 更新 』，但是如果這時有瞬間的大量寫入，那就是產生大量的『 淘汰 』，那這時也會產生所謂的緩存雪崩。</p>
+<h4 id="heading3">解法</h4>
+<p>這一題目前想了一下，事實上發生機率很低，因為會建立緩存的資料前提假設之一就是更新頻率低，而在這個情況下還是會發生這種情況的另一種可能就在於『 有人在批次大量修改資料 』。</p>
+<p>如果是在這種批次的情況下，那就建議直接用『 批次更新 』緩存，而不要在正規使用『 淘汰 』，先說一下系統內的運行一樣是『 淘汰 』，只是當發現有需要大量修改資料時，請手動的『 更新 』緩存。</p>
+<p>如果都不是上面說的這種情況，而還是發生了，那就可能需要使用『 隊列服務 』來讓這些寫操作排隊，不要一口氣灌到緩存服務，但當然，這會對架構與性能可能都會有不少影響，所不定也會出現一堆坑。</p>
+<h2 id="--2">緩存失效情況 - 緩存服務炸了</h2>
+<hr>
+<p>就是緩存服務炸掉了，導致直接灌到資料庫層去，如下圖 5 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/20089358zGZGXNrEnk.png" alt="">
+圖 5 : 緩存服務炸了</p>
+<p><strong>~ 小備註 ~</strong></p>
+<p>這裡應該會有人覺得很奇怪，假設咱們程式碼如下所示，那基本緩存服務掛了，資料庫那層應該是不會處理啊，因為錯誤囉。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="s1">&#39;Mark&#39;</span><span class="p">;</span>
+
+<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+  <span class="nx">rturn</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>對是沒錯。</p>
+<p>但這時你要想想，這樣是對的嗎 ?</p>
+<p>緩存是為了什麼 ? 是為了加快查詢的速度與保護資料庫層。那你想想，你覺得緩存服務掛了，要讓整個『 系統業務 』都死嗎，如果你有個記錄 log 的服務掛了，也要整個系統都死嗎 ?</p>
+<p>不不 ~ 這樣不太對 ~ 別忘了我們追求的是『 好的系統 』，是要讓客戶愉悅的，如果一個業務系統要綁十個服務，然後每個服務都要完成，業務才算完成，那你想想你的業務完成機率是多少呢 ? 順到說一下，如果一個服務裡需要綁那麼多服務，請考慮開拆。</p>
+<p>緩存掛了對用戶來說，有時也感覺不到，log 服務掛了對用戶來說更感覺不到，所以通常咱們會在這 isExistInCache 這方法裡面加個 try cache 然後繼續去 db 查詢。</p>
+<p>這樣才能保證緩存服務就算故障了，也不影響『 系統業務 』。</p>
+<h3 id="--masterslave-">解法 - Master-Slave 模式</h3>
+<p>這個架構基本算是最基本的 redis 高可用架構，它主要的目的在於 :</p>
+<blockquote>
+<p>當 master 掛了，一台 slave 馬上來補 ( 就是升為 master )</p>
+</blockquote>
+<p>所以當緩存服務有建立這架構後，就可以解決緩存服務炸了導致大量請求直接灌入到 db 的問題，因為有後補者。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191005/200893589pWhqnB78a.png" alt="">
+圖 6 : master-slave 架構</p>
+<p>這裡簡單說明一下這個架構，這個架構基本上是有三個服務 :</p>
+<ul>
+<li>master : 主要接客用的 redis。</li>
+<li>slave : 後補球員。</li>
+<li>sentinel : master 監控者</li>
+</ul>
+<p>圖 6 中，這裡有兩個小重點，首先第一個 master slave 會一直運行資料同步 ( a 的部份 )，這樣才能保證 slave 轉換到 master 時，有相同的資料，而第二點為 sentinel 它會不斷的監控這 master ( b 的部份 )，當它發現 master 掛了，就會將某個 slave 上架上來。</p>
+<p><strong>小備註</strong>
+傳統它這個架構，它會有三個 sentinel, 主要的原因有兩個 :</p>
+<ul>
+<li>防止 sentinel 單點掛掉。</li>
+<li>sentinel 仲裁會。</li>
+</ul>
+<p>其中 sentinel 仲裁會比較特別一點，這個東西就是用來決定 master 要不要下掉的機制。一台 master 要下掉需要由多個 sentinel 來投票，如果 n 個 sentinel 同意 master 掛掉，則進行 failover ( 就是 slave 補上 )。</p>
+<h2 id="heading4">結論與心得</h2>
+<p>本篇文章中，咱們介紹了幾種緩存失效的類型 :</p>
+<ul>
+<li>緩存穿透</li>
+<li>緩存雪崩</li>
+<li>緩存服務炸了</li>
+</ul>
+<p>基本上緩存穿透我目前還比較少碰到，雖然當初再開發時有想到這問題，但後來想想發生機率不高，就有點懶的解…… ( 這不算好事情，請別學 )。然後我也是在查資料時才知道有布隆過濾器這個解法。</p>
+<p>而至於緩存雪崩這問題，這就還真的碰到不少次，最後也是給每個 key 的到期時間，給它加個大秒 10 秒以內的隨機亂數，才比較安全一點。但如果真的沒辦法給你就要考慮 key 的退場方案新機制，例如用 queue 來處理之類的。</p>
+<p>最後緩存服務炸了這件事情麻，還真沒啥發生過，因為咱家 redis 基本型就是 master-slave 炸了可以馬上的換過來。</p>
+<p>但是最近咱們在談討一個問題 :</p>
+<blockquote>
+<p>如果 redis 有被應用層 connection pool 連線住，那 failover 機制可以正常運行嗎 ?</p>
+</blockquote>
+<p>目前我們發現好像不會正常運行，會卡住，但根本原因還要再研究一下，之後有空在發篇文來談談。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="https://www.zhihu.com/question/39114188">如果缓存失效，瞬间大量请求可能会直接访问数据库，请问如何在代码层面应该怎么处理？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/37645456">常见的缓存穿透，缓存击穿，缓存雪崩解决方案分析</a></li>
+<li><a href="https://redis.io/commands/expire">REDIS-EXPIRE key seconds</a></li>
+<li><a href="https://dotblogs.com.tw/supershowwei/2016/02/03/123740">軟體主廚的程式料理廚房</a></li>
+<li><a href="https://segmentfault.com/a/1190000002680804">Redis Sentinel机制与用法（一）</a></li>
+<li><a href="http://imhuchao.com/1271.html">布隆过滤器(bloom filter)介绍以及php和redis实现布隆过滤器实现方法</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-20 之資料緩存失效問題</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#--">緩存失效情況 - 緩存穿透</a>
+      <ul>
+        <li><a href="#-1--">解法 1 : 硬處理</a></li>
+        <li><a href="#-2----bloom-filter-">解法 2 : 布隆過濾器 ( Bloom Filter )</a></li>
+      </ul>
+    </li>
+    <li><a href="#--1">緩存失效情況 - 緩存雪崩</a>
+      <ul>
+        <li><a href="#-1--1">雪崩情況 1 : 緩存的到期時間到期，而自動清除緩存</a></li>
+        <li><a href="#-2--">雪崩情況 2 : 瞬間大量的寫入</a></li>
+      </ul>
+    </li>
+    <li><a href="#--2">緩存失效情況 - 緩存服務炸了</a>
+      <ul>
+        <li><a href="#--masterslave-">解法 - Master-Slave 模式</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論與心得</a></li>
+    <li><a href="#heading5">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

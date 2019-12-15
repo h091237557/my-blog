@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-15 之資料庫層的難題 - 單機『 故障 』一致性難題 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="mysql, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-15 之資料庫層的難題 - 單機『 故障 』一致性難題 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-15.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/200893583XNdu76MIf.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性能後腿的東西。</p>
+<p>這個會性能後腿的東西就是 :</p>
+<blockquote>
+<p>一致性難題</p>
+</blockquote>
+<p>在追求高性能的路上，通常一定會面臨到資料一致性問題，而產生的原因通常可簡單的分為以下來個來源 :</p>
+<ul>
+<li>故障</li>
+<li>併發</li>
+</ul>
+<p>接下來本篇文章，咱們來看看 mysql 它是如何處理『 故障 』所引發的一致性問題。</p>
+<ul>
+<li>不一致資料產生原因。</li>
+<li>MySQL 的解法。</li>
+<li>ACID 的小關連。</li>
+</ul>
+<h2 id="heading1">不一致資料產生原因</h2>
+<h3 id="-1--">原因 1 : 某項操作故障</h3>
+<p>假設咱們要將 a 帳戶的 1000 元轉到 b 帳戶去，但這時如果在處理 b 帳戶加錢時出錯了，那整個結果就錯誤了，如下圖 1 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358bzdYTcWXVB.png" alt="">
+圖 1 : 故障導致資料不一致性</p>
+<p>在圖 1 中正確的 b 帳戶應該是 1000 元，但是因為加錢失敗了，所以 b 帳戶變成 0 元，這就是產生了『 資料不一致性 』。</p>
+<h3 id="-2--">原因 2 : 單機故障</h3>
+<p>第二個產生的原因要先來理解一下，所謂的『 通常 』寫入硬碟的原理。</p>
+<p>假設咱們有一個 insert 的指令，要將資料寫入到資料庫中，然後資料庫要將它寫到硬碟中，那它的運行過程如下。</p>
+<ol>
+<li>將資料寫入到內核的緩存區。</li>
+<li>返回 ok 的回應給資料庫。</li>
+<li>內核再將它寫到硬碟。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358urpli4PJDz.png" alt="">
+圖 2 : 作業系統寫入硬碟原理。</p>
+<p>明眼人應該有看出問題在那，那就是假如在寫到硬碟前，機器掛掉了，那由記憶體開的內核緩衝區中的資料不是就消失了 ? 如下圖 3 所示，那剛剛那筆寫入的指令，不就事實上是失敗的了 ?</p>
+<p>假設這情境在銀行，當用戶存了一百萬進去，然後銀行說成功，但是當去看看帳戶領錢時，卻發現沒有那筆錢時，用你的小腦袋想想，用戶有沒有可能拿刀出來呢 ? 當然不會大家都是文明人，頂多拿個球棒。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358v7bUvpv87o.png" alt="">
+圖 3 : 機器故障導致內核緩衝區資料遺失</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p>基本上應該是有人會問，為什麼不是寫到硬碟在回 ok 呢 ? 嗯作業系統的確有提供 fsync 這方法，它可以直接寫入到硬碟，但是如果每一次操作都是需要修改硬碟，那會耗費非常多的時間，所以通常很多情況下是只有寫入到內核緩衝區中，等待一段時間後在一起寫入到硬碟。</p>
+<p><a href="http://man7.org/linux/man-pages/man2/fdatasync.2.html">linux-fsync</a></p>
+<h2 id="mysql-innodb-">MySQL InnoDB 的解法</h2>
+<h3 id="-1-">原因 1 的解法</h3>
+<p>首先它定義了一個叫『 事務 transaction 』的操作單位。</p>
+<p>假設某件事情需要以下兩個指令才能完成 :</p>
+<ol>
+<li>刪除 A</li>
+<li>更新 B</li>
+</ol>
+<p>那資料庫會將這兩個操作包裝成一個『 事務 』。</p>
+<p>而這個事務只有兩種結果。</p>
+<ul>
+<li>這事務裡的指令『 全部完成 』。</li>
+<li>這事務裡的指令『 全部都未完成 』。</li>
+</ul>
+<pre><code>delete(10) // 帳戶減少 10 元
+add(10) // 帳戶增加 10 元
+
+包裝成事務
+
+begin transaction 
+delete(10) // 帳戶減少 10 元
+add(10) // 帳戶增加 10 元
+transaction commit
+</code></pre><h4 id="-mysql--">那 MySQL 如果實現上述的兩種結果呢 ?</h4>
+<blockquote>
+<p>它主要的實現是使用 undo log。</p>
+</blockquote>
+<p>就是當你 insert 一條資料時，就會在 undo log 中，新增一條 delete 指令，而當你 update 一條資訊時，就會在 undo log 中，新增一條 update 回原資料指令。</p>
+<p>當事務失敗時後，就可以利用 undo log，來將資料回復到原本的模樣，如下圖 4 所示，當在紅色區塊要將 b 帳戶加錢時，但是機器故障或是啥的失敗，導致這個事務沒有進行 commit，那這時就會使用 undo log 來將未 commit 的 undo log 給回復。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358cN1fEatbSb.png" alt="">
+圖 4 : 事務失敗回滾</p>
+<p>而正常運行圖如下，當一個事務有正確的進行 commit 已後，就會將該 undo log 下一個已經 commit 的 tag，然後就算系統重啟，它發現這個 undo log 已經 commited 了，它也就不會回滾它了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358I2ubnnbEr3.png" alt="">
+圖 5 : 事務正常處理</p>
+<p><strong>~ 小備註 ~</strong>
+這裡只是淺淡一下 undo log，它事實上還有很多東西可以說，包含 undo log 的管理等，有興趣的友人可以查查。</p>
+<h4 id="php-">PHP 的使用小範例</h4>
+<p>這裡簡單的拿個程式碼小範例來給一些初學者看看，應該會比較有感覺。</p>
+<p>下面為 php 範例，從 laravel 官網直接拿來的小範例，簡單一個 transaction 就是一個操作單位，這個單位裡面的指令，要嘛全部完成，要嘛全部不做，不二價。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">DB::beginTransaction();
+DB::table(&#39;users&#39;)-&gt;update([&#39;votes&#39; =&gt; 1]);
+DB::table(&#39;posts&#39;)-&gt;delete();
+DB::commit();
+</code></pre></div><h3 id="-2-">原因 2 的解法</h3>
+<blockquote>
+<p>redo log 機制</p>
+</blockquote>
+<p>基本上有人一定會問說，為什麼它是寫到內核緩存後，就直接回傳 ok 的回應呢 ? 不能直接改成寫完硬碟後在回 ok 嗎 ?</p>
+<p>對 ! 答案是可以，但是有問題。</p>
+<blockquote>
+<p>那就是會太慢</p>
+</blockquote>
+<p>假設我們每一個指令，都要進行所謂的 fsync ( 就是直接寫到硬碟的方法 )，那會效能會非常的差。</p>
+<p>因此 mysql innodb 使用 redo log 來建立一套，可以保證寫入，且性能又不會影響到太多的機制。</p>
+<h4 id="redo-log-">Redo Log 流程</h4>
+<p>假設咱們有一段的事務流程如下。</p>
+<pre><code>A = 1000, B = 0
+
+1. 開始事務 T
+2. Update A account = 0  (A 帳戶修改為 0 元)
+3. Update B account = 1000 (B 帳戶修改為 1000 元)
+4. 事務 commit
+</code></pre><p>接下來看看在運行這一段事務時，它會如何的儲放 redo log 與使用它。如下面流程，基本上每一個操作都是會寫入到 redo log 緩存中，而不是實際上將修改的資料，寫入到硬碟中。</p>
+<pre><code>Redo log 角度 ( 編號對應於上方操作 )
+
+1. 記錄事務 T 開始到 redo log 緩存。
+2. 記錄要修改 A 的 page 到 redo log 緩存。
+3. 記錄要修改 B 的 page 到 redo log 緩存。
+4. 將 redo log 緩存使用 fsync 寫入到硬碟。
+</code></pre><p><strong>~ 小知識 1 ~</strong></p>
+<p>redo log 是儲你修改了那一個 page，而 undo log 是你對那一個資料表的欄位進行了什麼修改。通常會稱 redo log 為物理日誌，而 undo log 為邏輯日誌。</p>
+<p><strong>~ 小知識 2 ~</strong></p>
+<p>page 是 innodb 的硬碟操作的最小單位，它的預設大小為 16 kb。而這個 page 會在 mysql 的緩衝區暫存住。</p>
+<p>上面是針對事務所產生的 redo log 流程，然後咱們來看一下完整的將資料寫到硬碟的流程如下:</p>
+<h4 id="heading2">完整將資料寫到硬碟的流程</h4>
+<p>下圖為完整的將資料寫到硬碟的流程。</p>
+<ol>
+<li>用戶發送請求 mysql 執行一段事務。</li>
+<li>mysql 先將緩存區資料進行修改(你可以想成也就是將緩存取的 a、b 帳戶值修改)。</li>
+<li>將更新 a、b 所修改的 page 操作寫入到 redo log 緩存區。</li>
+<li>等事務執行 commit 時，執行 fsync 將 redo log 寫入到硬碟。</li>
+<li>用戶端收到更新 ok 的回應。</li>
+<li>實際上的將修改的資料，寫入到硬碟中。</li>
+</ol>
+<p>所以從上述的流程知道，用戶收到 ok 只是 redo log 已經寫到硬碟，而不是實際將修改的資料寫到硬碟。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358BUwgiuqRyg.png" alt="">
+圖 6 : 將資料完整寫到硬碟的流程</p>
+<p><strong>~ 小知識 ~</strong>
+注意，在 innodb 中，一切都是以 log 為主，也就是說你實際上 insert 資料，不是直接去修改硬碟的 b+ 樹，而是先將這個操作寫入到 log 中，在由一個叫 master thread 來將緩衝區資料丟到硬碟中。</p>
+<p>可是這時有人會問，那如果有人在 master thread 修改前，來讀取資料，那不是也會讀到舊的 ?</p>
+<p>不，不會，因此所有的操作都會到 mysql innodb 的緩衝區先進行處理，也就是 insert 會寫到緩衝區，而讀取時也會先直接到緩存區拿。</p>
+<h4 id="-fsync--">那為什麼不要直接將修改數據 fsync 到硬碟 ?</h4>
+<p>為什麼不能改成下圖 7 的流程呢，直接在 commit 時在 fsync 就好，為什麼一定要寫到 redo 後，在處理呢 ? 我當初也有這個鬼疑問。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190930/20089358QNlgFWqgSj.png" alt="">
+圖 7 : 馬克疑問圖</p>
+<blockquote>
+<p>因為慢。</p>
+</blockquote>
+<p>慢在兩個地方 :</p>
+<ul>
+<li>上面有提到 innodb 的硬碟最小操作單位是 page，而它預設是 16 kb，而假設上面一個小地方寫改後，就要整頁寫入，浪費社會資源。</li>
+<li>隨機 i/o 問題。你可以將硬碟想成有『 順序 』的一堆有排序的頁 ( 不是指 innodb page )，而我們每一次的修改，都需要先去找到硬碟中某個頁後在去修改。</li>
+</ul>
+<p>而由於 redo log 只是往個檔案進行追加操作，它屬於順序 i/o 與隨機 i/o 相比之下，順序 i/o 較快，所以才會使用 redo log 寫完硬碟來當回應。然後在偷偷的來處理實際資料寫入。</p>
+<h4 id="redo-log--">redo log 寫入到硬碟出事怎麼辦 ?</h4>
+<p>莫慌 ! 不影響。</p>
+<p>因為對一個事務來說，預設是要將 redo log 檔寫到硬碟後才回傳 ok，如上圖 5 的流程 5 所示，所以如果 redo log 寫入時失敗了，那就代表這個事務失敗，客戶端就會知道它是失敗的。而不會發生，明明說回應正常，但是下一次去領錢卻發現沒錢的問題。</p>
+<h4 id="heading3">如果將實際修改資料寫入硬碟資料時出事怎麼辦　？</h4>
+<p>莫慌 ! 別忘了有 redo log，它記錄好了那個 page 要修改，用它就可以復活。</p>
+<h2 id="acid-">ACID 的小關連</h2>
+<p>基本上熟悉資料庫的人都會知道，我上述的兩個問題，就事務的特性 ACID 中的其中兩個 :</p>
+<ul>
+<li>原子性 Atomic ( 資料不一致原因 1 )</li>
+<li>持久性 Durability ( 資料不一致原因問題 2 )</li>
+</ul>
+<h3 id="-atomic">原子性 Atomic</h3>
+<p>就是事務的運行只有兩個結果 :</p>
+<ul>
+<li>全部執行</li>
+<li>全部不執行</li>
+</ul>
+<p>而在 mysql innodb 的實現就是使用 undo log。</p>
+<h3 id="-durability">持久性 Durability</h3>
+<p>這個特性主要是說 :</p>
+<blockquote>
+<p>當事務執行 commit 時，對系統的影響是永久的</p>
+</blockquote>
+<p>就如上述原因 2 一樣，如果是用正常的 write ( 寫到緩衝區後就回應 ok )，那就不能滿足持久性。</p>
+<p>而 mysql innodb 的實現基於兩個重點在於『 redo log 』加『 fsync 』。</p>
+<p>而不單獨使用 fsync 是因為性能考量。</p>
+<h4 id="--">特殊用法 : 在追求極端性能情況，可考慮犧牲持久性</h4>
+<p>在 mysql innodb 事實上有提供一個設定，可以讓我們犧牲持久性，來大量的提供效能，但是要不要使用請自已判斷。</p>
+<blockquote>
+<p>innodb_flush_log_at_trx_commit</p>
+</blockquote>
+<p>它有三個參數設定。</p>
+<ul>
+<li>0 : 事務提交時，不會 fsync，而是讓 master thread 每 1 秒鐘執行一次 fsync，將 log 儲到硬碟，但是這種問題會出在，機器或服務掛了，可能會損失 1 秒的資料。</li>
+<li>1 : 事務提交時，會 fsync 一次，將 log 儲放硬碟 ( 這是預設，就是我們上圖 6 的模式 )。</li>
+<li>2 : 事務提交時，將只寫入到 redo log 緩衝區的資料，寫到內核緩衝區，但是這種問題會出在系統掛掉時，在內核衝區的資料會死，而 mysql 服務掛了會沒事。</li>
+</ul>
+<p>在 mysql 技術內幕 innodb 這本書中，作者有測試過以上三這的效能差異，如下。</p>
+<table>
+<thead>
+<tr>
+<th>innodb_flush_log_at_trx_commit</th>
+<th>插入 50 萬行資料花費時間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>13.90 sec</td>
+</tr>
+<tr>
+<td>1(預設)</td>
+<td>1 m 52.11 sec</td>
+</tr>
+<tr>
+<td>2</td>
+<td>23.73 sec</td>
+</tr>
+</tbody>
+</table>
+<p>從上面結果可知，只要調整成 0 或 2 時，執行花費時間效能提升非常的多，因為這兩個參數不會一直寫到硬碟中。但是調整後就是不包證 ACID 的一致性，這就是開發者要自行權衡的地方。</p>
+<p><strong>~ 小知識 ~</strong>
+注意一下你看這個參數為 innodb_flush_log_at_trx_commit，然後有些人可能會想到 linux 所提供的方法 fflush，這個和上述說的 fsync 不太一樣喔。</p>
+<ul>
+<li>fsync : 將資料實際上的寫入到硬碟中。</li>
+<li>fflush : 將資料寫入到內核緩衝區。</li>
+</ul>
+<p><a href="http://man7.org/linux/man-pages/man2/fdatasync.2.html">linux-fsync</a>
+<a href="http://man7.org/linux/man-pages/man3/fflush.3.html">linux-fflush</a></p>
+<h2 id="heading4">結論與心得</h2>
+<p>本篇文章中咱們說說單機故障時，可能會碰到的數據不一致性問題，並且咱們理解了 mysql 它是如何解決這兩個事情。</p>
+<p>當初在研究這個主題的時後，看了不少文章發現，它們都是先介紹事務，然後在介紹 ACID，然後才開始說明什麼是 undo 或 redo，但是我覺得這樣不太好讓人理解。</p>
+<p>主要的原因在於 :</p>
+<blockquote>
+<p>一定是先有問題，才有解決工具</p>
+</blockquote>
+<p>如果不先理解問題是什麼，而真接去看解決工具，你確定你找到的是正確的工具嗎，又或是你可以正確理解它的解法嗎 ?</p>
+<p>不過這只是咱自已的想法，沒啥對與錯。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/35574452">undo log与redo log原理分析</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/65438009">一文解析：MySQL事务ACID原理让你面试不再害怕</a></li>
+<li><a href="https://www.zhihu.com/question/31346392">如何理解数据库事务中的一致性的概念？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/48327345">一文了解InnoDB事务实现原理</a></li>
+<li><a href="https://juejin.im/entry/5ba0a254e51d450e735e4a1f">详细分析MySQL事务日志(redo log和undo log)</a></li>
+<li><a href="https://draveness.me/database-concurrency-control">浅谈数据库并发控制 - 锁和 MVCC</a></li>
+<li><a href="https://www.jianshu.com/p/4e3edbedb9a8">五分钟搞清楚MySQL事务隔离级别</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-redo-log.html">官網-redo log</a></li>
+<li><a href="https://codertw.com/%E8%B3%87%E6%96%99%E5%BA%AB/21464/">Innodb中的buffer poll和redo undo log</a></li>
+<li><a href="https://segmentfault.com/a/1190000017888478">浅析MySQL事务中的redo与undo</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">不一致資料產生原因</a>
+      <ul>
+        <li><a href="#-1--">原因 1 : 某項操作故障</a></li>
+        <li><a href="#-2--">原因 2 : 單機故障</a></li>
+      </ul>
+    </li>
+    <li><a href="#mysql-innodb-">MySQL InnoDB 的解法</a>
+      <ul>
+        <li><a href="#-1-">原因 1 的解法</a></li>
+        <li><a href="#-2-">原因 2 的解法</a></li>
+      </ul>
+    </li>
+    <li><a href="#acid-">ACID 的小關連</a>
+      <ul>
+        <li><a href="#-atomic">原子性 Atomic</a></li>
+        <li><a href="#-durability">持久性 Durability</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">結論與心得</a></li>
+    <li><a href="#heading5">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

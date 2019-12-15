@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-23 之應用層的擴展 - 負載均衡服務 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前面幾篇的文章中，我們知道如何儘可能的在單機上，可以以最少的資源做最多的事，但是單機一定有它的限制，因此接下來我們要開始正式進入所謂|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-23 之應用層的擴展 - 負載均衡服務 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前面幾篇的文章中，我們知道如何儘可能的在單機上，可以以最少的資源做最多的事，但是單機一定有它的限制，因此接下來我們要開始正式進入所謂|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-23 之應用層的擴展 - 負載均衡服務</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-23.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358zr6o6r2B8Z.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>前面幾篇的文章中，我們知道如何儘可能的在單機上，可以以最少的資源做最多的事，但是單機一定有它的限制，因此接下來我們要開始正式進入所謂的『 分散式系統 』。</p>
+<p>分散式系統不是簡單的增加機器就可以增加效能那麼簡單，它不是簡單的 1 + 1 = 2 的這種概念，有時後 1 + 1 還會小於 2 或小於 1。</p>
+<p>最要的原因在於要達成一致性的難度更高，並且維護與管理更複雜，除非你單機真的已經到了極限，不然如果是為了『 性能 』而加機器，那也只是會浪費你更多的時間，不過在實務上有時是為了可用性而加機器那這到還可接受。</p>
+<p>本篇文章將分為以下幾個章節 :</p>
+<ul>
+<li>應用層擴展基本架構</li>
+<li>負載均衡架構優化</li>
+<li>擴展後第一個問題 - Session</li>
+</ul>
+<h2 id="heading1">應用層擴展基本架構</h2>
+<p>應用層擴展基本上 90 % 都會是長的如下圖 1 架構。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358IX7MNxfR2o.png" alt="">
+圖 1 : 基本擴展型</p>
+<p>基本上會將應用服務變成多台，然後前面加一個負載均衡 ( Load balancing )，每當用戶有請求進來時，會先通過負載均衡服務，然後它會選一台應用服務來將請求送過去。</p>
+<p>目前在 web 領域比較常用的負載均衡服務應該是『 nginx 』，它的基本架構就如同咱們前面章節所說的 reactor 架構，所以基本上它可以處理非常多的連線。</p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10219203">30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor</a></p>
+<p>然後 nginx 它有提供以下幾種的分配演算法 :</p>
+<ul>
+<li>輪詢 : 也就是所謂的輪流分配，每個能基本上都可以平均的收到。</li>
+<li>加權 : 根據應用服務的能力來決定分配，例如機器性能較好的就給他權限較高，差的則給權限較低，這個地方在 nginx 還有很多變化。</li>
+<li>ip_hash : 就是同 ip 的都會打到同一台，這個在 socketio 擴展時很重要，如果沒設置，建立 socketio 連線時會打錯台。</li>
+<li>url_hash : 打同一個 url 會到同一台。</li>
+<li>fair : 簡單的說就是智能的演算法，它會根據頁面大小、加載時間來智慧的選擇應用服務。</li>
+</ul>
+<h2 id="heading2">負載均衡優化方向</h2>
+<hr>
+<p>接下來這個章節，咱們要來看看負載均衡的一些優化方向</p>
+<h3 id="1---">1. 基本型 - 第七層負載均衡</h3>
+<p>首先咱們先看最基本型的詳細運行流程，如下圖 2 所示。</p>
+<ol>
+<li>至 dns 請求 <a href="https://marklin.com">https://marklin.com</a> 的 ip。</li>
+<li>dns 解析後回傳 120.1.1.10 位置回來給 client。</li>
+<li>用戶往 120.1.1.10 發送請求至負載均衡服務。</li>
+<li>負載均衡根據分配算法，將請求發送至第一台。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358QNZMr5X4Gl.png" alt="">
+圖 2 : 基本型的傳輸流程</p>
+<h3 id="2---">2. 進化型 - 負載均衡高可用性</h3>
+<p>上面的基本型有什麼問題呢 ?</p>
+<blockquote>
+<p>負載均衡服務單機固障</p>
+</blockquote>
+<p>嗯對很明顯，如果負載均衡服務固障了，那就整個系統就要說掰掰了，所以通常會準備多台的服務然後使用 keepalived 機制來確保某個正在服務的服務固障時，可以快速的轉換成備用的。</p>
+<p>keepalived 是一個使用 vrrp 協議的高可用方案，有興趣的有友人可以自已去 google 研究一下。</p>
+<p>接下來咱們來看一下加入以後整個流程是如何跑。</p>
+<ol>
+<li>用戶先至 dns 尋問 <a href="https://marklin.com">https://marklin.com</a> 這個位置的 ip。</li>
+<li>dns 回傳對應 ip 120.1.1.10 給用戶。</li>
+<li>用戶使用 120.1.1.10 發送 http 請求。</li>
+<li>nat 會將外網 ip 120.1.1.10 轉換成內網的虛擬 ip 10.1.1.120。</li>
+<li>master 的負載均衡服務會負責接客，並選用其中一台應用服務來做 http 處理。</li>
+</ol>
+<p>其中這裡要注意，keepalived 是會裝在兩台 nginx 機器中，然後對外都統一用 keepalived 這配置的虛擬 ip ( 10.1.1.120 )，當 master 有問題時 ( slave 偵測到 )，會自動的將 slave 升為 master。還有對外都是使用 keepalived 所配置的 ip，所以也不需要修改 nat 的轉換表。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358HOL3R3UdKj.png" alt="">
+圖 3 : nginx 加入高可用性</p>
+<p>對了為啥要用虛擬 ip 呢 ? 首先第一個原因靈為快與省對外封包，你可以想成虛擬 ip 都是包含在同一個內網世界，每當某台內網服務要找另一台服務時，只要擴播到內網就夠了，而如果是在外網 ip 上，你就要去每個中端機器問一下這是你家的東西嗎 ? 然後找到這個 ip 是某家族的以後，在內裡面才會在擴播一次，這裡只是很簡單的說一下，詳細的內容自已去找找。</p>
+<p>第二個原因，安全，通常躲在內網裡，正常的情況下，前面都要放一層防火牆，有些情況下 nat 本身也有防火牆的功能，這樣可以防止你內部的服務不被打。</p>
+<p>第三個原因，外網 ip 很貴，你覺得有可能每一台備機都要有個外網 ip 嗎 ?</p>
+<p><strong>~ 小知識 ~</strong>
+這上面多了一個叫做 nat 的服務，它專門用來將公網 ip 轉換成內網 ip，詳細 nat 的知識可以參考之前寫的這一篇文章。</p>
+<p><a href="https://mark-lin.com/posts/20180928/">30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</a></p>
+<h3 id="3---">3. 性能增加進化型 - 第四層負載均衡</h3>
+<p>到了這裡要來介紹另一個負載均衡服務『 LVS ( Linux Virtual Server ) 』。</p>
+<p>上面說提到的 nginx 負載均衡服務它被稱為『 第七層負載均衡 』，而這裡所提的第七層就是指網路協議的『 應用層 』，也就是說它是專門用來負載均衡一些 http 這種應用層協議的服務。</p>
+<p>而 lvs 被稱為『 第四層負載均衡 』，它就是專門用來處理第四層『 傳輸層 』協議的，也就是說它是用來專門處理 tcp 或 udp 傳輸層的負載均衡。</p>
+<p>事實上在台灣大部份的系統大約上面兩個階段就很足夠了，下面這種結構除非你真的衝過頭，不然基本上應該是用不太到的，不過這裡還是可以來理解一下。</p>
+<p>這種架構如下圖 4 所示。運行流程如下。</p>
+<ol>
+<li>用戶先至 dns 尋問 <a href="https://marklin.com">https://marklin.com</a> 這個位置的 ip。</li>
+<li>dns 回傳對應 ip 120.1.1.10 給用戶。</li>
+<li>用戶使用 120.1.1.10 發送 http 請求。</li>
+<li>nat 會將外網 ip 120.1.1.10 轉換成內網的虛擬 ip 10.1.1.12。</li>
+<li>lvs 會在 tcp 傳輸層級將它轉發到後面的 nginx 應用層。</li>
+<li>nginx 應用層負載均衡服務收到後，在將它丟到後面某個應用層服務來處理。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358wUi9ThMjJX.png" alt="">
+圖 4 : 加入第二層負載均衡。</p>
+<p><strong>~ 小備註 ~</strong>
+lvs 它事實上也有所所謂的 nat 功能，所以事實上可以將前面的 nat 拿掉。</p>
+<h2 id="--session">擴展後第一個問題 - Session</h2>
+<p>上面基本上就是咱們比較常見的應用層擴展架構，那接下來咱們要來談談，當應用層擴展以下，你通常會碰到的第一個問題 :</p>
+<blockquote>
+<p>那就是 session 如何處理呢 ?</p>
+</blockquote>
+<p>這裡先簡單說一下 session 的概念。</p>
+<p>session 簡單的說代表這『 狀態 』，咱們都知道 http 是屬於無狀態的協議，但通常咱們還是會需要有狀態的情況，例如登入以後，接下來的請求就代表這某個人，所以通常運行會是如下圖 6 所示。</p>
+<p>注意一下通常咱們會將 sessionId 設定在 cookie 上，如圖 6 的第 2 個步驟，然後接下來的所有請求，都會自動代這個 sessionId 來進行請求，就如同第 3 個步驟，也就代表接下來的請求都是某個用戶所發的。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358Oy03jw6Z3f.png" alt="">
+圖 6 : session 狀態</p>
+<p>接下來來在應用層擴後，問題就出在 :</p>
+<blockquote>
+<p>session 是存在某一台 server 上</p>
+</blockquote>
+<p>所以如果有多台 server 就會發生如下圖 7 這種事情。</p>
+<ol>
+<li>mark 登入</li>
+<li>在 server a 建立一個 session 對應表，abc sessionId 將對應到 mark 這個人</li>
+<li>回傳時 header 會炎上這個 sessionId 回去。</li>
+<li>client 在帶上這個 sessionId abc 至 server b 請求。</li>
+<li>server b 不認識這個 sessionId。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358JnV2gybU2G.png" alt="">
+圖 7 : server session 混亂圖</p>
+<p>然後在現在咱們看看以下幾個常見的解法。</p>
+<h3 id="-1----ex-redis-">解法 1 : 外部儲存服務 ( Ex. Redis )</h3>
+<p>解法就是將 session Id 所對應到的用戶資訊儲放在外部儲放服務，例如 redis，它的運行流程如下圖 8 所示。</p>
+<ol>
+<li>用戶 mark 發送登入請求。</li>
+<li>server 收到以後產生出個 session Id abc ，然後再將 session Id abc 與 mark 使用者資訊的對應關係儲放在 redis 中。</li>
+<li>server 將 session Id 設置到 cookie 中。</li>
+<li>用戶 mark 帶這 session Id abc 發送一個請求。</li>
+<li>server 收到以後使用 session Id abc 去 redis 取得對應用用戶資料 mark。</li>
+<li>回應 mark 訊息。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/20089358cK1jvTcXcL.png" alt="">
+圖 8 : 使用外部儲存服務解決 session 問題</p>
+<h3 id="-2---ip-hash">解法 2 : 負載均衡 ip hash</h3>
+<p>簡單的說就是同一個使用者只會打到同一台 server，這樣就不會發生找不到用戶 session 的問題。這個方法在某些情況下不錯用，例如需要多次請求建立連線的 socket.io，則下一篇會詳說。</p>
+<h3 id="-3--token">解法 3 : Token</h3>
+<p>然後接下來這個解法嚴格來說就是不要用 session 來代表 user，而改用 token 來代表 user，這個 token 的產生方法有不少，不過比較常看到的是所謂的『 JWT Token 』，這裡就不說它是如何產生，反正它就是個 token，只是它是不好破的東東。</p>
+<p>然後這裡有個重點那就是 :</p>
+<blockquote>
+<p>token 中包含使用者資訊</p>
+</blockquote>
+<p>也就是說 server 解完這個 token 後，它就知道是誰了，也就不需要在去其它地方拿用戶資料。</p>
+<p>接下來咱們看一下這個方法的流程，如下圖 9 所示，由於 server 又變回所謂的『 無狀態 』模式後，又沒有擴展所帶來的問題囉。</p>
+<ol>
+<li>用戶 Mark 發送登入請求。</li>
+<li>server 收到以後，使用 Mark 用戶資訊加密成一個 token xxxx ，然後回傳給用戶。</li>
+<li>接下來用戶在表頭的 authorization 帶這個 token xxxx 發送一個請求。</li>
+<li>server 收到以後解密 token xxxx 後得到 Mark 這個用戶資訊，然後回應請求。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191008/200893580d118CbZJZ.png" alt="">
+圖 9 : token 的解決流程</p>
+<h2 id="heading3">結論與心得</h2>
+<p>本篇文章中，咱們簡單的學習了應用層的基本擴展，最基本的用法就是前面加一台負載均衡服務，然後後面在放幾台應用層服務。</p>
+<p>但是這感覺沒啥毛病啊 ? 好像也沒有發生什麼一致性的問題啊 ?</p>
+<p>嗯對在大部份的情況下，應用層如果用上述這種基本擴展，是沒啥毛病的，因為每一台基本上都是獨立無相關，唯一相關的項多就是咱們上面提到的 session 問題。</p>
+<p>但如果是有相關的話，就不是很好處理了……</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="http://www.ipshop.xyz/14752.html">淺談幾種常用負載均衡架構</a></li>
+<li><a href="https://www.zhihu.com/question/61783920">什么是负载均衡原理？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/60783609">分布式架构系列: 负载均衡技术详解</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/61847281">讲讲亿级PV的负载均衡架构</a></li>
+<li><a href="https://medium.com/@hulitw/session-and-cookie-15e47ed838bc">白話 Session 與 Cookie：從經營雜貨店開始</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-23 之應用層的擴展 - 負載均衡服務</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#heading1">應用層擴展基本架構</a></li>
+    <li><a href="#heading2">負載均衡優化方向</a>
+      <ul>
+        <li><a href="#1---">1. 基本型 - 第七層負載均衡</a></li>
+        <li><a href="#2---">2. 進化型 - 負載均衡高可用性</a></li>
+        <li><a href="#3---">3. 性能增加進化型 - 第四層負載均衡</a></li>
+      </ul>
+    </li>
+    <li><a href="#--session">擴展後第一個問題 - Session</a>
+      <ul>
+        <li><a href="#-1----ex-redis-">解法 1 : 外部儲存服務 ( Ex. Redis )</a></li>
+        <li><a href="#-2---ip-hash">解法 2 : 負載均衡 ip hash</a></li>
+        <li><a href="#-3--token">解法 3 : Token</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a></li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

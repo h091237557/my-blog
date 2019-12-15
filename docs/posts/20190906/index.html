@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  30-6之MongoDB新手村CRUD---更新之陣列欄位攻略 &ndash; 拿鐵派的馬克 Blog
+  30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 ) &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
-    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明陣列修改器$push，主要就是針對document中的陣列進行修改，同時他也可以搭配$each、$slice、$ne、$ad|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -37,15 +37,15 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="30-6之MongoDB新手村CRUD---更新之陣列欄位攻略 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明陣列修改器$push，主要就是針對document中的陣列進行修改，同時他也可以搭配$each、$slice、$ne、$ad|Describe what your web page is about">
+    <meta name="twitter:title" content="30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
 
 
     <link rel="stylesheet" href="/assets/syntax-1.0.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.2.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
   </head>
 
 
@@ -77,7 +77,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</div>
+    <div class="h1 mt-3 mb-1">30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 )</div>
   </div>
   <div class="Subhead-description">
     
@@ -85,21 +85,17 @@
 
 
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
-  <span class="Label Label--gray">IT 鐵人賽 2016</span>
-</a>
-
-<a href='/tags/mongodb' class="muted-link">
-  <span class="Label Label--gray">mongodb</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
 </a>
 
 
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-13. Published at: 2016-09-06.">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-06.">
         
-          Lastmod: 2019-12-13
+          Lastmod: 2019-12-15
         
       </span>
     </div>
@@ -109,104 +105,173 @@
 <article>
   
   <section class="pb-6 mb-3 border-bottom">
-    <p>本篇文章將要說明陣列修改器<code>$push</code>，主要就是針對<code>document</code>中的陣列進行修改，同時他也可以搭配<code>$each</code>、<code>$slice</code>、<code>$ne</code>、<code>$addToSet</code>、<code>$pop</code>、<code>$pull</code>來使用。</p>
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358Xi2sK70Jom.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<hr>
+<p>Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。</p>
+<p>本篇文章將分為以下幾個章節</p>
 <ul>
-<li>陣列更新修改器攻略</li>
+<li>Stream 是什麼 ? 可以解決什麼事情 ?</li>
+<li>Stream 在 IPC 通信的原理。</li>
+<li>簡單的小範例。</li>
 </ul>
-<p>呼好多……</p>
-<h2 id="--">~ 陣列更新修改器攻略 ~</h2>
-<h3 id="push">$push</h3>
-<p><code>$push</code>是陣列修改器，假如一個<code>document</code>中已經有陣列的結構，使用<code>push</code>會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。</p>
-<p>使用方法如下範例，首先先新增一筆資料，然後新增加一個叫<code>jack</code>的<code>fans</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">}</span>
-	<span class="p">}</span><span class="p">)</span>
-</code></pre></div><p>結果如下圖。</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-1.png" alt=""></p>
-<h3 id="each">$each</h3>
-<p><code>$push</code>一次新增只能新增一筆元素，而搭配<code>$each</code>就可以新增多筆。</p>
-<p>使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個<code>fans</code>分別為<code>jack</code>、<code>landry</code>、<code>max</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
-</code></pre></div><p>結果如下圖</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-2.png" alt=""></p>
-<h3 id="slice">$slice</h3>
-<p>如果你希望限制一個陣列的大小，就算多<code>push</code>進元素，也不要超過限制大小，這時你就可以用<code>$slice</code>，不過注意它是保留最後<code>n</code>個元素。</p>
-<p>使用方法如下範例，新增一筆資料，然後我們希望<code>fans</code>人數不超過<code>5人</code>，但我們硬多塞一個人進去。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
-			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
-			 <span class="s2">&#34;$slice&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">5</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
-</code></pre></div><p>執行結果如下，可以看到第一位<code>steven</code>被刪除，只保留了最後5位。</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-3.png" alt=""></p>
-<h3 id="addtoset">$addToSet</h3>
-<p>你可能有這個需求，假設你要新增一個元素到陣列裡，並且保證陣列內的元素不會重複，這時就可以使用<code>$addToSet</code>。</p>
-<p>使用方法如下範例，新增一筆資料，然後<code>fans</code>有<code>steven、landry、stanly</code>，這時我們在新增<code>steven</code>和<code>jack</code>進去，預期應該<code>steven</code>不會被新增進去，也就是不會產生兩個<code>steven</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-	
-		<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$addToSet&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
-			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">]</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
-</code></pre></div><p>執行結果如下，符合預期。</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-4.png" alt=""></p>
-<h3 id="poppull">$pop<code>與</code>$pull</h3>
-<p><code>$pop</code>與<code>$pull</code>這兩個修改器都是用來刪除元素用的，<code>$pop</code>可以從頭或尾刪除，而<code>$pull</code>則是基於特定條件來刪除。</p>
-<p>先來看看<code>$pop</code>的使用範例。其中<code>&quot;fans&quot;:1</code>代表從<code>fans</code>陣列尾刪除<code>&quot;fans&quot;:-1</code>則從陣列頭刪除。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-	
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$pop&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
-
-</code></pre></div><p>下圖為執行結果。</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-5.png" alt=""></p>
-<p>這時我們在來看看<code>$pull</code>用法，假設我們要將<code>crisis</code>這<code>fans</code>刪除，使用方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-	
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$pull&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
-</code></pre></div><p>執行結果如下圖</p>
-<p><img src="http://yixiang8780.com/outImg/20161204-6.png" alt=""></p>
-<h2 id="--1">~ 結語 ~</h2>
-<p>今天說了不少個修改器簡單的進行總結一下。</p>
+<h2 id="stream----">Stream 是什麼 ? 可以解決什麼事情 ?</h2>
+<h3 id="heading1">傳統資料傳輸流程問題</h3>
+<p>stream 它是一種技術，基本上專門用來傳輸資料用。</p>
+<p>咱們先來看看傳統上，咱們如果要從硬碟拿個檔案是如何處理。</p>
+<p>基本上流程如下圖 1 所示。</p>
+<ol>
+<li>應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核)</li>
+<li>內核看看內核緩衝區有沒有相關資料(也就是所謂的內核記憶體)。</li>
+<li>有，則將內核緩衝區的資料，拷貝到用戶緩衝區(用戶進程記憶體)。</li>
+<li>無，則前往硬碟取得。</li>
+<li>將硬碟資料拷貝至內核緩衝區。</li>
+<li>將內核緩存區資料，拷貝到用戶緩衝區。(內核切成用戶)</li>
+<li>然後就可以使用資料了。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/200893585lXidKo1in.png" alt="">
+圖 1 : 傳統的資料傳輸流程</p>
+<p>而重點在於這裡 :</p>
+<blockquote>
+<p>硬碟資料 copy 到內核緩衝區，接下來再從內核緩衝區 copy 到用戶緩衝區。</p>
+</blockquote>
+<p>然後問題出在於 :</p>
+<blockquote>
+<p>如果資料很大會發生什麼事呢 ?</p>
+</blockquote>
+<p>基本上結果就如下圖 2 所示，有可能在內核緩衝或用戶緩衝，就爆掉了，因為記憶體是整份 copy 過去，如果你硬碟資料有 10 gb，那就代表，要將這 10 gb 的資料 copy 到內核緩存，再 copy 到用戶緩存，這時後用戶進程才能拿到它。</p>
+<p>但正常來說，不論是內核緩存或用戶緩存都一定要大小限制，如果直接來個 10gb 資料，那一定會炸掉的。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358BtqHxWIGWa.png" alt="">
+圖 2 : 傳統資料傳輸的問題</p>
+<p>而正也是這個原因，才有 stream 這個技術的誕生。</p>
+<p><strong>~ 小提醒 ~</strong>
+緩衝區就是指某個記憶體區塊，大部份在資料傳輸的時後，每一個地方的應用、包含內核都會在某個記憶體區塊，開啟一些緩衝區，用來存放等等進來的資料。</p>
+<h3 id="stream-">Stream 原理</h3>
+<p>stream 的基本原理如下圖 3 所示，它不是直接一次將 10gb 的資料拷則到內核緩存後，再直接全部拷則到用戶緩存，它是一點一點的慢慢拷則，每當拷貝 100 mb ( 這只是範例大小 ) 到內核時就繼續拷貝到用戶，然後用戶再直接將它拿來使用，而當使用完，用戶就是將記憶體清除掉，就不會有什麼爆炸，或記憶體爆漲的問題。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358vFwACgAWLr.png" alt="">
+圖 3 : stream 原理</p>
+<h4 id="heading2">注意</h4>
+<p>從上圖原理事實上會發現一個事情。</p>
+<p>如果它是每 100 mb 就會拷貝到用戶緩存，然後用戶在將它處理掉，那這樣是不是代表每進行一次這個就會進行一次上下文切換呢 ?</p>
+<p>嗯對。</p>
+<p>不過這裡簡單說明一下，它的上下文切換不會比進程至進程的上下文切換還耗資源，因為它不用處理下一個進程的東西，這也代表不需要記錄與載入其它進程的資訊，比較圖如下圖 4 所示 。這種切換比較常被稱為『 特權模式切換 』，不過事實上它也的確也換是有進行上下文切換。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358R5A5jIQZxZ.png" alt="">
+圖 4 : 特權模式切換與進程上下文切換比較</p>
+<h2 id="stream--ipc-">Stream 在 IPC 通信的原理</h2>
+<p>接下來咱們來說說 stream 在 ipc 通信的一些原理，咱們先從 ipc 開始來談談。</p>
+<h3 id="ipc-interprocess-communication">IPC (InterProcess Communication)</h3>
+<p>比較白話的說法為 :</p>
+<blockquote>
+<p>它是作業系統提供 process 與 process 的傳輸資料的方式</p>
+</blockquote>
+<p>linux 基本上有提供以下幾種方式 :</p>
 <ul>
-<li>要將元素丟進陣列時可用<code>$push</code>。</li>
-<li>要將『多個』元素丟進陣列時可搭配<code>$each</code>。</li>
-<li>要限制陣列大小時請用<code>$slice</code>。</li>
-<li>要保證陣列內容不重複請用<code>$addToSet</code>。</li>
-<li>要刪除陣列元素請用<code>$pop</code>和<code>$pull</code>。</li>
+<li>管道 ( pipe )</li>
+<li>訊息佇列 ( Message queue )</li>
+<li>訊號 ( signal )</li>
+<li>socket</li>
 </ul>
-<p>結束……又快要燒起來的<code>fu</code>，<code>+u^6</code>。</p>
-<h2 id="--2">~ 參考資料 ~</h2>
+<p>它們的運作原理基本上就如下圖 5 所示，流程如下 :</p>
+<ol>
+<li>進程 A 將在用戶空間緩衝區的資料拷則到內核緩衝區。</li>
+<li>內核再將資料從內核緩衝區拷則到進程 B 的用戶空間緩衝區。</li>
+</ol>
+<p>這就是 IPC 基本的運作原理，這裡就先不探討不同 IPC 方法有啥不同，只要先知道原理相同就好。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358XLfi9aaN12.png" alt="">
+圖 5 : ipc 的傳輸原理</p>
+<h3 id="stream--ipc-1">Stream 在 IPC 的運用</h3>
+<p>事實上當知道它也是運用拷貝來將資料進行傳輸時，那就代表它也可以使用 stream 來處理它。</p>
+<p>原理會變成如下圖 6 所示 :</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/2008935842AfogMlU0.png" alt="">
+圖 6 : stream 在 ipc 的傳輸原理</p>
+<h3 id="android-binder">Android Binder</h3>
+<p>這裡咱們要順到來看一個東西，那就是『 Andorid Binder 』，它是在 android 的系統上所提供的另一種 ipc 通信方案。</p>
+<p>傳統的 ipc 通信基本上都一定要通常以下幾次拷貝，來將資料進行傳輸，如下範例。</p>
+<p>假設 process A 要傳資料到 process B</p>
 <ul>
-<li><a href="https://docs.mongodb.com/v3.2/reference/operator/update-array/"><a href="https://docs.mongodb.com/v3.2/reference/operator/update-array/">https://docs.mongodb.com/v3.2/reference/operator/update-array/</a></a></li>
+<li>從 process A 拷貝資料到內核緩衝區 ( 1 次 )。</li>
+<li>從內核緩衝區拷貝到 process B 的用戶緩衝區 ( 2 次 )。</li>
+</ul>
+<p>而 binder 這個機制只要 1 次拷貝。</p>
+<ul>
+<li>binder 在內核緩衝區在另外創建接受方的緩衝區。</li>
+<li>從 process A 拷貝資料到內核緩衝區 ( 1 次 )。</li>
+<li>接受方的緩衝區與內核緩衝區有 map ( binder 處理)。</li>
+<li>由於 process B 某個記憶體有 map 到 binder 開的內核接受方的位置，所以就可以取得 process A 的資料囉。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358Vp5pRTz3wd.png" alt="">
+圖 7 : android binder 的資料傳輸原理</p>
+<p>為啥 process B 會知道 binder 開的記憶體位置呢 ? 因為在開始前 A 與 B 都需要對 binder 的 servcie manager 註冊喔，所以才會知道呢。</p>
+<p>這裡就只是淺淺的談一下它的概念，詳細的知識有興趣的可以去找找。</p>
+<p><strong>~ 小知識 1 ~</strong>
+這裡有提到記憶體 map 的東西，它所實現的核心技術就是之前咱們在零拷貝有提到的 linux 的 mmap 別忘了它，它在性能的世界中佔了很重要的地位。</p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10218166">30-05 之應用層的 I / O 加速 - 零拷貝 ( Zero Copy )</a></p>
+<p><strong>~ 小知識 2 ~</strong>
+binder 是 android 內核所提供的東西喔。</p>
+<h2 id="--nodejs-">簡單的小範例 ( Nodejs )</h2>
+<p>最後咱們來簡單的使用 nodejs 來寫個小範例。比較詳細的 nodejs stream 操作可以參考此篇文章。</p>
+<ul>
+<li><a href="http://marklin-blog.logdown.com/posts/1922923-streaming-tour-of-basic-concepts-of-nodejs">Node.js 的串流之旅之基本概念</a></li>
+<li><a href="http://marklin-blog.logdown.com/posts/1943772">Node.js 的串流之旅之雙工串流與管道</a></li>
+</ul>
+<h3 id="-1---http-">範例 1 : 一個 http 請求影片資源，並回傳回去</h3>
+<p>下面範例你可以想成，從硬碟到網路會有一條 stream 的感覺。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;video/avi&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s1">&#39;aaa.avi&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;server up !&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h3 id="-2--process-a--process-b">範例 2 : Process A 以串流傳送文字給 Process B</h3>
+<p>對不起我實在有點懶，所以直接拿這個<a href="https://www.npmjs.com/package/stream-node-ipc">套件</a>來使用。以下為它的網路範例程式碼。</p>
+<h4 id="server----process-a-">Server 程式碼 ( 就是 Process A )</h4>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// Server
+</span><span class="c1"></span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">getServer</span><span class="p">,</span> <span class="nx">NodeIpcServerDuplex</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;stream-node-ipc&#39;</span><span class="p">;</span>
+ 
+<span class="kr">const</span> <span class="nx">someNodeIPCConfigToOverride</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">maxConnections</span><span class="o">:</span> <span class="mi">12</span> <span class="p">}</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">ipcClient</span> <span class="o">=</span> <span class="nx">getServer</span><span class="p">(</span><span class="s1">&#39;magne4000-test-worker&#39;</span><span class="p">,</span> <span class="nx">someNodeIPCConfigToOverride</span><span class="p">)</span><span class="p">;</span>
+ 
+<span class="kr">const</span> <span class="nx">newClientConnection</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_data</span><span class="o">:</span> <span class="nx">Buffer</span><span class="p">,</span> <span class="nx">socket</span><span class="o">:</span> <span class="nx">Socket</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">duplex</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeIpcServerDuplex</span><span class="p">(</span><span class="nx">ipcClient</span><span class="p">,</span> <span class="nx">socket</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">duplex</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;Hi Mark ~&#39;</span><span class="p">)</span><span class="p">;</span> <span class="c1">// 傳送資料給 client (Process B)
+</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+ 
+<span class="nx">ipcClient</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="nx">newClientConnection</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h4 id="client----process-b-">Client 程式碼 ( 就是 Process B )</h4>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">import</span> <span class="p">{</span> <span class="nx">getClient</span><span class="p">,</span> <span class="nx">NodeIpcClientDuplex</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;stream-node-ipc&#39;</span><span class="p">;</span>
+ 
+<span class="kr">const</span> <span class="nx">someNodeIPCConfigToOverride</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">logger</span><span class="o">:</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="p">}</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">ipcClient</span> <span class="o">=</span> <span class="nx">getClient</span><span class="p">(</span><span class="s1">&#39;magne4000-test-worker&#39;</span><span class="p">,</span> <span class="s1">&#39;myClientId&#39;</span><span class="p">,</span> <span class="nx">someNodeIPCConfigToOverride</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">duplex</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NodeIpcClientDuplex</span><span class="p">(</span><span class="nx">ipcClient</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">duplex</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="c1">// 收到從 server (process A) 來的資料
+</span><span class="c1"></span>  <span class="c1">// Hi Mark ~
+</span><span class="c1"></span><span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="heading3">結論與心得</h2>
+<p>本篇文章中，咱們學習到了 stream 這個每一個程式語言都有提供的操作的核心原理 :</p>
+<blockquote>
+<p>分段傳送，為了不讓緩衝區爆炸</p>
+</blockquote>
+<p>並且也簡單的看了一下 ipc 的一些與 stream 相關機制與，然後這裡也看將 android binder 也抓出來說說，因為它的觀念很有意思。</p>
+<p>最後這裡簡單的說一下。</p>
+<p>stream 這東西咱們每個人一定都在不知不覺有使用到，如果只是會用，但不知道理解為什麼要這樣用，為什麼有些 lib 底層是有時用 stream 有時用一般拷貝方式，或需現階段工作上還可以活的好好的，但是未來出事了，沒有人可以救你的。</p>
+<p>不斷的追求為什麼，才知學習正道。</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/35519585">写给 Android 应用工程师的 Binder 原理剖析</a></li>
+<li><a href="https://kknews.cc/zh-tw/other/k6eampv.html">一文讓你明白CPU上下文切換</a></li>
+<li><a href="https://www.zhihu.com/question/39440766">为什么 Android 要采用 Binder 作为 IPC 机制？</a></li>
+<li><a href="https://blog.csdn.net/carson_ho/article/details/73560642">Android跨进程通信：图文详解 Binder机制 原理</a></li>
 </ul>
 
   </section>
@@ -263,19 +328,30 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</b><nav id="TableOfContents">
+      <b>30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 )</b><nav id="TableOfContents">
   <ul>
-    <li><a href="#--">~ 陣列更新修改器攻略 ~</a>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#stream----">Stream 是什麼 ? 可以解決什麼事情 ?</a>
       <ul>
-        <li><a href="#push">$push</a></li>
-        <li><a href="#each">$each</a></li>
-        <li><a href="#slice">$slice</a></li>
-        <li><a href="#addtoset">$addToSet</a></li>
-        <li><a href="#poppull">$pop與$pull</a></li>
+        <li><a href="#heading1">傳統資料傳輸流程問題</a></li>
+        <li><a href="#stream-">Stream 原理</a></li>
       </ul>
     </li>
-    <li><a href="#--1">~ 結語 ~</a></li>
-    <li><a href="#--2">~ 參考資料 ~</a></li>
+    <li><a href="#stream--ipc-">Stream 在 IPC 通信的原理</a>
+      <ul>
+        <li><a href="#ipc-interprocess-communication">IPC (InterProcess Communication)</a></li>
+        <li><a href="#stream--ipc-1">Stream 在 IPC 的運用</a></li>
+        <li><a href="#android-binder">Android Binder</a></li>
+      </ul>
+    </li>
+    <li><a href="#--nodejs-">簡單的小範例 ( Nodejs )</a>
+      <ul>
+        <li><a href="#-1---http-">範例 1 : 一個 http 請求影片資源，並回傳回去</a></li>
+        <li><a href="#-2--process-a--process-b">範例 2 : Process A 以串流傳送文字給 Process B</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a></li>
+    <li><a href="#heading4">參考資料</a></li>
   </ul>
 </nav></div>
   

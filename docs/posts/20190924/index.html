@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/instant-messaging' class="muted-link">
+  <span class="Label Label--gray">Instant messaging</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-24.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358r8FbMMVAPl.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於
+即時通訊服務 ( IM Instant Messaging Service ) 的擴展。</p>
+<p>本篇文章共分以下幾個章節 :</p>
+<ul>
+<li>IM 服務的先行知識</li>
+<li>IM 服務的擴展方案 1 - 負載均衡</li>
+<li>IM 服務的擴展方案 2 : IM 服務分配器</li>
+</ul>
+<p>在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。</p>
+<p>簡單的說就是像 line 一樣可以進行即時的溝通。</p>
+<p>傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :</p>
+<h2 id="im-">IM 服務的先行知識</h2>
+<p>首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。</p>
+<blockquote>
+<p>IM 服務就是像聊天室例如 Line 這種類型的服務</p>
+</blockquote>
+<p>而通常要實現這個功能目前應該只有兩種機制 :</p>
+<ul>
+<li>long polling</li>
+<li>websocket</li>
+</ul>
+<p>咱們來簡單用下圖 1 來看一下這兩種運行的差別。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358Uy3O7PHhN5.png" alt="">
+圖 1 : long polling 與 websocket 差別。</p>
+<p>long polling 就如同上圖 1 所示，它會不斷的打 http 來去問 server 有沒有我的訊息，當然想也知道這種很沒效率，可能你問 10 次只有 1 次會收到訊息。</p>
+<p>而另一種 websocket 就是當 server 一收到 client A 傳來的訊息後，會直接的推到 client B。</p>
+<p><strong>~ 小備註 ~</strong>
+想比較理解 socket 或 websocket 的差別，可以看看筆者這篇文章。</p>
+<p><a href="http://marklin-blog.logdown.com/posts/2366799">Socket 的哩哩扣扣</a></p>
+<h3 id="im---">IM 服務的問題 - 長連線</h3>
+<p>那 im 服務有什麼問題會導致擴展方式和一般 web 服務不同呢 ? 那就是 :</p>
+<blockquote>
+<p>長連線的問題</p>
+</blockquote>
+<p>在 http 那篇文章中，咱們有提到在 http 1.1 由於有 keepalive 機制，所以預設都是本來就是長連線，但是別忘了 web 這種一般的應用，通常不會一直打 http，所以就算你網頁開這，過了一段時間，這條連線會自動的關閉。</p>
+<p>但是在 im 這種系統中，不論是 long polling 或 websocket 基本上都是建立一條很久的長連線，除非你下線，不然有幾個 client 就代表 server 要有幾條永久連線。</p>
+<h3 id="im--socketio">IM 服務的基本起手式 Socket.io</h3>
+<p>先來說一下，咱們通常在建立 IM 服務時，最簡單的起手式就是使用『 socket.io 』 這個套件來快速的建立服務，然後它有分為以下兩個部份 :</p>
+<ul>
+<li>socket.io client</li>
+<li>socket.io server</li>
+</ul>
+<p>簡單的方例如下使用。首先來看 server 端的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">io</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">hello</span><span class="o">:</span> <span class="s1">&#39;world&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>再來是 client 方的程式碼</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&#34;/socket.io/socket.io.js&#34;</span><span class="o">&gt;</span><span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
+<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
+    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;data&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
+</code></pre></div><p>這樣就可以完成一個即時通訊服務。</p>
+<p><strong>~ 小備註 ~</strong>
+想理解 socket.io 相關知識的，可以參考筆者以下幾篇文章。</p>
+<p><a href="http://marklin-blog.logdown.com/posts/2907665-socket-io-talking-island">Socket.io 的說話島</a>
+<a href="http://marklin-blog.logdown.com/posts/2906519">Socket.io 的架構</a>
+<a href="http://marklin-blog.logdown.com/posts/3123459-socket-io-how-do-you-run-when-you-want-to-build-online">Socket.io 原始碼分析之建立連線</a></p>
+<h2 id="im--1--">IM 服務的擴展方案 1 - 負載均衡</h2>
+<p>首先咱們來看第一個方案，如下圖 2 所示。這應該不少人使用的方案，就是與傳統模式一樣，中間加一個負載均衡，記憶中在 nginx 1.3 的版本時，就有支援 websocket。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358brRkLsOITz.png" alt="">
+圖 2 : im 服務擴展方案 1</p>
+<p>但是這個方案有幾個雷。</p>
+<h3 id="-1--">雷 1 : 負載均衡會有壓力</h3>
+<p>這個雷在於 :</p>
+<blockquote>
+<p>連線貧頸會變成在負載均衡服務</p>
+</blockquote>
+<p>因為 im 服務會一直有連線在，所以如果用傳統的負載均衡會變成如下圖 3 所示，那麼他會發生 :</p>
+<blockquote>
+<p>建立與維護太多條連線，導致 nginx 掛掉</p>
+</blockquote>
+<p>下圖 3 中，你看到的每一條紅線，就是 nginx 所建立的連線量，所以如果 client 有 10 萬個，那這樣實際上它會建立 20 萬條，因為它與 im 服務也需要建連線，而且用戶也要和他建立連線。</p>
+<p>這會導致以下兩個問題。</p>
+<ul>
+<li>連線太多導致為了維護連線，而花費太多的運算資源。</li>
+<li>file descriptor 的大小限制，每建立一條連線一定都會建立一個 file descriptor，它是有大小限制的。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358bYzTMXtkI9.png" alt="">
+圖 3 : 傳統負載均衡在 im 服務的慘況。</p>
+<h3 id="-2--socketio-polling--default-">雷 2 : Socket.io Polling 與 Default 問題</h3>
+<p>上面咱們有提到 socket.io 基本上可以是咱們最常見的 im 服務套件，然後它有提供三種 transport 方式 :</p>
+<ul>
+<li>defaut</li>
+<li>polling</li>
+<li>websocket</li>
+</ul>
+<p>其中 polling 與 websocket，上面已經有說過，而 defaut 指的就是 :</p>
+<blockquote>
+<p>先用 polling 然後再嘗試升級為 websocket</p>
+</blockquote>
+<p>但這時如果使用『 defaut 與 polling 』這個方案會出事情。</p>
+<blockquote>
+<p>這兩個 transport 會無法建立連線</p>
+</blockquote>
+<p>主要的原因在於 polling ，它就是打多次 http 來看看沒有訊息，但是你想想，如果第一次打 a 台，第二次打 b 台，會發生什麼事情呢 ?</p>
+<p>現面來模擬一下這個流程 :</p>
+<ol>
+<li>用戶 mark 往 nginx 發起建立 socket.io 連線</li>
+<li>nginx 分配到 server a 建立。</li>
+<li>回應 socket.io 編號 abc 給 client。</li>
+<li>用戶使用編號 abc 來進行 polling，nginx 分配到 server b。</li>
+<li>由於 server b 不認識這條 abc 連線，因此 client 會誤斷連線斷掉，因此開始重連機制，但是過後不久又發生同樣的循環。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358NBI14OCwJF.png" alt="">
+圖 4 : 方案 1 雷 2 圖</p>
+<p>這個問題有沒有覺得有點眼熟，這個就和上一篇說的 session 問題有點相似，但這可沒辦法加個 redis 就可以處理。</p>
+<h4 id="heading1">解法</h4>
+<p>這裡基本上有以下兩種解法 :</p>
+<ul>
+<li>nginx 開啟 ip hash 演算法，讓它一個用戶可以連到同一台機器。</li>
+<li>直接強制使用 websocket 連線。</li>
+</ul>
+<p>嚴格來說第二種 websocket 方法會比較好，不過咱公司有發生過沒辦法穿透防火牆的問題，不過詳細我也不確定實際情況是如何，就當參考一下。</p>
+<p><strong>~ 小補充 1 ~</strong>
+這裡補充一下，通常咱們會使用 pm2 來當 socket.io process 服務的管理器，然後它有一個 cluster 功能，也就是說它可以在一台機器中，開多個 socket.io process 來處理，這樣就可以用多 cpu 資源。</p>
+<p>但是你一開始使用建立一定會失敗，主要的原因也如上述，就是打錯 process 囉，解法就是打同一 process。</p>
+<p><strong>~ 小補充 2 ~</strong>
+應該也有人使用 aws 的 ec2 + alb 方案來建立出 socket.io 服務，這裡應該也會碰到這個雷，而且
+alb 雖然有支援某個用戶在一定時間打同一台。</p>
+<p>但 ! 它是用 cookie 來決定打同一台，所以瀏覽器的用戶不會出事，手機端的應該就會死一片，如果沒有處理 cookie 的話。</p>
+<h2 id="im--2--im-">IM 服務的擴展方案 2 : IM 服務分配器</h2>
+<p>簡單的說將 nginx 拿掉，然後建立一個 dispatcher 服務上去，它就是一個 http 服務，然後它會回應讓 client 去那一台 im 服務來建立長連線，如下圖 3 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358aJO6hon56h.png" alt="">
+圖 5 : 方案</p>
+<p>這種方案的優點就在於 :</p>
+<blockquote>
+<p>沒有負載均衡連線量太大的貧頸</p>
+</blockquote>
+<h3 id="heading2">這種方案的大雷</h3>
+<p>這個方案事實上有個大地雷 :</p>
+<blockquote>
+<p>沒處理好，會沒有 HA 機制</p>
+</blockquote>
+<p>socket.io 這個套件它有幫我們建立一套維護連線的心跳機制，也就是說正常來想，如果有啥網路不穩還啥的，導致連線中斷了，它會自動幫我們重連。</p>
+<p>坑點在於 :</p>
+<blockquote>
+<p>它是和 IM 服務重連</p>
+</blockquote>
+<p>嗯這很正常，有啥毛病了 ? 假設你那台 im 服務倒或是需要下掉維護，那如果你使用上述方案會產生什麼事情呢 ?</p>
+<blockquote>
+<p>它會一直不斷的重連那台死掉的 IM 服務，直到到達重連上限</p>
+</blockquote>
+<p>如下圖 6 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191009/20089358A0LuShdZsV.png" alt="">
+圖 6 : 分配器模式的雷點</p>
+<p>這也代表這 :</p>
+<blockquote>
+<p>你的系統沒有可用性，一台機器倒了，在那台上的用戶全部無法使用，除非用戶主動進行重連。</p>
+</blockquote>
+<p>所以記好，如果是用上述方案來進行擴展的，請記得要處理以下的事情 :</p>
+<blockquote>
+<p>用戶端重連時，請設定要至 dispatcher 拿新的 im 服務位置</p>
+</blockquote>
+<p>你知道如果是已經上線一段的服務，發現這問題有多慘嗎 ? 首先用戶端一定不能保證強制更新到最新版 ( 你想想你的系統多久沒更新了 ? )，所以說不能指望用戶端全部改完就 ok，那這時你要如何更新機器呢 ? 你爆了要如何呢 ? 幾乎完全動不了啊…… 項多只能在全服務關機時才能更新啊……，但如果你的服務是要 7 x 24 小時的，有可能動嗎 ?</p>
+<p>一開始走錯，這真的卡很死……啊</p>
+<h2 id="heading3">結論與心得</h2>
+<p>本篇文章本來在考慮要不要寫的，但是考慮到自已的血淚史，還是寫出讓後人不要踩到這些雷坑。</p>
+<p>最後這裡總結一下各方案的優缺與雷坑注意。</p>
+<h4 id="im--1--1">IM 服務的擴展方案 1 - 負載均衡</h4>
+<p>這種方案的優點如下 :</p>
+<ul>
+<li>簡單，現在應該有不少服務有支援它了。</li>
+</ul>
+<p>但雷坑點在於 :</p>
+<ul>
+<li>負載均衡服務記得開 ip hash 演算法，否則 polling 與 default 這兩種 socket.io 提供的 transport 配置會死。</li>
+<li>負載均衡服務的壓力會很大，現在我不敢保證有解法。</li>
+</ul>
+<h4 id="-2--im-">方案 2 : IM 服務分配器</h4>
+<p>這種方案的優點如下 :</p>
+<ul>
+<li>沒有負載均衡服務壓力。</li>
+<li>分配算法可以依業務需求來分配。</li>
+</ul>
+<p>而這種方案的大雷坑在於 :</p>
+<ul>
+<li>用戶端的重連機制，記得是連到 im 服務分配器，不然會很慘</li>
+</ul>
+<p><strong>祈禱未來的走這條路的，謹記前人的血淚史。</strong></p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#im-">IM 服務的先行知識</a>
+      <ul>
+        <li><a href="#im---">IM 服務的問題 - 長連線</a></li>
+        <li><a href="#im--socketio">IM 服務的基本起手式 Socket.io</a></li>
+      </ul>
+    </li>
+    <li><a href="#im--1--">IM 服務的擴展方案 1 - 負載均衡</a>
+      <ul>
+        <li><a href="#-1--">雷 1 : 負載均衡會有壓力</a></li>
+        <li><a href="#-2--socketio-polling--default-">雷 2 : Socket.io Polling 與 Default 問題</a></li>
+      </ul>
+    </li>
+    <li><a href="#im--2--im-">IM 服務的擴展方案 2 : IM 服務分配器</a>
+      <ul>
+        <li><a href="#heading2">這種方案的大雷</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

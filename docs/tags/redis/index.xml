@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/redis/</link>
+    <description>Recent content in redis on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Fri, 20 Sep 2019 20:16:57 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/redis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>30-20 之資料緩存失效問題</title>
+      <link>https://mark-lin.com/posts/20190920/</link>
+      <pubDate>Fri, 20 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190920/</guid>
+      <description>正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基</description>
+    </item>
+    
+    <item>
+      <title>30-19 之資料庫層的優化  - 資料緩存策略</title>
+      <link>https://mark-lin.com/posts/20190919/</link>
+      <pubDate>Thu, 19 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190919/</guid>
+      <description>正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，</description>
+    </item>
+    
+    <item>
+      <title>30-18 之資料緩存層的服務 - Redis 概念與一致性難題</title>
+      <link>https://mark-lin.com/posts/20190918/</link>
+      <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190918/</guid>
+      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能</description>
+    </item>
+    
+  </channel>
+</rss>

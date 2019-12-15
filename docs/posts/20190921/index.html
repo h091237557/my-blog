@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/network' class="muted-link">
+  <span class="Label Label--gray">network</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-21.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358zmfCBeJfDV.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :</p>
+<ul>
+<li>CDN ( Content Delivery Network )</li>
+<li>HTTP 緩存</li>
+</ul>
+<p>本篇文章分為以下幾個章節 :</p>
+<ul>
+<li>CDN 與運行流程</li>
+<li>HTTP 緩存與運行流程</li>
+<li>CDN 與 HTTP 緩存搞在一起用</li>
+</ul>
+<p>這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。</p>
+<p><a href="https://mark-lin.com/posts/20180923/">30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )</a></p>
+<h2 id="cdn-">CDN 與運行流程</h2>
+<p>在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。</p>
+<p>首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳
+html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358L394w8r0oh.png" alt="">
+圖 1 : 一個台灣用戶連到台灣網站的時間</p>
+<p>然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358WIYfHP7ksn.png" alt="">
+圖2 : 一個台灣用戶連到美國網站的時間</p>
+<p>這就是 CDN 最一開始要解決的問題 :</p>
+<blockquote>
+<p>將資源放到離用戶更近一點的地方</p>
+</blockquote>
+<p>CDN ( Content Delivery Network )，它存在的目的就是讓你接近取得網路資料的方法，咱們如果將上圖加入 cdn 後就會長的如下圖 3 所示，所以 client 要取得的一些資源 (ex. html、css、js, imgage, video) 都會去 cdn 那取得。這樣就算你的網站架在美國，但只要 cdn 是在台灣，那回應速度應該也不會有太大的差距。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/20089358NZ2rYxVuzs.png" alt="">
+圖 3 : cdn 回應加速圖</p>
+<p>雖然當初 cdn 是為了上述原因才誕生的，但它事實上有很多的優點 :</p>
+<ul>
+<li>抓資源更快。</li>
+<li>保護來源端。</li>
+<li>節省網路傳輸量。</li>
+</ul>
+<p>而且如果是影音傳輸的情境下 cdn 可以說是核心的命脈，好的 cdn 讓你看片不卡卡，壞的 cdn 讓你砸電腦。</p>
+<h3 id="cdn-1">CDN 的請求運作原理</h3>
+<p>首先 cdn 基本上會分為三個部份。</p>
+<ul>
+<li>智能 DNS (Intelligent DNS)：事實上是 dns 的某個功能，它的主要功用就是可以幫用戶找到最近的 edge cdn，這樣用戶就可以去最近的 cdn 拿資料了。</li>
+<li>邊緣 CDN ( Edge CDN )：就是散布在不同地方的 cdn 節點。</li>
+<li>來源 Server ( Origin Server )：就是原始資料存放地。</li>
+</ul>
+<p>然後基本一個圖片的請求，會變的如下圖 4 所示。</p>
+<ol>
+<li>client 發送一個 http 請求來取得圖片。</li>
+<li>dns 收到後，會去請求智能 dns。</li>
+<li>智能 dns 會回傳給 dns 最近 cdn 的 ip 位置。</li>
+<li>client 收到 ip 以後，在發送請求去那個 cdn。</li>
+<li>cdn 收到請求後，會先判斷有沒有緩存此圖片，如果有就直接回傳，沒有則在去來源 server 取得圖片，然後緩存此圖片，最後在送去給 client。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20181107/200893580n0UPwlTOG.png" alt="">
+圖 4 : cdn 請求流程</p>
+<h4 id="---server--">這裡問個問題 ~ 如果 Server 檔案有更新了，通常會如何處理呢 ?</h4>
+<p>基本上就是兩個 :</p>
+<ul>
+<li>等緩存到期</li>
+<li>強制將 cdn 緩存清空</li>
+</ul>
+<p>通常第一個解法是用在一些不那麼需要即時的圖片或啥的檔案來使用，就是時間一到就自然會更新。</p>
+<p>而第二種，通常是用在例如 html 或 js 這種有重要更新一定要吃到它時，就會去 cdn 那強制的刷新緩存，這種所有的請求都會暫時的去來源來抓最新檔案。通常大部份的 cdn 都要設置這個功能。</p>
+<h2 id="http-">HTTP 緩存與運行流程</h2>
+<p>http 這個咱們網路世界最常用的協議，它也有支援所謂的緩存機制，它所在的位置嚴格來說如下圖 5 所示，也就是會在瀏覽器將資源存在那台電腦上。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358bfg610iilV.png" alt="">
+圖 5</p>
+<p>嚴格來說，我覺得這個緩存稱為『 瀏覽器緩存 』會比較準確一點，雖然它是 http 提供的機制，但是有沒有實作它要看應用層，例如瀏覽器，而如果你是在一個例如 web server 的應用程式裡，另外打 http 給其它 api，你覺得會有緩存嗎 ?</p>
+<p>不一定，真的要看應用層有沒有實現，還真有看到不少套件有真的處理，像 android volly 就有處理 http 緩存。</p>
+<h4 id="http-1">HTTP 緩存流程</h4>
+<p>那接下來咱們來看看，如果這時用戶端要一張圖片，那整個緩存流程會是如何，如下圖 6 所示。</p>
+<ol>
+<li>用戶端發請一個 http 請求要一張馬克圖</li>
+<li>server 回應圖片，且會在表頭塞一個『 Cache-Control:max-age=60 』欄位，標示這張圖片要緩存 60 秒，過期後再去 server 重拿。</li>
+<li>瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。</li>
+<li>用戶端第二次發送請一個 http 請求要一張馬克圖。</li>
+<li>但發現本地端已經有緩了，就直接從本地端拿回傳。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358oPvIedY0V6.png" alt="">
+圖 6 : http 緩存實現流程</p>
+<h4 id="http-2">Http 緩存過期流程</h4>
+<p>接下來咱們來看看過期的流程。</p>
+<ol>
+<li>用戶端發請一個 http 請求要一張馬克圖</li>
+<li>server 回應圖片，且會在表頭塞二個『 Cache-Control:max-age=60 』與 『 Etag: abcde 』 欄位，標示這張圖片要緩存 <strong>60 秒</strong>，過期後再去 server 重拿 ( etag 過期流程會說 )。</li>
+<li>瀏覽器看到回應有 cache-Control 欄位，就將此圖片存在用戶端內。</li>
+<li>時間過了 <strong>100 秒</strong>。</li>
+<li>100 秒後用戶要再一次請求圖片，發現緩存已到期，再請新發送請求，並且帶這從之前 etag 拿到的圖片指紋，發送給 server。</li>
+<li>server 收到後，使用 if-none-match 裡的 etag 指紋來比對一下這張圖片有沒有更新過。</li>
+<li>『 沒 』更新過，則回傳 304，叫瀏覽器自已再從本地端拿圖片來用就行了。</li>
+<li>『 有 』更新過，則回傳新圖片，之後如同第二個步驟。</li>
+</ol>
+<p>注意一下 etag 主要是為了讓 server 端判斷這張圖片有沒有更新過，如果沒有則叫用戶在抓一次本地端的圖，這樣可以節省網路傳輸。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358EaStSvyKxh.png" alt="">
+圖 7 : http 緩存過期實現流程</p>
+<p>關於 http 緩存的詳細內容，建議看這篇文章，寫得非常好理解。</p>
+<p><a href="https://blog.techbridge.cc/2017/06/17/cache-introduction/">循序漸進理解 HTTP Cache 機制</a></p>
+<p><strong>~ 小知識 ~</strong>
+在 http 1.0 有一個 expires 表頭欄位，但是在 http 1.1 之後就幾乎被 cache-control 替代囉，因為 expires 是看用戶端時間，也就是說你調整時間緩存就失效了。</p>
+<p>如果在使用時有帶 expires，http 現在都還是會看 cache-control 的配置。</p>
+<h2 id="cdn--http-">CDN 緩存與 HTTP 緩存</h2>
+<p>咱們已經分別的看完 cdn 緩存與 http 緩存的知識以後，咱們接下來把它混在一起看它們的運行流程。</p>
+<p>這裡就只看以下兩種基本的情況，另外兩個過期圖事實上也沒有太大的差別。</p>
+<h4 id="-1--cdn--http-">情況 1 : CDN 與 HTTP 緩存都還沒過期</h4>
+<p>如下圖 8 所示。</p>
+<ol>
+<li>用戶端發請一個 http 請求要一張馬克圖。</li>
+<li>cdn 的馬克圖還沒過期，直接回傳。</li>
+<li>server 回應圖片，且會在表頭塞二個緩存用欄位。</li>
+<li>瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。</li>
+<li>用戶端第二次發送請一個 http 請求要一張馬克圖。</li>
+<li>但發現本地端已經有緩存了，就直接從本地端拿圖片。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358VelbNWz9YM.png" alt="">
+圖 8 : CDN 與 Http 緩存都還沒過期</p>
+<h4 id="-2--cdn--http-">情況 2 : CDN 過期而 HTTP 緩存還沒過期</h4>
+<p>如下圖 9 所示。</p>
+<ol>
+<li>用戶端發請一個 http 請求要一張馬克圖。</li>
+<li>cdn 的馬克圖還過期，至 server 拿取新圖。</li>
+<li>server 回傳新馬克圖。</li>
+<li>server 回應圖片，且會在表頭塞二個緩存用欄位。</li>
+<li>瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。</li>
+<li>用戶端第二次發送請一個 http 請求要一張馬克圖。</li>
+<li>但發現本地端已經有緩存了，就直接從本地端拿圖。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358ZxoNCNxxb6.png" alt="">
+圖 9 :  CDN 過期而 Http 緩存還沒過期圖</p>
+<h3 id="--">問題 - 雙方不同步</h3>
+<p>這兩個混在一起時，有個地方有注意，不然會是雷 :</p>
+<blockquote>
+<p>cdn 緩存過期時間與 http 緩存過期時間要一起考慮</p>
+</blockquote>
+<p>問題會出在如下圖 10 所示，通常 server 端會決定這個圖片緩存時間要多久，而 cdn 這裡也有配置可以決定緩存時間要多久，而這時如果兩者時間不同步，那就會發生以下的情境。</p>
+<pre><code>用戶 : 奇怪我明明已經更新大頭圖了，為啥等了 10 幾分鐘都還沒更新呢 ?
+server : 奇怪我明明設定緩存時間為 60 秒過期，客戶應該 60 秒後就會抓到新的啊……
+
+調查以後發現…
+
+cdn : 對不起 ~ 因為我這配置為 1000 秒後才更新緩存……
+</code></pre><p><img src="https://ithelp.ithome.com.tw/upload/images/20191006/20089358vfdtgRGJG5.png" alt="">
+圖 10 :  雙方配置問題點</p>
+<p>這裡順到說一下，每一家 cdn 廠商緩存更新配置可以都會有點不同，請參閱更家文件，在來決定配置。</p>
+<h2 id="heading1">結論與心得</h2>
+<p>本篇文章中，咱們簡單的談談了兩個網路傳輸優化技術 :</p>
+<ul>
+<li>CDN</li>
+<li>HTTP 緩存</li>
+</ul>
+<p>並且要注意在使用上，兩個有可能會互相的打架，這個小雷要注意。</p>
+<p>最後如果想要看看 aws cloudFront cdn 服務的使用，可以參考我之前寫的文章，請參閱。</p>
+<p><a href="https://mark-lin.com/posts/20180923/">30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )</a></p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://kknews.cc/zh-tw/tech/gqkzny.html">http緩存與cdn相關技術</a></li>
+<li><a href="https://blog.techbridge.cc/2017/06/17/cache-introduction/">循序漸進理解 HTTP Cache 機制</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/55623075">图解Http缓存控制之max-age=0、no-cache、no-store区别</a></li>
+<li><a href="http://caibaojian.com/mobile-cache.html">移动web缓存介绍</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#cdn-">CDN 與運行流程</a>
+      <ul>
+        <li><a href="#cdn-1">CDN 的請求運作原理</a></li>
+      </ul>
+    </li>
+    <li><a href="#http-">HTTP 緩存與運行流程</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#cdn--http-">CDN 緩存與 HTTP 緩存</a>
+      <ul>
+        <li></li>
+        <li><a href="#--">問題 - 雙方不同步</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論與心得</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

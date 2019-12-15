@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號 &ndash; 拿鐵派的馬克 Blog
+  30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
-    <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
+    <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -37,15 +37,15 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本|Describe what your web page is about">
+    <meta name="twitter:title" content="30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
 
 
     <link rel="stylesheet" href="/assets/syntax-1.0.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.2.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
   </head>
 
 
@@ -77,7 +77,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</div>
+    <div class="h1 mt-3 mb-1">30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine</div>
   </div>
   <div class="Subhead-description">
     
@@ -85,21 +85,17 @@
 
 
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016' class="muted-link">
-  <span class="Label Label--gray">IT 鐵人賽 2016</span>
-</a>
-
-<a href='/tags/mongodb' class="muted-link">
-  <span class="Label Label--gray">mongodb</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
 </a>
 
 
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-13. Published at: 2016-09-08.">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-08.">
         
-          Lastmod: 2019-12-13
+          Lastmod: 2019-12-15
         
       </span>
     </div>
@@ -109,164 +105,185 @@
 <article>
   
   <section class="pb-6 mb-3 border-bottom">
-    <p>前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。</p>
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190921/20089358Xi2sK70Jom.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :</p>
+<blockquote>
+<p>異步非阻塞的 I/O 操作。</p>
+</blockquote>
+<p>而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?</p>
+<p>簡單的說它可以讓我們實現以下的事情 :</p>
+<blockquote>
+<p>可以在應用層實現同步非阻塞的 I/O 操作</p>
+</blockquote>
+<p>接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。</p>
 <ul>
-<li><code>find</code>方法基本說明</li>
-<li><code>find</code>的搜尋條件(含搜尋故事)</li>
+<li>coroutine 協程想要解決的問題。</li>
+<li>coroutine 協程實現原理。</li>
+<li>Golang 的 goroutine。</li>
 </ul>
-<p>P.S <code>+u^8</code>~</p>
-<h2 id="find-">find 方法基本說明</h2>
-<p><code>mongodb</code>使用<code>find</code>來進行搜尋，它的第一個參數決定要那些資料，而第二個參數則決定要返回那些<code>key</code>。</p>
-<p>基本的使用範例如下，首先我們先建立一些資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;bb&#34;</span><span class="p">,</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-</code></pre></div><p>我們想尋找到<code>name</code>為<code>mark</code>的<code>document</code>，並且我們希望回傳值只回傳<code>id</code>這個<code>key</code>就好，搜尋指令如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">1</span> <span class="p">}</span><span class="p">)</span>
-</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161206-1.png" alt=""></p>
-<p>搜尋結果如下，它只回傳了<code>key id</code>的內容，但是可以看到<code>_id</code>也被回傳回來，因為在默認情況下<code>_id</code>這個<code>key</code>會自動被傳回來，如果真的不想它也回傳回來可以下達下列搜尋指令。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span><span class="s2">&#34;_id&#34;</span><span class="o">:</span><span class="mi">0</span><span class="p">}</span><span class="p">)</span>
-</code></pre></div><p><img src="http://yixiang8780.com/outImg/20161206-2.png" alt=""></p>
-<h2 id="-find--">~ find 的搜尋條件 ~</h2>
-<p>這邊我們將要說明<code>find</code>常用搜尋條件，and、or、大於等於、大於、小於、小於等於、包含、不包含，有了這些條件我們就可以更方便的尋找你所需要的<code>document</code>。</p>
-<p>這邊簡單的整理成一張表來對應操作符號。</p>
-<table>
-<thead>
-<tr>
-<th>條件</th>
-<th align="center">操作符號</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AND</td>
-<td align="center"><code>$and</code>，另一種方法也可以直接在<code>query</code>中下<code>{&quot;key1&quot;,&quot;value1&quot;,&quot;key2&quot;:&quot;value2&quot;}</code>|</td>
-</tr>
-<tr>
-<td>OR</td>
-<td align="center"><code>$or</code></td>
-</tr>
-<tr>
-<td>NOT</td>
-<td align="center"><code>$not</code></td>
-</tr>
-<tr>
-<td>NOR</td>
-<td align="center"><code>$nor</code></td>
-</tr>
-<tr>
-<td>大於</td>
-<td align="center"><code>$gt</code></td>
-</tr>
-<tr>
-<td>大於等於</td>
-<td align="center"><code>$gte</code></td>
-</tr>
-<tr>
-<td>小於</td>
-<td align="center"><code>$lt</code></td>
-</tr>
-<tr>
-<td>小於等於</td>
-<td align="center"><code>$lte</code></td>
-</tr>
-<tr>
-<td>包含</td>
-<td align="center"><code>$in</code></td>
-</tr>
-<tr>
-<td>不包含</td>
-<td align="center"><code>$nin</code></td>
-</tr>
-</tbody>
-</table>
-<p>我們接下來會先產生幾筆測試資料，再來測試幾個搜尋故事。</p>
-<p>測試資料如下，這是一組使用者資訊，裡面記載了使用者的名稱、年紀、粉絲數以及喜歡數。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//collection為user
-</span><span class="c1"></span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;1&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">100</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">35</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">220</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">50</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;3&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">120</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">33</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;4&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">500</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1000</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;5&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">1300</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;6&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="s2">&#34;7&#34;</span><span class="p">,</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;landry&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">25</span><span class="p">,</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">130</span><span class="p">,</span><span class="s2">&#34;likes&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">}</span>
-</code></pre></div><h3 id="30306060fans200200">我想要尋找年紀30歲以上(包含30)，但不滿60歲(不包含60)，fans又有200人以上(包含200)的人</h3>
-<p>這時就需要<code>$gte</code>、<code>$lt</code>和<code>and</code>一起用囉，這有兩種寫法。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//這是第一種
-</span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
-	<span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;$lt&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">}</span><span class="p">,</span>
-	 <span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span> <span class="o">:</span> <span class="mi">200</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-	 
-<span class="c1">//這是第二種
-</span><span class="c1"></span><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span>
-	<span class="p">{</span><span class="s2">&#34;$and&#34;</span><span class="o">:</span><span class="p">[</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">,</span><span class="s2">&#34;$lt&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">}</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gte&#34;</span> <span class="o">:</span> <span class="mi">200</span><span class="p">}</span><span class="p">}</span><span class="p">]</span><span class="p">}</span><span class="p">)</span>
-</code></pre></div><p>結果如下，應該只找到<code>steven</code>這位仁兄。</p>
-<p><img src="http://yixiang8780.com/outImg/20161206-3.png" alt=""></p>
-<h3 id="-fans--100-likes--100-">我想要尋找 fans 小於等於 100，或是 likes 小於 100 的人。</h3>
-<p>這時就需要用到<code>or</code>和<code>$lt</code>、<code>$lte</code>囉。</p>
-<pre><code>db.user.find(
-	{&quot;$or&quot;: [{&quot;fans&quot;:{&quot;$lte&quot;:100}},{&quot;likes&quot;:{&quot;$lt&quot;:100}}]})
-
-</code></pre><p>結果如下，應該是找到三位<code>mark、steven、stanly</code>。</p>
-<p><img src="http://yixiang8780.com/outImg/20161206-4.png" alt=""></p>
-<h3 id="-age--2560-">我想要尋找 age 為 25、60 的人。</h3>
-<p>這時可用<code>$in</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$in&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">60</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-</code></pre></div><p>結果如下，應該是找到三位<code>mark、max、landry</code>。</p>
-<p><img src="http://yixiang8780.com/outImg/20161206-5.png" alt=""></p>
-<h3 id="-age--2560--id-">我想要尋找 age 不為 25、60 的人，並且只給我它的 id 就好。</h3>
-<p>這時可用<code>$nin</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$nin&#34;</span><span class="o">:</span><span class="p">[</span><span class="mi">25</span><span class="p">,</span><span class="mi">60</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;id&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
-
-</code></pre></div><p>結果如下~應該是會找到4位。</p>
-<p><img src="http://yixiang8780.com/outImg/20161206-6.png" alt=""></p>
-<h3 id="-likes--100----not-">我想要尋找 likes 小於等於 100 的人 ( 使用 $not )</h3>
-<p>這邊事實上可以很簡單的用<code>$lte</code>，但因為我們要介紹一下<code>$not</code>所以會寫的比較麻煩點兒，
-而真正可以發揮<code>$not</code>功能時，是在和正規表達式聯合使用時，用來查找不匹配的<code>document</code>。</p>
-<p>來解釋一下這段，首先它會尋找所有<code>likes</code>大於<code>100</code>的<code>document</code>，但這時在配個<code>$not</code>就變成完全相反會變成小於等於喔。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;likes&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$not&#34;</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;$gt&#34;</span><span class="o">:</span><span class="mi">100</span><span class="p">}</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-
-</code></pre></div><p>所以結果應該是找到4筆。</p>
-<p><img src="http://yixiang8780.com/outImg/20161206-7.png" alt=""></p>
-<h3 id="-fans--100--likes--500">我們想要找同時不滿足 fans 大於 100 人且 likes 大於 500。</h3>
-<p>這邊我們可以用<code>$nor</code>來尋找，它的意思就是選出所有不滿足條件的<code>document</code>。</p>
-<pre><code>db.user.find({&quot;$nor&quot;:[{&quot;fans&quot;:{&quot;$lt&quot;:100}},{&quot;likes&quot;:{&quot;$lt&quot;:100}}]})
-
-</code></pre><p><img src="http://yixiang8780.com/outImg/20161206-8.png" alt=""></p>
-<h2 id="--">~ 結語 ~</h2>
-<p>今天說明了很多的條件符號，可以簡單分成以以下兩類，邏輯符號與比較符號，運用這兩種符號就可以針對很多種情況下進行搜尋，當然還不只這些，明天將會繼續，我累了……。</p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th align="center">操作符號</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>邏輯符號</td>
-<td align="center"><code>$and</code>、<code>$or</code>、<code>$or</code>、<code>not</code>|</td>
-</tr>
-<tr>
-<td>邏輯符號用法</td>
-<td align="center"><code>{$xxx: [ { expression1 },{ expression2 }]}` </code>{ field: { $not: { <!-- raw HTML omitted --> } } }`|</td>
-</tr>
-<tr>
-<td>比較符號</td>
-<td align="center"><code>$gt</code>、<code>$gte</code>、<code>$lt</code>、<code>$lte</code>、<code>$in``$nin</code></td>
-</tr>
-<tr>
-<td>比較符號用法</td>
-<td align="center"><code>{field: {$gt: value} } ` </code>{ field: { $in($nin): [<!-- raw HTML omitted -->, <!-- raw HTML omitted -->, &hellip; <!-- raw HTML omitted --> ] } }`</td>
-</tr>
-</tbody>
-</table>
-<h2 id="--1">~ 參考資料 ~</h2>
+<h2 id="coroutine-">coroutine 協程想要解決的問題</h2>
+<p>首先咱們先來看看它想要解決什麼問題呢 ?</p>
+<blockquote>
+<p>協程它想要將異步非阻塞的 I/O 操作變成同步的。</p>
+</blockquote>
+<h3 id="heading1">異步非阻塞寫法</h3>
+<p>首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :</p>
 <ul>
-<li><a href="https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/"><a href="https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/">https://docs.mongodb.com/v3.0/reference/operator/query-geospatial/</a></a></li>
-<li><a href="http://www.cnblogs.com/egger/p/3135847.html"><a href="http://www.cnblogs.com/egger/p/3135847.html">http://www.cnblogs.com/egger/p/3135847.html</a></a></li>
+<li>異步 : callback 機制，也就是下面程式碼裡面的 function。</li>
+<li>非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_redis</span><span class="p">;</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">GET</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;swoole&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">var_dump</span><span class="p">(</span><span class="nv">$result</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div><p>基本上有寫過 js 的一看就知道，這是一種很常見的寫法，而它的問題就在於有可能會有 callback 地獄產生。</p>
+<p>而要解決這個問題通常就是以下三個:</p>
+<ul>
+<li>Promise</li>
+<li>Generator</li>
+<li>Coroutines</li>
+</ul>
+<p>這裡我們就不深入說明 Promise 與 Generator，而直來說明 Coroutines。</p>
+<h3 id="heading2">同步非阻塞寫法</h3>
+<p>由於上面範例 callback 這種寫法在多層有可能會變成 callback hell，因此就有人想說，能不能寫的和一般同步的測試碼一樣，嗯這就是協程誕生的理由。</p>
+<p>你使用了協程程式碼就會變成如下，如何是不是好看多與直覺多了呢 ?</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nx">go</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$redis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swoole\Coroutine\Redis</span><span class="p">();</span>
+    <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">);</span>
+    <span class="nv">$val</span> <span class="o">=</span> <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div><p>而事實上在 nodejs 中的 async/await 就是協程。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">(</span><span class="nx">async</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">createClient</span><span class="p">(</span><span class="p">)</span>
+    <span class="kr">const</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><h2 id="coroutine-1">Coroutine 協程實現原理</h2>
+<p>它的實現原理簡單的說就是 :</p>
+<blockquote>
+<p>在應用層所實現一個控制單元</p>
+</blockquote>
+<p>咱們應該都知道 thread 這東東，它的概念就是 cpu 的最小執行單位。也就是說作業系統會以它為單位，將 cpu 分給它。</p>
+<p>而協程就是一個更小的執行單位，但是有幾點要注意 :</p>
+<ul>
+<li>它是純應用端的執行單位，作業系統完全不知道它。</li>
+<li>它與 thread 一樣都有自已的記憶體空間。</li>
+</ul>
+<p>假設作業系統將 CPU 分一段時間給某個 Thread，運行，然後應用端內部會『 自行 』的決定誰先執行，如下圖 1 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190923/20089358z6RrjvkCuO.png" alt="">
+圖 1 : corotuine 的概念圖</p>
+<h3 id="-io-">同步非阻塞 I/O 運行流程</h3>
+<p>然後當我們知道協程是如何運行後，接下來咱們來看看它是如何搭配非阻塞 I/O 模式。</p>
+<p>下圖為當應用端發送一個請求給遠方時的流程。</p>
+<p>首先第一張圖 2 是 reactor 運行角度圖，當應用端 corotuine A 發送 http 請求以後，會將此 socket 的 read 事件監控丟給 epoll，然後不斷的去問有沒有資料回來。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190923/200893587469DZPw1m.png" alt="">
+圖 2 : refactor 角度圖</p>
+<p>在上述的步驟中，當 corotuine A 丟完 read 後，就會自已讓出控制權，轉成如下圖 3 所示，然後接下來由 corotuine B 開始做它的工作，最後當有請求回應時，在將控制權轉交給 corotuine B，這樣就完了一段請求囉。注意一下，這裡所有的控制都是由『 應用層 』自已處理。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190923/20089358kp0YoMggFR.png" alt="">
+圖 3 : corotuine 角度圖</p>
+<h3 id="-coroutine-">關於 Coroutine 的幾個問題</h3>
+<h4 id="-1--coroutine--io--">問題 1 : Coroutine 是實現非阻塞 I/O 的技術嗎 ?</h4>
+<p>不是。</p>
+<p>coroutine 很多人會說它是一個比 thread 還更小的操作單位，所以就會想，那我每一個阻塞 I/O 就開一個協程來處理，那這樣不就可以實現非阻塞 i/o 操作了嗎 ? 就像 multi thread 原理一樣，而且我協程更省資源。</p>
+<p>nonono ~</p>
+<p>process 為作業系統的最小資源管理單位，而 thread 為作業系統最小操作單位。</p>
+<p>而 coroutine 是一個比 thread 更小的操作單位，但是它的操作是『應用層』，而不是像 thread 一樣是作業系統所操作。</p>
+<p>i/o 的操作是指作業系統的操作，當一個阻塞 i/o 執行時，讓 process 阻塞的是操作系統，所以如果你在一個協程內開啟一個阻塞 i/o 它仍然會卡住整個 process。</p>
+<blockquote>
+<p>coroutine 嚴格來說只能幫你做到同步非阻塞，非阻塞還是需要有 reactor 機制來實現。</p>
+</blockquote>
+<h3 id="-2--coroutine--">問題 2 : coroutine 可以增加性能嗎 ?</h3>
+<p>不，絕對不是。</p>
+<p>它是性能的減項。</p>
+<p>它是使用一些資源來將『 異步 』非阻非塞 i/o 操作變成『 同步 』非阻塞 i/o 操作，為了讓寫程式與運行時，是直覺式的一直線運行下來。</p>
+<p>然後順到提一下，應該是有不少的文章說 coroutine 適合高 i/o 的應用，這句話只能說一半對一半錯，它有很多前提假設沒給。</p>
+<p>你想想，如果它是使用 multi thread 或 multi process 來處理大量 i/o 的情況下，你需要 coroutine 要幹啥 ?</p>
+<p>要說 coroutine 適合高 I/O 的應用需要的假設為 :</p>
+<blockquote>
+<p>此應用已是一個異步非阻塞的應用，當你搭配 coroutine 下去，會減少不少的維護成本，因為寫法就和一般程式寫法一樣。</p>
+</blockquote>
+<h2 id="golang--goroutine">Golang 的 Goroutine</h2>
+<p>接下來咱們來談談被稱為天生可以支持高併發的 golang，而其中支持它可以高併發的東西稱為 goroutine，很多人說它是 coroutine 事實上有點不太對，但也不能說不對。</p>
+<p>接下來咱們來淺淺的來理解一下。</p>
+<h3 id="golang-">Golang 的運行架構</h3>
+<p>首先 golang 基本上它的運行架構為所謂的『 MPG 』模型，這個英文字分別代表三個部份 :</p>
+<ul>
+<li>M : 就是 thread，裡面跑了一堆 goroutine。</li>
+<li>P ( Processor ) : 處理器，用來執行 goroutine，然後它裡面要個隊列，裡面放了一堆待處理的 goroutine。</li>
+<li>G ( Goroutine ) : 就是 goroutine 在 golang 中應用端最小的運行單位。</li>
+</ul>
+<p>然後它事實上還有第四個重要東西。</p>
+<ul>
+<li>Sched : 嚴格來說它是大總管，它會記錄 M、P、G 的狀態，如果發現某個 M (thread) 工作滿了，就會將一些 goroutine 丟給其它的 M 處理。</li>
+</ul>
+<p>上面幾個東西的關連如下圖 4 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190923/200893588SLmIn9hjI.png" alt="">
+圖 4 : Golang 架構圖</p>
+<p>假設一個 goroutine 中有工作要運行，那這時它會被丟到處理器 P 的隊列中排隊處理，然後到它時，就代表這將這個 thread ( M ) 的 cpu 資源分配給它來運行。</p>
+<h4 id="-goroutine--">那如果 goroutine 在運行時阻塞了怎麼呢 ?</h4>
+<p>這裡先說一下阻塞的假設。</p>
+<p>假設 G-1 這個 goroutine 執行了一些 i/o 請求，又或是在進行大量 cpu 運算，那這時包工頭總管 Sched 將有可能會將，丟到另一個 M 中，有可能是也有可能是開一個 M。</p>
+<p>如下圖 5 所示，這圖是另外建立一個新的 M 的說明，當 G-1 這個 goroutine 導致 M-1 這個 thread 無法處理其它資料時，這時總管就會出手，就 M-1 上的所有 goroutine 都移至一個新開的 thread M-3 上面。</p>
+<p>然後等到 M-1 上工作解放後，大總管就又會將一些 goroutine 丟回去給 M-1 囉。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190923/20089358KwkUFOsqtc.png" alt="">
+圖 5 : goroutine 工作轉移</p>
+<h3 id="-goroutine-">一些 Goroutine 的問答</h3>
+<h4 id="-1--goroutine--io--">問題 1 : goroutine 機制是實現非阻塞 I/O 的機制嗎 ?</h4>
+<p>不是。</p>
+<p>實現非阻塞 I/O 機制的是在 golang 中的 poller 嚴格來說它就是咱們上一章節所說的 refactor 模式。</p>
+<p>這裡你想想如果真的是 goroutine 的機制來實現非阻塞 I/O 那會發生什麼事呢 ? 假設一個 goroutine 運行阻塞 i/o 操作，導致某個 thread ( M ) 阻塞，然後剩下的 goroutine 都丟到其它 M 上，假設你只有兩個 M，那第二個 M 在阻塞後，你覺得怎麼辦 ? 再開 M 嗎 ? 那這樣和 multi thread 處理 I/O 有什麼不同 ?</p>
+<p>goroutine 這個機制實現的是以下兩個事情 :</p>
+<ul>
+<li>讓異步非阻塞的 I/O 操作變成同步 ( 就是我們上面說的協程完成的東西 )</li>
+<li>讓咱們在寫程式不需要『自已寫』開新的 thread 來處理 cpu 運算工作，包在 goroutine 就 ok，因為會自動的分配到閒的 thread。</li>
+</ul>
+<h4 id="-2--goroutine----">問題 2 : goroutine 是性能 ++ 項嗎 ?</h4>
+<p>先說 i/o 這一部份，嚴格來說我覺得是沒有。</p>
+<p>就如同上面 corotuine 說的，它只是使用資源來將異步程式碼改成同步程式碼，就算變成 goroutine 看起來也是一樣。</p>
+<p>然後 cpu 運算這一塊來說，嚴格來說有一點。</p>
+<p>因為傳統上大量 cpu 運法咱們會開多個 thread 來處理，但這裡就要考慮上下文切換的影響，但到了 goroutine 這裡，就有點變成更方便的 thread 池了。</p>
+<p>說真的，我真的不覺得 goroutine 是 golang 高性能的核心，不過如果說 golang 高性能的原因被認為是非阻塞 i/o 的話，那我覺得應該是要說高性能核心是因為 goroutine 機制裡面有用到 refactor 才對。</p>
+<p>不過也有可能是其它 golang 特性所影響，不然我真的不覺得 goroutine 是高性能的原因。</p>
+<p>然後這裡說一下，嚴格來說我沒有對 golang 語言進行到非常深的研究，所以上述只是我的看法，請參考看看就好，對與不對，我不知道，請自行判斷。</p>
+<h4 id="-3--goroutine--corotuine">問題 3 : goroutine 等於 corotuine</h4>
+<p>一半算吧，goroutine 有實現 corotuine 想完成的『同步』這個事情，但同時間它又針對 cpu 運算這方面在實現上增加不少改善，讓咱們在運算是只要開 goroutine 就可以取代以前開 thread 來運算的時代，不過它內部的確還是開 thread 沒錯，只是咱們沒感覺。</p>
+<h4 id="-4--nodejs--golang-">問題 4 : nodejs 與 golang 相比較</h4>
+<p>首先以 i/o 處理來看，雙方是戰的差不多的，底層都是使用 refactor 模式，並且在程式碼撰寫上都有提供『 同步 』的處理。</p>
+<p>咱來運算方法 golang 說實話真的完勝，golang cpu 運行效率與開發者效率皆優於 nodejs，在寫 golang 時你要進行大量運算只要寫在 goroutine 中就 ok，而在 nodejs 中你則要自已開個 thread 來處理。</p>
+<p>說實話，如果後來真的要推薦人開發高性能系統，我還真的會推用 golang，性能或需真的有強點兒，但不是性能的問題，而是用 golang 開發雷人度真的會比較少點。</p>
+<h2 id="heading3">結論與心得</h2>
+<p>本篇文章中，咱們學習到了應用層的性能減項 Coroutines，這東西最主要的目的為 :</p>
+<blockquote>
+<p>讓『 異步 』非阻塞 I/O 程式碼，變成『 同步 』。</p>
+</blockquote>
+<p>這個是最重要的核心，這或需不是性能的加項，但是覺得是寫程式碼的加項，應該是有不少人寫過一堆 callback 或 promise 的時代，而後來看到 async/await 這種優雅的程式碼出來，應該愉悅不少，不然原本異步的寫法真的有點混亂與醜。</p>
+<p>然後咱們也簡單的理解 golang 的 goroutine 這個機制，目前我看到現在，還是覺得它只完成以下兩件事情 :</p>
+<ul>
+<li>讓異步非阻塞的 I/O 操作變成同步 ( 就是我們上面說的協程完成的東西 )</li>
+<li>讓咱們在寫程式不需要『自已寫』開新的 thread 來處理 cpu 運算工作，包在 goroutine 就 ok，因為會自動的分配到閒的 thread。</li>
+</ul>
+<p>而非阻塞的 I/O 部份是由 refactor 模式處理。</p>
+<p>最後 golang 這部份是對或是錯，就請自行判斷看看，不要別人說是或不是就當順風車，用自已的腦袋從 0 至 1 好好想想看。</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="http://likakuli.com/post/2018/06/06/golang-network/">Golang netpoll</a></li>
+<li><a href="https://www.cnblogs.com/liang1101/p/7285955.html">Golang 之协程详解</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/62683990"><a href="https://zhuanlan.zhihu.com/p/62683990">https://zhuanlan.zhihu.com/p/62683990</a></a></li>
+<li><a href="https://colobu.com/2017/05/04/go-scheduler/">[译]Go 调度器: M, P 和 G</a></li>
+<li><a href="https://blog.csdn.net/u012999985/article/details/49520773">深入理解进程和线程</a></li>
+<li><a href="https://blog.albert-chen.com/php-with-swoole/">PHP 的性能猛獸 - Swoole</a></li>
+<li><a href="https://linkeddestiny.gitbooks.io/easy-swoole/content/">easy-swoole</a></li>
+<li><a href="https://segmentfault.com/a/1190000007614502">nginx、swoole高并发原理初探</a></li>
+<li><a href="http://rango.swoole.com/archives/508">swoole 作者 blog</a></li>
+<li><a href="https://segmentfault.com/a/1190000002946586">swoole教程第一节:进程管理模块(Process)-上</a></li>
+<li><a href="https://segmentfault.com/a/1190000015976967#articleHeader0">Swoole 源码分析——Reactor模块之ReactorBase</a></li>
+<li><a href="https://www.itcodemonkey.com/article/4620.html">漫画：什么是协程？</a></li>
 </ul>
 
   </section>
@@ -323,21 +340,30 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</b><nav id="TableOfContents">
+      <b>30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine</b><nav id="TableOfContents">
   <ul>
-    <li><a href="#find-">find 方法基本說明</a></li>
-    <li><a href="#-find--">~ find 的搜尋條件 ~</a>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#coroutine-">coroutine 協程想要解決的問題</a>
       <ul>
-        <li><a href="#30306060fans200200">我想要尋找年紀30歲以上(包含30)，但不滿60歲(不包含60)，fans又有200人以上(包含200)的人</a></li>
-        <li><a href="#-fans--100-likes--100-">我想要尋找 fans 小於等於 100，或是 likes 小於 100 的人。</a></li>
-        <li><a href="#-age--2560-">我想要尋找 age 為 25、60 的人。</a></li>
-        <li><a href="#-age--2560--id-">我想要尋找 age 不為 25、60 的人，並且只給我它的 id 就好。</a></li>
-        <li><a href="#-likes--100----not-">我想要尋找 likes 小於等於 100 的人 ( 使用 $not )</a></li>
-        <li><a href="#-fans--100--likes--500">我們想要找同時不滿足 fans 大於 100 人且 likes 大於 500。</a></li>
+        <li><a href="#heading1">異步非阻塞寫法</a></li>
+        <li><a href="#heading2">同步非阻塞寫法</a></li>
       </ul>
     </li>
-    <li><a href="#--">~ 結語 ~</a></li>
-    <li><a href="#--1">~ 參考資料 ~</a></li>
+    <li><a href="#coroutine-1">Coroutine 協程實現原理</a>
+      <ul>
+        <li><a href="#-io-">同步非阻塞 I/O 運行流程</a></li>
+        <li><a href="#-coroutine-">關於 Coroutine 的幾個問題</a></li>
+        <li><a href="#-2--coroutine--">問題 2 : coroutine 可以增加性能嗎 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#golang--goroutine">Golang 的 Goroutine</a>
+      <ul>
+        <li><a href="#golang-">Golang 的運行架構</a></li>
+        <li><a href="#-goroutine-">一些 Goroutine 的問答</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論與心得</a></li>
+    <li><a href="#heading4">參考資料</a></li>
   </ul>
 </nav></div>
   

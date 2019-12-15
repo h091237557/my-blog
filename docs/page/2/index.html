@@ -82,8 +82,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20181228/">
-                <div class="h2 mt-1 mb-1">PHP Laravel 的 Facade 的理解</div>
+              <a href="/posts/20190920/">
+                <div class="h2 mt-1 mb-1">30-20 之資料緩存失效問題</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -92,20 +92,24 @@
 
 
 
-<a href='/tags/php' class="muted-link">
-  <span class="Label Label--gray">php</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-12-28</span>
+                <span>2019-09-20</span>
               </div>
             </div>
           </div>
           <div>
             
-            什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 : &lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，
-            <a class="muted-link" href="/posts/20181228/">…</a>
+            正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基
+            <a class="muted-link" href="/posts/20190920/">…</a>
           </div>
         </div>
   </div>
@@ -114,8 +118,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20181214/">
-                <div class="h2 mt-1 mb-1">PHP Laravel 的 Container 理解</div>
+              <a href="/posts/20190919/">
+                <div class="h2 mt-1 mb-1">30-19 之資料庫層的優化  - 資料緩存策略</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -124,20 +128,24 @@
 
 
 
-<a href='/tags/php' class="muted-link">
-  <span class="Label Label--gray">php</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-12-14</span>
+                <span>2019-09-19</span>
               </div>
             </div>
           </div>
           <div>
             
-            什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類
-            <a class="muted-link" href="/posts/20181214/">…</a>
+            正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，
+            <a class="muted-link" href="/posts/20190919/">…</a>
           </div>
         </div>
   </div>
@@ -146,8 +154,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20181030/">
-                <div class="h2 mt-1 mb-1">PHP Laravel 的 Container 理解</div>
+              <a href="/posts/20190917/">
+                <div class="h2 mt-1 mb-1">30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -156,20 +164,24 @@
 
 
 
-<a href='/tags/php' class="muted-link">
-  <span class="Label Label--gray">php</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-10-30</span>
+                <span>2019-09-17</span>
               </div>
             </div>
           </div>
           <div>
             
-            Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。 容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 : 裡面裝
-            <a class="muted-link" href="/posts/20181030/">…</a>
+            正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上
+            <a class="muted-link" href="/posts/20190917/">…</a>
           </div>
         </div>
   </div>
@@ -178,8 +190,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180930/">
-                <div class="h2 mt-1 mb-1">30-30之寫給想入門影音直播開發的 Junior 工程師攻略本</div>
+              <a href="/posts/20190918/">
+                <div class="h2 mt-1 mb-1">30-18 之資料緩存層的服務 - Redis 概念與一致性難題</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -188,24 +200,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-30</span>
+                <span>2019-09-17</span>
               </div>
             </div>
           </div>
           <div>
             
-            前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，
-            <a class="muted-link" href="/posts/20180930/">…</a>
+            正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能
+            <a class="muted-link" href="/posts/20190918/">…</a>
           </div>
         </div>
   </div>
@@ -214,8 +226,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180929/">
-                <div class="h2 mt-1 mb-1">30-29之 WebRTC 的 P2P 打洞術 ( ICE )</div>
+              <a href="/posts/20190916/">
+                <div class="h2 mt-1 mb-1">30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -224,24 +236,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-29</span>
+                <span>2019-09-16</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用
-            <a class="muted-link" href="/posts/20180929/">…</a>
+            正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾
+            <a class="muted-link" href="/posts/20190916/">…</a>
           </div>
         </div>
   </div>
@@ -250,8 +262,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180928/">
-                <div class="h2 mt-1 mb-1">30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</div>
+              <a href="/posts/20190915/">
+                <div class="h2 mt-1 mb-1">30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -260,28 +272,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
-</a>
-
-<a href='/tags/network' class="muted-link">
-  <span class="Label Label--gray">network</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-28</span>
+                <span>2019-09-15</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章
-            <a class="muted-link" href="/posts/20180928/">…</a>
+            正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性
+            <a class="muted-link" href="/posts/20190915/">…</a>
           </div>
         </div>
   </div>
@@ -290,8 +298,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180927/">
-                <div class="h2 mt-1 mb-1">30-27之 WebRTC 的 Signaling Server</div>
+              <a href="/posts/20190914/">
+                <div class="h2 mt-1 mb-1">30-14 之資料庫層的優化 - 表的設計</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -300,24 +308,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-27</span>
+                <span>2019-09-14</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。 Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling S
-            <a class="muted-link" href="/posts/20180927/">…</a>
+            正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時
+            <a class="muted-link" href="/posts/20190914/">…</a>
           </div>
         </div>
   </div>
@@ -326,8 +334,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180926/">
-                <div class="h2 mt-1 mb-1">30-26之 WebRTC 的 P2P 即時通信與小範例</div>
+              <a href="/posts/20190913/">
+                <div class="h2 mt-1 mb-1">30-13 之資料庫層的優化 - 索引設計與雷區</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -336,24 +344,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-26</span>
+                <span>2019-09-13</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的
-            <a class="muted-link" href="/posts/20180926/">…</a>
+            正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演
+            <a class="muted-link" href="/posts/20190913/">…</a>
           </div>
         </div>
   </div>
@@ -362,8 +370,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180925/">
-                <div class="h2 mt-1 mb-1">30-25之直播連麥的挑戰與方案 ( P2P )</div>
+              <a href="/posts/20190912/">
+                <div class="h2 mt-1 mb-1">30-12 之資料庫層的核心 - MySQL 的索引實現</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -372,24 +380,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-25</span>
+                <span>2019-09-12</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用文字，也就是所謂的聊天室，而這篇文章咱們將要介紹另
-            <a class="muted-link" href="/posts/20180925/">…</a>
+            正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使
+            <a class="muted-link" href="/posts/20190912/">…</a>
           </div>
         </div>
   </div>
@@ -398,8 +406,8 @@
       <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
           <div class="Subhead mb-2">
             <div class="Subhead-heading">
-              <a href="/posts/20180924/">
-                <div class="h2 mt-1 mb-1">30-24之直播與點播可動版的改良 ( 正式版 )</div>
+              <a href="/posts/20190911/">
+                <div class="h2 mt-1 mb-1">30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</div>
               </a>
             </div>
             <div class="Subhead-description">
@@ -408,24 +416,24 @@
 
 
 
-<a href='/tags/instant-messaging' class="muted-link">
-  <span class="Label Label--gray">instant messaging</span>
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2018' class="muted-link">
-  <span class="Label Label--gray">it 鐵人賽 2018</span>
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
 </a>
 
 
               <div class="float-md-right">
-                <span>2018-09-24</span>
+                <span>2019-09-11</span>
               </div>
             </div>
           </div>
           <div>
             
-            正文開始 上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。 使用 CDN 來調整可動
-            <a class="muted-link" href="/posts/20180924/">…</a>
+            正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何
+            <a class="muted-link" href="/posts/20190911/">…</a>
           </div>
         </div>
   </div>
@@ -496,6 +504,18 @@
             14
           </a>
         
+          <a href="/page/15/">
+            15
+          </a>
+        
+          <a href="/page/16/">
+            16
+          </a>
+        
+          <a href="/page/17/">
+            17
+          </a>
+        
 
         
         <a href="/page/3/" class="next_page">Next</a>
@@ -524,7 +544,7 @@
     
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/algorithm" class="link-gray text-emphasized css-truncate-target"><span class="">Algorithm</span></a>
-      <span class="text-right Counter Counter--gray"> 10</span>
+      <span class="text-right Counter Counter--gray"> 11</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">
@@ -564,7 +584,7 @@
     
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/instant-messaging" class="link-gray text-emphasized css-truncate-target"><span class="">Instant messaging</span></a>
-      <span class="text-right Counter Counter--gray"> 35</span>
+      <span class="text-right Counter Counter--gray"> 36</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">
@@ -579,7 +599,7 @@
     
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/it-%e9%90%b5%e4%ba%ba%e8%b3%bd-2019" class="link-gray text-emphasized css-truncate-target"><span class="">It 鐵人賽 2019</span></a>
-      <span class="text-right Counter Counter--gray"> 4</span>
+      <span class="text-right Counter Counter--gray"> 30</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">
@@ -593,13 +613,18 @@
     </span>
     
     <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/musql" class="link-gray text-emphasized css-truncate-target"><span class="">Musql</span></a>
+      <span class="text-right Counter Counter--gray"> 5</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
       <a href="/tags/mysql" class="link-gray text-emphasized css-truncate-target"><span class="">Mysql</span></a>
-      <span class="text-right Counter Counter--gray"> 4</span>
+      <span class="text-right Counter Counter--gray"> 7</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/network" class="link-gray text-emphasized css-truncate-target"><span class="">Network</span></a>
-      <span class="text-right Counter Counter--gray"> 12</span>
+      <span class="text-right Counter Counter--gray"> 14</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">
@@ -610,6 +635,11 @@
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/php" class="link-gray text-emphasized css-truncate-target"><span class="">Php</span></a>
       <span class="text-right Counter Counter--gray"> 7</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/redis" class="link-gray text-emphasized css-truncate-target"><span class="">Redis</span></a>
+      <span class="text-right Counter Counter--gray"> 3</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">

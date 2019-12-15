@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-04 之應用層的運算加速 - 並行運算 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ? 假設你所在的機器是多核心|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-04 之應用層的運算加速 - 並行運算 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ? 假設你所在的機器是多核心|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-04 之應用層的運算加速 - 並行運算</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-04.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190918/20089358YWcXuY0jDd.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ?</p>
+<p>假設你所在的機器是多核心 CPU，那這時的確是有解，那就是本篇文章的主題 :</p>
+<blockquote>
+<p>開啟 Process 或 Thread 來幫忙進行運算。</p>
+</blockquote>
+<p>本篇文章就分為以下三個章節:</p>
+<ul>
+<li>CPU 運算與 process、thread 的關係。</li>
+<li>CPU 密集任務處理。</li>
+<li>多線程並行處理的淺在問題。</li>
+</ul>
+<h2 id="cpu--processthread-">CPU 運算與 Process、Thread 的關係</h2>
+<p>在實際上理解如何開啟 process 或 thread 前，咱們先從最基本的東西說起。</p>
+<p>何謂 process ? 何謂 thread 呢 ?</p>
+<h3 id="--process-">進程、行程 ( Process )</h3>
+<p>首先咱們先來看看 process，基本上在你的電腦中每一個應用 ( ex. line、chrome ) 都是至少是一個 process，然後比較重要的一點在於 :</p>
+<blockquote>
+<p>對作業系統來說，它是資源分配的最小單位，並且同時是個『操作單位』</p>
+</blockquote>
+<p>在 linux 系統上，一個 process 的建立過程如下圖 1 所示 :</p>
+<ol>
+<li>母進程執行 fork() 建立一個子進程。</li>
+<li>同時間建立子進程的記憶體空間。</li>
+</ol>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358GhOjRynzUz.png" alt="">
+圖 1 : 作業系統建立進程的概念圖</p>
+<p>而上面說的資源分配就是指上面步驟 2 分配記憶體空間。然後這個子進程之後工作時，需用到的記憶體，就是那從那一堆子進程記憶體空間來分配。</p>
+<p><strong>~ 小備註 ~</strong></p>
+<p>在 linux 中不是只有 fork 可以建立一個 process，還有所謂的 vfork 與 clone 這兩種，感興趣的可以去理解一下這幾個差別。這裡就只是淺淺的談談。</p>
+<h4 id="process-">Process 在進行運算時的情況</h4>
+<p>然後接下來咱們來看一下，process 在處理工作時，以作業系統的角度來看，它是如何的運作。</p>
+<p>咱們假設運行在以下的機器設備上 :</p>
+<ul>
+<li>一個邏輯 CPU。</li>
+<li>有二個 process A 與 B 在工作。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358ghl4OIcWmC.png" alt="">
+圖 2 : 作業系統工作原理</p>
+<p>那基本上它運行的過程會如上圖 2 所示，一下 A process、一下 B process，因為只有一個 cpu，然後每一次要轉換工作時，都需要進行所謂的『 上下文切換 ( context switch ) 』，它是由作業系統的核心 ( kerneal ) 來處理這工作。</p>
+<p>上下文切換這個工作基本上，就是將正在處理進程 A 的資訊記錄起來，然後再讀取進程 B 之前做到那裡資訊，這樣才能在重新開始進行進程 B 的工作。</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p>正常情況下，邏輯 cpu = 物理 cpu 個數 X cpu 核數 ( 先別管超線程 )。然後有幾個邏輯 cpu 就代表『 同一個 』時間可以開幾條生產線來工作。</p>
+<h4 id="-process--">那什麼時後會 Process 的工作轉換呢 ?</h4>
+<ul>
+<li>時間片段結束</li>
+<li>process 自已主動或被動睡著。</li>
+<li>某一些 system call。</li>
+</ul>
+<p>每一個 process 所能分配到 cpu 的時間片段基本都相同，不過也是可以使用 nice 這種作業系統提供的方法來調整進程的優先權，也就是讓某一個進程比較容易被分配到 cpu 來進行工作。</p>
+<p>在來說說這個睡著這個，咱們在寫程式碼不是有時會執行 sleep 還啥的嗎，這就是主動睡，而被動通常是出了什麼事，例如硬體或軟體怎麼了，作業系統強制中斷。</p>
+<p>然後另一個東西是 system call。它是什麼呢 ?</p>
+<p>這就要來理解一些作業系統，下面這張圖代表這，當在一個 process 裡面，有段程式碼，需要執行網路存取，那它的運行流程就如下 :</p>
+<ol>
+<li>進程執行網路存取程式碼 ( ex. http 請求 )。</li>
+<li>呼叫 os 外函式庫。</li>
+<li>呼叫 os 函式庫。</li>
+<li>kernel 核心</li>
+<li>硬體 ( ex. 網卡 )</li>
+</ol>
+<p>其中 3 至 4 的操作就是謂的的 system call。</p>
+<p>所以假設發出來一個 http 請求，那會如下圖 3 那樣運行 :</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358u8myUHrcK8.png" alt="">
+圖 3 : 一個請求的操作流程</p>
+<p>這裡簡單說明一下，上下文切換事實上分的很細，如果某個 system call 就只是轉成 kernel 來讓他處理事情的，那這叫特權上下文切換，而如果某個 system call 是要傳送資料這種，那就會進行所謂的進程的上下文切換，就是將 cpu 資源分給其它 process，然後圖 2 的是所謂的『進程的上下文切換』。</p>
+<p><strong>~ 小備註 ~</strong>
+像咱們常常處理的 mysql 操作或 http 請求，底層都是有使用 system call 來去操作網路下的動作，因此在『 某一些情況下 』，它會頻繁的觸發上下文切換，這個在說到 I/O 的文章是會詳談。</p>
+<h3 id="--thread-">線程、執行緒 ( Thread )</h3>
+<p>在說明完進程 process 以後，接下來我們來說說線程 thread。</p>
+<p>它的定義如下 :</p>
+<blockquote>
+<p>對作業系統來說，它是最小的操作單位，且它包含在 process 中。</p>
+</blockquote>
+<p>也就是說，作業系統可以分配 cpu 直接給 thread 來進行工作，然後在同一個 process 中的 thread 都可以共享 process 的記憶體空間。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358vk5pLiZjVx.png" alt="">
+圖 4 : thread 在 process 中的概念</p>
+<h4 id="-">那為什麼會有線程呢 ?</h4>
+<p>進程 process 與線程 thread 它們都是 cpu 分配的單位，但是為什麼有了 process 還會有 thread 呢 ?</p>
+<blockquote>
+<p>因為 process 太肥了</p>
+</blockquote>
+<p>上面有提到每當 CPU 要從一個進程分配給另一個進程時，需要進行所謂的『上下文切換』，而這個切換所需要做的事情就是將進程資訊記錄起來，而問題就出在進程的上下文切換很耗資源，則也是為什麼會誕生一個，較小的執行單位，因為就可以使切換時所需要記錄的東西就變小囉。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/200893588R8vpEOM9W.png" alt="">
+圖 5 : thread 的運行模式</p>
+<h2 id="cpu-">CPU 密集任務處理</h2>
+<p>在上面理解完 process 與 thread 的概念以下，接下來我們來說明為什麼開啟它們可以來加速運算，並且進行簡單的示範。</p>
+<h3 id="-process--thread--">為什麼開啟 process 或 thread 可以加速運算呢 ?</h3>
+<p>要能加速基本要有以下幾個假設情況下 :</p>
+<ul>
+<li>在有多個邏輯 cpu 的情況下。</li>
+<li>任務所需的運行是可以拆分的。</li>
+</ul>
+<p>首先是一個，要能開啟進程來加速運算第一個條件是有多個邏輯 cpu，上述在說明時有說過，一個進程或線程同一個時間只能有一個邏輯 cpu 來進行運算。</p>
+<p>也就是說，當你只有一個邏輯 cpu 時，這也代表你『 不可能同一時間，處理兩件事情 』，它會如下圖 6 所示來處理任務。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358F80Mhks6M0.png" alt="">
+圖 6 : 只有一個 cpu 時的運算情況</p>
+<p>而當你有 2 個以上的邏輯 cpu 時才能『 同時間 』處理兩個任務，如下圖 7 所示。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358hUUIZbJL3T.png" alt="">
+圖 7 : 有多個 cpu 時的運算情況</p>
+<p>而第二點那就不用說了，如果你的任務不能拆分，那就沒有必要開另一個進程來處理了。</p>
+<p><strong>~ 小知識 ~</strong>
+將一個大問題拆成小問題，是一個並行工作最重要的地方，這個在演算法中也有很多這種類型的題目，有興趣的人可以去研究一下。</p>
+<blockquote>
+<p>Divide-and-conquer Algorithm</p>
+</blockquote>
+<p>順到說一下 DP 類型也算。</p>
+<p><strong>~ 小提醒 ~</strong>
+大部份的語言都可以開多個 thread 來進行並行運算，但是要注意有一些語言不太行，例如 python (cpyton)，主要的原因在於有 GIT ( Global Interpreter Lock ) 這東西在，有興趣的友人可以用這個關鍵字去查查。</p>
+<h3 id="nodejs-">Nodejs 的並行運算範例</h3>
+<p>接下來我們將使用 nodejs 來寫個簡單的範例。例範內容如下:</p>
+<pre><code>範例 :
+給定一串數組陣列，計算出陣列所有加總後的數字
+</code></pre><p>這個範例非常的簡單，並且也是很典型的 cpu 運算，然後這裡我們將要模擬開啟二個 thread 來計算運算，然後在分別將結果加總起來，就是答案。</p>
+<p>下面這段是主程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="p">{</span> <span class="nx">Worker</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;worker_threads&#39;</span><span class="p">)</span>
+
+<span class="c1">// 這一段建立 thread，並且將 workerData 丟給 thread。
+</span><span class="c1"></span><span class="kd">function</span> <span class="nx">runService</span><span class="p">(</span><span class="nx">workerData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kr">const</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="s1">&#39;./worker.js&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">workerData</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+      
+      <span class="c1">// 監聽有沒有資料從 thread 傳回來。
+</span><span class="c1"></span>      <span class="nx">worker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="nx">resolve</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+  <span class="p">}</span>
+
+<span class="c1">// 這裡建立兩個 thread 來並行計算 nums 數組。
+</span><span class="c1"></span><span class="c1">// 第一個 thread 負責計算第 0 至 4 個
+</span><span class="c1"></span><span class="c1">// 第二個 thread 負責計算第 5 至 8 個
+</span><span class="c1"></span><span class="nx">async</span> <span class="kd">function</span> <span class="nx">run</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">nums</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">19</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]</span><span class="p">;</span>
+    <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="p">[</span>
+        <span class="nx">runService</span><span class="p">(</span><span class="p">{</span>
+            <span class="nx">nums</span><span class="p">,</span>
+            <span class="nx">start</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="nx">end</span><span class="o">:</span> <span class="mi">4</span> 
+        <span class="p">}</span><span class="p">)</span><span class="p">,</span>
+        <span class="nx">runService</span><span class="p">(</span><span class="p">{</span>
+            <span class="nx">nums</span><span class="p">,</span>
+            <span class="nx">start</span><span class="o">:</span> <span class="mi">5</span><span class="p">,</span>
+            <span class="nx">end</span><span class="o">:</span> <span class="mi">8</span> 
+        <span class="p">}</span><span class="p">)</span>
+    <span class="p">]</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">(</span><span class="nx">async</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kr">const</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">run</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="p">)</span>
+</code></pre></div><p>而這一段是負責運算用的 thread 程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">
+<span class="kr">const</span> <span class="p">{</span> <span class="nx">workerData</span><span class="p">,</span> <span class="nx">parentPort</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;worker_threads&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="c1">// workerData 為從母進程傳送過來的資料
+</span><span class="c1"></span>
+<span class="kr">const</span> <span class="nx">nums</span> <span class="o">=</span> <span class="nx">workerData</span><span class="p">.</span><span class="nx">nums</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">start</span> <span class="o">=</span> <span class="nx">workerData</span><span class="p">.</span><span class="nx">start</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">end</span> <span class="o">=</span> <span class="nx">workerData</span><span class="p">.</span><span class="nx">end</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="nx">start</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">end</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">sum</span> <span class="o">+=</span> <span class="nx">nums</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// 將運算結果回傳至母進程。
+</span><span class="c1"></span><span class="nx">parentPort</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>上面這些就是簡單的開啟二個 thread 來分別進行計算，然後在將結果返回。</p>
+<p>以這個問題來看是可以不用這方法，不過這只是範例，別太在意。</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p>nodejs 忘了在幾版以後就有 thread 可以使用了，在比較舊以前的 nodejs 世界只能開 process。然後這裡我用的是 nodejs v12.10.0，不過注意一下它的狀態還是『 Stability: 1 - Experimental 』。</p>
+<p><a href="https://nodejs.org/api/worker_threads.html">v12.10.0-nodejs-thread</a></p>
+<h2 id="-thread---">多 Thread 並行處理的問題 - 資源共享競爭</h2>
+<p>上面有提到，thread 是可以共享 process 的記憶體空間，因此可以所有在裡面的 thread 都可以讀取那個共享的變數，而這在某些情況下，就會發生問題。</p>
+<p>最有名的例子下面這段 java 程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">System</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="n">count</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getCount</span><span class="o">(</span><span class="o">)</span><span class="o">{</span>
+       <span class="k">return</span> <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>這一段程式碼有什麼問題呢 ? 假設咱們開 2 個 thread 來執行 getCount，就可能會發生如下圖的問題，明明執行兩次 count++ 但是最後結果卻只有一次。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358N7Z8QiNzA9.png" alt="">
+圖 8 : 並行的問題。</p>
+<p><strong>~ 小備註 ~</strong>
+這裡就是咱們第一個碰到的一致性問題，後面還有一堆這種問題，慢慢看。</p>
+<h3 id="-1--">解法 1 : 加鎖</h3>
+<p>在 java 最多人使用的解法就是『 加鎖 』，如下程式碼，它會將這個方法所屬物件給鎖定起來，也就是說在同一個時間，只能一個 thread 來執行這一段。</p>
+<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">synchronized</span> <span class="kt">int</span> <span class="nf">getCount</span><span class="o">(</span><span class="o">)</span> <span class="o">{</span>
+     <span class="k">return</span> <span class="n">count</span><span class="o">+</span><span class="o">+</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><p>而當使用這個方法時，事實上運行就變成下面這張圖的感覺，因此這也代表，性能被限制住了。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20190919/20089358swAyJ6yOGT.png" alt="">
+圖 9 : 加鎖後的運行圖</p>
+<h3 id="-2--">解法 2 : 不要用共享資源</h3>
+<p>有寫過 golang 的友人們應該是有看過下面這一句話。</p>
+<blockquote>
+<p>Do not communicate by sharing memory; instead, share memory by communicating.</p>
+</blockquote>
+<p>這句話是說，不要使用共享記憶體來進行溝通，而是使用溝通來分享資料。上述 nodejs 的範例就是屬於這一種思想方案。</p>
+<p><strong>~ 小備註 ~</strong>
+上網仔細查了以後，基本上發現以這種思想所產生的模式事實上有兩種『 Actor 』與『 CSP 』。像 Java/Scala 的 Akka 庫就是 Actor 實現，而 golang 則是 CSP 的實現，之後會開篇文章來詳細說明。</p>
+<h2 id="heading1">結論與心得</h2>
+<p>本篇文章中咱們學習到了應用層的一項運算加速的方法，並行運算，不過要使用這個東西有兩個條件 :</p>
+<ul>
+<li>在有多個邏輯 cpu 的情況下。</li>
+<li>任務所需的運行是可以拆分的。</li>
+</ul>
+<p>同時咱們學詳細的學習了 process 與 thread 這兩個在作業系統中的運算單位。理解它是如何運作與產生，同時在這裡也碰到第一個一致性問題，這個問題只要是在性能與可用這條路上會形影不離的追隨這咱們的。</p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://nodejs.org/api/worker_threads.html">Node.js v12.8.0 Documentation-thread</a></li>
+<li><a href="https://www.books.com.tw/products/0010808891">圖解Linux核心工作原理：透過實作與圖解學習OS與硬體的基礎知識</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/36907022">深入golang之&mdash;goroutine并发控制与通信</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-04 之應用層的運算加速 - 並行運算</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#cpu--processthread-">CPU 運算與 Process、Thread 的關係</a>
+      <ul>
+        <li><a href="#--process-">進程、行程 ( Process )</a></li>
+        <li><a href="#--thread-">線程、執行緒 ( Thread )</a></li>
+      </ul>
+    </li>
+    <li><a href="#cpu-">CPU 密集任務處理</a>
+      <ul>
+        <li><a href="#-process--thread--">為什麼開啟 process 或 thread 可以加速運算呢 ?</a></li>
+        <li><a href="#nodejs-">Nodejs 的並行運算範例</a></li>
+      </ul>
+    </li>
+    <li><a href="#-thread---">多 Thread 並行處理的問題 - 資源共享競爭</a>
+      <ul>
+        <li><a href="#-1--">解法 1 : 加鎖</a></li>
+        <li><a href="#-2--">解法 2 : 不要用共享資源</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論與心得</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

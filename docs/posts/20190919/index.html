@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  30-19 之資料庫層的優化  - 資料緩存策略 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="redis, 鐵人賽" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="30-19 之資料庫層的優化  - 資料緩存策略 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">30-19 之資料庫層的優化  - 資料緩存策略</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-19.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358Z0dcXbWruv.png" alt=""></p>
+<h2 id="heading">正文開始</h2>
+<p>上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 :</p>
+<blockquote>
+<p>緩存策略</p>
+</blockquote>
+<p>相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，然後用戶先優先去緩存取得，沒有則去資料庫拿去嗎 ?</p>
+<p>用腦袋想很簡單沒錯，但是難處就在於 :</p>
+<blockquote>
+<p>你要如何確保資料一致性呢 ?</p>
+</blockquote>
+<p>有沒有覺得這名詞很耳熟呢 ? 你只要記好，只要是多個服務，只要是共用資料的，那就一定會碰到它。</p>
+<ul>
+<li>什麼樣類型資料適合緩存呢 ?</li>
+<li>緩存讀流程</li>
+<li>緩存寫策略與難題</li>
+<li>緩存寫策略的難題總結</li>
+</ul>
+<h2 id="-">什麼樣類型資料適合緩存呢 ?</h2>
+<p>在建立緩存時，我們需要先來決定一件重要的事情。</p>
+<blockquote>
+<p>什麼樣的資料需要存放到緩存中呢 ?</p>
+</blockquote>
+<p>基本上適合緩存資料的特點有以下幾點 :</p>
+<ul>
+<li>這個資料是常常被使用到的。</li>
+<li>這個資料是不常被更新的。</li>
+</ul>
+<p>且中如果符合上述兩個情況的那就可以算在『 適合建立緩存的資料 』選項中。</p>
+<h2 id="heading1">緩存讀流程</h2>
+<p>讀的基本流程如下 :</p>
+<ul>
+<li>(1) 用戶往應用服務發送請求。</li>
+<li>(2) 應用服務至緩存服務看看是否有緩存。</li>
+<li>(3A) 有，則回傳。</li>
+<li>(3B) 無，則前往資料庫服務取得資料。</li>
+<li>(4) 並將資料回寫入緩存服務。</li>
+</ul>
+<p>基本上這種讀的流程比較沒有太大問題與爭論。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/200893584LY6F9hzAc.png" alt="">
+圖 1 : 緩存讀取流程</p>
+<h2 id="heading2">緩存寫策略與難題</h2>
+<hr>
+<blockquote>
+<p>緩存策略最大坑在這</p>
+</blockquote>
+<p>比較大的問題在於『 寫 』這裡，因為不同的寫入方式會產生不同的問題，而且這沒有 100% 的完美解，只能有較優但還是有缺點的解。接下來我們來一個一個慢慢看。</p>
+<p>先說一下，最大的問題在於 :</p>
+<blockquote>
+<p>在併發情況下，會產生 db 與 緩存 ( redis ) 不一致。</p>
+</blockquote>
+<p>基本上會有以下四種變型。</p>
+<ol>
+<li>先寫 db 後改緩存</li>
+<li>先寫 db 後淘汰援存</li>
+<li>先改緩存 後寫 db</li>
+<li>先淘汰緩存，後寫 db</li>
+</ol>
+<h3 id="---db-">第一種 : 先寫 DB 後改緩存</h3>
+<p>首先咱們先來看第一種方式『 先寫 db 後改緩存 』。</p>
+<p>流程如下圖 2 所示 :</p>
+<ul>
+<li>(1) 用戶請求修改資料。</li>
+<li>(2) 先修改 db 資料。</li>
+<li>(3) 再修改緩存資料。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358rWJhth7O2V.png" alt="">
+圖 2 : 先寫 db 後改緩存模式</p>
+<p>這種情境會有什麼問題呢 ?</p>
+<p>基本會有兩個問題。</p>
+<h4 id="-1--">問題 1 : 會有一次讀取到舊的緩存資料</h4>
+<p>首先第一個問題為會有一次讀取到舊的緩存資料如下圖 3 所示，雖然有些人會覺得這沒什麼，但是你想想如果是搶票情況呢 ? 假設有個用戶已經確定買到票，且已經更新完 db 後，這時另一個用戶，在緩存更新『 前 』讀取，發現還有一張票，但實際上已經沒票了。這時你覺得用戶會如何呢 ?</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358peOnuAPVUL.png" alt="">
+圖 3 : 先寫 db 後改緩存的問題 1</p>
+<h4 id="-2---db-">問題 2 : 併行修改時會有緩存 DB 資料不一致問題</h4>
+<p>這一種情況是發生同時有兩個用戶要進行修改的情況，如下圖 4 所示，用戶 a 先要求修改數量，接下來用戶 b 要再將數量修改，但是問題就出在緩存這裡，變成用戶 b 先修改緩存，用戶 a 後來才修改緩存。</p>
+<p>這是真的有可能會發生的場境，你不能保證所有操作都是照你想的順序進行。</p>
+<p>這會造成什麼後果呢 ? 那就是後來進來的請求，全部都會在緩存這讀取到『 錯誤 』的數量，而這個錯誤只能人工發現修改。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358iwToAD7fYd.png" alt="">
+圖 4 : 先寫 db 後改緩存的問題 2</p>
+<h3 id="---db---cache-aside-pattern-">第二種 : 先寫 DB 後淘汰緩存 ( Cache Aside Pattern )</h3>
+<p>接下來咱們先來看第二種方式『 先寫 db 後淘汰緩存 』。這裡和第一種的差別就在於，從『 修改 』轉『 淘汰 』，這裡淘汰的意思就是刪除緩存，然後當讀取 miss 後再去重新建立緩存。</p>
+<p>順到說一下，這種類型又被稱為『 Cache Aside Pattern 』，它也是 facebook 所使用的緩存策略。</p>
+<p>流程如下圖 5 所示 :</p>
+<ul>
+<li>(1) 用戶請求修改資料。</li>
+<li>(2) 先修改 db 資料。</li>
+<li>(3) 再淘汰緩存 ( 也就是直接將緩存移除 )。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358dIzBpdt6Zb.png" alt="">
+圖 5 : 先寫 db 後淘汰緩存</p>
+<p>這種情境會有什麼問題呢 ?</p>
+<p>基本會有一個問題。</p>
+<h4 id="-1--1">問題 1 : 緩存操作失敗會導致資料不一致性問題</h4>
+<p>這種情況會發生當緩存刪除操作失敗時，之後所有的讀取都會讀到錯誤的資訊。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358vfv0MkVux8.png" alt="">
+圖 6 : 先寫 db 後淘汰緩存問題 1</p>
+<p>這個問題仔細思考一下，發生機率事實上應該不高，首先如果緩存刪除那一步失敗，那再重試，而如果一直不行那事實上也有可能緩存服務整個掛掉，那這樣用戶 b 應用也不會讀到錯誤的緩存。</p>
+<p>而這裡還有另一種解法，那就是當發現緩存失敗了，就回滾 db 操作。</p>
+<p><strong>~ 小備註 ~</strong>
+如果是 db 操作失敗，那也就只是回覆用戶說這個操作失敗，而不是會回錯誤的數量給用戶。</p>
+<h3 id="---db">第三種 : 先改緩存後寫 DB</h3>
+<p>流程如下 :</p>
+<ul>
+<li>(1) 用戶請求修改資料。</li>
+<li>(2) 先修改緩存資料。</li>
+<li>(3) 再修改 db 資料。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358QWx5RSq4Qd.png" alt="">
+圖 7 : 先改緩存後寫 db</p>
+<p>這種情境會有什麼問題呢 ?</p>
+<p>基本上會有兩個問題 :</p>
+<h4 id="-1---db-">問題 1 : 修改 DB 失敗會有資料不一致問題</h4>
+<p>這種情況會發生在，當修戶緩存成功，但修改 db 失敗時，緩存會是錯誤資料。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358U8v2nd63lU.png" alt="">
+圖 8 : 先改緩存後寫 db 問題 1</p>
+<h4 id="-2--">問題 2 : 並行寫入問題會有資料不一致問題</h4>
+<p>這種情況會發生在，當用戶 a 請求修改，而用戶 b 在請求修改，但這時如果用戶 b 的都先完成，用戶 a 的後完成，就會發生 db 與緩存會是不一致的。而這情境上面事實上也有發生過，注意只要是『 修改緩存 』的情境，這都會發生。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358fAvbtozxvC.png" alt="">
+圖 9 : 先改緩存後寫 db 問題 2</p>
+<h3 id="---db1">第四種 : 先淘汰緩存後寫 DB</h3>
+<p>流程如下圖 10 所示 :</p>
+<ul>
+<li>(1) 用戶請求修改資料。</li>
+<li>(2) 先淘汰緩存資料。</li>
+<li>(3) 再修改 db 資料。。</li>
+</ul>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358hLyDyzpaIB.png" alt="">
+圖 10 : 先淘汰緩存，後寫 db</p>
+<p>這種情境會有什麼問題呢 ?</p>
+<p>基本會有個問題。</p>
+<h4 id="-1--2">問題 1 : 併行讀時可能會有資料不一致問題</h4>
+<p>這個情況如下圖 11 所示，如果在刪除緩存到修改 db 這一段時間，有人進來讀取，發現是空的緩存，然後去 db 抓資料來塞緩存，而這個動作又快於用戶 a 修改 db，那就會發生緩存與 db 資料不一致的問題。</p>
+<p><img src="https://ithelp.ithome.com.tw/upload/images/20191004/20089358IMtDyLbiUN.png" alt="">
+圖 11 : 先淘汰緩存後寫 db 問題 1</p>
+<h2 id="heading3">緩存寫策略的難題總結</h2>
+<p>那要選那個方案好呢 ?</p>
+<h4 id="--db-">第一種: 先寫 DB 後改緩存</h4>
+<ul>
+<li>問題 1 : 會有一次讀取到舊的緩存資料。</li>
+<li>問題 2 : 並行修改時會有緩存 db 資料不一致問題。</li>
+</ul>
+<h4 id="--db---cache-aside-pattern-">第二種: 先寫 DB 後淘汰援存 ( Cache Aside Pattern )</h4>
+<ul>
+<li>問題 1 : 緩存操作失敗會導致資料不一致性問題。</li>
+</ul>
+<h4 id="---db2">第三種: 先改緩存 後寫 DB</h4>
+<ul>
+<li>問題 1 : 修改 db 失敗會有資料不一致問題。</li>
+<li>問題 2 : 並行寫入問題會有資料不一致問題。</li>
+</ul>
+<h4 id="--db">第四種: 先淘汰緩存，後寫 DB</h4>
+<ul>
+<li>問題 1 : 併行讀時可能會有資料不一致問題</li>
+</ul>
+<h4 id="heading4">小總結</h4>
+<p>事實上咱們可以注意到一件事情，每一種都會有問題，這個基本上是無法避免的事情，所以咱們只能儘可能的選擇比較不差的。</p>
+<p>首先第一種與第三種這兩個類型，可以先刪除了，這兩個問題比較多些而。</p>
+<blockquote>
+<p>改緩存的選項可移除</p>
+</blockquote>
+<p>接下來第二種與第四種來選。基本上如果是我來選的話，應該會選擇『 第二種 』方法當緩存策略。</p>
+<blockquote>
+<p>建議走第二種 : 先寫 DB 後淘汰援存 ( Cache Aside Pattern )</p>
+</blockquote>
+<p>主要的原因在於這種感覺比較想的到解法，當你發現後淘汰緩存失敗後，你可以手動的讓 db rollback，雖然在 rollback 這一段時間，可能緩存還是錯誤的，但至少會回復。</p>
+<p>而第四種雖然這種發生的機率可能性比較小，但是這種很難像上面情況我們可以處理，除非我們將它完全變成序列化執行，也就是所謂的一個一個處理，但是相對的，性能完全是大打折，這做法幾乎就是 mysql 開 serializable 級別一樣。</p>
+<p>不過這個答案不是絕對，只是個人看法。</p>
+<p><strong>~ 小備註 ~</strong>
+架構師之路這一系列文章中，有專門在討探緩存這一塊，其中作者是支持『 第四種: 先淘汰緩存，後寫 db』，有興趣的友人可以去看看裡面留言的一堆論戰。不過好像連結看不到留言，要用微信……</p>
+<p>但於它贊成的原因在於，就是因為第二種會碰到上述問題，不過感覺它裡面沒有說的很清楚，第四種他的解法是如何處理……，不過這不影響這個作者寫的『 架構師之路 』這一系列文章的價值，他真的寫的很好。</p>
+<p><a href="https://mp.weixin.qq.com/s/YBpOz1dQ0sG15vGL7N0PeQ">缓存，究竟是淘汰，还是修改？</a>
+<a href="https://mp.weixin.qq.com/s/7IgtwzGC0i7Qh9iTk99Bww">Cache Aside Pattern</a></p>
+<h2 id="heading5">結論與心得</h2>
+<p>本篇文章中咱們大概理了一下，基本上緩存策略，其中讀的流程比較不會有問題，問題出在『 寫 』的過程，而最後咱們大概離出只有這兩種選擇 :</p>
+<ul>
+<li>第二種: 先寫 db 後淘汰援存 ( Cache Aside Pattern )</li>
+<li>第四種: 先淘汰緩存，後寫 db</li>
+</ul>
+<p>其中這裡是比較建議用第二種，不過也是有人支持第四種，詳細可以參考上面說的那幾篇文章。</p>
+<blockquote>
+<p>建議走第二種 : 先寫 DB 後淘汰援存 ( Cache Aside Pattern )</p>
+</blockquote>
+<p>最後說一下，從上面可以知道，事實上這四種方法都還是會有一些不一致情況產生，而且都是在『 寫 』這一塊會發生問題，所以這裡也可以總結一下幾個 cache 使用時機 :</p>
+<blockquote>
+<p>緩存適合用在大量讀取，且更新頻率較少的資料</p>
+</blockquote>
+<p>如果在常更新的資料上進行快取，那和找死沒差多少。</p>
+<p>最後這裡提一下。</p>
+<p>現階段我們都是假設資料庫是單機的情況，如果多機的情況，答案或需有可能不同。之後會談到。</p>
+<blockquote>
+<p>你想想資料庫讀寫分離方案，緩存策略這裡還是一樣嗎 ?</p>
+</blockquote>
+<h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/CY4jntpM7VNkBrz1FKRsOw">缓存架构设计细节二三事</a></li>
+<li><a href="https://mp.weixin.qq.com/s/ALSDqOslGXx2Qz7e5YKtFg">细聊冗余表数据一致性（架构师之路）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/z364m8iWgk2tSag_q7VUiQ">缓存与数据库一致性保证</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/58536781">Redis缓存和MySQL数据一致性方案详解</a></li>
+<li><a href="https://coolshell.cn/articles/17416.html">缓存更新的套路</a></li>
+<li><a href="https://www.quora.com/Why-does-Facebook-use-delete-to-remove-the-key-value-pair-in-Memcached-instead-of-updating-the-Memcached-during-write-request-to-the-backend">Why does Facebook use delete to remove the key-value pair in Memcached instead of updating the Memcached during write request to the backend?</a></li>
+<li><a href="https://www.usenix.org/system/files/conference/nsdi13/nsdi13-final170_update.pdf">Scaling Memcache at Facebook</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/59167071">Redis与Mysql双写一致性方案解析</a></li>
+<li><a href="https://blog.kido.site/2018/12/01/db-and-cache-01/">缓存与数据库一致性系列-01</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>30-19 之資料庫層的優化  - 資料緩存策略</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">正文開始</a></li>
+    <li><a href="#-">什麼樣類型資料適合緩存呢 ?</a></li>
+    <li><a href="#heading1">緩存讀流程</a></li>
+    <li><a href="#heading2">緩存寫策略與難題</a>
+      <ul>
+        <li><a href="#---db-">第一種 : 先寫 DB 後改緩存</a></li>
+        <li><a href="#---db---cache-aside-pattern-">第二種 : 先寫 DB 後淘汰緩存 ( Cache Aside Pattern )</a></li>
+        <li><a href="#---db">第三種 : 先改緩存後寫 DB</a></li>
+        <li><a href="#---db1">第四種 : 先淘汰緩存後寫 DB</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">緩存寫策略的難題總結</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">結論與心得</a></li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

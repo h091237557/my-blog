@@ -15,14 +15,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  30-12 之資料庫層的核心 - MySQL 的索引實現 &ndash; 拿鐵派的馬克 Blog
+  30-27之資料庫層的擴展 - 分區表 &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
-    <meta content="mysql, 鐵人賽, 索引" name="keywords">
+    <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -37,8 +37,8 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="30-12 之資料庫層的核心 - MySQL 的索引實現 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使|Describe what your web page is about">
+    <meta name="twitter:title" content="30-27之資料庫層的擴展 - 分區表 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
 
@@ -77,7 +77,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">30-12 之資料庫層的核心 - MySQL 的索引實現</div>
+    <div class="h1 mt-3 mb-1">30-27之資料庫層的擴展 - 分區表</div>
   </div>
   <div class="Subhead-description">
     
@@ -89,17 +89,17 @@
   <span class="Label Label--gray">it 鐵人賽 2019</span>
 </a>
 
-<a href='/tags/mysql' class="muted-link">
-  <span class="Label Label--gray">mysql</span>
+<a href='/tags/musql' class="muted-link">
+  <span class="Label Label--gray">musql</span>
 </a>
 
 
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-12. Published at: 2019-09-27.">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-09-27.">
         
-          Lastmod: 2019-12-12
+          Lastmod: 2019-12-15
         
       </span>
     </div>
@@ -109,463 +109,213 @@
 <article>
   
   <section class="pb-6 mb-3 border-bottom">
-    <p><img src="https://ithelp.ithome.com.tw/upload/images/20190926/20089358ZPcBZlbJcf.png" alt=""></p>
+    <p><img src="https://ithelp.ithome.com.tw/upload/images/20191012/20089358IsTcYcPdWQ.png" alt=""></p>
 <h2 id="heading">正文開始</h2>
-<p>上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b+ 樹來建立索引機制 ?</p>
-<p>本篇文章分為以下幾個章節 :</p>
+<p>上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :</p>
 <ul>
-<li>一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index )</li>
-<li>一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index )</li>
-<li>InnoDB 所提供的索引類型</li>
+<li>分庫</li>
+<li>分表</li>
 </ul>
-<h2 id="-innodb----clustered-index-">一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index )</h2>
-<p>假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?</p>
-<table>
-<thead>
-<tr>
-<th align="center">Id ( PK )</th>
-<th align="center">Name</th>
-<th align="center">age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">1</td>
-<td align="center">Mark</td>
-<td align="center">18</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">Jack</td>
-<td align="center">10</td>
-</tr>
-<tr>
-<td align="center">3</td>
-<td align="center">Ian</td>
-<td align="center">36</td>
-</tr>
-<tr>
-<td align="center">4</td>
-<td align="center">Jiro</td>
-<td align="center">30</td>
-</tr>
-<tr>
-<td align="center">5</td>
-<td align="center">Fucc</td>
-<td align="center">27</td>
-</tr>
-<tr>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-</tr>
-<tr>
-<td align="center">10</td>
-<td align="center">Fukk</td>
-<td align="center">46</td>
-</tr>
-<tr>
-<td align="center">表 1 : 範例</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。</p>
-<p>這個儲存結構就是使用我們上一篇所提的『 b+ 樹 』。</p>
-<p>那 innodb 會選擇上面那一行的欄位，來當節點的 key 呢 ?</p>
-<p>它的選擇如下 :</p>
-<ol>
-<li>Primary key ( PK )。</li>
-<li>如果沒有 pk 則選擇一個非空的 unique 索引。</li>
-<li>如果還是沒有，innodb 會自動產生一個隱藏的欄位來建立。</li>
-</ol>
-<p>由於咱們有 pk，所以 innodb 會自動以它來幫我們產生出以下圖 1 所示的 clustered Index。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358oGVYLtv8RD.png" alt="">
-圖 1 : innodb 根據 表 1 所建立的 clustered Index 範例。</p>
-<p><strong>~ 注意事項 ~</strong>
-下面的文章或圖片中，很多咱們會直接說使用 pk 去 clustered Index，但比較準備的說，應該是使用『 某個值 』而這個值，就是建立 clustered Index 的值，它不一定是用 pk，只是下面打 pk 比較方便。</p>
-<h3 id="heading1">簡單的搜尋運行流程</h3>
-<p>接下來我們來看看，如果咱們在這個表實際上下 query 它會如何找。</p>
-<h4 id="-1--select--from-table-where-id--1">範例 1 : SELECT * FROM Table WHERE id = 1</h4>
-<p>基本上就如同下圖一樣綠色圖案的路徑來尋找。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358vwxjbLWVnq.png" alt="">
-圖 2 : 範例 1 行走圖</p>
-<h4 id="-2--select--from-table-where-name--mark">範例 2 : SELECT * FROM Table WHERE name = &lsquo;Mark&rsquo;</h4>
-<p>由於基本上 query 的欄位不是使用索引欄位，因此這就代表他只能一個一個慢慢找。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358AbjWkzPWEE.png" alt="">
-圖 3 : 範例 2 行走圖</p>
-<h3 id="-">注意事項 !</h3>
-<ul>
-<li>每張表都一定有一個 clustered Index b+ 樹，它就是實際儲放資料的結構，同時也包含資料。</li>
-<li>只有最底層的非索引節點，才有實際資料，其它上面的索引節點，只有索引值。</li>
-<li>只有使用 PK 來搜尋才會使用此樹，其它搜尋都是全部掃描。</li>
-</ul>
-<h2 id="--innodb----secondary-index-">一張『 自已 』加了索引的表InnoDB 實際上如何儲呢 ? ( Secondary Index )</h2>
-<p>上面的 clustered Index 是咱們啥都不做，它就會自然建立起來的東西，而接下來咱們要介紹的『 Secondary Index 』才是咱們實際上可以自行建立的索引。</p>
-<pre><code>ALTER TABLE table ADD INDEX age_index(age) 
-</code></pre><p>所以當咱們執行以上 sql 指令後，會使用 age 欄位，來建立出來的索引 b+ 樹如下圖，其中要注意一下，自已建的 secondary index 本身沒有資料，所以通常情況還要在去 clustered Index 抓資料。</p>
-<table>
-<thead>
-<tr>
-<th align="center">Id (PK)</th>
-<th align="center">Name</th>
-<th align="center">age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">1</td>
-<td align="center">Mark</td>
-<td align="center">18</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">Jack</td>
-<td align="center">10</td>
-</tr>
-<tr>
-<td align="center">3</td>
-<td align="center">Ian</td>
-<td align="center">36</td>
-</tr>
-<tr>
-<td align="center">4</td>
-<td align="center">Jiro</td>
-<td align="center">30</td>
-</tr>
-<tr>
-<td align="center">5</td>
-<td align="center">Fucc</td>
-<td align="center">27</td>
-</tr>
-<tr>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-</tr>
-<tr>
-<td align="center">10</td>
-<td align="center">Fukk</td>
-<td align="center">46</td>
-</tr>
-<tr>
-<td align="center">表 2</td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358yNbSVsOSo4.png" alt="">
-圖 4 : innodb 根據表 2 所建立的 secondary index</p>
-<h3 id="heading2">簡單的搜尋運行流程</h3>
-<h4 id="-1--select--from-table-where-age--18">範例 1 : SELECT * FROM TABLE WHERE age = 18</h4>
-<p>首先第一步，它會去 age 的 b+ 索引樹尋找，如下圖 5 所示，然後它會尋找到 pk 為 1 的資料。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358Qd7wmJREkA.png" alt="">
-圖 5 : 範例 1 至 secondary index 尋找圖。</p>
-<p>接下來第二步，會去使用 pk 為 1 資料去 clustered Index 取得完整資料。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358uhT0s6ssFW.png" alt="">
-圖 6 : 範例 1 之後去 clustered Index 尋找圖</p>
-<p>而這就是最基本使用 secondary Index 的步驟。</p>
-<ol>
-<li>至 secondary Index 尋找 PK。</li>
-<li>再至 clustered Index 取得完整資料。</li>
-</ol>
-<h4 id="-2--select--from-table-where-age--30">範例 2 : SELECT * FROM TABLE WHERE age &lt;= 30</h4>
-<p>接下來這個範例咱們來看一下範例搜尋。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358Tjs7YLbbWv.png" alt="">
-圖 7 : 範例 2 至 secondary index 尋找範例索引圖</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358dJhux6Xqgs.png" alt="">
-圖 8 : 範例 2 之後去 clustered Index 尋找圖</p>
-<h2 id="innodb-">InnoDB 所提供的索引類型</h2>
-<p>在 InnoDB 中，它有提供的索引基本上分為兩大類 :</p>
-<ul>
-<li>clustered Index</li>
-<li>secondary Index</li>
-</ul>
-<p>其中 clustered Index 代表包含這原始資料行，而 secondary Index 就是咱們實際上所能建立與使用的索引。</p>
-<p>其中 Secondary Index 又分為以下幾類 :</p>
-<ol>
-<li>覆蓋索引 ( covering index ) (預設)</li>
-<li>連合索引 ( compound index )</li>
-<li>前綴索引 ( prefix index )</li>
-<li>唯一索引 ( unique index )</li>
-</ol>
-<h3 id="1---covering-index-">1. 覆蓋索引 ( covering index )</h3>
-<p>基本上你自已加了一個 secondary Index，那它預設就是個覆蓋索引，而它有一個特點就在於 :</p>
+<p>其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :</p>
 <blockquote>
-<p>它可以從 secondary Index 直接取得到索引欄位的資料，不用回到 clustered Index 抓資料。</p>
+<p>分區表</p>
 </blockquote>
-<p>就設咱們有以下的表</p>
-<table>
-<thead>
-<tr>
-<th align="center">id (PK)</th>
-<th align="center">name</th>
-<th align="center">age</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">1</td>
-<td align="center">Mark</td>
-<td align="center">18</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">Jack</td>
-<td align="center">10</td>
-</tr>
-<tr>
-<td align="center">3</td>
-<td align="center">Ian</td>
-<td align="center">36</td>
-</tr>
-<tr>
-<td align="center">4</td>
-<td align="center">Jiro</td>
-<td align="center">30</td>
-</tr>
-<tr>
-<td align="center">5</td>
-<td align="center">Fucc</td>
-<td align="center">27</td>
-</tr>
-<tr>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-<td align="center">&hellip;</td>
-</tr>
-<tr>
-<td align="center">10</td>
-<td align="center">Fukk</td>
-<td align="center">46</td>
-</tr>
-</tbody>
-</table>
-<p>然後你執行了以下的建立索引指令。</p>
-<pre><code>ALTER TABLE table ADD INDEX age_index(age) 
-</code></pre><p>那它會建立以下的 secondary index 的 b+ 樹，如下，事實上就和上面的圖一樣，我有點懶的在畫一張，請見諒。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358LSpD86lZFG.png" alt="">
-圖 9 : secondary Index 索引樹</p>
-<h4 id="heading3">覆蓋索引搜尋過程</h4>
-<p>然後你這時進行以下查詢，注意咱們只抓 age 這個欄位:</p>
-<pre><code>SLEECT age FROM Table WHERE age &lt;= 30
-</code></pre><p>這時它的查詢路徑如下圖，你會發現它只會去 secondary index 找到資料後，就回傳，而不會在像前幾個範例一樣，還需要去 clustered Index 抓所有資料。</p>
+<p>本篇文章分以下幾個章節 :</p>
+<ul>
+<li>分區概念</li>
+<li>MySQL 分區的切分類型</li>
+<li>分區使用的注意事項</li>
+</ul>
+<h2 id="heading1">分區概念</h2>
+<p>分區表的核心概念為 :</p>
 <blockquote>
-<p>注意它沒有至 clustered Index 抓所有資料，因為 query 只要取索引值。</p>
+<p>將一張大表，根據『 規則 』拆分為『 隱藏 』的小表</p>
 </blockquote>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358NPmzI0dvBA.png" alt="">
-圖 10 : 覆蓋索引搜尋範例圖</p>
-<h4 id="heading4">覆蓋索引小總結</h4>
+<p>觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下</p>
 <ul>
-<li>預設建立的 secondary index 就是覆蓋索引。</li>
-<li>覆蓋索引的功用就是可以讓你直接在 secondary index 抓取你要的欄位資料。</li>
-<li>但如果有多指令其它欄位 (ex. SELECT age,name .)，則就還是會去 clustered Index 抓所有資料。</li>
+<li>分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。</li>
+<li>分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。</li>
 </ul>
-<h3 id="2---compound-index-">2. 連合索引 ( Compound index )</h3>
-<p>連合索引就是可以將兩個欄位組合在一起，建立一個索引表。</p>
-<p>假設咱們有以下的資料表。</p>
-<table>
-<thead>
-<tr>
-<th align="center">id ( PK )</th>
-<th align="center">name</th>
-<th align="center">age</th>
-<th align="center">power</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">1</td>
-<td align="center">Mark</td>
-<td align="center">18</td>
-<td align="center">100</td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">Jack</td>
-<td align="center">10</td>
-<td align="center">10</td>
-</tr>
-<tr>
-<td align="center">3</td>
-<td align="center">Ian</td>
-<td align="center">36</td>
-<td align="center">10</td>
-</tr>
-<tr>
-<td align="center">4</td>
-<td align="center">Jiro</td>
-<td align="center">30</td>
-<td align="center">20</td>
-</tr>
-<tr>
-<td align="center">5</td>
-<td align="center">Fucc</td>
-<td align="center">27</td>
-<td align="center">30</td>
-</tr>
-<tr>
-<td align="center">6</td>
-<td align="center">Mark</td>
-<td align="center">46</td>
-<td align="center">200</td>
-</tr>
-</tbody>
-</table>
-<p>然後執行建立連合索引的指令。</p>
-<pre><code>create index idx_age_name on table(age,name);
-</code></pre><p>它這時就會建成以下 b+ 樹。由於受限於圖案大小，將這顆樹會縮成 2 層的高度，不然好難畫……</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358ZKAfc99sZC.png" alt="">
-圖 11 : 連合索引範例</p>
-<h4 id="heading5">連合索引搜尋過程</h4>
-<p>然後你這時進行以下查詢，注意咱們只抓 age 這個欄位:</p>
-<pre><code>SLEECT name,age FROM db.Table WHERE age &lt;= 20 AND name = 'Mark'
-</code></pre><p>這時它的運行路徑如下圖，它會透過 secondary Index 找到 age &lt;= 20 且 name 為 Mark 的 pk，然後這時因為我們是只要 name 與 age 兩個索引欄位資料，因此就如同覆蓋索引一樣，在 secondary index 就可處理完。</p>
-<p>注意雖然我們在最上層就找到了，但是那個只是索引值，而不是可以拿來用的，b+樹它一定會跑到最下面。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358ywOmLQsv57.png" alt="">
-圖 12 : 連合索引搜尋範例</p>
-<h4 id="----agename---nmae">連合索引失效 - 索引 { age,name } 找 nmae</h4>
-<p>咱們接下來看一下不正確的使用，會讓連合索引失效。</p>
-<p>咱們下了以下的 sql，但這一段不會跑連合索引，而是會執行全部掃描。</p>
-<pre><code>SLEECT name FROM db.Table WHERE name = 'Mark'
-</code></pre><p>因為你看看下圖，它要如何的找 name = &lsquo;Mark&rsquo;，之前有說過索引基本上是以二分法的概念，也就是看看目標在那個區間 ( ex. 左邊或右邊 )，然後在決定去某個區間找。而下圖它的區間都是以 age 來畫分，因此要用 name 來找就會失效。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358ON2eSQ3PzL.png" alt="">
-圖 13 : 連合索引失效範例</p>
-<h4 id="heading6">連合索引小總結</h4>
-<ul>
-<li>它是會將兩個欄位組合一個索引樹 ( 而不是用兩個欄位，建立兩個索引樹 )。</li>
-<li>它的先後順序有影響。</li>
-</ul>
-<p>以索引 { age , name } 情況來看。</p>
-<pre><code>WHERE age = 20 =&gt; OK !
-WHERE age = 20 AND name = 'Mark' =&gt; OK !
-WHERE name = 'Mark' =&gt; No !!!
-</code></pre><p>只後還有一些細節會在之後的文章中詳細的進行總整理。</p>
-<h3 id="3-">3. 前綴索引</h3>
-<p>前綴索引就是指在個長長的字串欄位上的『 前幾個字 』就上索引。</p>
-<pre><code>ALTER TABLE xxx ADD KEY (Field(n))
+<p>也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :</p>
+<pre><code>user 根據 type 拆分成三個表 :
+1. user_type_A 表
+2. user_type_B 表
+3. user_type_C 長
 
-n : 指前幾個字
-</code></pre><p>假設咱們有以下資料表，然後咱們 name 比較特別的會在每個的人名字前面加一個 tag，例如 A-Mark 那個 A。這裡只是先示範前綴索引，就先不探討為什麼不要多一個欄位來放 tag 這問題。</p>
-<table>
-<thead>
-<tr>
-<th align="center">id (PK)</th>
-<th align="center">name</th>
-<th align="center">age</th>
-<th></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="center">1</td>
-<td align="center">A-Mark</td>
-<td align="center">18</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">2</td>
-<td align="center">B-Jack</td>
-<td align="center">10</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">3</td>
-<td align="center">C-Ian</td>
-<td align="center">36</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">4</td>
-<td align="center">E-Jiro</td>
-<td align="center">30</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">5</td>
-<td align="center">D-Fucc</td>
-<td align="center">27</td>
-<td></td>
-</tr>
-<tr>
-<td align="center">6</td>
-<td align="center">C-Mark</td>
-<td align="center">46</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>然後咱們執行以下指令來建立前綴索引。</p>
-<pre><code>ALTER TABLE xxx ADD INDEX index_tag (name(1))
-</code></pre><p>然後他會建立出以下的 b+ 樹。</p>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/20089358BWmCcssdFv.png" alt="">
-圖 14 : 前綴索引範例</p>
-<h4 id="heading7">前綴索引查詢流程</h4>
-<p>要使用前綴索引查詢，只有以下兩種才能。</p>
-<pre><code>SELECT name FROM table WHERE name = 'C-Ian';
-
-SELECT name FROM table WHERE name like 'C-%';
-</code></pre><p>當我們執行以上查詢 sql 後，它就會如下圖一樣進行查詢。先至 secondary index 再去 compound index。</p>
+SELECT * FROM user_type_A WHERE name = 'mark';
+</code></pre><p>而如果是『 分區表 』的話為 :</p>
+<pre><code>SELECT * FROM user WHERE name = 'mark';
+</code></pre><p><strong>這裡問個問題 ~ 那實務上要使用分表還是分區呢 ?</strong></p>
+<p>首先這兩個沒有互相排斥，兩個可以一起使用，但如果是要先選一個來用的話，要選那個呢 ? 目前我是覺得『 分區 』比較簡單實現，但是它在使用上會比較需要『 使用者 』注意，一個用不好，性能反而會下降。</p>
+<p>而『 分表 』某些方面來說彈性較大，可以做的業務較多，但相對的除非有一個很完美的中間件團隊，不然坑如果直接各別讓『 使用者 』直接用資料庫，會天下大亂的。</p>
+<p><strong>~ 小知識 ~</strong></p>
+<p>分區表這個東西在不少資料庫上都有提供像 mysql、ms-sql、postgresql 等都有支援。</p>
+<h3 id="heading2">分表區的優點</h3>
+<p>分區有以下幾個好處 :</p>
+<ul>
+<li>減少修改時對索引樹的維護 : 因為越大的樹越難維護，所以切小後，每顆樹就好維護多了。</li>
+<li>減少索引碎片處理 : 只要是有進行修改，就有可能會讓索引樹一個洞一個洞的，而通常會下達指令來整理這顆樹，但是這很耗效能，而且如果樹越大，資源吃越多。</li>
+<li>增加查詢效率 : 越大的樹查詢效率一定越小，而不過切小後，『 只對 』那顆小樹查那就快多了。</li>
+<li>增加表的維護性 : 假設咱們要針對大表中某一段時間砍資料，那這時如果每張表是以時間來分的話，那就只要直接砍掉小表，這樣也不會影響到其它小表的查詢。</li>
+</ul>
+<p>上面看似美好。</p>
 <blockquote>
-<p>注意它無法像覆蓋索引只在 secondary Index 就抓取 name ( 因為這顆前綴數 name 不完整 )</p>
+<p>但分區表不是銀彈</p>
 </blockquote>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/200893586JpkxBmbCS.png" alt="">
-圖 15 : 前綴索引查詢流程流程圖</p>
-<h4 id="heading8">前綴索引小總結</h4>
-<ul>
-<li>前綴索引是在某一段文字上，針對前面幾個文字建立索引。</li>
-<li>前綴索引沒有覆蓋索引的功能，所以它還是需要至 compound index 抓所有資料。</li>
-<li>只有在指定欄位名稱或用 like % 才能使用到前綴索引，如上範例 sql。</li>
-</ul>
-<h3 id="4---unique-index-">4. 唯一索引 ( Unique index )</h3>
-<pre><code>ALTER TABLE xxx ADD unique(`username`);
-</code></pre><p>這個所產生出來的圖與上面幾個索引都沒差多少，它有幾個重要注意一下 :</p>
-<ul>
-<li>它可以當 clustered Index 的索引值。</li>
-<li>它是唯一的。</li>
-<li>它可以允許空值。</li>
-</ul>
-<p>就降</p>
-<h2 id="heading9">結論與心得</h2>
-<p>這一章咱們介紹了 mysql 中的非常多的索引，咱們簡單的畫一張來理解一下它們的關係，如下圖 16 所示。</p>
-<p>首先基本最大的兩個分類為 :</p>
-<ul>
-<li>clustered Index : innodb 自動建立</li>
-<li>Secondary Index : 咱們自已手工建立</li>
-</ul>
-<p>然後大部份的情況下，搜尋流程者是 :</p>
-<ol>
-<li>secondary Index</li>
-<li>clustered Index</li>
-</ol>
-<p>除非你只用 PK 搜尋就只會跑 clustered Index，又或是你用覆蓋索引那它就會只跑 secondary Index。</p>
-<p>接下來咱們看一下，可以自已手工建立索甲的的情境下都是所謂的 :</p>
-<ul>
-<li>覆蓋索引 : 也就是 sql 下的對，就可以只去 secondary Index 找資料就夠了。</li>
-</ul>
-<p>其中下圖 16 中的一般索引，就是咱們直接建立的最簡單索引，如下範例，在上面分類中你沒有看到，為它是直接寫在覆蓋索引中，因為它本來就是覆蓋索引。而下面這圖拉出來只是讓你比較好理解。</p>
-<pre><code>ALTER TABLE table ADD INDEX age_index(age) 
-</code></pre><p>然後幾種狀況下，『 唯一索引 』與『 連合索引 』都也屬於這一類。</p>
-<p>接下來是比較特別一點的 :</p>
-<ul>
-<li>前綴索引 : 它沒有覆蓋索引的功能，所以不管如何，都一定還要在回去 clustered Index 找資料。</li>
-</ul>
-<p><img src="https://ithelp.ithome.com.tw/upload/images/20190927/200893585yw37JdZiZ.png" alt="">
-圖 16 : mysql 索引關係圖</p>
-<h2 id="heading10">參考資料</h2>
+<p>後面章節會說明它的坑處。</p>
+<h2 id="mysql-">MySQL 分區的切分類型</h2>
+<p>mysql 中分區表提供了以下的類型，然後咱們指定分區的那個欄位都稱為 :</p>
+<blockquote>
+<p>分區鍵</p>
+</blockquote>
+<p>分區鍵的選擇要點提醒</p>
+<blockquote>
+<p>那個欄位會變成每一次查詢時，都會要用的</p>
+</blockquote>
+<h4 id="-1--range-">類型 1 : RANGE 分區</h4>
+<p>假設咱們由一張儲員工的資料表，那咱們可以選擇以『 RANGE 』來分區，通常這種分區欄位比較常見的有日期或啥有順序的編號之類。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">RANGE</span> <span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="p">(</span>
+    <span class="n">PARTITION</span> <span class="n">p0</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="p">,</span>
+    <span class="n">PARTITION</span> <span class="n">p1</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="p">,</span>
+    <span class="n">PARTITION</span> <span class="n">p2</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="p">,</span>
+    <span class="n">PARTITION</span> <span class="n">p3</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>假設咱們有以下的員工 :</p>
+<pre><code>A : age = 18
+B : age = 25
+C : age = 35
+D : age = 45
+E : age = 15
+</code></pre><p>那這樣上述資料會分別放在不同的分區表中 :</p>
+<pre><code>p0 : A,E
+p1 : B
+p2 : C
+p 3 : D
+</code></pre><h4 id="-2--list-">類型 2 : LIST 分區</h4>
+<p>list 這種分區通常是用在枚舉類型上，如下範例，咱們有一個 type 欄位，然後使用數字來代表類型，然後就使用這個類型來決定分區。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">list</span> <span class="p">(</span><span class="k">type</span><span class="p">)</span> <span class="p">(</span>
+    <span class="n">PARTITION</span> <span class="n">p0</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="p">,</span>
+    <span class="n">PARTITION</span> <span class="n">p1</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">,</span>
+<span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>假設咱們有以下的員工 :</p>
+<pre><code>A : age = 18, type : 0
+B : age = 25, type : 1
+C : age = 35, type : 2
+D : age = 45, type : 0
+E : age = 15, type : 1
+</code></pre><p>那這樣上述資料會分別放在不同的分區表中 :</p>
+<pre><code>p0 : A,B,D,E
+p1 : E
+</code></pre><h4 id="-3--hash-">類型 3 : Hash 分區</h4>
+<p>它就是會直接將 id 進行 hash 後分成四個區。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+</code></pre></div><h4 id="-4--key-">類型 4 : KEY 分區</h4>
+<p>它就是會直接根據指定的 pk 來分區。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="k">KEY</span><span class="p">(</span><span class="p">)</span>
+<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+</code></pre></div><h2 id="heading3">分區使用的注意事項</h2>
 <hr>
+<h3 id="-1--">注意 1 : 查詢時一定有用到分區鍵，不然還是會每個分區找</h3>
+<p>假設咱們有以下的分區表。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="p">,</span>
+    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
+<span class="p">)</span>
+<span class="n">PARTITION</span> <span class="k">BY</span> <span class="k">KEY</span><span class="p">(</span><span class="p">)</span>
+<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+</code></pre></div><p>然後咱們下達以下的指令進行 query :</p>
+<pre><code>EXPLAIN SELECT * FROM users WHERE age = 10;
+</code></pre><p>那你會看到以下的結果如下 explain 的結果，你會發現它去每一個分區都找過。</p>
+<pre><code>partitions 
+p0,p1,p2,p2
+</code></pre><p>而如果改成 :</p>
+<pre><code>EXPLAIN SELECT * FROM users WHERE id = 1;
+</code></pre><p>結果如下，就有使用到分區表。</p>
+<pre><code>partitions 
+p0
+</code></pre><h3 id="-2--">注意 2 : 沒有使用到分區表查詢會慢</h3>
+<p>分區別是為了解決單表太大，導致操作太慢所進行的一種解法，以 b+ 樹的概念來看，就是將一顆大樹分成幾個小樹。</p>
+<p>但是這有一個問題，如果你的查詢沒有用到分區，那也就代表你需要去每個小樹找，那這樣整體而言 i/o 的次樹會大於一顆大樹。</p>
+<p>mysql innodb 是使用 b+ 樹來建立資料，在資料庫中基本上樹的高度大約為 2 至 3，不論資料的多與少，這也代表你分區以後，那幾顆分區後出來的 b+ 樹高度也是會差不多的。</p>
+<p>所以有可能大表查詢需要 3 次 i/o，但變到小表可能就只需要 2 次 i/o，但是如果沒有指定分區查詢的話，假設有 4 個小表，那就代表要 2 * 4 = 8 次 i/o 查詢，這樣反而變慢了。</p>
+<p>所以這裡記好 :</p>
+<blockquote>
+<p>查詢時一定要包含分區鍵來查詢，沒用到會很慢</p>
+</blockquote>
+<h3 id="-3--null-">注意 3 : NULL 的問題</h3>
+<p>如果你的分區鍵中，所對應的表格是 null 的話，那他會如何處理呢 ?</p>
+<blockquote>
+<p>它會都儲在第一個分區</p>
+</blockquote>
+<p>所以有時後不知覺第一個分區查詢會非常慢就是這個原因。</p>
+<h3 id="-4--">注意 4 : 索引的使用問題</h3>
+<p>分區鍵與索引鍵不相同時</p>
+<p>假設咱們有一張表，它們的分區與索引鍵如下 :</p>
+<pre><code>欄位 a 與 b
+
+分區鍵 : a
+索引鍵 : b
+</code></pre><p>那你想想，如果這個時後下以下的 sql 會如何呢 ? 它基本上會去每一個分區表中的每個顆 b+ 樹去找一次，就算有使用索引 b 仍然會非常的慢，尤其如果是沒有用到『 覆蓋索引 』。</p>
+<pre><code>SELECT * FROM table WHERE b = 1;
+</code></pre><p>所以這裡建議，任何查詢一定要配分區鍵</p>
+<pre><code>SELECT * FROM table WHERE b = 1 AND a = x
+</code></pre><p><strong>~ 小備註 ~</strong></p>
+<p>上面有提到覆蓋索引這東西，如果還不知道的友人們，可以參考看看筆者這篇文章。</p>
+<p><a href="https://ithelp.ithome.com.tw/articles/10221572">30-12 之資料庫層的核心 - MySQL 的索引實現</a></p>
+<h3 id="-5---range--insert-">注意 5 : 在 Range 類型 INSERT 時的問題</h3>
+<p>在範例類型的分區表的操作時，insert 實際上是進行以下事情 :</p>
+<blockquote>
+<p>分區層鎖住所有分區表，然後決定它是在那，再將它丟入那個分區</p>
+</blockquote>
+<p>事實上這個操作非常的消耗性能，所以基本會建議 range 不要設太多分區。</p>
+<h3 id="-6---explain-">注意 6 : 記得常用 Explain 來看看有沒有分區</h3>
+<p>注意 explain 中的 partiation 欄位，如果是全部的分區都有掃到，那就要考慮改一下你的語法。</p>
+<pre><code>id: 1
+select_type: simple
+table: user
+partiation: p1
+</code></pre><h3 id="--">最後的注意 : 分區鍵的選擇非常重要</h3>
+<p>你只要記好，你只有一次機會選擇它，上線已後要改，會出人命的。</p>
+<h2 id="heading4">結論與心得</h2>
+<p>本篇文章中，咱們介紹了淺談了資料庫分區表的概念，它的概念事實上和咱們上一章節介紹的分表非常的相似，但是還是有點不同。</p>
 <ul>
-<li><a href="https://medium.com/@genchilu/%E6%B7%BA%E8%AB%87-innodb-%E7%9A%84-cluster-index-%E5%92%8C-secondary-index-f75da308352e">淺談 InnoDB 的 Cluster Index 和 Secondary Index</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/56322544">[译]从磁盘结构到B+树</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/62018452">MySQL(Innodb)索引的原理</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/63509913">老哥：说实话，不深入了解MySQL存储原理，还真回答不了这几个问题。</a></li>
-<li><a href="https://kknews.cc/code/ag634b6.html">[玩轉MySQL之七]InnoDB存儲引擎架構簡介</a></li>
-<li><a href="https://www.jianshu.com/p/c4e1ecd4563b">InnoDB存储引擎体系架构</a></li>
-<li><a href="https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/438173/">MySql Innodb儲存引擎–架構和引擎介紹</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/40820574">Mysql索引简明教程</a></li>
-<li><a href="https://www.cnblogs.com/studyzy/p/4310653.html">前缀索引，一种优化索引大小的解决方案</a></li>
+<li>分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。</li>
+<li>分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。</li>
+</ul>
+<p>然後這裡說一下，並不是所有表太大，都需要使用分表或分區這兩個擴展，很多情況下，事實上不需要所有的資料都需要存放在資料庫中，這些資料事實上可以考慮轉移至 s3 或啥的，唯有當資料一定要存在資料庫中，且都需要查詢的情況，才可考慮。</p>
+<p>不然分表與分區後，應用端操作是個雷，資料庫端也是個雷。</p>
+<p>最後在提醒一下分區與分表是用在 :</p>
+<blockquote>
+<p>單表太大的情境</p>
+</blockquote>
+<p>而不是資料庫太大的情境，我真看過有人不管表大不大，一律都分區這樣玩。</p>
+<h2 id="heading5">參考資料</h2>
+<ul>
+<li><a href="http://mysql.taobao.org/monthly/2017/11/09/">MySQL · 最佳实践 · 分区表基本类型</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/5.7/en/partitioning-range.html">MySQL 官網分區</a></li>
+<li><a href="https://www.ituring.com.cn/article/472244">【原创】MYSQL 的那些“坑”</a></li>
+<li><a href="https://dev.mysql.com/doc/refman/8.0/en/partitioning-overview.html">Overview of Partitioning in MySQL-8.0</a></li>
 </ul>
 
   </section>
@@ -622,30 +372,32 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>30-12 之資料庫層的核心 - MySQL 的索引實現</b><nav id="TableOfContents">
+      <b>30-27之資料庫層的擴展 - 分區表</b><nav id="TableOfContents">
   <ul>
     <li><a href="#heading">正文開始</a></li>
-    <li><a href="#-innodb----clustered-index-">一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index )</a>
+    <li><a href="#heading1">分區概念</a>
       <ul>
-        <li><a href="#heading1">簡單的搜尋運行流程</a></li>
-        <li><a href="#-">注意事項 !</a></li>
+        <li><a href="#heading2">分表區的優點</a></li>
       </ul>
     </li>
-    <li><a href="#--innodb----secondary-index-">一張『 自已 』加了索引的表InnoDB 實際上如何儲呢 ? ( Secondary Index )</a>
+    <li><a href="#mysql-">MySQL 分區的切分類型</a>
       <ul>
-        <li><a href="#heading2">簡單的搜尋運行流程</a></li>
+        <li></li>
       </ul>
     </li>
-    <li><a href="#innodb-">InnoDB 所提供的索引類型</a>
+    <li><a href="#heading3">分區使用的注意事項</a>
       <ul>
-        <li><a href="#1---covering-index-">1. 覆蓋索引 ( covering index )</a></li>
-        <li><a href="#2---compound-index-">2. 連合索引 ( Compound index )</a></li>
-        <li><a href="#3-">3. 前綴索引</a></li>
-        <li><a href="#4---unique-index-">4. 唯一索引 ( Unique index )</a></li>
+        <li><a href="#-1--">注意 1 : 查詢時一定有用到分區鍵，不然還是會每個分區找</a></li>
+        <li><a href="#-2--">注意 2 : 沒有使用到分區表查詢會慢</a></li>
+        <li><a href="#-3--null-">注意 3 : NULL 的問題</a></li>
+        <li><a href="#-4--">注意 4 : 索引的使用問題</a></li>
+        <li><a href="#-5---range--insert-">注意 5 : 在 Range 類型 INSERT 時的問題</a></li>
+        <li><a href="#-6---explain-">注意 6 : 記得常用 Explain 來看看有沒有分區</a></li>
+        <li><a href="#--">最後的注意 : 分區鍵的選擇非常重要</a></li>
       </ul>
     </li>
-    <li><a href="#heading9">結論與心得</a></li>
-    <li><a href="#heading10">參考資料</a></li>
+    <li><a href="#heading4">結論與心得</a></li>
+    <li><a href="#heading5">參考資料</a></li>
   </ul>
 </nav></div>
   

@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>&amp;copy;Your Name 2019</copyright>
-    <lastBuildDate>Sun, 30 Sep 2018 19:51:35 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 24 Sep 2019 20:16:57 +0800</lastBuildDate>
     
 	<atom:link href="https://mark-lin.com/tags/instant-messaging/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑</title>
+      <link>https://mark-lin.com/posts/20190924/</link>
+      <pubDate>Tue, 24 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190924/</guid>
+      <description>正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個</description>
+    </item>
     
     <item>
       <title>30-30之寫給想入門影音直播開發的 Junior 工程師攻略本</title>
