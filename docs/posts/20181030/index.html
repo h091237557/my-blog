@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  PHP Laravel 的 Container 理解 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="php, laravel" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。 容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 : 裡面裝|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="PHP Laravel 的 Container 理解 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。 容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 : 裡面裝|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">PHP Laravel 的 Container 理解</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/php' class="muted-link">
+  <span class="Label Label--gray">php</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-10-30.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="http://yixiang8780.com/outImg/20181130-1.png" alt=""></p>
+<h2 id="container--">Container 是什麼 ?</h2>
+<p>Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。</p>
+<p>容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 :</p>
+<blockquote>
+<p>裡面裝了一堆可以用的服務載體，就叫 Container。</p>
+</blockquote>
+<p>像我們每當要執行 Laravel 時，都會先執行下面這段程式碼，其中 $app 就是我們的 Container，然後接下來會使用 Container 來實體化一些物件，例如 $kernel。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">public</span><span class="o">/</span><span class="nx">index</span><span class="o">.</span><span class="nx">php</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">require_once</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../bootstrap/app.php&#39;</span><span class="p">;</span>
+
+<span class="cm">/*
+</span><span class="cm">|--------------------------------------------------------------------------
+</span><span class="cm">| Run The Application
+</span><span class="cm">|--------------------------------------------------------------------------
+</span><span class="cm">|
+</span><span class="cm">| Once we have the application, we can handle the incoming request
+</span><span class="cm">| through the kernel, and send the associated response back to
+</span><span class="cm">| the client&#39;s browser allowing them to enjoy the creative
+</span><span class="cm">| and wonderful application we have prepared for them.
+</span><span class="cm">|
+</span><span class="cm">*/</span>
+
+<span class="nv">$kernel</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nx">Illuminate\Contracts\Http\Kernel</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span>
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nx">Illuminate\Http\Request</span><span class="o">::</span><span class="na">capture</span><span class="p">()</span>
+<span class="p">);</span>
+
+<span class="nv">$response</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">();</span>
+
+<span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">terminate</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">);</span>
+</code></pre></div><h2 id="-container-">為什麼要使用 Container ?</h2>
+<p>上面我們理解 Container 是做什麼用以後，接下來我們要來想想一件事情。</p>
+<p>為什麼 Laravel 要使用 Container 呢，為什麼上面的要實體化 $knernel 時，不使用 new Knernel() 這種實體化的方式呢 ?</p>
+<blockquote>
+<p>因為它想解決依賴與耦合。</p>
+</blockquote>
+<p>這就是 Conainter 想解決的事情。</p>
+<h3 id="heading">(高)依賴與耦合</h3>
+<blockquote>
+<p>高依賴與耦合 : 程式碼中綁死了某個模組，如下面程式碼綁死了 Log Service。</p>
+</blockquote>
+<p>假設有一段程式碼如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">Log</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+      <span class="nv">$awsLogService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWSLogService</span><span class="p">();</span>
+      <span class="nv">$awsLogService</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">AWSLogService</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+       <span class="o">....</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>但假設今天我們要將 Log 改傳到 GCP ( Google 雲端 )，那我們程式碼要修改成如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">Log</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+      <span class="c1">//$awsLogService = new AWSLogService();
+</span><span class="c1"></span>      <span class="c1">//$awsLogService-&gt;send(log);
+</span><span class="c1"></span>      
+      <span class="nv">$gcpLogService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">GCPLogService</span><span class="p">();</span>
+      <span class="nv">$gcpLogService</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">GCPLogService</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+       <span class="o">....</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用
+</span><span class="c1"></span>
+<span class="nv">$log</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Log</span><span class="p">();</span>
+<span class="nv">$log</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">&#39;log.....&#39;</span><span class="p">);</span>
+</code></pre></div><p>從上面程式碼中，我們可以注意到我們沒當要換個服務時，都需要修改程式碼，並且這裡還有一個缺點，你要如何做單元測試 ? 程式碼裡面完全的綁死了 AWSLogService 或是 GCPLogService，沒有地方可以給我們進行替換，沒辦法替換就代表我們在做測試時，只能真的將資料丟到 AWS 或 GCP。</p>
+<h3 id="-">(低) 依賴與耦合</h3>
+<p>然後由於有上面說的缺點，因此會將程式碼改成如下。基本上就是將 LogService 改成由使用這個物件時來決定是用選擇 AWS 還是 GCP，並且這兩個 service 都實作同一個 ILogService 的 interface。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">Log</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">;</span>
+  
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span> <span class="o">=</span> <span class="nv">$logService</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">GCPLogService</span> <span class="k">implements</span> <span class="nx">ILogService</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+       <span class="o">....</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">AWSLogService</span> <span class="k">implements</span> <span class="nx">ILogService</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+       <span class="o">....</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">interface</span> <span class="nx">ILogService</span> 
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// 使用
+</span><span class="c1"></span><span class="nv">$log</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Log</span><span class="p">(</span><span class="k">new</span> <span class="nx">AWSLogServcie</span><span class="p">());</span>
+<span class="nv">$log</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">&#39;log......&#39;</span><span class="p">);</span>
+</code></pre></div><p>好接下來在拉回主題。</p>
+<h3 id="-laravel-container-">為什麼要使用 Laravel Container ?</h3>
+<p>上面我們的範例程式碼最後要執行時，會如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$log</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Log</span><span class="p">(</span><span class="k">new</span> <span class="nx">AWSLogServcie</span><span class="p">());</span>
+<span class="nv">$log</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">&#39;log......&#39;</span><span class="p">);</span>
+</code></pre></div><p>這樣事實上沒什麼問題。</p>
+<p>但是如果這一段程式碼有很多地方使用怎麼辦 ? 有沒有可能系統中統一都要使用 AWS 的，但是其中一個地方忘了改，而不小心使用到 GCP ? 嗯這是有可能發生的。</p>
+<p>還有另一個問題，這一段程式碼本身就依賴了<code>Log</code>這個類別，這樣事實上還是沒有解決依賴的問題。</p>
+<p>因此 Laravel 建立了 Container，並且會在開啟服務時，先行註冊好，例如下面偽代碼。只要在這個 conatiner 內部的 class 都會根據它註冊好的東西來進行處理。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$containter</span> <span class="o">=</span> <span class="k">require</span><span class="p">(</span><span class="s1">&#39;Container&#39;</span><span class="p">);</span>
+
+<span class="c1">// 它會在這一段先將 ILogService 綁定好，如果 construct 中有使用到它的，將會將它實體化為 // AWSLogServcie。 
+</span><span class="c1"></span><span class="nv">$containter</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">ILogService</span><span class="p">,</span> <span class="nx">AWSLogServcie</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+
+<span class="c1">// 實體化 Log 類別。
+</span><span class="c1"></span><span class="nv">$log</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nx">Log</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+
+<span class="nv">$log</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">&#39;log....&#39;</span><span class="p">);</span>
+</code></pre></div><h4 id="-1">那有兩個類別，它們內部有使用相同抽像類別，但這時它們實際上要使用不同的類別要怎麼處理呢 ?</h4>
+<p>Laravel 官網有給個範例如下，Photo 與 Video 都有使用到 Filesystem 這個抽象類別，但它們實際上要使用不一樣的類別，則可以使用如下的方法來進行指定。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">when</span><span class="p">(</span><span class="nx">PhotoController</span><span class="o">::</span><span class="na">class</span><span class="p">)</span>
+          <span class="o">-&gt;</span><span class="na">needs</span><span class="p">(</span><span class="nx">Filesystem</span><span class="o">::</span><span class="na">class</span><span class="p">)</span>
+          <span class="o">-&gt;</span><span class="na">give</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">Storage</span><span class="o">::</span><span class="na">disk</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">);</span>
+          <span class="p">});</span>
+
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">when</span><span class="p">(</span><span class="nx">VideoController</span><span class="o">::</span><span class="na">class</span><span class="p">)</span>
+          <span class="o">-&gt;</span><span class="na">needs</span><span class="p">(</span><span class="nx">Filesystem</span><span class="o">::</span><span class="na">class</span><span class="p">)</span>
+          <span class="o">-&gt;</span><span class="na">give</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+              <span class="k">return</span> <span class="nx">Storage</span><span class="o">::</span><span class="na">disk</span><span class="p">(</span><span class="s1">&#39;s3&#39;</span><span class="p">);</span>
+          <span class="p">});</span>
+</code></pre></div><p><a href="https://laravel-china.org/docs/laravel/5.5/container/1289#contextual-binding">Contextual Bindings (上下文绑定)</a></p>
+<h2 id="laravel--container-">Laravel 如何建立 Container ?</h2>
+<p>這裡我們就要開始來研究一下 Laravel Container 的原始碼。</p>
+<p>首先最一開始是這裡，它會實體化一個 $app conatiner。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Illuminate\Foundation\Application</span><span class="p">(</span>
+    <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">&#39;APP_BASE_PATH&#39;</span><span class="p">]</span> <span class="o">??</span> <span class="nx">dirname</span><span class="p">(</span><span class="no">__DIR__</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div><p>接下來我們來看一下 Illuminate\Foundation\Application 的程式碼。這裡可以知道 Application 繼承了 Container 這個類別。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">Application</span> <span class="k">extends</span> <span class="nx">Container</span> <span class="k">implements</span> <span class="nx">ApplicationContract</span><span class="p">,</span> <span class="nx">HttpKernelInterface</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nv">$basePath</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$basePath</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">setBasePath</span><span class="p">(</span><span class="nv">$basePath</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerBaseBindings</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerBaseServiceProviders</span><span class="p">();</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerCoreContainerAliases</span><span class="p">();</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div><p><a href="https://github.com/laravel/framework/blob/5.7/src/Illuminate/Container/Container.php">laravel5.7-container</a></p>
+<p>然後 Container 類別中，有兩個方法是重點那就是<code>bind</code>與<code>make</code>。</p>
+<h3 id="bind">bind</h3>
+<blockquote>
+<p>建立抽象與實體的綁定表</p>
+</blockquote>
+<p><img src="http://yixiang8780.com/outImg/20181130-2.png" alt=""></p>
+<h4 id="bind-">bind 使用方式</h4>
+<p>基本上分為以下四種 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="c1">// 1. 類別綁定 clouse
+</span><span class="c1"></span><span class="nx">App</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;UserRepository&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">AWSUserRepository</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="c1">// 2. 抽像類別綁定實際類別
+</span><span class="c1"></span><span class="nx">App</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;UserRepositoryInterface&#39;</span><span class="p">,</span> <span class="s1">&#39;DbUserRepository&#39;</span><span class="p">);</span>
+
+<span class="c1">// 3. 實際類別綁定
+</span><span class="c1"></span><span class="nx">APP</span><span class="o">::</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;UserRepository&#39;</span><span class="p">)</span>
+
+<span class="c1">// 4. singleton 綁定
+</span><span class="c1"></span><span class="nx">App</span><span class="o">::</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;UserRepository&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">AWSUserRepository</span><span class="p">;</span>
+<span class="p">});</span>
+</code></pre></div><h4 id="heading1">原始碼解析</h4>
+<p><a href="https://github.com/laravel/framework/blob/5.7/src/Illuminate/Container/Container.php#L222">laravel5.7-container-bind</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="sd">/**
+</span><span class="sd">     * Register a binding with the container.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $abstract
+</span><span class="sd">     * @param  \Closure|string|null  $concrete
+</span><span class="sd">     * @param  bool  $shared
+</span><span class="sd">     * @return void
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">bind</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$concrete</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nv">$shared</span> <span class="o">=</span> <span class="k">false</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dropStaleInstances</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">);</span>
+       
+        <span class="c1">// 例如這種 APP::bind(&#39;UserRepository&#39;) 的註冊，就會執行這一段。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nx">is_null</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$concrete</span> <span class="o">=</span> <span class="nv">$abstract</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 如果是上面那種情況或是沒有 Closure，就直接產生一個 Closure。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nv">$concrete</span> <span class="nx">instanceof</span> <span class="nx">Closure</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$concrete</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getClosure</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$concrete</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 綁定，就是用一個 HashTable 來建立綁定對應。
+</span><span class="c1"></span>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bindings</span><span class="p">[</span><span class="nv">$abstract</span><span class="p">]</span> <span class="o">=</span> <span class="nx">compact</span><span class="p">(</span><span class="s1">&#39;concrete&#39;</span><span class="p">,</span> <span class="s1">&#39;shared&#39;</span><span class="p">);</span>
+        
+        <span class="c1">// 如果此類別已被 resolve 則進行 rebound。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">resolved</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rebound</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+        <span class="sd">/**
+</span><span class="sd">     * Get the Closure to be used when building a type.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $abstract
+</span><span class="sd">     * @param  string  $concrete
+</span><span class="sd">     * @return \Closure
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">getClosure</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$concrete</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$container</span><span class="p">,</span> <span class="nv">$parameters</span> <span class="o">=</span> <span class="p">[])</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$concrete</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$abstract</span> <span class="o">==</span> <span class="nv">$concrete</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">build</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">,</span> <span class="nv">$parameters</span><span class="p">);</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+</code></pre></div><h3 id="make">make</h3>
+<blockquote>
+<p>產生實際的實體物件</p>
+</blockquote>
+<p><img src="http://yixiang8780.com/outImg/20181130-3.png" alt=""></p>
+<h4 id="heading2">使用方法</h4>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="s1">&#39;UserRepository&#39;</span><span class="p">);</span>
+</code></pre></div><h4 id="heading3">原始碼解析</h4>
+<p><a href="https://github.com/laravel/framework/blob/5.7/src/Illuminate/Container/Container.php#L607">laravel5.7-container-make</a>
+<a href="https://github.com/laravel/framework/blob/5.7/src/Illuminate/Container/Container.php#L635">laravel5.7-containier-resolve</a></p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+ <span class="sd">/**
+</span><span class="sd">     * Resolve the given type from the container.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $abstract
+</span><span class="sd">     * @param  array  $parameters
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">make</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="k">array</span> <span class="nv">$parameters</span> <span class="o">=</span> <span class="p">[])</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">resolve</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$parameters</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+ <span class="sd">/**
+</span><span class="sd">     * Resolve the given type from the container.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  string  $abstract
+</span><span class="sd">     * @param  array  $parameters
+</span><span class="sd">     * @return mixed
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">resolve</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$parameters</span> <span class="o">=</span> <span class="p">[])</span>
+    <span class="p">{</span>
+        <span class="nv">$abstract</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getAlias</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">);</span>
+
+        <span class="nv">$needsContextualBuild</span> <span class="o">=</span> <span class="o">!</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$parameters</span><span class="p">)</span> <span class="o">||</span> <span class="o">!</span> <span class="nx">is_null</span><span class="p">(</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContextualConcrete</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">)</span>
+        <span class="p">);</span>
+
+
+        <span class="c1">// 如果此抽象類別已經實體化了，且 construct 沒使用其它外部注入，則回傳此物件。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nx">isset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">instances</span><span class="p">[</span><span class="nv">$abstract</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="nv">$needsContextualBuild</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">instances</span><span class="p">[</span><span class="nv">$abstract</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$parameters</span><span class="p">;</span>
+
+        <span class="c1">// 這個地方有兩種情況
+</span><span class="c1"></span>        <span class="c1">// 1. 從抽象類別的建構式取出有使用的類別，並回傳。
+</span><span class="c1"></span>        <span class="c1">// 2. 如果沒有，則從 bindings 中找出對應的實體類別。
+</span><span class="c1"></span>        <span class="nv">$concrete</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getConcrete</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">);</span>
+        
+        <span class="c1">// isBuildable =&gt; true
+</span><span class="c1"></span>        <span class="c1">// 1. $concrete 與 $abstract 為相同 (也就直接使用類別來綁定)
+</span><span class="c1"></span>        <span class="c1">// 
+</span><span class="c1"></span>        <span class="c1">// isBuildable =&gt; false
+</span><span class="c1"></span>        <span class="c1">// 1. 直接使用介面。 
+</span><span class="c1"></span>        <span class="c1">// 2. $abstract 本身內部還有依賴的外部套件。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isBuildable</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">,</span> <span class="nv">$abstract</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$object</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">build</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$object</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">);</span>
+        <span class="p">}</span>
+        
+        <span class="c1">// 不太懂
+</span><span class="c1"></span>        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getExtenders</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">)</span> <span class="k">as</span> <span class="nv">$extender</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$object</span> <span class="o">=</span> <span class="nv">$extender</span><span class="p">(</span><span class="nv">$object</span><span class="p">,</span> <span class="nv">$this</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 註冊的類別如果被指定為 singleton 就要 cache 它。
+</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isShared</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span> <span class="nv">$needsContextualBuild</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">instances</span><span class="p">[</span><span class="nv">$abstract</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$object</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">fireResolvingCallbacks</span><span class="p">(</span><span class="nv">$abstract</span><span class="p">,</span> <span class="nv">$object</span><span class="p">);</span>
+
+        <span class="c1">// 記錄那個類別已經被 resolve
+</span><span class="c1"></span>        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">resolved</span><span class="p">[</span><span class="nv">$abstract</span><span class="p">]</span> <span class="o">=</span> <span class="k">true</span><span class="nx">。</span><span class="p">;</span>
+
+        <span class="nx">array_pop</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="nv">$object</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="sd">/**
+</span><span class="sd">     * Determine if the given concrete is buildable.
+</span><span class="sd">     *
+</span><span class="sd">     * @param  mixed   $concrete
+</span><span class="sd">     * @param  string  $abstract
+</span><span class="sd">     * @return bool
+</span><span class="sd">     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">isBuildable</span><span class="p">(</span><span class="nv">$concrete</span><span class="p">,</span> <span class="nv">$abstract</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$concrete</span> <span class="o">===</span> <span class="nv">$abstract</span> <span class="o">||</span> <span class="nv">$concrete</span> <span class="nx">instanceof</span> <span class="nx">Closure</span><span class="p">;</span>
+    <span class="p">}</span>
+</code></pre></div><h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="http://blog.turn.tw/?p=3347">讀 SOURCE CODE 研究 LARAVEL IOC CONTAINER 實作的一點心得</a></li>
+<li><a href="https://laravel.tw/docs/4.2/ioc">IoC 容器</a></li>
+<li><a href="https://laravel-china.org/articles/6158/laravel-container-container-understand-below">Laravel Container (容器) 深入理解 (下)
+</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>PHP Laravel 的 Container 理解</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#container--">Container 是什麼 ?</a></li>
+    <li><a href="#-container-">為什麼要使用 Container ?</a>
+      <ul>
+        <li><a href="#heading">(高)依賴與耦合</a></li>
+        <li><a href="#-">(低) 依賴與耦合</a></li>
+        <li><a href="#-laravel-container-">為什麼要使用 Laravel Container ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#laravel--container-">Laravel 如何建立 Container ?</a>
+      <ul>
+        <li><a href="#bind">bind</a></li>
+        <li><a href="#make">make</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

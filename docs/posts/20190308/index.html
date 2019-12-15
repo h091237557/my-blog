@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Nodejs 之運行機制原理 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, event loop" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="Nodejs 出來時它的官網寫這以下的描述 : Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world. 簡|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Nodejs 之運行機制原理 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="Nodejs 出來時它的官網寫這以下的描述 : Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world. 簡|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Nodejs 之運行機制原理</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-03-08.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>Nodejs 出來時它的官網寫這以下的描述 :</p>
+<blockquote>
+<p>Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world.</p>
+</blockquote>
+<p>簡而言之 Nodejs 是運行在 V8 javascript 引擎，並且使用 Event driven 與 non-blocking I/O 模式所建立出來的東東。</p>
+<p>而這裡我們就要深入的來理解 Nodejs 的運行機制。</p>
+<ul>
+<li>Nodejs 核心設計 - 非阻塞 I/O 模式</li>
+<li>Nodejs 架構與運行</li>
+<li>Nodejs 為什麼需要使用 thread ?</li>
+</ul>
+<h2 id="nodejs----io-">Nodejs 核心設計 - 非阻塞 I/O 模式</h2>
+<p>上面介紹文有提到，它是以 非阻塞 non-blocking I/O 模式所建立出來的，但為什麼它要選用非阻塞 I/O 呢 ?</p>
+<p>它想解決什麼問題呢 ?</p>
+<p>它最原始想解決的就是 :</p>
+<blockquote>
+<p>阻塞 I/O 模式在大併發請求下的貧頸。</p>
+</blockquote>
+<p>首先我們先來看看傳統的阻塞 blocking I/O 模式問題</p>
+<h3 id="-io-blocking-io-bio-">阻塞 I/O (Blocking I/O BIO) 伺服器的運行</h3>
+<p>首先我們先說明一下 I/O 這東西，I/O 是指輸入與輸出，只要是與外部記憶體或設置的溝通都算是 I/O 操作，像進行 http 請求或是讀檔案這種，都算是 I/O 操作。</p>
+<p>而所謂的<code>阻塞 I/O</code>就是指，當執行 I/O 的操作會阻塞，也就是直到操作完成後，才會執行下一段指令，更準備的說法是，<code>阻塞就是指這個 thread 或 process 無法處理其它事情</code>，就算它 CPU 閒閒的也是一樣。</p>
+<p>下面為一段模擬碼，process 或 thread 會在執行完 socket.read() 取得完資料後，才會執行下一段，這就是阻塞 I/O，而大部份的 I/O 在沒有特別處理的話，都是阻塞 I/O。</p>
+<pre><code>// 直到讀取完資料後，才會執行下一段。
+var data = socket.read();
+
+console.log(data);
+</code></pre><p>而傳統阻塞 I/O 伺服器在收到一個 http(I/O) 後，每一個 http 會開啟一個 thread 或 process 來處，</p>
+<p><img src="http://yixiang8780.com/outImg/20190308_1.png" alt=""></p>
+<p>為什麼呢 ?</p>
+<p>因為每當建立一個連線，一定需要一個 process 來監聽 socket，然後那個 process 就阻塞住。如下程式碼，這一段在建立連線前，就需要先執行，而等到資料進來時，才會往下做。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">request</span> <span class="o">=</span> <span class="n">socket</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">// 這裡會阻塞住
+</span><span class="c1"></span><span class="n">doSomething</span><span class="p">(</span><span class="n">request</span><span class="p">)</span><span class="p">;</span> <span class="c1">//有資料時才執行
+</span></code></pre></div><p>因此大部份的傳統阻塞 I/O 伺服器在收到一個 http 請求後，都會開啟一個 thread 或 process 來進行處理，因為這樣就不會卡住了。</p>
+<h3 id="-io-">阻塞 I/O 伺服器的問題</h3>
+<p>上面有提到傳統的阻塞 I/O 伺服器每收到一個 http 請求就會開啟一個 thread 來運行。</p>
+<p>這就是問題。</p>
+<blockquote>
+<p>因為 thread 是很貴的資源</p>
+</blockquote>
+<p>主要有以下的原因 :</p>
+<ul>
+<li>在 linux 系統下 thread 本質就是 process 創建和銷毀都非常的耗成本。</li>
+<li>它會暫用不少的 memory。</li>
+<li>thread 的切換上下文成本很高。</li>
+</ul>
+<p>所以當如果連線數來個十萬或上百萬的，那麼阻塞式 I/O 一定會倒給你看。</p>
+<p>而這也是為什麼 Nodejs 要以<code>非阻塞 I/O (Non-Blocking)</code>為核心來進行設計。</p>
+<h3 id="-io--nonblocking-io-nio">非阻塞 I/O 模式 (Non-Blocking I/O NIO)</h3>
+<p>由於阻塞 I/O 有以下所提到的問題，因此後來就發展出所謂的非阻塞 I/O 模式 (Non-Blocking I/O NIO) 模式，他想完成的事情如下。</p>
+<p><img src="http://yixiang8780.com/outImg/20190308_2.png" alt=""></p>
+<p>而實作 NIO 的設計模式有以下兩個 :</p>
+<ul>
+<li>Reactor</li>
+<li>proactor</li>
+</ul>
+<p>我們此篇的主軸為<code>Reactor</code>，主要的原因為 Nodejs 主要就是使用 Reactor 來建立它的架構。( proactor 會開另一篇 )</p>
+<p>它主要的概念圖就是咱們所謂的 event loop 機制，如下圖 :</p>
+<p><img src="http://yixiang8780.com/outImg/20190308_3.png" alt=""></p>
+<p>簡單的說它有一個 Event loop 會一直不斷的去 Event Queue 中 check 是否有 I/O 事件，如果有的話就將它丟到指定的 handler 去，如下概念碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="p">{</span>
+
+    <span class="n">events</span> <span class="o">=</span> <span class="n">sockets</span><span class="p">.</span><span class="n">fetchIOEvents</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    
+    <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">events</span><span class="p">.</span><span class="n">length</span><span class="p">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="p">)</span><span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span><span class="o">=</span><span class="o">=</span> <span class="err">&#39;</span><span class="n">write</span><span class="err">&#39;</span><span class="p">)</span><span class="p">{</span>
+            <span class="n">writeHandler</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span><span class="o">=</span><span class="o">=</span> <span class="err">&#39;</span><span class="n">read</span><span class="err">&#39;</span><span class="p">)</span><span class="p">{</span>
+            <span class="n">readHandler</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span><span class="o">=</span><span class="o">=</span> <span class="err">&#39;</span><span class="n">accept</span><span class="err">&#39;</span><span class="p">)</span><span class="p">{</span>
+            <span class="n">acceptHandler</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">.</span><span class="n">dadta</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>但這裡有問題想問問。</p>
+<h4 id="-io--">為什麼可以取得到 I/O 事件呢 ?</h4>
+<p>上面不是有提到要從 socket 中取得資料，需要使用 linux 底層的 socket.read() 阻塞方法，那為什麼概念碼的 fetchIOEvents 可以取得到所有 socket 的事件呢 ? 不是一個 process 只能監聽一個 socket 嗎 ?</p>
+<p>主要的答案在於 :</p>
+<blockquote>
+<p>多路複用（ Multiplexing ) 技術，而各系統的實作為 epoll(linux)、kqueue(Mac)、IOCP(Window)</p>
+</blockquote>
+<p>這幾個方法的功用就是，它們可以幫我們監控所有 socket 的 I/O 操作，當某些 socket 有事件產生時(ex. 有資料進來時)會自動的將它相關資料推送到一個 event queue 中，然後你可以使用它提供的方法，來取得事件相關資料。</p>
+<p>我們這裡以 epoll 來說明它的使用方法，基本上它提供三個方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">int</span> <span class="nf">epoll_create</span><span class="p">(</span><span class="kt">int</span> <span class="n">size</span><span class="p">)</span><span class="p">;</span> 
+<span class="kt">int</span> <span class="nf">epoll_ctl</span><span class="p">(</span><span class="kt">int</span> <span class="n">epfd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">op</span><span class="p">,</span> <span class="kt">int</span> <span class="n">fd</span><span class="p">,</span> <span class="k">struct</span> <span class="nc">epoll_event</span> <span class="o">*</span><span class="n">event</span><span class="p">)</span><span class="p">;</span> 
+<span class="kt">int</span> <span class="nf">epoll_wait</span><span class="p">(</span><span class="kt">int</span> <span class="n">epfd</span><span class="p">,</span> <span class="k">struct</span> <span class="nc">epoll_event</span> <span class="o">*</span><span class="n">events</span><span class="p">,</span><span class="kt">int</span> <span class="n">maxevents</span><span class="p">,</span> <span class="kt">int</span> <span class="n">timeout</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><ul>
+<li>epoll_create : 它就是建立一個 epoll 對像，然後它的 size 就是 kernal 保証可以監控的最大 file descitpor 數。</li>
+<li>epoll_ctl : 它就是將 socket 加入到 epoll 的監控中的方法。</li>
+<li>epoll_wait : 它在給定的 timeout 時間內，如果監控的 socket有產生事件，則會返回事件。</li>
+</ul>
+<p>下面為我們使用它的範例碼，這個範例的功用就是讓 epoll 監聽你有註冊的 socket，然後當有事件產生時，就可能從 epoll_wait 取得相對應的 socket 與事件，最後再將此事件執行到對應的 event handler。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">struct</span> <span class="nc">events</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="p">;</span>
+
+<span class="c1">// 建立一個 epoll 用 file descriptor
+</span><span class="c1"></span><span class="n">epollfd</span> <span class="o">=</span> <span class="n">epoll_create</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 註冊讓 epoll 監聽某 socket 的 EPOLLIN 事件
+</span><span class="c1"></span><span class="n">epoll_ctl</span><span class="p">(</span><span class="n">epollfd</span><span class="p">,</span> <span class="n">EPOLL_CTL_ADD</span><span class="p">,</span> <span class="n">socket</span><span class="p">,</span> <span class="n">EPOLLIN</span><span class="p">)</span><span class="p">;</span>
+
+<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="p">{</span>
+
+    <span class="c1">// 如果 epoll queue 中有事件產生，則會回傳產生事件的 socket 與 events。
+</span><span class="c1"></span>    <span class="n">have_events_fds</span> <span class="o">=</span> <span class="n">epoll_wait</span><span class="p">(</span> <span class="n">epollfd</span><span class="p">,</span> <span class="n">events</span><span class="p">,</span> <span class="n">MAX_EVENTS</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span> <span class="p">)</span><span class="p">;</span>
+
+    <span class="c1">// 讀取每個有產生事件的 socket，並執行對應的 eventHandler。
+</span><span class="c1"></span>    <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">have_events_fds</span><span class="p">;</span> <span class="n">i</span><span class="o">+</span><span class="o">+</span><span class="p">)</span><span class="p">{</span>
+        <span class="n">eventHandler</span><span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="-io--io-">阻塞 I/O 與非阻塞 I/O 的比較圖</h3>
+<p>這章節最後，我們來看看阻塞 I/O 與非阻塞 I/O 的比較圖。</p>
+<p>阻塞 : 監控 socket，然後就開始卡住整個 process，直到有資料進來後才結束。
+非阻塞 : 不斷的去問 socket 有沒有資料。</p>
+<p><img src="http://yixiang8780.com/outImg/20190308_4.png" alt=""></p>
+<h4 id="-">問個問題，非阻塞不斷的去尋問有沒有資料不會很耗資源嗎 ?</h4>
+<p>嗯對會，所以你實際上看 libuv 程式碼 event loop 這個地方，你會發現注意到，它事實上有給一個 timeout 參數，它會根據某些條件阻塞在那裡，不會一直重複的去問。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="p">{</span>
+<span class="err">…</span><span class="err">…</span>
+
+<span class="n">timeout</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="p">(</span><span class="n">mode</span> <span class="o">=</span><span class="o">=</span> <span class="n">UV_RUN_ONCE</span> <span class="o">&amp;</span><span class="o">&amp;</span> <span class="o">!</span><span class="n">ran_pending</span><span class="p">)</span> <span class="o">|</span><span class="o">|</span> <span class="n">mode</span> <span class="o">=</span><span class="o">=</span> <span class="n">UV_RUN_DEFAULT</span><span class="p">)</span>
+      <span class="n">timeout</span> <span class="o">=</span> <span class="n">uv_backend_timeout</span><span class="p">(</span><span class="n">loop</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="n">uv__io_poll</span><span class="p">(</span><span class="n">loop</span><span class="p">,</span> <span class="n">timeout</span><span class="p">)</span><span class="p">;</span> <span class="c1">// 這裡
+</span><span class="c1"></span>
+<span class="err">…</span><span class="err">…</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="nodejs-">Nodejs 架構與基本運行</h2>
+<p>Nodejs 的基本組合與運行如下。其中 libuv 就是實現非阻塞 I/O 的核心庫，它讓我們可以跨平台的實現非阻塞 I/O。</p>
+<p><img src="http://yixiang8780.com/outImg/20190308_6.png" alt=""></p>
+<p>根據上圖如果有一段程式碼執行下去，那它的運行流程如下 :</p>
+<ol>
+<li>使用 V8 引擎解析 javascript 語法。</li>
+<li>解析後呼叫對應對 node C++ 程式碼。</li>
+<li>將所有同步的程式碼運行完。</li>
+<li>libuv 建立起 event loop 並且不斷的去輪詢 event queue 來執行那些可以呼叫的異步操作 callback。</li>
+</ol>
+<p>我們簡單的看一下範例</p>
+<p>假設我們有一段程式碼如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Hi&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">setTimeout</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;fuck u&#39;</span><span class="p">)</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Mark&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>它的運行流程為:</p>
+<ol>
+<li>執行同步程式碼 console.log(&lsquo;Hi&rsquo;)。</li>
+<li>將 setTimeout 事件與 callback 丟到 Event Queue 中。</li>
+<li>執行同步程式碼 console.log(&lsquo;Mark&rsquo;)。</li>
+<li>開啟執行 event loop。</li>
+<li>發現 event queue 中有需要執行的 time 事件，執行 console.log(&lsquo;fuck u&rsquo;)。</li>
+</ol>
+<p>所以最後輸出的結果為 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// Hi
+</span><span class="c1"></span><span class="c1">// Mark
+</span><span class="c1"></span><span class="c1">// fuck u
+</span></code></pre></div><h4 id="--nodejs--worker-thread--">這裡問個問題 ~ Nodejs 是單進程的架構，可是為什麼架構圖中最後有 worker thread 的東西呢 ?</h4>
+<p>這就是我們接下來要章節要說明的東西。</p>
+<h2 id="nodejs--thread-">Nodejs 為什麼需要使用 thread ?</h2>
+<p>根據<a href="https://nodejs.org/en/docs/guides/dont-block-the-event-loop/#what-code-runs-on-the-worker-pool">官方文件</a>，可以知道，有以下幾個東西需要使用 thread 來處理。</p>
+<ul>
+<li>CPU-intensive : <a href="https://nodejs.org/api/crypto.html">Crypto</a>、<a href="https://nodejs.org/api/zlib.html#zlib_threadpool_usage">Zlib</a>。</li>
+<li>I/O-intensive : <a href="https://nodejs.org/api/dns.html">DNS</a>、<a href="https://nodejs.org/api/fs.html#fs_threadpool_usage">FileSystem</a>。</li>
+</ul>
+<p>首先來說說 cpu 密集的這兩個<code>Crypto</code>與<code>Zlib</code>加密與壓縮套件，為什麼需要丟到 thread 做呢 ? 主要的原因為，基本上正常的運算都是屬於同步程式碼，也就是說會在 event loop 前執行，如果這時運算太花時間，那就代表他會卡住 event loop 運行，那如果是 callback 的呢 ? 它應該是在 event loop 內執行吧 ? 嗯沒錯，但問題就是，當它執行時，它就會卡 event loop，不要忘了 event loop 只是一個 while，然裡面執行的東西還是同步，包含 epoll 操作也是同步且阻塞的。</p>
+<p>那接下來看 I/O-intensive 的<code>DNS</code>與<code>FileSystem</code>。</p>
+<p>我們先來說說<code>FileSystem</code>的情況。</p>
+<p>首先基本上 I/O 阻塞來源為 :</p>
+<blockquote>
+<p>I/O 阻塞來源 = Network I/O + File I/O</p>
+</blockquote>
+<p>那為什麼在 Nodejs 中，可以做到非阻塞呢 ?</p>
+<p>因為他們兩個都有解法可處理。</p>
+<blockquote>
+<p>libuv 解決 I/O 阻塞方法 = Network I/O (epoll) + File I/O (thread)</p>
+</blockquote>
+<p>Network I/O 可以用 epoll 來處理</p>
+<h4 id="-file-io--epoll--">但重點是為什麼 File I/O 無法用 epoll 來處理呢 ?</h4>
+<p>目前筆者只知道，如果你將檔案的 file descriptor 註冊到 epoll 中，會發生以下的錯誤:</p>
+<blockquote>
+<p>EPERM  The target file fd does not support epoll.</p>
+</blockquote>
+<p>簡單來說就是 epoll 不支援檔案類型的 file descriptor 監控。</p>
+<p>這也是為什麼 Nodejs 實際上會偷偷的開幾個 worker thread 來處理 file system 這件事情。</p>
+<h4 id="file-io--dns--network-io----thread-">file I/O 可以理解，但為什麼 dns 他不是 network I/O 嗎 ? 那為什麼它還需要 thread 來處理呢。</h4>
+<p>筆者覺得主要的原因在於，DNS 的操作事實上為 :</p>
+<blockquote>
+<p>Network I/O + File I/O</p>
+</blockquote>
+<p>這或需就是為什麼它需使用 thread 來完成非阻塞 I/O。</p>
+<p>不過以上只是推測，不代表是正確答案。</p>
+<h3 id="-nodejs-">注意 nodejs 只能說架構是非阻塞，但不代表不會阻塞</h3>
+<p>我們有以下兩個假設:</p>
+<ul>
+<li>Thread number: 3</li>
+<li>test.txt 讀檔時間: 2 sec</li>
+</ul>
+<p>那你執行以下的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">start</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">hrtime</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">(</span><span class="p">(</span><span class="nx">id</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readdir</span><span class="p">(</span><span class="s1">&#39;test.txt&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">end</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">hrtime</span><span class="p">(</span><span class="nx">start</span><span class="p">)</span><span class="p">;</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">util</span><span class="p">.</span><span class="nx">format</span><span class="p">(</span><span class="s1">&#39;read file %d finished in %ds&#39;</span><span class="p">,</span> <span class="nx">id</span><span class="p">,</span> <span class="nx">end</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="nx">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1</span><span class="nx">e9</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後你就會發結果如下，實際上在讀三個檔案時，就已經阻塞了，原因在於我們只有三個 thread，它們都在忙錄，因此第四個才會需要花 4 秒才完成。</p>
+<pre><code>read file 1 finished in 2 sec
+read file 2 finished in 2 sec
+read file 3 finished in 2 sec
+read file 4 finished in 4 sec
+</code></pre><h2 id="heading">參考資料</h2>
+<hr>
+<ul>
+<li><a href="https://juejin.im/post/5a5e03eef265da3e5033c5b9">Node.js design pattern : Reactor (Event Loop)</a></li>
+<li><a href="https://segmentfault.com/a/1190000003063859">Linux IO模式及 select、poll、epoll详解</a></li>
+<li><a href="http://docs.libuv.org/en/v1.x/design.html">libuv 官方</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/35039878">Node.js源码解析：深入Libuv理解事件循环</a></li>
+<li><a href="https://github.com/tsy77/blog/issues/11">libuv源码-Event Loop</a></li>
+<li><a href="https://www.eebreakdown.com/2016/09/nodejs-eventemitter.html">非同步程式碼之霧：Node.js 的事件迴圈與 EventEmitter</a></li>
+<li><a href="https://www.future-processing.pl/blog/on-problems-with-threads-in-node-js/"><a href="https://www.future-processing.pl/blog/on-problems-with-threads-in-node-js/">https://www.future-processing.pl/blog/on-problems-with-threads-in-node-js/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Nodejs 之運行機制原理</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#nodejs----io-">Nodejs 核心設計 - 非阻塞 I/O 模式</a>
+      <ul>
+        <li><a href="#-io-blocking-io-bio-">阻塞 I/O (Blocking I/O BIO) 伺服器的運行</a></li>
+        <li><a href="#-io-">阻塞 I/O 伺服器的問題</a></li>
+        <li><a href="#-io--nonblocking-io-nio">非阻塞 I/O 模式 (Non-Blocking I/O NIO)</a></li>
+        <li><a href="#-io--io-">阻塞 I/O 與非阻塞 I/O 的比較圖</a></li>
+      </ul>
+    </li>
+    <li><a href="#nodejs-">Nodejs 架構與基本運行</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#nodejs--thread-">Nodejs 為什麼需要使用 thread ?</a>
+      <ul>
+        <li></li>
+        <li><a href="#-nodejs-">注意 nodejs 只能說架構是非阻塞，但不代表不會阻塞</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

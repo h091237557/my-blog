@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="php, reactor, reactphp" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/php' class="muted-link">
+  <span class="Label Label--gray">php</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-05-13.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>上一篇文章<a href="https://mark-lin.com/posts/20190513/">PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式</a>我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現<code>reactPHP</code>。</p>
+<p>本篇文章分為以下三個章節 :</p>
+<ul>
+<li>reactPHP 基本概念</li>
+<li>reactPHP 非阻塞 I/O 實現</li>
+<li>reactPHP 使用時注意事項</li>
+</ul>
+<h2 id="reactphp-">reactPHP 基本概念</h2>
+<p>reactPHP 官網寫這一段話 :</p>
+<blockquote>
+<p>Event-driven, non-blocking I/O with PHP</p>
+</blockquote>
+<p>它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :</p>
+<ul>
+<li>可以建立一個非阻塞 I/O 的網路服務。</li>
+<li>可以建立一個定時排程服務。</li>
+</ul>
+<h3 id="http-server-">http server 的範例</h3>
+<p>下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
+
+$server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) {
+    return new React\Http\Response(
+        200,
+        array(&#39;Content-Type&#39; =&gt; &#39;text/plain&#39;),
+        &#34;Hello World!\n&#34;
+    );
+});
+
+$socket = new React\Socket\Server(8080, $loop);
+$server-&gt;listen($socket);
+
+echo &#34;Server running at http://127.0.0.1:8080\n&#34;;
+
+$loop-&gt;run();
+</code></pre></div><h4 id="heading">排程服務的範例</h4>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
+
+// 5 秒後執行
+$loop-&gt;addPeriodicTimer(5, function () {
+    echo &#34;Hi Mark&#34;;
+});
+
+$loop-&gt;run();
+</code></pre></div><h2 id="reactphp--io-">reactPHP 非阻塞 I/O 實現</h2>
+<p>那 reactPHP 它是如何實現非阻塞 I/O 模式呢 ?</p>
+<p>它就是如我們標題所說，它使用<code>reactor 模式</code>來實現非阻塞 I/O 模式，並且它與 nodejs 一樣使用 single process 的 reactor 模式。</p>
+<p>備註: 為什麼 single process 可以做到非阻塞 I/O 請參考前一篇文章。</p>
+<p>架構圖如下，就是一個 reactor 機制，其中它的 process 裡面就有所謂的 I/O 多路復用技術。</p>
+<p><img src="http://yixiang8780.com/outImg/20190513-1.png" alt=""></p>
+<p>而我們實際上的運行機制如下圖:</p>
+<p><img src="http://yixiang8780.com/outImg/20190513-2.png" alt=""></p>
+<p>接這我們來看看，如果是段 reactor 模式的程式碼，那麼它的運行原理流程會如下 :</p>
+<ol>
+<li>建立 event loop。</li>
+<li>將 addPeriodicTimer 5 秒後要執行的事件丟到 queue 中。</li>
+<li>執行 event loop。(也就是開始跑無窮迴圈)</li>
+<li>event loop 在 5 秒時，發現有個要執行的任務 callback function</li>
+<li>執行 echo &ldquo;Hi Mark&rdquo;。</li>
+<li>將立 http 請求，並將它丟到 queue 中。</li>
+<li>event loop 當發現 I/O 操作有回復時，則執行 callback function</li>
+<li>echo $chunk。</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">(1) $loop = React\EventLoop\Factory::create();
+    $client = new React\HttpClient\Client($loop);
+
+    // 5 秒後執行
+(2) $loop-&gt;addPeriodicTimer(5, function () {
+(4)   
+(5)     echo &#34;Hi Mark&#34;;
+(6)     $request = $client-&gt;request(&#39;GET&#39;, &#39;https://github.com/&#39;);
+        $request-&gt;on(&#39;response&#39;, function ($response) {
+            $response-&gt;on(&#39;data&#39;, function ($chunk) {
+(7)             echo $chunk;
+            });
+            $response-&gt;on(&#39;end&#39;, function() {
+                echo &#39;DONE&#39;;
+            });
+        });
+
+(3)     $loop-&gt;run();
+</code></pre></div><h2 id="heading1">使用時注意事項</h2>
+<p>reactPHP 理論上是 php 版的 nodejs 但實際使用要注意，不是。</p>
+<p>假設我們使用 reactPHP 然後來寫一個 http server。</p>
+<p>然後當 server 收到一個請求時，它會再使用<code>file_get_contents</code>這個方法去打某個 api，這 api 需要一分鐘左右才能回應。</p>
+<div class="highlight"><pre class="chroma"><code class="language-PHP" data-lang="PHP"><span class="cp">&lt;?php</span> 
+
+<span class="k">require</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$loop</span> <span class="o">=</span> <span class="nx">React\EventLoop\Factory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Http\Server</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Psr\Http\Message\ServerRequestInterface</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$client</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="c1">// 假設這一段要執行一分鐘。
+</span><span class="c1"></span>    <span class="nv">$response</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:3000&#39;</span><span class="p">);</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">React\Http\Response</span><span class="p">(</span>
+        <span class="mi">200</span><span class="p">,</span>
+        <span class="k">array</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">),</span>
+        <span class="s2">&#34;Hello World!</span><span class="se">\n</span><span class="s2">&#34;</span>
+    <span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nv">$socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Socket\Server</span><span class="p">(</span><span class="mi">8080</span><span class="p">,</span> <span class="nv">$loop</span><span class="p">);</span>
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">listen</span><span class="p">(</span><span class="nv">$socket</span><span class="p">);</span>
+
+<span class="k">echo</span> <span class="s2">&#34;Server running at http://127.0.0.1:8080</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+
+<span class="nv">$loop</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</code></pre></div><h4 id="-reactphp--http-server-wait--">假設往這個使用 reactPHP 寫的 http server，發送兩次請求，上面的 wait 會看到幾次呢 ?</h4>
+<p>答案是 : 1 次</p>
+<p>因為第一次請求時，就將整個 process 給阻塞住了，所以第二個請求完全無法處理。</p>
+<p>它不是說它有提供非阻塞 I/O 的功能嗎 ?</p>
+<p>嗯對的，它有提供，但是前提假設為，你要使用它。</p>
+<p>你在寫 nodejs 時，上面這個相似範例 process 就不會被阻塞住，因為它在給 v8 處理完 binding c++ 階段時，會將所有的 I/O 操作執行完並且丟到 event loop 機制中，所以在 nodejs 操作 I/O 時，你什麼都沒做，就會是非阻塞的 I/O 操作。</p>
+<p>而在 reactPHP 中，你要自已處理又或是使用它所提供的 http client 才能讓變成非阻塞 I/O 的操作。如下範例。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> 
+
+<span class="k">require</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+
+<span class="nv">$loop</span> <span class="o">=</span> <span class="nx">React\EventLoop\Factory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\HttpClient\Client</span><span class="p">(</span><span class="nv">$loop</span><span class="p">);</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Http\Server</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Psr\Http\Message\ServerRequestInterface</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$client</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;http://127.0.0.1:3000&#39;</span><span class="p">);</span>
+    <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$chunk</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="nv">$chunk</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s1">&#39;DONE&#39;</span><span class="p">;</span>
+    <span class="p">});</span>
+    
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">React\Http\Response</span><span class="p">(</span>
+        <span class="mi">200</span><span class="p">,</span>
+        <span class="k">array</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">),</span>
+        <span class="s2">&#34;Hello World!</span><span class="se">\n</span><span class="s2">&#34;</span>
+    <span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nv">$socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Socket\Server</span><span class="p">(</span><span class="mi">8080</span><span class="p">,</span> <span class="nv">$loop</span><span class="p">);</span>
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">listen</span><span class="p">(</span><span class="nv">$socket</span><span class="p">);</span>
+
+<span class="k">echo</span> <span class="s2">&#34;Server running at http://127.0.0.1:8080</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+
+<span class="nv">$loop</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+</code></pre></div><h2 id="heading2">結論</h2>
+<p>本篇文章中我們學習了幾個重點:</p>
+<h4 id="reactphp-1">reactPHP 基本概念</h4>
+<p>就是這段話。</p>
+<blockquote>
+<p>Event-driven, non-blocking I/O with PHP</p>
+</blockquote>
+<h4 id="reactphp--io-1">reactPHP 非阻塞 I/O 實現</h4>
+<p>它使用<code>single process 的 reactor 模式</code>來實現。</p>
+<h4 id="heading3">使用時注意事項</h4>
+<p>在使用它時注意，你要確保你所有的 I/O 操作，都有丟到 event loop 中，否則，它仍然是阻塞 I/O 操作，就如同範例一樣。</p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://reactphp.org/">reactPHP 官方文件</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#reactphp-">reactPHP 基本概念</a>
+      <ul>
+        <li><a href="#http-server-">http server 的範例</a></li>
+      </ul>
+    </li>
+    <li><a href="#reactphp--io-">reactPHP 非阻塞 I/O 實現</a></li>
+    <li><a href="#heading1">使用時注意事項</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">結論</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

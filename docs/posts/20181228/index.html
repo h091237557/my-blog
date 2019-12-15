@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  PHP Laravel 的 Facade 的理解 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="php, laravel" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 : &amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="PHP Laravel 的 Facade 的理解 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 : &lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">PHP Laravel 的 Facade 的理解</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/php' class="muted-link">
+  <span class="Label Label--gray">php</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2018-12-28.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p><img src="http://yixiang8780.com/outImg/20181228-1.png" alt=""></p>
+<h2 id="-laravel-facade-">什麼是 Laravel Facade ?</h2>
+<p>在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$userService</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="s1">&#39;UserService&#39;</span><span class="p">);</span>
+<span class="nv">$userService</span><span class="o">-&gt;</span><span class="na">createUser</span><span class="p">();</span>
+</code></pre></div><p>但是有時後你會看到如下的程式碼 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nx">UserService</span><span class="o">::</span><span class="na">createUser</span><span class="p">();</span>
+</code></pre></div><p>而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。</p>
+<h3 id="facade-">Facade(外觀) 設計模式</h3>
+<p>Facade 設計模式基本的定義如下 :</p>
+<blockquote>
+<p>定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。</p>
+</blockquote>
+<p>畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。</p>
+<p><img src="http://yixiang8780.com/outImg/20181228-2.png" alt=""></p>
+<h4 id="heading">程式碼範例</h4>
+<p>假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">interface</span> <span class="nx">IMessage</span> 
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">LineSDK</span> <span class="k">implements</span> <span class="nx">IMessage</span> 
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;I push a message to line&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">MessageFacade</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$sdk</span><span class="p">;</span> 
+
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">IMessage</span> <span class="nv">$sdk</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sdk</span> <span class="o">=</span> <span class="nv">$sdk</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sdk</span><span class="o">-&gt;</span><span class="na">push</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="c1">// 備註，在 laravel 時這裡嚴格來說會寫成
+</span><span class="c1">// $app-&gt;make(&#39;Imessage&#39;)
+</span><span class="c1">// 而不會看到 linesdk 這東西
+</span><span class="c1"></span><span class="nv">$sdk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MessageFacade</span><span class="p">(</span><span class="k">new</span> <span class="nx">LineSDK</span><span class="p">());</span>
+<span class="nv">$sdk</span><span class="o">-&gt;</span><span class="na">push</span><span class="p">();</span>
+</code></pre></div><h4 id="-">這樣有什麼好處 ?</h4>
+<blockquote>
+<p>當 sdk 進行修改時，你就不需要修改應用層的也方，只要修改 Facade 就好。</p>
+</blockquote>
+<p>但這樣還是要改啊 ? 只是換個地方改而以 ?</p>
+<p>那假設你有十個地方直接使用 SDK 呢 ? 那這樣不就代表你十個地方就要改，而如果使用 Facade 就只有一個地方要修改。</p>
+<h3 id="laravel-facade--">Laravel Facade 是如何實現的呢 ?</h3>
+<p>就單來說，它就如下圖所示，主要的核心就是在 Facade 這個抽象類別，它裡面會定義一個 php 的 <code>__callStatic</code> 方法，它被執行到的時機為，這個類別中被呼叫靜態方法時，他就會被執行到。</p>
+<p><img src="http://yixiang8780.com/outImg/20181228-3.png" alt=""></p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
+<span class="cp">&lt;?php</span>
+
+<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="fm">__callStatic</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$instance</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">getFacadeAccessor</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$instance</span><span class="o">::</span><span class="nv">$method</span><span class="p">(</span><span class="o">...</span><span class="nv">$args</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
+<span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">MessageFacade</span> <span class="k">extends</span> <span class="nx">Facade</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">LineSDK</span><span class="p">();</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">LineSDK</span> 
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;I push a message to line&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
+<span class="cp">&lt;?php</span>
+
+<span class="k">include</span> <span class="s1">&#39;Facades/MessageFacade.php&#39;</span><span class="p">;</span>
+
+<span class="nx">MessageFacade</span><span class="o">::</span><span class="na">push</span><span class="p">();</span>
+</code></pre></div><h2 id="laravel-facade-">Laravel Facade 的爭論</h2>
+<p>它們的爭論點就是 :</p>
+<blockquote>
+<p>是否要使用 Laravel Facade</p>
+</blockquote>
+<p>這裡大至上會分成兩派 :</p>
+<h3 id="-laravel-facade">使用 Laravel Facade</h3>
+<p>這一派的程式碼會寫的如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="k">class</span> <span class="nc">Log</span>
+<span class="p">{</span>
+  
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="nx">LogService</span><span class="o">::</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div><h3 id="-laravel-facade1">不使用 Laravel Facade</h3>
+<p>而這一派的程式碼會寫的如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">class</span> <span class="nc">Log</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">;</span>
+  
+    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">)</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span> <span class="o">=</span> <span class="nv">$logService</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+    <span class="p">}</span>  
+<span class="p">}</span>
+</code></pre></div><h3 id="heading1">支持與反對的看法</h3>
+<p>首先支持使用 Facade 這一派的他們提出以下使用後的優點 :</p>
+<ol>
+<li>簡潔的程式碼。</li>
+<li>乾淨的建構子。</li>
+<li>更高的可測試性與彈性。</li>
+</ol>
+<p>但相對的反對派提出了一下問題 :</p>
+<ol>
+<li>相依了 Facade，這樣事實上就打破了當初建立 container 來想解決的事情。</li>
+<li>要知道這個類別中有使用那些外部套件，那就只能一個一個找。</li>
+<li>IDE 的不友好。</li>
+</ol>
+<p>順到說一下，就我各人的看法我比較偏向不使用 Laravel Facade，主要是因為我比較在意一個類別的相依性控制，而每當我需要知道這個類別有啥相依時，不用讓我一個一個去慢慢的找，對我來說有點浪費時間。</p>
+<p>順到說一下，在下面的參考資料裡包含了大部份吵架的文章，有興趣的人可以去看看。</p>
+<h2 id="---laravel-facade-">備註 : 關於使用 Laravel Facade 有更高的可測試性說明</h2>
+<p>在 Laravel Facade 中，如果你有一段程式碼直接的使用 Laravel Facade 如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">getIndex</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">Event</span><span class="o">::</span><span class="na">fire</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Dayle&#39;</span><span class="p">]);</span>
+
+    <span class="k">return</span> <span class="s1">&#39;All done!&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後你這時要進行測試時，可以使用<code>shouldReceive</code>的方法來模擬 Event :</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="k">public</span> <span class="k">function</span> <span class="nf">testGetIndex</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="nx">Event</span><span class="o">::</span><span class="na">shouldReceive</span><span class="p">(</span><span class="s1">&#39;fire&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">once</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Dayle&#39;</span><span class="p">]);</span>
+
+    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://programmingarehard.com/2014/01/11/stop-using-facades.html/">Stop Using Facades</a></li>
+<li><a href="https://www.reddit.com/r/PHP/comments/3bmclk/why_experienced_developers_consider_laravel_as_a/">Why experienced developers consider Laravel as a poorly designed framework?</a></li>
+<li><a href="https://www.brandonsavage.net/lets-talk-about-facades/">Let’s Talk About Facades</a></li>
+<li><a href="https://www.sitepoint.com/how-laravel-facades-work-and-how-to-use-them-elsewhere/">How Laravel Facades Work and How to Use Them Elsewhere</a></li>
+<li><a href="https://stackoverflow.com/questions/35011364/using-dependency-injection-over-laravel-facades">stackoverflow</a></li>
+<li><a href="https://carstenwindler.de/php/automated-bad-practice/">Automated bad practice</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>PHP Laravel 的 Facade 的理解</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-laravel-facade-">什麼是 Laravel Facade ?</a>
+      <ul>
+        <li><a href="#facade-">Facade(外觀) 設計模式</a></li>
+        <li><a href="#laravel-facade--">Laravel Facade 是如何實現的呢 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#laravel-facade-">Laravel Facade 的爭論</a>
+      <ul>
+        <li><a href="#-laravel-facade">使用 Laravel Facade</a></li>
+        <li><a href="#-laravel-facade1">不使用 Laravel Facade</a></li>
+        <li><a href="#heading1">支持與反對的看法</a></li>
+      </ul>
+    </li>
+    <li><a href="#---laravel-facade-">備註 : 關於使用 Laravel Facade 有更高的可測試性說明</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

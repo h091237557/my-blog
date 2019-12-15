@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="php, reactor, swoole" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/php' class="muted-link">
+  <span class="Label Label--gray">php</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-05-13.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西<code>swoole</code>。</p>
+<p>本篇文章分為以下幾個章節 :</p>
+<ul>
+<li>Swoole 的架構</li>
+<li>Swoole 非阻塞 I/O 的處理</li>
+<li>Swoole 的 Coroutine</li>
+<li>Swoole 實際使用的注意事項</li>
+</ul>
+<h2 id="swoole-">swoole 的架構</h2>
+<p>swoole 官網寫到 :</p>
+<blockquote>
+<p>event-driven asynchronous &amp; coroutine-based concurrency networking communication engine with high performance written in C and C++ for PHP.</p>
+</blockquote>
+<p>swoole 它是一個用 c++ 所寫的 php extension，一個非常高效能的通訊引擎，而它能達到高效能的基礎在於以下幾個重點 :</p>
+<ul>
+<li>event-drivent</li>
+<li>coroutine</li>
+</ul>
+<p>一句話來說他可以幹麻。</p>
+<blockquote>
+<p>它可以讓我們建立一個高效能的網路服務</p>
+</blockquote>
+<p>下面就是它實現非阻塞 I/O 的架構圖。</p>
+<p>當它建立一個 http server 以後，你會看到產生出下圖這些 process 與 thread，基本上可以分為幾個部份 :</p>
+<p><img src="http://yixiang8780.com/outImg/swoole-20190517-1.png" alt=""></p>
+<ul>
+<li>Master Process : 用來管理 reactor thread，主要就是當 client 發送一個 http 請求後，由它來決定那個 reactor thread 來接客。</li>
+<li>Reactor Thread : 每個 thead 中都有使用 I/O 多路復用的技術來監聽多個 socket，當有事件(讀或寫資料)進來時，會發送給某個 worker process 來處理。</li>
+<li>Manager Process : 用來管理 worker process，也是用來決定那個 worker process 來接客。</li>
+<li>Worker Process : 實際運行 php 代碼的地方，它這裡也有使用 I/O 多路復用技術來監聽 socket。這裡提供同步阻塞或是異步非阻塞操作。</li>
+<li>Task Process : 一樣 php 代碼運行的地方，它會接受由 worker 丟過來的任務(開發者自已撰寫)，通常都是一些 cpu 密集的運算。這裡只能同步阻塞操作。</li>
+</ul>
+<p>上面是主要的架構，然後我們來理一下所謂的阻塞 I/O 會在那幾個地方，而 swoole 又是如何解決。</p>
+<h2 id="swoole--io-">Swoole 非阻塞 I/O 的處理</h2>
+<p>這裡基本上可以分成兩個地方來看。</p>
+<h3 id="heading">高併發建立連線的地方</h3>
+<p>swoole 這裡是在 reactor thread 實作 reactor 模式來解決，而 reactor 最主要透過的技術為 I/O 多路復用技術來做到大量 socket I/O 監控，並且在將事情丟給 worker process 處理。</p>
+<p>順到說一下，與 nodejs 或 reactPHP 相比，swoole 這裡勝在它開啟多個 thread 來監控多條連線，理論上它這樣應該可以承受的比 nodejs 與 reactPHP 更多的併發量。</p>
+<h3 id="worker-process--db--redis-">Worker process 中大量的 db 或 redis 操作</h3>
+<p>swoole 有提供幾個機制可以給 worker process 實現非阻塞 I/O 操作。</p>
+<ul>
+<li>reactor 模式 (網路 I/O)</li>
+<li>丟 task worker 處理 (網路、檔案 I/O)</li>
+<li>底層使用 aio 處理 (檔案 I/O)</li>
+</ul>
+<h4 id="reactor---io">reactor 模式 (網路 I/O)</h4>
+<p>首先第一個 reactor 模式就與 reactor thread 的機制一樣，都是會使用 I/O 多路復用來監聽 socket，當有事件進來時，就執行 handler (callback)。</p>
+<p>下面為範例，當在 worker 執行了這段程式碼以後，會將連 redis 的這條 socket 丟到 reactor 來進行監控，當有事件進來時，會執行 callback。</p>
+<p>而這就是所謂的<code>異步非阻塞</code>。( 異步: callback 非阻塞: 不會卡住 process )</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_redis</span><span class="p">;</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// callback function
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span> <span class="o">===</span> <span class="k">false</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s2">&#34;connect to redis server failed.</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;swoole&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">var_dump</span><span class="p">(</span><span class="nv">$result</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div><p>而所謂的<code>同步阻塞</code>的範例如下，假設你在 worker 中直接使用 predis 來操作 redis，那這就是所謂的同步阻塞。</p>
+<p>同步就是依順序走，而阻塞就是指會在 $cient-&gt;get(&ldquo;foo&rdquo;) 那會卡住整個 process。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="p">&lt;</span><span class="nt">php</span>
+
+<span class="err">$</span><span class="na">client </span><span class="o">=</span> <span class="s">new</span> <span class="na">Predis</span><span class="err">\</span><span class="na">Client</span><span class="err">(</span><span class="err">)</span><span class="err">;</span>
+<span class="err">$</span><span class="na">client-</span><span class="p"></span><span class="p">&gt;</span>set(&#39;foo&#39;, &#39;bar&#39;);
+$value = $client-&gt;get(&#39;foo&#39;);
+</code></pre></div><h4 id="-task-worker---io">丟 task worker 處理 (網路、檔案 I/O)</h4>
+<p>而下面為處理 file 的範例，但這裡要注意，這種處理檔案的方式受限於 task process 的數量，假設我們 task 的數量為二，那當如果開啟三個 task 來處理檔案時，第三個就會無法處理。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_http_server</span><span class="p">(</span><span class="s2">&#34;0.0.0.0&#34;</span><span class="p">,</span> <span class="mi">9501</span><span class="p">);</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;task_worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span>
+<span class="p">));</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$server</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">task</span><span class="p">(</span><span class="s2">&#34;hi&#34;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">(</span><span class="s2">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s2">&#34;text/html; charset=utf-8&#34;</span><span class="p">);</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">end</span><span class="p">(</span><span class="s2">&#34;&lt;h1&gt;Hello Swoole. #&#34;</span><span class="o">.</span><span class="nx">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span><span class="o">.</span><span class="s2">&#34;&lt;/h1&gt;&#34;</span><span class="p">);</span>
+<span class="p">});</span>
+
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$server</span><span class="p">,</span> <span class="nv">$task_id</span><span class="p">,</span> <span class="nv">$from_id</span><span class="p">,</span> <span class="nv">$data</span><span class="p">){</span>
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s1">&#39;file 位置&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;Finish&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_server</span> <span class="nv">$serv</span><span class="p">,</span> <span class="nv">$task_id</span><span class="p">,</span> <span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">&#34;Task#</span><span class="si">$task_id</span><span class="s2"> finished, data_len=&#34;</span><span class="o">.</span><span class="nx">strlen</span><span class="p">(</span><span class="nv">$data</span><span class="p">)</span><span class="o">.</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+<span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div><h4 id="-aio---io">底層使用 aio 處理 (檔案 I/O)</h4>
+<p>這裡注意要將 runtime 的 coroutine 開啟，才能讓 file_get_contents 使用底層 aio 來完成同步非阻塞操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<span class="nx">Swoole\Runtime</span><span class="o">::</span><span class="na">enableCoroutine</span><span class="p">(</span><span class="k">true</span><span class="p">);</span>
+
+<span class="nx">go</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$fp</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s2">&#34;test.log&#34;</span><span class="p">);</span>
+    <span class="nx">fclose</span><span class="p">(</span><span class="nv">$fp</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div><h4 id="qa--reactor--filesystem--">Q&amp;A 為什麼 Reactor 的機制無法處理 filesystem 的東西呢 ?</h4>
+<p>目前筆者只知道，如果你將檔案的 file descriptor 註冊到 I/O 多路復用(epoll) 中，會發生以下的錯誤:</p>
+<pre><code>EPERM The target file fd does not support epoll.
+</code></pre><p>這也是為什麼需要使用其它 process 來處理，而在 nodejs 中碰到這種檔案類型的操作，則是開啟 thread 來進行處理，詳細可看此篇文章。</p>
+<p><a href="http://marklin-blog.logdown.com/posts/7827140-principle-of-operating-mechanism-of-nodejs">Nodejs 之運行機制原理 - 馬克筆</a></p>
+<h2 id="swoole--coroutine">Swoole 中的 Coroutine</h2>
+<p>swoole 中有提供一個 coroutine 的功能，那它是做什麼呢 ?</p>
+<blockquote>
+<p>它可以讓 worker 做到同步非阻塞的操作</p>
+</blockquote>
+<p>剛剛上面有說 worker 可以提供以下兩種 I/O 操作型式 :</p>
+<ul>
+<li>同步阻塞 ( 同步:程式碼順序走 阻塞: 會卡住整個 process )</li>
+<li>異步非阻塞 ( 異步: callback 機制 非阻塞: 不會卡住整個 process )</li>
+</ul>
+<p>但實際上它還有提供第三種 :</p>
+<ul>
+<li>同步非阻塞 ( 同步: 程式碼順序走 非阻塞: 不會卡住整個 process )</li>
+</ul>
+<p>而實現的方法就是使用 coroutine 也就是協程。</p>
+<p>它系統內的運行流程如下:</p>
+<p><img src="http://yixiang8780.com/outImg/20190515-1.png" alt=""></p>
+<p><img src="http://yixiang8780.com/outImg/20190515-2.png" alt=""></p>
+<h3 id="coroutine-">coroutine 使用範例</h3>
+<p>使用情景如下程式碼，那在 go 裡面的這段程式碼就會開一個被稱為 coroutine 協程的東西來處理這一段，這樣就可以做到<code>同步非阻塞</code>操作。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nx">go</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="nv">$redis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swoole\Coroutine\Redis</span><span class="p">();</span>
+    <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">);</span>
+    <span class="nv">$val</span> <span class="o">=</span> <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">);</span>
+<span class="p">});</span>
+</code></pre></div><p>而如果沒有用 coroutine 的話，那就只能做到<code>異步非阻塞操作</code>，如下程式碼，也就是一堆 callback。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_redis</span><span class="p">;</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">GET</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;swoole&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">var_dump</span><span class="p">(</span><span class="nv">$result</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</code></pre></div><h3 id="qa--coroutine--io--">Q&amp;A - Coroutine 是實現非阻塞 I/O 的技術嗎 ?</h3>
+<p>不是。</p>
+<p>coroutine 很多人會說它是一個比 thread 還較更小單位的操作單位，所以就會想，那我每一個阻塞 I/O 就開一個協程來處理，那這樣不就可以實現非阻塞 I/O 操作了嗎 ? 就像 multi thread 原理一樣，而且我協程更省資源。</p>
+<p>NoNoNo ~</p>
+<p>process 為操作系統的最小資源管理單位，而 thread 為操作系統最小操作單位。</p>
+<p>而 coroutine 是一個比 thread 更小的操作單位，但是它的操作是<code>用戶 (application)</code>所操作，而不是像 thread 一樣是操作系統所操作。</p>
+<p>而 I/O 的操作是指操作系統的操作，當一個阻塞 I/O 執行時，讓 process 阻塞的是操作系統，所以如果你在一個協程內開啟一個阻塞 I/O 它仍然會卡住整個 process。</p>
+<p>coroutine 嚴格來說只能幫你做到<code>同步非阻塞</code>，非阻塞還是需要有 reactor 機制來實現。</p>
+<p>備註: go 語言的 coroutine 就比較特殊了，這之後會另開篇章討論。</p>
+<h2 id="swoole-1">Swoole 的實際使用注意</h2>
+<p>與 reactPHP 的範例一樣，我們一樣使用 swoole 來建立一個 http server。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_http_server</span><span class="p">(</span><span class="s2">&#34;0.0.0.0&#34;</span><span class="p">,</span> <span class="mi">9501</span><span class="p">);</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">&#39;task_worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+<span class="p">));</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="nv">$request</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:3000&#39;</span><span class="p">);</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">(</span><span class="s2">&#34;Content-Type&#34;</span><span class="p">,</span> <span class="s2">&#34;text/html; charset=utf-8&#34;</span><span class="p">);</span>
+    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">end</span><span class="p">(</span><span class="s2">&#34;&lt;h1&gt;Hello Swoole. #&#34;</span><span class="o">.</span><span class="nx">rand</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">9999</span><span class="p">)</span><span class="o">.</span><span class="s2">&#34;&lt;/h1&gt;&#34;</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">(</span><span class="nv">$server</span><span class="p">,</span> <span class="nv">$task_id</span><span class="p">,</span> <span class="nv">$from_id</span><span class="p">,</span> <span class="nv">$data</span><span class="p">){</span>
+<span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div><h4 id="-http--">如果這時發兩條 http 請求會如何呢 ?</h4>
+<p>答案: 1 次 wait ( 因為第一次就卡住 process )</p>
+<p>主要的原因基本上在於，你沒將這 I/O 操作丟到這個 worker 的 reactor 機制中，所以這個 I/O 操作仍然會是阻塞的。</p>
+<p>然後有些人在測試時可能會收到二次 wait，但是有一點你要注意，那就是<code>worker_num</code>你設多少，如果你設<code>2</code>，它當然可以收到二次，因為是由不同的 process 接受，但是接下來的第三次，你絕對收不到。</p>
+<h4 id="heading1">正確版</h4>
+<p>首先第一種是官方現在推薦使用 coroutine 的<code>同步非阻塞</code>的寫法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_http_server</span><span class="p">(</span><span class="s2">&#34;0.0.0.0&#34;</span><span class="p">,</span> <span class="mi">9501</span><span class="p">);</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;task_worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+<span class="p">));</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swoole\Coroutine\Http\Client</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+    <span class="k">echo</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">;</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span><span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+
+</code></pre></div><p>而另一種就是使用 callback 的<code>異步非阻塞</code>的寫法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+
+<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_http_server</span><span class="p">(</span><span class="s2">&#34;0.0.0.0&#34;</span><span class="p">,</span> <span class="mi">9501</span><span class="p">);</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">&#39;worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s1">&#39;task_worker_num&#39;</span> <span class="o">=&gt;</span> <span class="mi">0</span>
+<span class="p">));</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;request&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
+    <span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_http_client</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">3000</span><span class="p">);</span>
+    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$client</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">echo</span> <span class="s2">&#34;Length: &#34;</span> <span class="o">.</span> <span class="nx">strlen</span><span class="p">(</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">)</span> <span class="o">.</span> <span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+        <span class="k">echo</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">body</span><span class="p">;</span>
+    <span class="p">});</span>
+    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
+    <span class="c1">// ----------------------------------------------------
+</span><span class="c1"></span><span class="p">});</span>
+
+<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div><h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://blog.csdn.net/u012999985/article/details/49520773">深入理解进程和线程</a></li>
+<li><a href="https://blog.albert-chen.com/php-with-swoole/">PHP 的性能猛獸 - Swoole</a></li>
+<li><a href="https://linkeddestiny.gitbooks.io/easy-swoole/content/">easy-swoole</a></li>
+<li><a href="https://segmentfault.com/a/1190000007614502">nginx、swoole高并发原理初探</a></li>
+<li><a href="http://rango.swoole.com/archives/508">swoole 作者 blog</a></li>
+<li><a href="https://segmentfault.com/a/1190000002946586">swoole教程第一节:进程管理模块(Process)-上</a></li>
+<li><a href="https://segmentfault.com/a/1190000015976967#articleHeader0">Swoole 源码分析——Reactor模块之ReactorBase</a></li>
+<li><a href="https://www.itcodemonkey.com/article/4620.html">漫画：什么是协程？</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#swoole-">swoole 的架構</a></li>
+    <li><a href="#swoole--io-">Swoole 非阻塞 I/O 的處理</a>
+      <ul>
+        <li><a href="#heading">高併發建立連線的地方</a></li>
+        <li><a href="#worker-process--db--redis-">Worker process 中大量的 db 或 redis 操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#swoole--coroutine">Swoole 中的 Coroutine</a>
+      <ul>
+        <li><a href="#coroutine-">coroutine 使用範例</a></li>
+        <li><a href="#qa--coroutine--io--">Q&A - Coroutine 是實現非阻塞 I/O 的技術嗎 ?</a></li>
+      </ul>
+    </li>
+    <li><a href="#swoole-1">Swoole 的實際使用注意</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

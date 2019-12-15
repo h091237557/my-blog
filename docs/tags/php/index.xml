@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>php on 拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/tags/php/</link>
+    <description>Recent content in php on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <copyright>&amp;copy;Your Name 2019</copyright>
+    <lastBuildDate>Mon, 13 May 2019 19:51:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://mark-lin.com/tags/php/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式</title>
+      <link>https://mark-lin.com/posts/20190513/</link>
+      <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190513/</guid>
+      <description>前篇: PHP 的 Web 運行原理 ( 1 ) 上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而</description>
+    </item>
+    
+    <item>
+      <title>PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP</title>
+      <link>https://mark-lin.com/posts/20190514/</link>
+      <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190514/</guid>
+      <description>上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac</description>
+    </item>
+    
+    <item>
+      <title>PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</title>
+      <link>https://mark-lin.com/posts/20190515/</link>
+      <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190515/</guid>
+      <description>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項</description>
+    </item>
+    
+    <item>
+      <title>PHP 的 Web 運行原理 ( 1 )  - 傳統型</title>
+      <link>https://mark-lin.com/posts/20190131/</link>
+      <pubDate>Thu, 31 Jan 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190131/</guid>
+      <description>這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情</description>
+    </item>
+    
+    <item>
+      <title>PHP Laravel 的 Facade 的理解</title>
+      <link>https://mark-lin.com/posts/20181228/</link>
+      <pubDate>Fri, 28 Dec 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20181228/</guid>
+      <description>什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 : &amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，</description>
+    </item>
+    
+    <item>
+      <title>PHP Laravel 的 Container 理解</title>
+      <link>https://mark-lin.com/posts/20181214/</link>
+      <pubDate>Fri, 14 Dec 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20181214/</guid>
+      <description>什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類</description>
+    </item>
+    
+    <item>
+      <title>PHP Laravel 的 Container 理解</title>
+      <link>https://mark-lin.com/posts/20181030/</link>
+      <pubDate>Tue, 30 Oct 2018 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20181030/</guid>
+      <description>Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。 容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 : 裡面裝</description>
+    </item>
+    
+  </channel>
+</rss>

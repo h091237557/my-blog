@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  PHP 的 Web 運行原理 ( 1 )  - 傳統型 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="php, laravel" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 1 )  - 傳統型 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">PHP 的 Web 運行原理 ( 1 )  - 傳統型</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/php' class="muted-link">
+  <span class="Label Label--gray">php</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-01-31.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>這篇文章雖然主題為<code>PHP 的 Web 運行原理</code>，但是比較白話文的說，事實上是想要理解這件事情 :</p>
+<blockquote>
+<p>一個 http 請求進來後，php 到底是如何運行呢 ?</p>
+</blockquote>
+<p>要理解這件事情，有個最基本的觀念要先理解，那就是下面這段指令，它到底是如何運行的。</p>
+<pre><code>php index.php
+</code></pre><p>然後接下來才能在理解 Web 是如何用 php 來處理。</p>
+<p>這篇文章將分為以下幾個章節 :</p>
+<ul>
+<li>執行 php index.php 它是如何運行的呢 ?</li>
+<li>三種用 PHP 來處理 HTTP 的模式</li>
+<li>Web PHP 應用組合與問題</li>
+</ul>
+<h2 id="-php-indexphp--">執行 php index.php 它是如何運行的呢 ?</h2>
+<p>假設我們在 Terminal 執行了如下的指令。</p>
+<blockquote>
+<p>php index.php</p>
+</blockquote>
+<p>那實際上它的運行流程會如下圖，而這張圖也代表 PHP 的基本運行架構。</p>
+<ul>
+<li>SAPI ( Server Application Programming Interface ) : 它就是一個<code>應用環境</code>與<code>PHP 核心</code>的一個 Interface，會有這層主要的原因在於，不同的應用環境，例如命令行環境(就是在 Terminal 執行 php) 或 Web 環境都需要不同的 PHP 環境配置，如果沒有這一層就代表 PHP 本身要針對不同的環境來考慮設計兼容，這也是為什麼會有 SAPI 的目的。</li>
+<li>main : 它是 php 所有操作的整合者。</li>
+<li>Zend 引擎 : 它就是將咱們編寫的 PHP 程式碼解釋成可以執行的 opcode 碼，其中 PHP7 與 PHP5 有速度上的飛升原因就在於此，PHP7 大幅度的優化了 Zend 引擎。</li>
+<li>Extension : 它是 PHP 內核所提供的一套擴充 PHP 功能的方式，大部份都是使用 C/C++ 所撰寫，基本上可以分為 PHP extension 與 Zend extension。</li>
+</ul>
+<p><img src="http://yixiang8780.com/outImg/20190125-1.png" alt=""></p>
+<h2 id="-php--http-">三種用 PHP 來處理 HTTP 的模式</h2>
+<p>那如果改成 Web 情況下，上面那張圖會變成什麼樣子呢 ? 如下圖，就只是將 Terminal 那改成 Web Server。</p>
+<p><img src="http://yixiang8780.com/outImg/20190125-5.png" alt=""></p>
+<p>然後 Web 模式基本上可分為三種模式 :</p>
+<ol>
+<li>模組模式</li>
+<li>CGI 模式 (這只是過渡期，現在沒啥在用)</li>
+<li>Fast-CGI 模式</li>
+</ol>
+<h3 id="module-">Module 模式</h3>
+<p>在早期開發 PHP 時，大部份的人應該都用過 LAMP 這東西，它就是 Linux + Apache + MySQL + PHP 這些東組合。</p>
+<p>然後在通常會在 Apache Web Server 上設置一段指令 :</p>
+<pre><code>LoadModule php5(or 7)_module modules/mod_php5.so
+</code></pre><p>這一段就是讓 Apache 把 php 當成一個模塊來處理。</p>
+<p>在種情況下，一個 http 請求它是如何的運行呢 ?</p>
+<p>運行模式下圖 :</p>
+<ol>
+<li>瀏覽器發送一個 http 請求到 Apache Web Server。</li>
+<li>Apache 收到以後，如果發現是 .php 的請求，則會使用 php5_module 來解析 php。</li>
+<li>php5_module 接下來會將 php 代碼丟到 sapi 來進行一些針對 Apache 的環境設定 然後最後在由 zedn 來處理這段程式碼。</li>
+</ol>
+<p><img src="http://yixiang8780.com/outImg/20190125-2.png" alt=""></p>
+<p>但這裡有個問題。</p>
+<h4 id="-apache---">那假如我不用 Apache  呢 ?</h4>
+<p>這就是為什麼會有下面這個模式的原因。</p>
+<h3 id="cgi-">CGI 模式</h3>
+<p>雖然 LAMP 方案在當時很流行，但是並不是每個人都想使用 Apache，而且比較正確的說法，應該是說，不是所有的 Web Server 都有建立 PHP 模組，那這種情況下要怎麼辦呢 ?</p>
+<p>這時就有所謂的<code>CGI 協議</code>。</p>
+<blockquote>
+<p>CGI 定義了讓 Web Server 與請求處理程序(ex. php)溝通的標準。</p>
+</blockquote>
+<p>它的運行流程如下圖 :</p>
+<ol>
+<li>瀏覽器發送一個 http 請求到 Web Server</li>
+<li>Web Server 產生出一個已實作 CGI 協議的 child process (ex. php-cgi)</li>
+<li>子進程解析 php.ini 進行初使化環境。</li>
+<li>處理 http 請求，並返回給 Web Server。</li>
+<li>關閉子進程。</li>
+</ol>
+<p><img src="http://yixiang8780.com/outImg/20190125-3.png" alt=""></p>
+<h4 id="heading">這裡有幾點事情要注意一下</h4>
+<p>首先實作 CGI 協議的 child process，這裡，這句話事實上也代表了不限制任何語言，而 php-cgi 就只是一個使用 php 來實作 CGI 協議的程式，它可以用來解析從 Web Server 傳送過來的 CGI 請求，並且用 php 來處理。</p>
+<h4 id="-">這種模式有什麼缺點呢 ?</h4>
+<p>上面使用這種 CGI 模式的缺點就在於，它每一個 http 請求就需要 fork 一個 CGI 子進程來處理，然後大量的請求一定會倒。</p>
+<p>這也是為什麼之後會出現一個叫<code>Fast-CGI</code>的協議。</p>
+<h3 id="fastcgi">Fast-CGI</h3>
+<p><code>Fast-CGI</code>它也是個協定，它運作的標準如下 :</p>
+<ol>
+<li>先產生一個 master 進程。</li>
+<li>解析 php.ini 來初使化環境。</li>
+<li>然後預先建立多個 worker 進程。</li>
+<li>當有一個請求時會分配給某個 worker 來處理。</li>
+<li>當 worker 不夠用時，master 會在建立 worker，而當 worker 閒置太多時，master 也會減少 worker。</li>
+</ol>
+<p>而這裡就要提到一個新名詞<code>PHP-FPM</code>，它就是根據 Fast-CGI 協議所實作進程管理器。</p>
+<p>所以當一個 http 請求進來時，使際上的運作會如下圖 :</p>
+<ol>
+<li>一個 http 請求從瀏覽器送到 Web Server。</li>
+<li>Web Server 會將此請求包含旁 Fast-CGI 協議標準，發送給 PHP-FPM 所管理的 Master 進程。</li>
+<li>接下來 Master 進程會將請求在發送給某個 worker 來處理。</li>
+<li>最後 worker 處理完後返回結果，然後在等待接客。</li>
+</ol>
+<p><img src="http://yixiang8780.com/outImg/20190125-4.png" alt=""></p>
+<h2 id="web-php-">Web PHP 應用組合與問題</h2>
+<p>根據咱們上述學的模式，基本上現今 PHP Web 的組合大至上可以分為以下兩種 :</p>
+<ol>
+<li>Apache + php module</li>
+<li>Nginx + php-fpm</li>
+</ol>
+<p>在早期的時後，基本上一定是選擇 Nginx + php-fpm 這種類型來開發 PHP Web 應用，主要的原因在於使用 moduel 模式的 PHP Web 它就只是單線程的應用，這也代表一定會有效能壓力，但是之後 Apache 提供了一個叫 MPM (Multi-Processing Module) 就解決了這個問題。</p>
+<p>或需有人認為 Nginx 一定比較快，因為它有 Event Loop 機制，可以不塞車，但是問題是處理 PHP 的地方是在另個 process 中和 Nginx Event Loop 也就沒啥過係。</p>
+<p>所以目前我也不敢保證說選那個比較好，這方面還需要更深入的探討。</p>
+<h4 id="-1">那這種二模式有什麼問題呢 ?</h4>
+<p>比較大的問題是 :</p>
+<blockquote>
+<p>它每一個 worker 同時間只能處理一個 http 請求</p>
+</blockquote>
+<p>雖然它已經比 CGI 模式下還可以處理更多的請求，但它還是有一定的瓶頸在。</p>
+<p>而這就是下一篇文章中要 Swoole 的原因。</p>
+<h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="https://wwxiong.com/2018/07/php-operation-mode/">PHP核心PHP的运行模式</a></li>
+<li><a href="https://segmentfault.com/a/1190000008114150">5分钟PHP扩展开发快速入门</a></li>
+<li><a href="https://www.awaimai.com/371.html">CGI、FastCGI和PHP-FPM关系图解</a></li>
+<li><a href="https://github.com/littlespark/blog/issues/7">SAPI,CGI,Fastcgi,php-fpm的一些知识(个人见解)</a></li>
+<li><a href="https://segmentfault.com/a/1190000014913877">segament-PHP 运行模式与运行原理</a></li>
+<li><a href="https://segmentfault.com/a/1190000014547406">segmentfault-PHP 运行模式</a></li>
+<li><a href="https://segmentfault.com/q/1010000008356979">php-cgi和php-fpm有什么关系?</a></li>
+<li><a href="https://laravel-china.org/articles/9450/php-fpm-vs-swoole">Laravel-china-PHP-FPM vs Swoole</a></li>
+<li><a href="https://www.zhihu.com/question/64414628/answer/220973563">php fpm 进程数和并发数是什么关系？</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>PHP 的 Web 運行原理 ( 1 )  - 傳統型</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-php-indexphp--">執行 php index.php 它是如何運行的呢 ?</a></li>
+    <li><a href="#-php--http-">三種用 PHP 來處理 HTTP 的模式</a>
+      <ul>
+        <li><a href="#module-">Module 模式</a></li>
+        <li><a href="#cgi-">CGI 模式</a></li>
+        <li><a href="#fastcgi">Fast-CGI</a></li>
+      </ul>
+    </li>
+    <li><a href="#web-php-">Web PHP 應用組合與問題</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

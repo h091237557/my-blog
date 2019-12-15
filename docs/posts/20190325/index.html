@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Socket.io 使用 AWS ALB 建立 Load Balance 問題 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, socket.io" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Socket.io 使用 AWS ALB 建立 Load Balance 問題 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Socket.io 使用 AWS ALB 建立 Load Balance 問題</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/socket.io' class="muted-link">
+  <span class="Label Label--gray">socket.io</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2019-03-08.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。</p>
+<p>而這時如果你選擇使用<code>AWS ALB (Application Load Balancer)</code>來建立 load balance 你會發現它有個很大的問題，那就是 :</p>
+<blockquote>
+<p>使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線</p>
+</blockquote>
+<p>接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?</p>
+<p>本篇文章架構如下 :</p>
+<ul>
+<li>原因</li>
+<li>解法</li>
+</ul>
+<h2 id="heading">原因</h2>
+<p>為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?</p>
+<p>這裡我們就要先從 socket.io 建立連線的流程開始說啟。</p>
+<h3 id="socketio-">Socket.io 建立連線原理</h3>
+<p>假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用<code>socket.io client</code>來建立連線。</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :</p>
+<ul>
+<li>polling</li>
+<li>websocket</li>
+</ul>
+<p>這兩者差別在於 polling 就是一直用 http 長連線去 server 看看有沒有資料，而 websocket 是有資料時 server 會自動的推送。</p>
+<p>那如果我們在建立連線時，沒有設定要用那個，那它會選用那種方式呢 ?</p>
+<p>它會先使用 polling 來進行連線與資料傳輸，然後等到確定可以升級 websocket 後，就會將它轉成使用 websocket，然後將原本 polling 的那條給移除。</p>
+<p>建立連線的概念圖如下，而這個建立連程的核心就是 :</p>
+<blockquote>
+<p>sid 也就是 session id</p>
+</blockquote>
+<p><img src="http://yixiang8780.com/outImg/20190325-1.png" alt=""></p>
+<h3 id="-aws-alb-load-balance">使用 AWS ALB Load Balance</h3>
+<p>接下來我們建立 aws alb 來檔我們的 load Balance 架構如下圖，這裡提醒一下，如果是使用 alb 來建立連線，那當連線是屬於 websocket 時，這條 websocket 連線實際上是，client 到 alb 一條，而 alb 在到 server 一條這樣，而不是 client 直接與 server 建立一條 websocket。</p>
+<p>當然有人會說那這樣貧頸不是會在 alb 上，但目前已知，它有提供自動 auto scalling 的機制，這裡就先暫時的相信 aws。</p>
+<p><img src="http://yixiang8780.com/outImg/20190325-2.png" alt=""></p>
+<h4 id="heading1">然後接下來你會發現這連線有很高的機率連線無法建立。</h4>
+<p>當你使用下面的 client 來建立連線時，會發現很高的機率無法建立。</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><blockquote>
+<p>問題就在於 sid</p>
+</blockquote>
+<p>基本上建立一條完整可運行的 socket.io 連線時，至少可能會產生的三次請求。</p>
+<ol>
+<li>polling 連線建立，取得 sid。</li>
+<li>升級為 ws (它會帶 sid 發送請求)。</li>
+<li>使用 polling 看看是否有資料 (它會帶 sid 發送請求)。</li>
+</ol>
+<p>然後你想想，如果你第一次建立連線時，是在 server A 取得 sid，那你第二、三次使用時，如果連到 server B 或 C 時，server 會知道你要連的 socket 是誰嗎 ? 然後接下來 client 就會以為連線斷了，就自動的幫你斷線了，這就是失敗的原因。</p>
+<p><img src="http://yixiang8780.com/outImg/20190325-3.png" alt=""></p>
+<h3 id="-aws-sticky-session-">使用 AWS Sticky Session 的問題</h3>
+<p>然後有用過 aws alb 的人就會說，你可以使用它提供的 sticky session 功能，它可以讓某個 client 在一定的時間內的請求，都發送到同一台 server 上。</p>
+<p>這樣應該是可以解決問題沒錯。</p>
+<p>但是筆者那時一直試怎麼樣都無法成功建立。</p>
+<p>後來發現，問題是出在 :</p>
+<blockquote>
+<p>aws sticky session 是使用 cookie 來處理</p>
+</blockquote>
+<p>而筆者是用 nodejs 加上 socket.io client 來建立連線，因此如果沒有像瀏覽器一樣的幫我們自動處理 cookie， 那這個 sticky session 就會失效。</p>
+<h2 id="heading2">解法</h2>
+<p>事實上從上面的原因探討可以得知問題的核心在於兩點 :</p>
+<blockquote>
+<ol>
+<li>
+<p>polling 建立連線與請求資料，都會發送多條 http，並且用 sid 來標示這條連線，所以如果發送到沒有 sid 的那台 server 就會失敗。</p>
+</li>
+<li>
+<p>aws sticky session 在非瀏覽器情況(未處理 cookie) 時會失效。</p>
+</li>
+</ol>
+</blockquote>
+<p>這我們就來想一想假設我們真的需要支援非瀏覽器情況要如何解決呢 ?</p>
+<p>筆者這裡有想到幾種解法，然後分為以下兩類。</p>
+<h3 id="--">第一類 : 還沒有用戶在開始使用時</h3>
+<h4 id="1--client--websocket-">1. 強制讓 Client 端使用 Websocket 連線</h4>
+<p>首先第一個方法，就是直接指定 client 端直接強制使用 websocket 連線，socket.io client 強制使用的方法如下 :</p>
+<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">,</span><span class="p">{</span>
+  <span class="s1">&#39;transports&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;websocket&#39;</span><span class="p">]</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>這樣在建立連線時它就直接使用 websocket 來建立，而由於 websocket 屬於永久連線，也就是說一但你在 server A 建立完連線後，你接下來傳送的請求，都是一定是透過那台 server 來進行處理，因此就不會有上述的問題。</p>
+<h4 id="2--client--cookie">2. 讓 Client 處理 Cookie</h4>
+<p>假設如果你的 client 或 server 其中一方沒有辦法提供 websocket 協議，而你真的只能使用 polling 來處理，那你就需要想辦法讓 client 處理 cookie。</p>
+<p>處理原理如下:</p>
+<ol>
+<li>server 在 http 表頭設定 set-cookie 表頭</li>
+<li>application 中如果收到 response 中有 set-cookie 就將它取出並存成某個暫存檔。</li>
+<li>每當 application 要發送 http 請求時，就自動的將它帶到 header 中。</li>
+</ol>
+<p>事實上，上面的過程就是瀏覽器運行 cookie 的原理，而我們就只是實作一次。</p>
+<h3 id="--1">第二類 : 已經有用戶開始使用且無法強制所有人更新</h3>
+<h4 id="1--aws-alb">1. 不要使用 AWS ALB</h4>
+<p>不要使用 aws alb 來處理 load Balance，而選用其它的應用如 nginx，因為它有提到 ip hash 的分配演算法，它可以讓同一個 ip 都打到同一台。</p>
+<p>但是這種方案就有幾個麻煩處 :</p>
+<ul>
+<li>你要自已處理 nginx 的 HA 機制。</li>
+<li>你需要注意 nginx 單機的最大連線量 (也就是連線貧頸會出現在 nginx 這台)</li>
+</ul>
+<p>別問我 alb 如何處理貧頸，反正官網說可以自動 scalling。</p>
+<h4 id="2--aws-alb--websocket--polling">2. 使用 AWS ALB 分流 Websocket 與 Polling</h4>
+<p>但這種情況有個假設，那就的是 polling 的使用量不多。</p>
+<p>這種情況的做法順序如下 :</p>
+<ol>
+<li>將之後新出版本的 client 都強制使用 websocket。</li>
+<li>在 alb 將 websocket 與 polling 進行分流 (alb 可以根據 path 或 header 分流)。</li>
+<li>等到大部份的用啟都慢慢的升級到新版本後，那 polling 的那可以慢慢的下掉。</li>
+</ol>
+<p>架構圖如下 :</p>
+<p><img src="http://yixiang8780.com/outImg/20190325-4.png" alt=""></p>
+<p>但是這裡要注意，你的 polling 用的 server 只能有一台，這也是為什麼要假設 polling 使用量不多，因為它無法擴展。</p>
+<h2 id="heading3">結論</h2>
+<p>最後來說說感想。</p>
+<p>socket.io client 使用了 polling 與 websocket 方法來幫助我們建立與 client 與 server 的即時溝通，即時不支援 websocket 它也可以用 polling 來處理，但是我覺得這同時間也是雙刃劍，因為這代表你在做任何事情時，你都要考慮兩種情況是否可以運行。</p>
+<p>最後筆者建議，真的準備要開始使用 socketio 的人並且要支援不同 client 的人，請直接指定使用 websocket，這樣真的會省下不少麻煩，現階段大部份的 client 應該是都有提供 websocket 的處理，沒有就叫他滾 !</p>
+<h2 id="-socketio-">參考資料 Socket.io 建立連線實際過程</h2>
+<p>它的建立連線實際過程如下。</p>
+<p>以下看到的資訊都是使用 socket.io 所提供的 debug log 所取得，開啟方式如下。</p>
+<pre><code>DEBUG=* node xxxx.js
+</code></pre><p>首先他會發送以下的 url 來請求建立 socket 連線。</p>
+<pre><code>xhr open 
+GET:http://localhost:8080/socket.io/EIO=3&amp;transport=polling&amp;t=MckJUI4&amp;b64=1
+</code></pre><p>接下來它會收到一段回應，其它他包含了以下幾個資訊 :</p>
+<ul>
+<li>sid : session id，接下 polling 的 http 請求都會帶它。</li>
+<li>uprades : 表示可以升級為 websocket。</li>
+<li>pingInterval : 每幾 ms 會發送一次 ping packet，用來確定這條連線還存在。</li>
+<li>pingTimeout : 如果超過此 ms 沒有收到 pong，這代表此連線已斷。</li>
+</ul>
+<pre><code>polling got data 
+
+{
+  &quot;sid&quot;:&quot;Va6Nnm8ia_8ioOAvAAAA&quot;,
+  &quot;upgrades&quot;:[&quot;websocket&quot;],
+  &quot;pingInterval&quot;:25000,
+  &quot;pingTimeout&quot;:5000
+}
+</code></pre><p>然後執行到了這裡基本上這條連線的 socket 就算完成了。</p>
+<pre><code>socket receive: 
+type &quot;open&quot;, data &quot;{&quot;sid&quot;:&quot;Va6Nnm8ia_8ioOAvAAAA&quot;,&quot;upgrades&quot;:[&quot;websocket&quot;],&quot;pingInterval&quot;:25000,&quot;pingTimeout&quot;:5000}&quot;
+
+socket open
+</code></pre><p>然後接下來它會嘗試的進行升級，它事實上會發一個 ping 給 server。</p>
+<pre><code>engine.io-client:socket starting upgrade probes +1ms
+engine.io-client:socket probing transport &quot;websocket&quot;
+engine.io-client:socket creating transport &quot;websocket&quot;
+engine.io-client:socket probe transport &quot;websocket&quot; opened
+</code></pre><pre><code>ws://localhost:8080/socket.io/?EIO=3&amp;transport=websocket&amp;sid=Va6Nnm8ia_8ioOAvAAAA
+</code></pre><p>但是注意，在升級的中間，polling 還是會繼續的去 server 看看有沒有資料。</p>
+<pre><code>engine.io-client:polling-xhr xhr poll
+  engine.io-client:polling-xhr xhr open GET: http://localhost:8080/socket.io/?EIO=3&amp;transport=polling&amp;t=MckJUJ3&amp;b64=1&amp;sid=Va6Nnm8ia_8ioOAvAAAA
+  engine.io-client:polling-xhr xhr data null
+</code></pre><p>然後接下偵測到 server 有回收到升級用的 pong 回來，因此正式的將 transport 轉換成 websocket，並且將 polling 關掉。到了這時基本上 websocket 連線就就算正式的完成了。</p>
+<pre><code>engine.io-client:socket probe transport &quot;websocket&quot; pong
+engine.io-client:socket pausing current transport &quot;polling&quot;
+engine.io-client:socket changing transport and sending upgrade packet
+engine.io-client:socket setting transport websocket +0ms
+engine.io-client:socket clearing existing transport polling
+</code></pre>
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Socket.io 使用 AWS ALB 建立 Load Balance 問題</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">原因</a>
+      <ul>
+        <li><a href="#socketio-">Socket.io 建立連線原理</a></li>
+        <li><a href="#-aws-alb-load-balance">使用 AWS ALB Load Balance</a></li>
+        <li><a href="#-aws-sticky-session-">使用 AWS Sticky Session 的問題</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">解法</a>
+      <ul>
+        <li><a href="#--">第一類 : 還沒有用戶在開始使用時</a></li>
+        <li><a href="#--1">第二類 : 已經有用戶開始使用且無法強制所有人更新</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading3">結論</a></li>
+    <li><a href="#-socketio-">參考資料 Socket.io 建立連線實際過程</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
