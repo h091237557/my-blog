@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, rabbitmq" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-07.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>上一章節中我們有提到<code>rabbitmq</code>，它是用來建立<code>中介式架構</code>的<code>broker</code>，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。</p>
+<p>所以後來就有人提出使用<code>對等式架構</code>來解決這個問題，這個架構就是會將<code>broker</code>給移除掉，每一個用戶端同時也是伺服器端，像<code>比特幣</code>這種應用就是用該結構來處理。</p>
+<p>但相對的，它也有缺點，那就是要建置起來較為複雜，用在大規模的網路上，管理較難、安全性較低。</p>
+<h2 id="-zeromq--peertopeer">使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作</h2>
+<p><code>zeromq</code>它是一套網路通訊函式庫，記得他不是一個伺服器，而是一個lib，它在<code>socket api</code>之上做了一層封裝，將網路、通訊、進程等抽象化為統一的 API 接口，它和 socket 的區別是 :</p>
+<ul>
+<li>socket : 點對對的關係(一對一)</li>
+<li>zeromq : 多點對多點的關係(多對多)</li>
+</ul>
+<p>那 zeromq 有什麼特點呢 ? 它有以下四個特點 :</p>
+<ul>
+<li>去中心化 (無 broker)</li>
+<li>強調訊息收發模式</li>
+<li>以統一的接口支持多種底層通信方式</li>
+<li>異步</li>
+<li>速度飛快 (<a href="http://www.oschina.net/news/17973/message-queue-shootout">請參考這篇比較</a>)</li>
+</ul>
+<p>不過有一點要注意一下，zeromq 它不是一個獨立的伺服器進程 (rabbitmq 是)，所以嚴格來說它不是 mq ，它沒有 mq 這種在中間解耦合的能力，事實上他的名命也說了 zero mq 。</p>
+<p>zeromq 主要提供三種類型的通訊模式分別如下 :</p>
+<h3 id="req-request--rep-reply-">REQ (request) / REP (reply) 模式</h3>
+<p>這模式就是傳統的一個 reuest 配一個 response 的模式，非常的簡單。</p>
+<p><img src="http://yixiang8780.com/outImg/20170723-2.png" alt=""></p>
+<p>下面這段程式碼是發送請求(request)的程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span>  <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">requester</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;req&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">requester</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">reply</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received reply: </span><span class="si">${</span><span class="nx">reply</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Send msg&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">requester</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Hello Mark&#39;</span><span class="p">)</span><span class="p">;</span>
+
+
+<span class="nx">requester</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;tcp://localhost:5555&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGINT&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">requester</span><span class="p">.</span><span class="nx">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>然後下面這段程式碼為收到請求後，進行回傳的程式碼，這也可以理解成一個 server，它會一直等待 request 的 loop，然後針對每次的請求都進行回覆(Reply)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">responder</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;rep&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">responder</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">request</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received request : </span><span class="si">${</span><span class="nx">request</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nx">responder</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s2">&#34;Ok ~ I Received your msg&#34;</span><span class="p">)</span><span class="p">;</span> 
+    <span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+
+<span class="nx">responder</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:5555&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Listening on 5555&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGINT&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">responder</span><span class="p">.</span><span class="nx">close</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>不過這邊有二點要注意，當你將 server 進行重啟時，client 不會自動的重新連上 server ，如果想要建立一個高可靠性的 server 請參考官網該篇文章，它說明的很詳細囉 ~</p>
+<blockquote>
+<p><a href="http://zguide.zeromq.org/page:all#reliable-request-reply">reliable-request-reply</a></p>
+</blockquote>
+<p>而另外一點就是，不論先開啟 client 或 server 都沒關係，在傳統觀念上 server 就是要先開，然後 client 才連的上，但在這裡，它們的關係是節點對節點，也就是說沒有主或從的關係，只有誰發誰送的問題。</p>
+<h3 id="pub--sub-">Pub / Sub 模式</h3>
+<p><img src="http://yixiang8780.com/outImg/20170723-3.png" alt=""></p>
+<p>它基本上是一種很常見的設計模式，像我們在使用<code>jquery</code>時的事件機制就很常看到它，如下 :</p>
+<pre><code>$(&quot;.test&quot;).on('click', function(){
+    /do something...
+})
+</code></pre><p>上面的程式碼中，當頁面獨發了<code>click</code>事件後，就會<code>發佈(pub)</code>一個訊息，給有<code>訂閱(sub)</code>的使用者說，我獨發了 click 了喔，然後使用者在來處理獨發後的事情。</p>
+<p>這種模式的優點就在於<code>解耦合</code>，發佈者無須預先知道訊息的接受者，則也使得這種模式很適合用在變化多端的分佈式架構中。</p>
+<p>我們簡單的用一句話來說明 zeromq 的 pub/sub 模式，就是下面這句 :</p>
+<blockquote>
+<p>當訊息透過 pub socket 傳送後，便會擴播至所有已連線的 sub socket</p>
+</blockquote>
+<p>這種類型的模式，很適合用來處理股價報價，每個 subscriber 都會去和 publisher 訂閱事件，當有新個報價時，就會通知所有有訂閱報價的 subscriber。</p>
+<p>接下來我們來開使實作程式碼。</p>
+<p>首先我們下面這段程式碼是用來建立 zeromq 的<code>publisher</code>，也就是會將訊息從這邊發送出去給已連線的<code>subscriber</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// pub.js
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">pubSocket</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;pub&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">pubSocket</span><span class="p">.</span><span class="nx">bindSync</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:3000&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Publisher bound to port 3000&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">pubSocket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="p">[</span><span class="s1">&#39;mar&#39;</span><span class="p">,</span><span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="p">)</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><p>而下面這段程式碼就是<code>subscriber</code>，它用來訂閱訊息來源，然後會使用<code>on</code>這監聽器，來收得 pub 過來的訊息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// sub.js
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">subSocket</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;sub&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">port</span> <span class="o">=</span> <span class="s2">&#34;3000&#34;</span><span class="p">;</span>
+
+<span class="nx">subSocket</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="sb">`</span><span class="sb">tcp://127.0.0.1:</span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">subSocket</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;mark&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Subscriber connected to port </span><span class="si">${</span><span class="nx">port</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">subSocket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">topic</span><span class="p">,</span> <span class="nx">message</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">topic</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>我們可以看你心情來決定要先開啟<code>publisher</code>或<code>subscriber</code>，zeromq 它有提供一個機制，他會自動重新連線，也就是說，當然二個都開啟後，如果將<code>publisher</code>關掉在重啟，你的<code>subscriber</code>還是可以繼續收到資料。</p>
+<p>然後我們來執行程式碼看看。我們會開啟一個<code>publisher</code>和二個<code>subscriber</code>。</p>
+<pre><code>node pub.js
+node sub.js
+node sub.js
+</code></pre><p>然後我們應該是會看到如下的結果，兩個<code>subscriber</code>每隔十秒鐘會收到一次從<code>publisher</code>來的資料。</p>
+<pre><code>mark
+Thu Jul 20 2017 17:18:58 GMT+0800 (CST)
+
+mark
+Thu Jul 20 2017 17:18:59 GMT+0800 (CST)
+</code></pre><h3 id="push--pull">Push / Pull</h3>
+<p>這種模式又被稱為<code>管道(pipe)模式</code>，它是單向的，從 push 單向推送到 pull 端，這種模式和上面的<code>pub/sub</code>最模式最大的差別在於 :</p>
+<blockquote>
+<p>push 傳送的一堆資料，會被<code>平均</code>分散至多個 pull 端，就像是 load balance的機制一樣。</p>
+</blockquote>
+<p>以下的程式碼為 pull 端的建立。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// pull.js 
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">pullSocket</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;pull&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">pullSocket</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:3000&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Worker connected to port 3000&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">pullSocket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">msg</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>而下面的程式碼為 push 端的建立。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// push.js
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">sockPush</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;push&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">sockPush</span><span class="p">.</span><span class="nx">bindSync</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:3000&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Producer bound to port 3000&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="nx">sockPush</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="sb">`</span><span class="sb">mark wake up ~ : </span><span class="si">${</span><span class="nx">i</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+<span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然我們開始執行。</p>
+<pre><code>node push.js
+node pull.js
+node pull.js
+</code></pre><p>這時你會看到下面的結果顯示出，每一個 push 出去的資料都會平分給另外兩個 pull 端。</p>
+<pre><code>mark wake up ~ : 10
+mark wake up ~ : 11
+mark wake up ~ : 12
+mark wake up ~ : 14
+mark wake up ~ : 16
+mark wake up ~ : 18
+mark wake up ~ : 20
+mark wake up ~ : 22
+mark wake up ~ : 24
+</code></pre><pre><code>mark wake up ~ : 13
+mark wake up ~ : 15
+mark wake up ~ : 17
+mark wake up ~ : 19
+mark wake up ~ : 21
+mark wake up ~ : 23
+</code></pre><p>這種模式事實上很像我們之前所談到的負載平衡，他們的概念的確是一樣的沒錯，這種模式也代表我們可以將一個複雜的任務平均分配下去，當各 pull 端完成時，在全部一起收集起來使用。</p>
+<p>接下來我們再來建置一個分散式的雜湊碼破解器 ~</p>
+<h3 id="heading">建立一個分散式的雜湊碼破解器</h3>
+<p>這個應用主要是可以根據一組字母表做出各種排列組合，藉此對輸入的雜湊碼(MD5、SHA1等)來進行破解，這個架構就是一個典型的平行管線。</p>
+<p><img src="http://yixiang8780.com/outImg/20170723-4.png" alt=""></p>
+<p>這個爆力破解的過程如下</p>
+<p>首先我們會先建立一個<code>push</code>端，他們將我們指定的字串，進行各種排列組合，例如<code>abc</code>，會產生<code>abc</code>、<code>acb</code>、<code>bac</code>等……，然後使用串流來讀取出來，並且 push 到每一個 pull端。</p>
+<p>我們下面的程式碼中<code>alphabet</code>代表這我們要進行的排序組合，然後不可能英文 26 個字母全部排列，會出人命的，所以我們會用<code>maxLength</code>來進行限制，我們該值為 4 的意思代表只從 26 個字母內選取出 4 個字來進行排列組合。</p>
+<p>也因為上面 4 個字的限制，我們測試時輸入的單字要只有 4 個字母。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//ventilator.js
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">variationsStream</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;variations-stream&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">alphabet</span> <span class="o">=</span> <span class="s1">&#39;abcdefghijklmnopqrstuvwxyz&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">batchSize</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">maxLength</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">searchHash</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">ventilator</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;push&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">ventilator</span><span class="p">.</span><span class="nx">bindSync</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:5000&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">batch</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span class="nx">variationsStream</span><span class="p">(</span><span class="nx">alphabet</span><span class="p">,</span> <span class="nx">maxLength</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">combination</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">combination</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">batch</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">combination</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">batch</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="nx">batchSize</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="nx">searchHash</span><span class="o">:</span> <span class="nx">searchHash</span><span class="p">,</span>
+                <span class="nx">variations</span><span class="o">:</span> <span class="nx">batch</span><span class="p">,</span>
+            <span class="p">}</span>
+            
+            <span class="nx">ventilator</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">batch</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="nx">searchHash</span><span class="o">:</span> <span class="nx">searchHash</span><span class="p">,</span>
+            <span class="nx">variations</span><span class="o">:</span> <span class="nx">batch</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="nx">ventilator</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>接下來在 pull 端收到從 push 端來的字串後，我們會將該字串轉換成<code>sha1 hash</code>碼，然後我們在將該碼與輸入碼(我們要破解的碼)進行比對，最後當比對到時相同的東西時，我們就會將結果 push 到另一個收集結果的 pull 端 (就是toSink所連結的地方)</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// worker.js
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">zmq</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;zeromq&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">crypto</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;crypto&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">fromVentilator</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;pull&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">toSink</span> <span class="o">=</span> <span class="nx">zmq</span><span class="p">.</span><span class="nx">socket</span><span class="p">(</span><span class="s1">&#39;push&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">fromVentilator</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:5000&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">toSink</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;tcp://127.0.0.1:5001&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Worker connect to 5001&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">fromVentilator</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span><span class="kd">function</span> <span class="p">(</span><span class="nx">buffer</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">buffer</span><span class="p">)</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">variations</span> <span class="o">=</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">variations</span><span class="p">;</span>
+    <span class="nx">variations</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">word</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Processing: </span><span class="si">${</span><span class="nx">word</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>            
+        <span class="kd">var</span> <span class="nx">shasum</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">shasum</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">word</span><span class="p">)</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">digest</span> <span class="o">=</span> <span class="nx">shasum</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">digest</span> <span class="o">===</span> <span class="nx">msg</span><span class="p">.</span><span class="nx">searchHash</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Found! =&gt; </span><span class="si">${</span><span class="nx">word</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">toSink</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="sb">`</span><span class="sb">Found! </span><span class="si">${</span><span class="nx">digest</span><span class="si">}</span><span class="sb"> =&gt; </span><span class="si">${</span><span class="nx">word</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>其中下面這段，是指將我們從 26 個字母中產生任選出 4 個所產生出的排列組合的單字，進行<code>sha1 hash</code>加密，產生出 hash 碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">        <span class="kd">var</span> <span class="nx">shasum</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHash</span><span class="p">(</span><span class="s1">&#39;sha1&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">shasum</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">word</span><span class="p">)</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">digest</span> <span class="o">=</span> <span class="nx">shasum</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>最後，當我們從 worker 那收到破解後的結果，就進行輸入。</p>
+<div class="highlight"><pre class="chroma"><code class="language-j" data-lang="j"><span class="nv">var</span> <span class="nv">zmq</span> <span class="o">=</span> <span class="nv">require</span><span class="p">(</span><span class="s">&#39;</span><span class="s">z</span><span class="s">e</span><span class="s">r</span><span class="s">o</span><span class="s">m</span><span class="s">q</span><span class="s">&#39;</span><span class="p">)</span><span class="o">;</span>
+<span class="nv">var</span> <span class="nv">sink</span> <span class="o">=</span> <span class="nv">zmq</span><span class="o">.</span><span class="nv">socket</span><span class="p">(</span><span class="s">&#39;</span><span class="s">p</span><span class="s">u</span><span class="s">l</span><span class="s">l</span><span class="s">&#39;</span><span class="p">)</span><span class="o">;</span>
+<span class="nv">sink</span><span class="o">.</span><span class="nv">bindSync</span><span class="p">(</span><span class="s">&#39;</span><span class="s">t</span><span class="s">c</span><span class="s">p</span><span class="s">:</span><span class="s">/</span><span class="s">/</span><span class="s">1</span><span class="s">2</span><span class="s">7</span><span class="s">.</span><span class="s">0</span><span class="s">.</span><span class="s">0</span><span class="s">.</span><span class="s">1</span><span class="s">:</span><span class="s">5</span><span class="s">0</span><span class="s">0</span><span class="s">1</span><span class="s">&#39;</span><span class="p">)</span><span class="o">;</span>
+
+<span class="nv">sink</span><span class="o">.</span><span class="nv">on</span><span class="p">(</span><span class="s">&#39;</span><span class="s">m</span><span class="s">e</span><span class="s">s</span><span class="s">s</span><span class="s">a</span><span class="s">g</span><span class="s">e</span><span class="s">&#39;</span><span class="o">,</span><span class="nv">function</span> <span class="p">(</span><span class="nv">buffer</span><span class="p">)</span> <span class="o">{</span>
+    <span class="nv">console</span><span class="o">.</span><span class="nv">log</span><span class="p">(</span><span class="o">`</span><span class="nv">Message</span> <span class="nv">from</span> <span class="nv">worker</span><span class="o">:</span> <span class="o">$</span><span class="o">{</span><span class="nv">buffer</span><span class="o">.</span><span class="nv">toString</span><span class="p">(</span><span class="p">)</span><span class="o">}</span><span class="o">`</span><span class="p">)</span><span class="o">;</span>
+<span class="o">}</span><span class="p">)</span>
+</code></pre></div><p>我們來執行看看，我們要先開啟兩個 worker 和一個 sink。</p>
+<pre><code>node worker.js
+node worker.js
+node sink.js
+</code></pre><p>然後我們在開啟<code>ventilator.js</code>，用來開始啟產生單字的排列組合，其中<code>f1b5a91d4d6ad523f2610114591c007e75d15084</code>是指<code>mark</code>的<code>sha1 hash</code>碼。</p>
+<pre><code>node ventilator.js f1b5a91d4d6ad523f2610114591c007e75d15084
+</code></pre><p>然後當破解完，你可以看到 sink 那的輸出結果。</p>
+<pre><code>Message from worker: Found! f1b5a91d4d6ad523f2610114591c007e75d15084 =&gt; mark
+</code></pre><h2 id="heading1">結論</h2>
+<p>本篇文章中，我們說明了如何使用<code>zeromq</code>進行<code>對等式架構</code>建置，並且還了它的三種模式 :</p>
+<ul>
+<li>REQ / REP</li>
+<li>PUB / SUB</li>
+<li>PUSH / PULL</li>
+</ul>
+<p>這三種模式是 zeromq 中的基本，它們還有更多的變化類型，但都只是這三個的組合型，如果想了解更多，官網的資料已經夠多囉，請慢慢自已研究吧 ~</p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="http://zguide.zeromq.org/page:all">zeromq 官網</a></li>
+<li><a href="http://www.oschina.net/news/17973/message-queue-shootout">4 款消息队列软件产品大比拼</a></li>
+<li><a href="http://blog.ez2learn.com/2011/12/31/transport-lib-of-new-era-zeromq/">新世紀通訊函式庫 – ZeroMQ</a></li>
+<li><a href="">Node.js設計模式-著:Mario Casciaro</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-zeromq--peertopeer">使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作</a>
+      <ul>
+        <li><a href="#req-request--rep-reply-">REQ (request) / REP (reply) 模式</a></li>
+        <li><a href="#pub--sub-">Pub / Sub 模式</a></li>
+        <li><a href="#push--pull">Push / Pull</a></li>
+        <li><a href="#heading">建立一個分散式的雜湊碼破解器</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

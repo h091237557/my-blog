@@ -81,8 +81,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160914/">
-        <div class="h2 mt-1 mb-1">30-14之MongoDB聚合(1)---Aggregate Framework的哩哩扣扣</div>
+      <a href="/posts/20160924/">
+        <div class="h2 mt-1 mb-1">30-24之MongoDB分片Sharding(2)---Chunk的札事</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -101,14 +101,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-14</span>
+        <span>2016-09-24</span>
       </div>
     </div>
   </div>
   <div>
     
-    在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明
-    <a class="muted-link" href="/posts/20160914/">…</a>
+    在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。
+    <a class="muted-link" href="/posts/20160924/">…</a>
   </div>
 </div>
 
@@ -118,8 +118,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160913/">
-        <div class="h2 mt-1 mb-1">30-13之MongoDB索引(3)---比較特別的索引使用</div>
+      <a href="/posts/20160923/">
+        <div class="h2 mt-1 mb-1">30-23之MongoDB分片Sharding---Hello Sharding</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -138,14 +138,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-13</span>
+        <span>2016-09-23</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~+u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現
-    <a class="muted-link" href="/posts/20160913/">…</a>
+    本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、
+    <a class="muted-link" href="/posts/20160923/">…</a>
   </div>
 </div>
 
@@ -155,8 +155,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160912/">
-        <div class="h2 mt-1 mb-1">30-12之MongoDB索引(2)---複合索引的坑</div>
+      <a href="/posts/20160922/">
+        <div class="h2 mt-1 mb-1">30-22之MongoDB的副本集 replica set(2)---使用Docker建立MongoDB Cluster</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -175,14 +175,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-12</span>
+        <span>2016-09-22</span>
       </div>
     </div>
   </div>
   <div>
     
-    本文將會說明以下幾點。 複合索引是啥~ 複合索引的運用與坑坑坑~ ~ 複合索引是啥 ~ 假設有下列資料。 { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 20} { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 25} { &#34;name&#34; : &#34;steven&#34; , &#34;age&#34; : 30}
-    <a class="muted-link" href="/posts/20160912/">…</a>
+    上篇文章我們已經說明完，如何在本機上建立 mongodb 副本集，而本篇文章，我們將要實際的使用docker來建立有三個節點的副本集，也就是所謂 cluster 。 開始前的
+    <a class="muted-link" href="/posts/20160922/">…</a>
   </div>
 </div>
 
@@ -192,8 +192,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160911/">
-        <div class="h2 mt-1 mb-1">30-11之MongoDB索引(1)的哩哩扣扣</div>
+      <a href="/posts/20160921/">
+        <div class="h2 mt-1 mb-1">30-21之MongoDB的副本集 replica set(1)</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -212,14 +212,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-11</span>
+        <span>2016-09-21</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將會說明以下幾點。 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機 P.S +u^11鐵人們 ~ 事實上我已快gg了
-    <a class="muted-link" href="/posts/20160911/">…</a>
+    本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環
+    <a class="muted-link" href="/posts/20160921/">…</a>
   </div>
 </div>
 
@@ -229,8 +229,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160910/">
-        <div class="h2 mt-1 mb-1">30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</div>
+      <a href="/posts/20160920/">
+        <div class="h2 mt-1 mb-1">30-20之MongoDB運用研究---PO文情境模擬(3)</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -249,14 +249,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-10</span>
+        <span>2016-09-20</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜
-    <a class="muted-link" href="/posts/20160910/">…</a>
+    上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分
+    <a class="muted-link" href="/posts/20160920/">…</a>
   </div>
 </div>
 
@@ -266,8 +266,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160909/">
-        <div class="h2 mt-1 mb-1">30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex</div>
+      <a href="/posts/20160919/">
+        <div class="h2 mt-1 mb-1">30-19之MongoDB運用研究---PO文模擬情境(2)</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -286,14 +286,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-09</span>
+        <span>2016-09-19</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式
-    <a class="muted-link" href="/posts/20160909/">…</a>
+    上篇文章中，咱們已經將資料都建立好了，也完成了第一個需求，使用者可以進行PO文，並且我們建立出了模擬資料共一百萬筆，大約1gb的大小，接下來
+    <a class="muted-link" href="/posts/20160919/">…</a>
   </div>
 </div>
 
@@ -303,8 +303,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160908/">
-        <div class="h2 mt-1 mb-1">30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</div>
+      <a href="/posts/20160918/">
+        <div class="h2 mt-1 mb-1">30-18之MongoDB運用研究---PO文模擬情境(1)</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -323,14 +323,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-08</span>
+        <span>2016-09-18</span>
       </div>
     </div>
   </div>
   <div>
     
-    前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。 find方法基本
-    <a class="muted-link" href="/posts/20160908/">…</a>
+    咱們來細數一下，我們在前面的幾篇學了那些東西~ mongodb 的新增、刪除、更新、搜尋。 mongodb 的索引運用。 mongodb 的資料分析工具 Aggregate 聚合。 mongodb 的設計。 是的~雖然看起來很
+    <a class="muted-link" href="/posts/20160918/">…</a>
   </div>
 </div>
 
@@ -340,8 +340,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160907/">
-        <div class="h2 mt-1 mb-1">30-7之MongoDB新手村CRUD---刪除</div>
+      <a href="/posts/20160917/">
+        <div class="h2 mt-1 mb-1">30-17之MongoDB的設計---正規與反正規化的戰爭</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -360,14 +360,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-07</span>
+        <span>2016-09-17</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別
-    <a class="muted-link" href="/posts/20160907/">…</a>
+    本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。
+    <a class="muted-link" href="/posts/20160917/">…</a>
   </div>
 </div>
 
@@ -377,8 +377,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160906/">
-        <div class="h2 mt-1 mb-1">30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</div>
+      <a href="/posts/20160916/">
+        <div class="h2 mt-1 mb-1">30-16之MongoDB聚合(3)---潮潮的MapReduce</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -397,14 +397,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-06</span>
+        <span>2016-09-16</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、p
-    <a class="muted-link" href="/posts/20160906/">…</a>
+    前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞
+    <a class="muted-link" href="/posts/20160916/">…</a>
   </div>
 </div>
 
@@ -414,8 +414,8 @@
 <div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
-      <a href="/posts/20160905/">
-        <div class="h2 mt-1 mb-1">30-5之MongoDB新手村CRUD---更新</div>
+      <a href="/posts/20160915/">
+        <div class="h2 mt-1 mb-1">30-15之MongoDB聚合(2)---Pipeline武器庫</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -434,14 +434,14 @@
 
 
       <div class="float-md-right">
-        <span>2016-09-05</span>
+        <span>2016-09-15</span>
       </div>
     </div>
   </div>
   <div>
     
-    本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。 基本更新方法Update。 更
-    <a class="muted-link" href="/posts/20160905/">…</a>
+    在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分
+    <a class="muted-link" href="/posts/20160915/">…</a>
   </div>
 </div>
 
@@ -560,9 +560,18 @@
               
           
           
+      
+          
+          
+          
+          
+              
+              
+          
+          
             
               
-              <a href="/posts/page/8/">8</a>
+              <a href="/posts/page/9/">9</a>
             
           
       
@@ -618,6 +627,11 @@
     </span>
     
     <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/design-pattern" class="link-gray text-emphasized css-truncate-target"><span class="">Design pattern</span></a>
+      <span class="text-right Counter Counter--gray"> 2</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
       <a href="/tags/history" class="link-gray text-emphasized css-truncate-target"><span class="">History</span></a>
       <span class="text-right Counter Counter--gray"> 3</span>
     </span>
@@ -645,6 +659,11 @@
     <span class="css-truncate no-wrap tag-span">
       <a href="/tags/mysql" class="link-gray text-emphasized css-truncate-target"><span class="">Mysql</span></a>
       <span class="text-right Counter Counter--gray"> 4</span>
+    </span>
+    
+    <span class="css-truncate no-wrap tag-span">
+      <a href="/tags/nodejs" class="link-gray text-emphasized css-truncate-target"><span class="">Nodejs</span></a>
+      <span class="text-right Counter Counter--gray"> 10</span>
     </span>
     
     <span class="css-truncate no-wrap tag-span">

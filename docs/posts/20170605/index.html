@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node之可擴展性 --- Node的Cluster &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, nodejs cluster" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node之可擴展性 --- Node的Cluster | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node之可擴展性 --- Node的Cluster</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-05.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章中將要說明，<code>要如何的擴展 node 應用</code>，從上一篇文章中我們知道， node 它很<code>適合高 I/O </code>的任務，而<code>不適合高 cpu 的</code>任務，最主要的原因在於它的架構，它是<code>單執行緒架構</code>，但是無論單體的伺服器能力在強大，單一執行緒的效能一定會有界限，因此我們必須將應用程式擴展運用。</p>
+<p>根據<code>The Art of Scalabiltiy</code>的內容來知道，在擴展時，可以用下列三個維度來描述可擴展性。這也是被稱為<code>擴展立方(scale cube)</code>的東東。</p>
+<ul>
+<li>X 軸 : 複制</li>
+<li>Y 軸 : 以服務/功能分解</li>
+<li>Z 軸 : 以資料來分解</li>
+</ul>
+<p>基本上<code>Y軸</code>擴展的方法是屬於<code>微服務(Microservices)</code>的範圍所以本篇也不詳細說明，而<code>Z</code> 軸則屬於<code>資料庫</code>方法所以也不加以說明。</p>
+<p>我們本篇將要說明<code>X軸 : 複制</code>，它的白話文概念如下 :</p>
+<blockquote>
+<p>將應用程式加以複制 N 個，這也代表每個實體只須處理 N 分之一的工作量。</p>
+</blockquote>
+<p>傳統的系統可以利用多執行緒，來完整使用整台機器的效能，但 node 則否，因為它是單一執行緒，並且在 64 位元下有<code>1.7GB</code>的限制，接下來我們將介紹 node 擴展的基本機制 <code>cluster</code>。</p>
+<h2 id="cluster">cluster</h2>
+<p><code>cluster</code>是在 node 中的內建模組，他讓我們可以建立一個 cluster，可通過父進程來管理一堆子進程，在 cluster 中父進程被稱為<code>master process</code>，而子進程則被稱為<code>worker process</code>。</p>
+<p>每個傳送的連線都會先到<code>master process</code>然後會在將工作分配到<code>worker process</code>中。</p>
+<p>我們根據上一篇的程式碼來進行修改。下面程式碼中，首先請先看<code>if(cluster.isMaster)</code>裡面，當執行時，會使用<code>cluster fork</code>根據 cpu 的數量來新增 process，然後每次<code>fork</code>時都會執行<code>else</code>裡面的程式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">child_process</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;child_process&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">cluster</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;cluster&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">numCPUs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;os&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">cpus</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;master process:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;cpu num: &#34;</span> <span class="o">+</span> <span class="nx">numCPUs</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">numCPUs</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">cluster</span><span class="p">.</span><span class="nx">fork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;process run:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">fib</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;started&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;process:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">n</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>而我們的執行輸出的結果可以看到，我們的<code>master process</code>的 pid 為<code>95199</code>，其餘四個 <code>worker process</code>的 pid 如下。接下來我們每次打這隻 api 時，會直接從這 4 個 process 中選一個出來執行。</p>
+<pre><code>master process:95199
+cpu num: 4
+started
+process:95202
+started
+process:95200
+started
+process:95201
+started
+process:95203
+</code></pre><p>那 node 他是如何決定要用那個 process 呢 ?</p>
+<p>自版本<code>0.11.2</code>時變導入了一個<code>循環式負載平衡演算法</code>，它的基本概念就是<code>輪流</code>平均的分配所有可用伺服器的負載。</p>
+<h2 id="-">那我們要著麼樣相互溝通了呢 ?</h2>
+<p>這個事實上在上一章節有提，<code>process</code>間的相互溝通主要使用<code>IPC</code>的方法，而在 cluster 中因為每個 worker process 的產生都是使用 <code>child_process.fork()</code>來產生，所以相對的他也有提供<code>message</code>來讓我們進行溝通。</p>
+<p>那我們為什麼不直接用<code>child_process</code>呢 ?</p>
+<p>答案是方便，多進程的運行，我們同時還需要考慮到<code>進程通信</code>、<code>子進程管理</code>、<code>負載均衡</code>等問題，雖然<code>child_process</code>可以自已寫程式來處理，但<code>cluster</code>就已經幫我們處理好了，為何不直接拿來用呢 ? 對吧。</p>
+<h2 id="-process--">如果有一個 process 掛掉了會如何 ?</h2>
+<p>在某些時後，如果某個 process 掛掉了，會如何呢 ? 當然不會著麼樣，只要有處理的話。</p>
+<p><code>cluster</code>當然有考慮到這點，這種功能事實上在可擴展性上很重要，我們簡單的寫段程式碼，讓某個 process 來個隨機掛點，如下程式碼，大約每幾秒鐘就會 error 一次。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">    <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+       <span class="p">...</span><span class="p">.</span>
+
+    <span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Ooops&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">(</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後會監聽<code>cluster</code>的<code>exit</code>，該事件代表如果任何一個 worker 離開該<code>master process</code>則會觸發。當我們發生事件時，會先判斷是否錯誤，如果是的話，則在<code>fork()</code>一個<code>worker</code>。</p>
+<p>雖然掛掉的 worker 可能還在重新建立，但是不會影響到我們應用程式的使用。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">if</span> <span class="p">(</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">numCPUs</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="nx">cluster</span><span class="p">.</span><span class="nx">fork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">cluster</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;exit&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">worker</span><span class="p">,</span> <span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">code</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">worker</span><span class="p">.</span><span class="nx">suicide</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Worker crashed. Starting a new worker&#39;</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">cluster</span><span class="p">.</span><span class="nx">fork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span> 
+</code></pre></div><h2 id="heading">我想更新應該程式但不想停機</h2>
+<p>在實務上，某些大型的應該程式是 24 X 7 的在跑，就算是更新也不能停機，所以要著麼解決呢 ? 可行的解決方案是實作 :</p>
+<blockquote>
+<p>零停機時間的重啟</p>
+</blockquote>
+<p>比較白話文的來說明實作過程就是 :</p>
+<blockquote>
+<p>一次只重新啟動一個 worker ，其餘的繼續工作</p>
+</blockquote>
+<p>我們實作的方法參考<code>Miario Casciaro 的 nodejs設計模式一日</code>，首先我們會在<code>SIGUSR2</code>中設置監聽器，當接受到 SIGUSR2 信號時會一個一個將 worker 重新啟動。</p>
+<p>其中我們有使用 unix 信號，它也是一樣 IPC 的方法，它是一種異歲的通知機制，主要用來和某個 process 說一個事情已經被發生。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"> <span class="k">if</span> <span class="p">(</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;master process:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;cpu num: &#34;</span> <span class="o">+</span> <span class="nx">numCPUs</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;SIGUSR2&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Received SIGUSR2 from system&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Restarting workers&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">workers</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">cluster</span><span class="p">.</span><span class="nx">workers</span><span class="p">)</span><span class="p">;</span>
+        
+        <span class="kd">function</span> <span class="nx">restartWorker</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">workers</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="nx">cluster</span><span class="p">.</span><span class="nx">workers</span><span class="p">[</span><span class="nx">workers</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">]</span><span class="p">;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Stopping worker:&#39;</span> <span class="o">+</span> <span class="nx">worker</span><span class="p">.</span><span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">worker</span><span class="p">.</span><span class="nx">disconnect</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+            <span class="nx">worker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;exit&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">worker</span><span class="p">.</span><span class="nx">exitedAfterDisconnect</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+                <span class="kd">var</span> <span class="nx">newWorker</span> <span class="o">=</span> <span class="nx">cluster</span><span class="p">.</span><span class="nx">fork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">newWorker</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;listening&#39;</span><span class="p">,</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">restartWorker</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+                <span class="p">}</span><span class="p">)</span>
+            <span class="p">}</span><span class="p">)</span>
+
+        <span class="p">}</span>
+        <span class="nx">restartWorker</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+    
+<span class="p">}</span>
+</code></pre></div><p>為了要模擬這種狀態，我們需要使用下面指令，來 kill 掉我們<code>master process</code>，然後當執行這行時，就會執行<code>process.on('SIGUSR2')</code>裡面的指令開啟重新的一個一個啟動 worker。</p>
+<pre><code>kill -SIGUSR2 &lt;PID&gt;
+</code></pre><p>結果如下。</p>
+<pre><code>Restarting workers
+Stopping worker:14239
+started
+process:14249
+Stopping worker:14240
+started
+process:14255
+Stopping worker:14241
+started
+process:14256
+Stopping worker:14242
+started
+process:14257
+</code></pre><p>不過除了上面自已寫以外，當然還有其它的東西可以完成這項工作。</p>
+<h3 id="-forever---pm2">那就是 forever  或 pm2</h3>
+<p>這套工具最主要的功用是<code>持繼的保持後台的運作</code>。</p>
+<p>就算你的程式發生錯誤，他也會自動的幫你重新啟動，而且就像我們上面的說的，要更新應用程式時，他也會保持系統的持繼運作。</p>
+<p>他的用法很簡單。</p>
+<pre><code>npm install -g forever
+</code></pre><p>然後在執行下面指令，這樣就完成了。</p>
+<pre><code>forever start xxxx.js
+</code></pre><h2 id="heading1">結論</h2>
+<p>嚴格來說本篇文章大部份都針對<code>* X 軸 : 複制</code>的方法來進行說明，本篇中所提到的 cluster，就是用來複制的方法之一，但這只是之一，在傳統上也有一些技巧更常被使用到的，那就是在不同 port 或不同機器上啟動應用程式的多個實例，然後在使用一個<code>反向代理器</code>來處理，下一篇文章中我們將會繼續對於<code>X軸的擴展 : 複制</code>的方法進行討論。</p>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://nodejs.org/api/cluster.html">node官網</a></li>
+<li><a href="http://www.alloyteam.com/2015/08/nodejs-cluster-tutorial/">Alloytem 解读Node.js的cluster模块</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/Unix%E4%BF%A1%E5%8F%B7">維基-unix訊號</a></li>
+<li><a href="">nodejs設計模式-Mario Casciaro</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node之可擴展性 --- Node的Cluster</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#cluster">cluster</a></li>
+    <li><a href="#-">那我們要著麼樣相互溝通了呢 ?</a></li>
+    <li><a href="#-process--">如果有一個 process 掛掉了會如何 ?</a></li>
+    <li><a href="#heading">我想更新應該程式但不想停機</a>
+      <ul>
+        <li><a href="#-forever---pm2">那就是 forever  或 pm2</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

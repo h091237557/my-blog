@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, rabbitmq" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-07.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在前幾篇文章中，我們說明了如何將系統進行<code>擴展</code>，而接下來呢，我們將要說明如何使用<code>訊息佇列</code>來進行整合，事實上之前的每篇文章中都要提到一個名稱<code>IPC通信</code>，其中裡面就包含了<code>訊息佇列 (message queue)</code>。</p>
+<p>訊息佇列基本上是用來<code>行程間溝通</code>或是<code>同行程內不同執行序溝通</code>，他提供了<code>異步</code>的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :</p>
+<blockquote>
+<p>訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。</p>
+</blockquote>
+<p>我們可以想想<code>http協定</code>他是一個<code>同步協定</code>，這也代表你傳送一個<code>request</code>必須等待伺服器發送<code>response</code>。</p>
+<p>至於我們為什麼要用<code>message queue</code>請參考下面這篇文章，他真的已經寫的很完整了。</p>
+<p><a href="https://www.oschina.net/translate/top-10-uses-for-message-queue">使用訊息佇列的十個理由&mdash;簡中</a></p>
+<p>然後我們先簡單的說明一下<code>訊息系統</code>的基礎。</p>
+<h2 id="heading">訊息系統架構</h2>
+<p>基本上分為以下兩種 :</p>
+<h3 id="-peertopeer">對等式 (peer-to-peer)</h3>
+<p>在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :</p>
+<ul>
+<li>避免單點故障。</li>
+<li>和中介者模式比較來少了中間一層，速度應該是比較快。</li>
+<li>彈性較高。</li>
+</ul>
+<p>以下為<code>對等式架構的圖示</code> :</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-6.png" alt=""></p>
+<blockquote>
+<p>zeroMQ 他可以幫助我們建立<code>對等式架構</code>。</p>
+</blockquote>
+<h3 id="-message-broker">中介者模式 (message broker)</h3>
+<p>而<code>中介者模式</code>就是所有的節點，都會連結到某個<code>broker</code>，一切都由<code>broke</code>來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。</p>
+<p>以下為<code>中介者架構</code>的圖示 :</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-5.png" alt=""></p>
+<blockquote>
+<p>RabbitMQ 就是專門用來建立這個架構的東東。</p>
+</blockquote>
+<p>接下來的文章中，我們將要先來實作一些<code>rabbitmq</code>。</p>
+<h2 id="rabbit-mq">Rabbit MQ</h2>
+<p>在上面的章節中，我們應該有說到，分佈式架構除了<code>對等式架構</code>外，還有一個是<code>中介者架構</code>，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而<code>rabbitmq</code>就是一個支援<code>AMQP (Advanced Message Queuing Protocol)協議</code>的中間介者。</p>
+<p>如下圖所示，它就是中間綠綠那個，我們稱他為<code>中介者 broker</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-1.png" alt=""></p>
+<h3 id="amqp-">那<code>AMQP</code>是什麼 ?</h3>
+<p>它是一種<code>協議</code>，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。</p>
+<p>根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。</p>
+<h3 id="heading1">它有三個總要概念</h3>
+<h4 id="-queue-">佇列 (queue) :</h4>
+<p>這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。</p>
+<p>佇列它還有以下三種特性 :</p>
+<ul>
+<li>可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ? 只有被示為需保訊的訊息，才會存入磁碟，並於重啟時還原。</li>
+<li>專用性 : 一個佇列可綁定特定的訂閱著，若彼此連線關閉時，則該佇列會說掰掰。</li>
+<li>自動刪除 : 當有沒任何訂閱者連線時，便刪除佇列。</li>
+</ul>
+<h4 id="--exchange--">交換器 ( exchange ) :</h4>
+<p>他主要的功能是<code>將訊息傳輸送到一個或多個佇列</code>，這個東西就是放在<code>producer</code>與<code>queue</code>之間，架構大概長的如下圖 :</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-3.png" alt=""></p>
+<blockquote>
+<p>這邊我們會有一個問題，那就是為什麼需要這個 exchange 而不是直接<code>producer</code>與<code>quenu</code>間溝通就好呢 ? 這點我們後面在來說明。</p>
+</blockquote>
+<h4 id="--bind--">綁定器 ( bind ) :</h4>
+<p>這個就是上面的交換器與佇列之間的連結</p>
+<p>以上的東西都會被中介者管理，它會建立一個抽象的<code>通道</code>，用於維護與中介者之間的通訊狀態。</p>
+<h2 id="-rabiit-mq-mac">使用 Rabiit MQ (mac)</h2>
+<p>首先我們要先安裝 rabbitmq :</p>
+<pre><code>brew update 
+brew install rabbitmq
+</code></pre><p>然後安裝好後，我們需要去系統的<code>.zsrch</code>或<code>.bashrc</code>設置路徑，這樣我們才能在 terminal 上執行他的指令。</p>
+<pre><code>PATH=$PATH:/usr/local/sbin
+</code></pre><p>然後我們就可以執行下列指令開啟<code>rabbitmq server</code> :</p>
+<pre><code>rabbitmq-server
+</code></pre><p>如果看到下列的出輸結果，則代表開啟成功。</p>
+<pre><code>
+              RabbitMQ 3.6.9. Copyright (C) 2007-2016 Pivotal Software, Inc.
+  ##  ##      Licensed under the MPL.  See http://www.rabbitmq.com/
+  ##  ##
+  ##########  Logs: /usr/local/var/log/rabbitmq/rabbit@localhost.log
+  ######  ##        /usr/local/var/log/rabbitmq/rabbit@localhost-sasl.log
+  ##########
+              Starting broker...
+ completed with 10 plugins.
+</code></pre><p>如果要關啟請執行下列指令，而不要使用<code>alt + c</code>。</p>
+<pre><code>rabbitmqctl stop
+</code></pre><p>接下來我們就安裝 node 的 rabbitmq 的 lib <code>ampqplib</code>。</p>
+<pre><code>npm install --save amqplib
+</code></pre><h3 id="rabiitmq-producer--queue-">使用rabiitmq實作一個 Producer =&gt; Queue 的架構</h3>
+<p>接下來我們從最簡單的使用開始，我們會簡單的實作如下圖的架構，共有三個實體<code>producer</code>、<code>queue</code>、<code>consume</code>，其中<code>queue</code>現階段就是我們的<code>rabbitmq server</code>。</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-2.png" alt=""></p>
+<p>首先我們會先建立一個<code>producer</code>來負責產生訊息，從下面的程式碼我們可以知道，它需要先連線到我們的<code>rabbitmq server</code>，並且建立一個通道，然後，我們可以指定要將資料送到<code>特定的queue</code>，而我們 queue 取名為<code>mark</code>。</p>
+<p>其中，下面的程式碼中，比較需要注意的下面這行，這行是會判斷該 queue 是否存在，如果不存在則建立，並且<code>durable : false</code>代表的意思為<code>當 queue 重開裡面的資料會消失</code>。</p>
+<pre><code>ch.assertQueue(quenu_name, {durable: false});
+</code></pre><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;connect amqp server !&#34;</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">quenu_name</span> <span class="o">=</span> <span class="s2">&#34;mark&#34;</span><span class="p">;</span>
+
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="nx">quenu_name</span><span class="p">,</span> <span class="p">{</span><span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">sendToQueue</span><span class="p">(</span><span class="nx">quenu_name</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="s1">&#39;Hello Mark&#39;</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Send a message&#39;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>再來我們來實作<code>consumer</code>來當作我們訊息的接受者，一樣也是需要去連線到<code>radditmq server</code>和通道，然後會監聽這個通道所傳下來的訊息。</p>
+<p>其中我們的 <code>ch.consume</code>有個參數是<code>{noAck: true}</code>，代表這如果該<code>channel</code>不會使用<code>act</code>來進行確認，而如果是 false 它代表的意思為，如果中介者未收到 ack (確認)，則訊息就會被保留在佇列裡以待再次處理。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">queue_name</span> <span class="o">=</span> <span class="s2">&#34;mark&#34;</span><span class="p">;</span>
+
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="nx">queue_name</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Waitting the meesages&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">consume</span><span class="p">(</span><span class="nx">queue_name</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received the msg : </span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="p">}</span><span class="p">,</span> <span class="p">{</span><span class="nx">noAck</span><span class="o">:</span> <span class="kc">true</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>最後我們來執行兩次<code>producer</code>，然後再打開<code>consumer</code>來接受資料，你會發現，他還是接受的得，而且二次傳的資料都有收到，這就是我們前面有提供的<code>message quenue</code>的優點 :</p>
+<blockquote>
+<p>consumer 如果爆了，我 producer 還是一直可以發送資料，等你好了，你還是可以取得完整的資料。</p>
+</blockquote>
+<p>這邊我們提出一個問題。</p>
+<h4 id="-quenue--">那 quenue 應該有最大值吧，不然一直沒有訊息流出，遲早會爆的吧 ?</h4>
+<p>嗯沒錯，所以<code>radditmq</code>它有提供兩個方法來設定每個<code>queue</code>的最大值 :</p>
+<ul>
+<li>使用 policy 來進行設定。</li>
+<li>使用參數來設定。</li>
+</ul>
+<p>我們簡單的使用參數來限定，下面指令設定 quenue 最大為<code>10 byte</code>。</p>
+<pre><code>ch.assertQueue(queue_name, { durable: false, maxLength: 10  });
+</code></pre><p>那如果 queue 超過<code>10 byte</code>後會如何呢 ?</p>
+<p>我們實際執行看看就知道，首先每 0.5 秒傳送一個數字給 queue 結果如下:</p>
+<pre><code>Send a message:1
+Send a message:2
+Send a message:3
+Send a message:4
+Send a message:5
+Send a message:6
+Send a message:7
+Send a message:8
+Send a message:9
+Send a message:10
+Send a message:11
+Send a message:12
+Send a message:13
+Send a message:14
+Send a message:15
+Send a message:16
+Send a message:17
+Send a message:18
+Send a message:19
+Send a message:20
+</code></pre><p>然後我們 consumer 接收的結果如下 :</p>
+<pre><code>Received the msg : 11
+Received the msg : 12
+Received the msg : 13
+Received the msg : 13
+Received the msg : 14
+Received the msg : 15
+Received the msg : 16
+Received the msg : 17
+Received the msg : 18
+Received the msg : 19
+Received the msg : 20
+</code></pre><p>從上面的結果可知，因為每個單字為 1 byte，所以當 queue 儲放了前十個數字後，就超過 10 byte了，然後它將先進來的就先把他刪除，所以結果才能如上面所示，只收到 11 以後的數字。</p>
+<h3 id="rabiitmq-producer--exchange--queue-">使用rabiitmq實作一個 Producer =&gt; Exchange =&gt; Queue 的架構</h3>
+<p>實際上在 rabbitmq 中，我們的 producer 完全不會直接傳送訊息給 queue，producer 完全不知道會傳給那個 queue ，而是透過 exchange 來進行處理，而這邊就準備回答我們上面問的一個問題。</p>
+<blockquote>
+<p>為什麼要有 exchange 呢 ?</p>
+</blockquote>
+<p>我在 quora 發現也有人有相同的問題 (<a href="https://www.quora.com/Why-does-RabbitMQ-have-both-exchanges-and-queues">Why does RabbitMQ have both exchanges and queues?</a>)。</p>
+<p>然後我發現有一個老兄的說明很傳神，我簡單的說明一下。</p>
+<blockquote>
+<p>想像一下你在 app store ，當你進入店內後，有一位服務員問你說 &ldquo;你需要什麼呢 ? &quot; ，然我回答說 &ldquo;我要尋找耳機&rdquo;，然後該名服務員就將你引導到處理耳機的 queue ，接下來下一客人進來服務員就問 &ldquo;你需要什麼呢 ?&rdquo; ，然後該名客人回答 &ldquo;我要修理我的電腦&rdquo;，然後服務員就將它引導到處理修改電腦的 queue 去處理。</p>
+</blockquote>
+<p>所以根據那位老兄的說明，你可以發現<code>服務員</code>就是我們的<code>Exchange</code>，如果沒有了它，那就代表這每一位進來店裡的老兄，只能自已去尋找所需要的 queue ，而且還可能找錯，那是不是很浪費時間呢 ?</p>
+<p>在理解了<code>exchange</code>功用後，我們就開始來它的實作。</p>
+<p>我們先來畫張圖，你應該會更容易理解，我們等一下做的東西，其中我們先實作 error 那條線，其它的線事實上大同小異。</p>
+<p><img src="http://yixiang8780.com/outImg/20170722-4.png" alt=""></p>
+<p>首先我們來建立<code>producer</code>，下面的程式碼中，可以看到我們會建立一個<code>exchange</code>而不在是<code>queue</code>，並且我們發送訊息的對像也改為<code>exchange</code>。</p>
+<p>還有我們在發送訊息時，有指定<code>routing_key</code>，這也代表我們有指定發送到的綁定 routing key 為<code>error</code>的 queue 。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;connect amqp server !&#34;</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">exchange_name</span> <span class="o">=</span> <span class="s2">&#34;logs&#34;</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="s2">&#34;Hello mark&#34;</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">routing_key</span> <span class="o">=</span> <span class="s2">&#34;error&#34;</span><span class="p">;</span>
+
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertExchange</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span><span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="nx">routing_key</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">send msg: </span><span class="si">${</span><span class="nx">msg</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+
+</code></pre></div><p>其中下面這段程式碼中的<code>direct </code>代表這個 exchange 的種類，我們必須給定這個 exchange 的類型，用來決定要如何將訊息從 exchange 發送出。</p>
+<pre><code>ch.assertExchange(exchange_name, 'direct', { durable:false });
+</code></pre><p>它主要有四種類型 :</p>
+<ul>
+<li>direct : 會需要設定一個叫<code>routing key</code>的參數綁定 queue，然後在發送訊息時指定<code>routing key</code>，exchange 就會將該訊息傳送到指定的 queue (上面範例所使用的)。</li>
+<li>topic : 大至上和 direct 相同，但這裡的<code>routing key</code>可以用匹配的方式。</li>
+<li>fanout : 此類型的路由規則最簡單，就是收到訊息後，將它發送到所有綁定的佇列中。</li>
+<li>header : 它的路由規則是由<code>header</code>來判斷，如果要做一些複雜的路由規則，那就用他。</li>
+</ul>
+<p>接下來我們來看看<code>consumer</code>的程式碼，如下，我們在綁定 queue 時有指定 routing_key ，就代表這個 consume 只能收到指定的 queue 的訊息。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">exchange_name</span> <span class="o">=</span> <span class="s2">&#34;logs&#34;</span><span class="p">;</span>
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertExchange</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">exclusive</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Waiting for messages&#39;</span><span class="p">)</span><span class="p">;</span>
+
+            <span class="kd">var</span> <span class="nx">routing_key</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span><span class="p">;</span>
+            <span class="nx">ch</span><span class="p">.</span><span class="nx">bindQueue</span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">queue</span><span class="p">,</span> <span class="nx">exchange_name</span><span class="p">,</span> <span class="nx">routing_key</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">ch</span><span class="p">.</span><span class="nx">consume</span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">queue</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received msg:</span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">routing key is:</span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">fields</span><span class="p">.</span><span class="nx">routingKey</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span><span class="p">,</span> <span class="p">{</span> <span class="nx">noAck</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span>
+    <span class="p">}</span><span class="p">)</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>然後我們就來執行看看，結果如下 :</p>
+<pre><code>// producer
+connect amqp server !
+send msg: Hello mark
+
+// consumer
+Waiting for messages
+Received msg:Hello mark
+routing key is:error
+</code></pre><h2 id="heading2">結論</h2>
+<p>本篇文章中，我們先簡單的說明了<code>message queue</code>的概念，它是我們跨進程與執行緒的溝通工具之一，並且它是屬於<code>異步</code>的架構。</p>
+<p>接下來我們也說明了訊息系統架構，它基本上可分兩類，一種為<code>對等式架構</code>，而另一種為<code>中介者架構</code>，前者可以使用<code>zeromq</code>來建立，而後者可使用<code>rabbitmq</code>來建立。</p>
+<p>最後呢，我們就開始使用<code>rabbitmq</code>來進行實作，本文中只簡單的介紹一些基本的使用方式。</p>
+<h2 id="heading3">參考資料</h2>
+<ul>
+<li><a href="https://www.quora.com/Why-does-RabbitMQ-have-both-exchanges-and-queues">quora-Why does RabbitMQ have both exchanges and queues?</a></li>
+<li><a href="https://www.rabbitmq.com/">rabbit 官網</a></li>
+<li><a href="https://blog.gtwang.org/programming/rabbitmq-work-queues-in-python/">以 RabbitMQ 實作工作佇列（Work Queues）</a></li>
+<li><a href="">Node.js設計模式-著:Mario Casciaro</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">訊息系統架構</a>
+      <ul>
+        <li><a href="#-peertopeer">對等式 (peer-to-peer)</a></li>
+        <li><a href="#-message-broker">中介者模式 (message broker)</a></li>
+      </ul>
+    </li>
+    <li><a href="#rabbit-mq">Rabbit MQ</a>
+      <ul>
+        <li><a href="#amqp-">那AMQP是什麼 ?</a></li>
+        <li><a href="#heading1">它有三個總要概念</a></li>
+      </ul>
+    </li>
+    <li><a href="#-rabiit-mq-mac">使用 Rabiit MQ (mac)</a>
+      <ul>
+        <li><a href="#rabiitmq-producer--queue-">使用rabiitmq實作一個 Producer => Queue 的架構</a></li>
+        <li><a href="#rabiitmq-producer--exchange--queue-">使用rabiitmq實作一個 Producer => Exchange => Queue 的架構</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">結論</a></li>
+    <li><a href="#heading3">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

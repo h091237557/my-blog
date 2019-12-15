@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node設計模式之策略模式 (Stratgey) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, design pattern" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node設計模式之策略模式 (Stratgey) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node設計模式之策略模式 (Stratgey)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+<a href='/tags/design-pattern' class="muted-link">
+  <span class="Label Label--gray">design pattern</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-10.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章中，我們想要知道以下兩件事情 :</p>
+<blockquote>
+<ol>
+<li>為什麼要使用它呢 ?</li>
+<li>什麼是策略模式呢 ?</li>
+</ol>
+</blockquote>
+<h2 id="-">為什麼要使用策略模式呢 ?</h2>
+<p>我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用<code>google</code>、<code>facebook</code>的方法，來進行登入。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">login</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">==</span> <span class="s2">&#34;google&#34;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">doGoogleLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;google login process&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">==</span> <span class="s2">&#34;facebook&#34;</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">doFbLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;facebook login process&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">doSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;custom login process&#34;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s2">&#34;google&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>那上面這段程式碼中，有那些缺點呢 ?</p>
+<p>首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。</p>
+<p>第二個為該函數缺泛彈性，如果你想增加<code>twitter</code>的登入，那就必須修改這函數的內部實作，這樣違反了<code>開放封閉原則</code></p>
+<blockquote>
+<p>開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。</p>
+<p>好處 : <code>較好維護</code>、<code>較好測試</code>、<code>可重複使用</code></p>
+</blockquote>
+<p>所以說，當碰到這種情況時，就可以使用策略模式囉 ~</p>
+<p>策略模式簡單的來說，就是為了處理以下的情況 :</p>
+<blockquote>
+<p>當使用者有相同的行為，但不同的場景時，有不同的方法。</p>
+<p>例如 : 使用者想要進行登入，但我們可以使用<code>google</code>、<code>facebook</code>等不同的方法來登入。</p>
+</blockquote>
+<blockquote>
+<p>在白話文一點就是 : 當你有大量的<code>if else</code>或<code>switch</code>就可以使用策略模式了。</p>
+</blockquote>
+<h2 id="-1">策略模式是什麼 ?</h2>
+<p>接下來我們就要使用策略模式來修改上面的程式碼，但在開始前，我們要先知道策略模式是什麼。</p>
+<p>簡單的說，它的定義如下 :</p>
+<blockquote>
+<p>定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。</p>
+</blockquote>
+<p>以我們上面登入的範例來看，<code>login</code>裡面的每一種登入方法就是一種演算法，但他都丟在裡面，所以我們策略模式就是要將他，一個一個封裝起來，並且可以相互的替換。</p>
+<p>如下面的程式碼，我們將每一個登入的演算法都封裝起來，然後在需要那個的時後，就使用那個。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">login</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stragtegy</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">stragtegy</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">var</span> <span class="nx">loginStrategy</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">fb</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">doFbLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span>
+    <span class="nx">google</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">doGoogleLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">,</span>
+    <span class="nx">custom</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">doSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="nx">loginStrategy</span><span class="p">.</span><span class="nx">fb</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>首先我們先來看看<code>可維護性</code>，上面的程式碼中，我們假設要新增一個<code>twitter</code>，那你只需要在<code>loginStrategy</code>裡新增一個<code>twitter</code>的策略，這樣就不會動到主題的<code>login</code>函數，以防止，當你修改了<code>login</code>會影響到其它登入方法的問題。</p>
+<p>再來來看看<code>可測試性</code>，我們只需要<code>mock</code>你要測試的策略，然後在將他丟到<code>login</code>裡面，進行測試，非常的簡單，如果是沒用策略模式的程式碼，我還真的要動腦想一下著麼寫<code>單元測試</code>了。</p>
+<h2 id="heading">結論</h2>
+<p>上面我們簡單的用登入系統的例子，來說明策略模式，在 node 中，有一個叫<code>passport js</code>的東西，就是使用策略模式，來實作登入系統的實例，筆上之前就有寫過一篇關於 passport 的文章，可參考參考。</p>
+<p><a href="https://mark-lin.com/posts/20170609/">Passport.js 之 Hello 你好嗎 ~</a></p>
+<h2 id="heading1">參考資料</h2>
+<ul>
+<li><a href="http://dickeylth.github.io/2013/10/30/JavaScriptDesignPatterns-StrategyPattern/">JavaScript中的设计模式(4)——策略模式</a></li>
+<li><a href="">Nodejs設計模式-Mario Casciaro 著</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node設計模式之策略模式 (Stratgey)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-">為什麼要使用策略模式呢 ?</a></li>
+    <li><a href="#-1">策略模式是什麼 ?</a></li>
+    <li><a href="#heading">結論</a></li>
+    <li><a href="#heading1">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

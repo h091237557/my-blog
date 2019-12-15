@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node 設計模式之代理器(Proxy) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, proxy" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node 設計模式之代理器(Proxy) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node 設計模式之代理器(Proxy)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+<a href='/tags/design-pattern' class="muted-link">
+  <span class="Label Label--gray">design pattern</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-03.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章中我們將要解決以下的問答。</p>
+<blockquote>
+<ol>
+<li>什麼是代理器模式 ?</li>
+<li>我們為什麼要使用它 ?</li>
+</ol>
+</blockquote>
+<p>其中本篇文章還會介紹<code>ES6</code>所提供的<code>Proxy</code>使用方法。</p>
+<h2 id="-">什麼是代理器模式呢 ?</h2>
+<p>首先我們先來看一張下面這張圖，這張圖基本就說明了代理器模式的概念，無論如何，<code>client</code>和<code>Real Object</code>之間一定會由<code>Proxy</code>來進行溝通。</p>
+<p><img src="http://yixiang8780.com/outImg/20170628_1.png" alt=""></p>
+<p>我們還可以用下面這句非常白話文的文字來表達代理器模式的精華。</p>
+<blockquote>
+<p>我的時間很忙的，除非真的要用到我，不然請直接找我的代理人。</p>
+</blockquote>
+<p>我們簡單來寫個範例來說明一下，代理器的實際上使用，首先我們先寫一個登入的程式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Class</span> <span class="nx">UserService</span><span class="p">{</span>
+	<span class="nx">construct</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+	
+	<span class="p">}</span>
+	<span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">{</span>
+	    <span class="p">...</span><span class="p">...</span>
+	    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>然後通常我們要使用的時後會執行下面程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">userService</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserService</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">userService</span><span class="p">.</span><span class="nx">GetUser</span><span class="p">(</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;123456789&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>這樣看起來是沒什麼問題，東西是都還可以執行，然後我們來改寫成代理器的模式，我們會先建立一個<code>UserServiceProxy</code>，我們外面要使用<code>UserService</code>時，都只能透過這個<code>Proxy</code>進行溝通 (想找明星，只能想找他的代理人)。</p>
+<blockquote>
+<p>注意 : 這只是其中一種寫法，代理器還有很多的方法可實現。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Class</span> <span class="nx">UserServiceProxy</span> <span class="p">{</span>
+    <span class="nx">construct</span><span class="p">(</span><span class="nx">real</span><span class="p">)</span><span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">Real</span> <span class="o">=</span> <span class="nx">real</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">passowrd</span><span class="p">)</span><span class="p">{</span>
+       <span class="kr">const</span> <span class="nx">real</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Real</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> 
+       <span class="nx">real</span><span class="p">.</span><span class="nx">getUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">userServiceProxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserServiceProxy</span><span class="p">(</span><span class="nx">UserService</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">userServiceProxy</span><span class="p">.</span><span class="nx">GetUser</span><span class="p">(</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;123456789&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h2 id="-proxy--">為啥要用 Proxy 呢 ?</h2>
+<p>嗯 ? 那這樣有啥用處 ? 為要這樣寫 ? 上面的程式碼當然還看不出來代理器的優點，我們在將<code>UserService</code>裡的<code>GetUser</code>在增加幾行程式碼功能。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Class</span> <span class="nx">UserService</span><span class="p">{</span>
+    <span class="nx">construct</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+       <span class="p">...</span> <span class="nx">為了使用getUserFromDB所需耗費的資源處理</span> <span class="p">(</span><span class="nx">假設</span><span class="p">)</span>
+    
+    <span class="p">}</span>
+	
+	<span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">{</span>
+	    <span class="nx">saveLog</span><span class="p">(</span><span class="s2">&#34;get user&#34;</span><span class="p">)</span><span class="p">;</span>
+	    
+	    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">name</span> <span class="o">||</span> <span class="o">!</span><span class="nx">paaword</span><span class="p">)</span><span class="p">{</span>
+	      <span class="kr">throws</span> <span class="nx">error</span><span class="p">;</span>
+	    <span class="p">}</span>
+	    
+		 <span class="k">if</span> <span class="p">(</span><span class="nx">chached</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+		   <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+		 <span class="p">}</span>
+	    <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">getUserFromDB</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">;</span>
+	    <span class="nx">saveCache</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="p">;</span>
+	    <span class="nx">saveLog</span><span class="p">(</span><span class="s2">&#34;get user success&#34;</span><span class="p">)</span><span class="p">;</span>
+	    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>在<code>GetUser</code>這個程式碼，我們需要寫<code>log</code>，然後我們還要驗證使用者有沒有輸入帳號和密碼，接下來我們還要確認有沒有<code>cache</code>，如果有的話就直接從<code>cache</code>裡取出使用者，如果沒有就要使用帳號和密碼去取得該名使用者，最後還要在將它存放到<code>cache</code>中和再寫個<code>log</code>。</p>
+<p>雖然上面的程式碼可以執行，但事實上有三個問題。</p>
+<ol>
+<li>違反了<code>單一職責原則</code>，<code>GetUser</code>裡面做了太多的事，會變的不好測試與修改。</li>
+<li>上面的建構子有假設，他在實體化時，事實上需要做一些耗費資源的事情，這也表示我們的核心是<code>getUserFromDB</code>除非確定要使用到他，不然請全部找他的代理人處理(Proxy)。</li>
+</ol>
+<p>所以為了改善以上兩個問題我們將程式碼修改成下面這樣。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Class</span> <span class="nx">UserService</span><span class="p">{</span>
+    <span class="nx">construct</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+       <span class="p">...</span><span class="nx">conect</span> <span class="nx">db</span><span class="p">.</span>
+       <span class="p">...</span><span class="nx">connect</span> <span class="nx">cached</span><span class="p">.</span>
+       <span class="p">...</span> <span class="nx">耗費很大的資源的東西</span>
+    
+    <span class="p">}</span>
+	
+	<span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">{</span>
+	    <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">getUserFromDB</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">;</span>
+	    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Class</span> <span class="nx">UserServiceProxy</span><span class="p">{</span>
+    <span class="nx">construct</span><span class="p">(</span><span class="nx">real</span><span class="p">)</span><span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">Real</span> <span class="o">=</span> <span class="nx">real</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">passowrd</span><span class="p">)</span><span class="p">{</span>
+       <span class="nx">saveLog</span><span class="p">(</span><span class="s2">&#34;get User&#34;</span><span class="p">)</span><span class="p">;</span>
+       <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">name</span> <span class="o">||</span> <span class="o">!</span><span class="nx">paaword</span><span class="p">)</span><span class="p">{</span>
+	      <span class="kr">throws</span> <span class="nx">error</span><span class="p">;</span>
+	    <span class="p">}</span>
+	    
+		 <span class="k">if</span> <span class="p">(</span><span class="nx">chached</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
+		   <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+		 <span class="p">}</span>
+       <span class="kr">const</span> <span class="nx">real</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Real</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> 
+       <span class="nx">real</span><span class="p">.</span><span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">;</span>
+       <span class="nx">saveCache</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="p">;</span>
+       <span class="nx">saveLog</span><span class="p">(</span><span class="s2">&#34;get user success&#34;</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">userServiceProxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserServiceProxy</span><span class="p">(</span><span class="nx">UserService</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">userServiceProxy</span><span class="p">.</span><span class="nx">GetUser</span><span class="p">(</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;123456789&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>上面這種程式碼解決了上面說提到的兩個問題，首先我們將和不屬於<code>getUser</code>這個業務的東西完全的拉出來，他就變成單純的取得使用者，而致於第二個問題，實體化時會耗費資源這點也因為修改成上面這類型，我們只有在<code>必要</code>時才能需用真的用到<code>Real Obj</code>。</p>
+<p>上面這種寫法還有一個好處，假設我們<code>UserService</code>要修改成<code>UserFBService</code>的話我們只要確定<code>UserFBService</code>有實作<code>GetUser</code>，就幾乎可以不用修改程式碼直接進行使用。
+不在這事實上是<code>DI(Dependency Injection )</code>的運用。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Class</span> <span class="nx">UserFBService</span><span class="p">{</span>
+    <span class="nx">construct</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+       <span class="p">...</span><span class="nx">conect</span> <span class="nx">db</span><span class="p">.</span>
+       <span class="p">...</span><span class="nx">connect</span> <span class="nx">cached</span><span class="p">.</span>
+       <span class="p">...</span> <span class="nx">耗費很大的資源的東西</span>
+       <span class="p">...</span><span class="nx">connect</span> <span class="nx">fb</span><span class="p">...</span>
+    <span class="p">}</span>
+	
+	<span class="nx">GetUser</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">{</span>
+	    <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">getUserFromDB</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">password</span><span class="p">)</span><span class="p">;</span>
+	    <span class="nx">saveCache</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="p">;</span>
+	    <span class="k">return</span> <span class="nx">user</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">userServiceProxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">UserServiceProxy</span><span class="p">(</span><span class="nx">UserFBService</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">userServiceProxy</span><span class="p">.</span><span class="nx">GetUser</span><span class="p">(</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;123456789&#34;</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>上面只是簡單的用程式碼來表達代理器可以做什麼事，但我們可以歸納出一句話，來說明為什麼要用代理器。</p>
+<blockquote>
+<p>代理器就是為了保護實體而存在。</p>
+</blockquote>
+<p>然後我們還可以將上面那句話，在簡單用三點功能來說明。</p>
+<blockquote>
+<ul>
+<li>攔截和監視外部進來的東西。</li>
+<li>降低實體物件的複雜性。</li>
+<li>在進行耗費資源的操作前，先進行管理。</li>
+</ul>
+</blockquote>
+<h2 id="es6--proxy">ES6 的 Proxy</h2>
+<p>在<code>es6</code>時，他有推出一個功能，那就是<code>Proxy</code>，它的核心功能事實上就和我們上面說的一樣，這邊在複習一次。</p>
+<blockquote>
+<p>Proxy 就是為了保護實體而存在。</p>
+</blockquote>
+<p>我們直接來看使用的方法。</p>
+<h3 id="heading">資料設定的驗證</h3>
+<p>這邊我們將要來簡單的實作資料驗證的功能。</p>
+<blockquote>
+<p>假設我們有一個物件<code>obj</code>，每當要為他設置欄位時，我們都要先驗證欄位該值不能為<code>數字</code>。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<span class="kd">let</span> <span class="nx">input_data</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Proxy</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="p">{</span>
+    <span class="nx">set</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span><span class="nx">key</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">proxy</span><span class="p">)</span><span class="p">{</span>
+    	<span class="k">if</span><span class="p">(</span><span class="k">typeof</span> <span class="nx">value</span> <span class="o">===</span> <span class="s1">&#39;number&#39;</span><span class="p">)</span><span class="p">{</span>
+    	   <span class="k">throw</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&#34;不能是數值喔&#34;</span><span class="p">)</span>
+    	<span class="p">}</span>
+    	<span class="k">return</span> <span class="nx">Reflect</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span><span class="nx">key</span><span class="p">,</span><span class="nx">value</span><span class="p">,</span><span class="nx">proxy</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>執行的結果如下，上面程式碼中，<code>set</code>就是代表如果該實際物件被被設置欄位時，會先在這個<code>proxy</code>的<code>set</code>裡面先進行處理，其中<code>target</code>就是我們的<code>obj</code>實際物件，<code>key</code>就是我們要新增的欄位，以下範例來看就是<code>title</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">input_data</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="c1">// Error !!!!!
+</span><span class="c1"></span>
+<span class="nx">input_data</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="s2">&#34;bababab&#34;</span>
+<span class="c1">// OK !!!!!
+</span></code></pre></div><h3 id="-log-">使用的 log 撰寫</h3>
+<blockquote>
+<p>假設我們有一個物件<code>obj</code>並且它有一個方法<code>getData</code>，然後我們每次在呼叫該方法時，會自動寫 log 。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">getData</span><span class="o">:</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+      <span class="nx">age</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">proxy</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Proxy</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="p">{</span>
+	<span class="nx">get</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span><span class="nx">key</span><span class="p">,</span><span class="nx">proxy</span><span class="p">)</span><span class="p">{</span>
+	  <span class="kd">let</span> <span class="nx">value</span> <span class="o">=</span> <span class="nx">target</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">;</span>
+	  <span class="k">return</span> <span class="p">(</span><span class="p">...</span><span class="nx">arguments</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+			<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;log ~~~~ &#34;</span> <span class="o">+</span> <span class="s2">&#34;fucntion :&#34;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">)</span>
+	  		<span class="k">return</span> <span class="nx">Reflect</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">value</span><span class="p">,</span> <span class="nx">target</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">)</span><span class="p">;</span>
+	  <span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span><span class="p">)</span>
+</code></pre></div><p>執行結果如下程式碼。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">proxy</span><span class="p">.</span><span class="nx">getData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// log ~~~~ fucntion :getData
+</span><span class="c1"></span><span class="p">{</span>
+   <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
+   <span class="nx">age</span><span class="o">:</span> <span class="mi">20</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="heading1">結論</h2>
+<p>最後我們來簡單的為最上面問的兩個問題做些結論。</p>
+<blockquote>
+<ol>
+<li>什麼是代理器模式 ?</li>
+<li>我們為什麼要使用它 ?</li>
+</ol>
+</blockquote>
+<ol>
+<li>代理器模式就是一個實際物件，只能透過代理器物件來連絡他。</li>
+<li>而我們為什麼要使用他呢 ? 主要原因就是<code>為了保護實際物件</code>，不要讓他做太多的事，已經避免三不五十的都時用他，只有在真的會用到他時才使用。</li>
+</ol>
+<h2 id="heading2">參考資料</h2>
+<ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy">developer.mozilla</a></li>
+<li><a href="https://www.w3cplus.com/javascript/use-cases-for-es6-proxies.html">实例解析ES6 Proxy使用场景</a></li>
+<li><a href="">Node.js設計模式 (書) </a></li>
+<li><a href="">Javascript設計模式與開發實踐 (書) </a></li>
+<li><a href="">javascript設計模式(o'reilly)(書)</a></li>
+<li><a href="">深入淺出設計模式 (o'reilly)(書)</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node 設計模式之代理器(Proxy)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-">什麼是代理器模式呢 ?</a></li>
+    <li><a href="#-proxy--">為啥要用 Proxy 呢 ?</a></li>
+    <li><a href="#es6--proxy">ES6 的 Proxy</a>
+      <ul>
+        <li><a href="#heading">資料設定的驗證</a></li>
+        <li><a href="#-log-">使用的 log 撰寫</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading1">結論</a></li>
+    <li><a href="#heading2">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

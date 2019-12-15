@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node.js 的串流之旅之基本概念 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, nodejs stream" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node.js 的串流之旅之基本概念 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node.js 的串流之旅之基本概念</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-01.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種<code>傳送內容</code>的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資料，一直傳送給網頁，所以我們可以直接進行觀看，並且在觀看時它還會繼續傳送後面的片段過來。</p>
+<h2 id="heading">串流的優點</h2>
+<p>在node js中，傳送內容基本上有分兩種形式，一種是<code>緩衝</code>而另一種就是<code>串流</code>，我們先來看看緩衝在處理資料傳送時，它是如何處理。</p>
+<p>緩衝它的基本概念就是將所有的資料先收集到緩衝區裡，當資料已經完整的讀取完，在傳送給接受者，如下圖所示，它會將<code>HELLO MARK</code>這所有的資料先讀取完，然後才能傳送給接受者。</p>
+<p><img src="http://yixiang8780.com/outImg/20170604_1.png" alt=""></p>
+<p>然後我們來看看串流，它每個時間點一接受到資料就會直接發送給接受者，所以如下圖所示，在時間點<code>t1</code>時，它會接受到<code>HELLO</code>這串資料，然後在<code>t2</code>時會接受到剩下的<code>MARK</code>資料。</p>
+<p><img src="http://yixiang8780.com/outImg/20170604_2.png" alt=""></p>
+<p>那這樣有什麼好處呢 ? 簡單的說有兩個優點，一個是<code>空間效率</code>，因為如果使用緩衝的方法來進行個<code>10gb</code>以上的資料傳輸，就代表這你需要<code>10gb</code>的緩衝空間，那這樣記憶體一定爆掉。而第二個優點就是<code>時間效率</code>，就如同最上面的影片例子來說明，使用串流，你可以直接看影片，然後再看影片時，它還會繼續傳送剩下的影片片段，節省了等待時間。</p>
+<h2 id="heading1">緩衝與串流的程式碼實做比較</h2>
+<p>我們簡單寫一個檔案下載的伺服器，然後分別以緩衝與串流的程式碼，來進行實作，在<code>nodejs</code>中，有個 module 名為<code>fs</code>，它是專門用來處理檔案傳輸的工具，它也同時繼承了node 中的串流模組<code>stream</code>。</p>
+<h3 id="heading2">緩衝讀取檔案實作</h3>
+<p>這是一個下載<code>aaa.avi</code>檔案的伺服器，但假設該檔案大小如果大於<code>1024mb(舊版本node)</code>的話，它會直接死掉，因為它緩衝爆掉了。</p>
+<p>基本上這種類形的<code>api</code>被稱為<code>Bulk I/O</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="s1">&#39;aaa.avi&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">data</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span> 
+            <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">message</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span><span class="p">{</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;video/avi&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+            <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>    
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;server up !&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><h3 id="heading3">串流讀取檔案實作</h3>
+<p>下列程式碼就是使用串流來實作的讀取檔案伺服器，這樣如果檔案大小在大，它都可以進行處理，因為它是將大檔案分割成小塊小塊，然後一直傳輸。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;video/avi&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s1">&#39;aaa.avi&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span>
+        <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;server up !&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h2 id="nodejs-">Node.js 的串流工具說明</h2>
+<p>在串流的世界中，有分為<code>可讀取串流</code>另一種為<code>可寫入串流</code>。</p>
+<h3 id="heading4">可讀取串流</h3>
+<p>可讀取串流就是指<code>資料的來源</code>，我們可以利用在<code>stream</code>核心模組中的<code>Readable</code>，來抽像化類別進行實作，基本上像<code>fs</code>、<code>process.stdin</code>都有繼承<code>Readable</code>這模組，所以我們在<code>fs</code>中差可以使用串流的技術來讀取檔案。</p>
+<p>接下來我們來實作個<code>Readable</code>串流。</p>
+<p>首先建立一個名為<code>Read </code>的類別，並且繼承<code>Readable</code>，在這個類別中，我們需要實作<code>_read</code>這個方法，這個方法最主要的功能就是從你的資源(ex.檔案或文字)中取得資料，並執行<code>this.push</code>來丟到一個<code>internal queue</code>中，你可以想成水缸，每當<code>this.push</code>被呼叫時，<code>Readable</code>就會觸發<code>readable</code>事件，白話文就是和使用者說，這裡有資料喔 ~ 快來拿啊，這邊可以想成打開水缸開關給人拿。</p>
+<p>下列程式碼中，我們在<code>_read</code>模擬每次會丟入<code>this.push</code>為一個字元，並且至到字元結束時，就停止丟入<code>this.push(null)</code>，然後我們會使用<code>markStream.read()</code>這段用來實際取得現在<code>internal queue</code>內有的資料，我們也可以使用<code>markStream.read(size)</code>來指定每次取得時，要取得多大的資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">Readable</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">Readable</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">Read</span> <span class="kr">extends</span> <span class="nx">Readable</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">dataLength</span><span class="o">=</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">_read</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">chunk</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">dataLength</span><span class="p">)</span><span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Pushing chunk of size:&#39;</span> <span class="o">+</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">chunk</span><span class="p">,</span> <span class="s1">&#39;utf8&#39;</span><span class="p">)</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">testStr</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;喝&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">markStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">testStr</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">markStream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;readable&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">chunk</span> <span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="p">(</span><span class="nx">chunk</span> <span class="o">=</span> <span class="nx">markStream</span><span class="p">.</span><span class="nx">read</span><span class="p">(</span><span class="p">)</span><span class="p">)</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;chunk received:&#34;</span> <span class="o">+</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> 
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h3 id="heading5">可寫入串流</h3>
+<p>可寫入串流就是指資料的<code>接受者</code>，例入我們要將資料寫入到一個檔案中，那個檔案就是一個接受者。</p>
+<p>下面的程式碼，我們一樣實作一個<code>Writable</code>，首先建立一個類別<code>Write</code>並且繼承<code>stream.Writable</code>，在這裡我們要實作<code>_write</code>方法，這支方法是要告訴<code>stream</code>要如何將資料寫入到<code>接受者</code>內，這範例中，我們的接受者就是一個檔案，存放位置為<code>test.txt</code>。</p>
+<p>在<code>Writable</code>中，我們使用者可以使用<code>write(chunk)</code>來將資料寫入到<code>stream</code>中，最後當使用者呼叫<code>end()</code>時就是告訴<code>stream</code>已經沒有資料了，這時它會觸發<code>finish</code>事件來通知使用者。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">mkdirp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mkdirp&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">Write</span> <span class="kr">extends</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">Writable</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">_write</span><span class="p">(</span><span class="nx">chunk</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">data_path</span> <span class="o">=</span> <span class="s2">&#34;test.txt&#34;</span><span class="p">;</span>
+        <span class="nx">mkdirp</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">data_path</span><span class="p">)</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">data_path</span><span class="p">,</span> <span class="nx">chunk</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">markStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Write</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">markStream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&#34;Hello mark , how are you today?&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">markStream</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">(</span><span class="p">)</span><span class="p">=&gt;</span><span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h3 id="-backpressure">回壓 (Backpressure)</h3>
+<p><code>stream</code>就如同水管中的水流動，但是水管大小一定要限制，如果水量過大，而出口過小一定會發生問題，這在資料傳送時也一定會發生，如果寫入資料快於串流能消化的速度時就一定會遇到。</p>
+<p>而回壓這個機製就是為了解決這個問題。</p>
+<p>我們先來寫段程式碼，來模擬水管爆掉的情況，基本上我們使用和上面的範例相同，都是寫入資料到檔案中，<code>_watch</code>沒有變動，比較不同的是執行寫入時的下面段，在執行<code>write()</code>時除了寫入到<code>stream</code>中，它事實上還會回傳一個布林值，用來告訴我們<code>這個水管是否滿了</code>，如果滿了，它會回傳<code>true</code>。</p>
+<p>對了還有我們本次測試時使用<code>chance</code>模組，它可以隨機產生字串，而<code>likelihood: 95</code>這段代表<code>chance.bool</code>有<code>95%</code>的機率會回傳<code>true</code>，而我們為了盡可能的模擬出水管爆滿的情況，所以我們將丟入的資料大小增加到16KB左右。</p>
+<blockquote>
+<p>有個預設的<code>highWaterMark</code>限制為<code>16KB</code>，這就是水管的大小。</p>
+</blockquote>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">testStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Write</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">chance</span><span class="p">.</span><span class="nx">bool</span><span class="p">(</span><span class="p">{</span><span class="nx">likelihood</span><span class="o">:</span> <span class="mi">95</span><span class="p">}</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">is_continue_write_data</span> <span class="o">=</span> <span class="nx">testStream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span>
+            <span class="nx">chance</span><span class="p">.</span><span class="nx">string</span><span class="p">(</span><span class="p">{</span><span class="nx">length</span><span class="o">:</span> <span class="p">(</span><span class="mi">16</span><span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span> 
+        <span class="p">)</span><span class="p">;</span> 
+
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_continue_write_data</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Backpressure&#39;</span><span class="p">)</span><span class="p">;</span>
+            
+            <span class="c1">// 這行先別看
+</span><span class="c1"></span>            <span class="c1">//return testStream.once(&#39;drain&#39;, generateMoreData);
+</span><span class="c1"></span>        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><p>這是全部的程式碼，<code>Write</code>的地方完全相同。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">mkdirp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mkdirp&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">chance</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;chance&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">Chance</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">Write</span> <span class="kr">extends</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">Writable</span> <span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">super</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="nx">_write</span><span class="p">(</span><span class="nx">chunk</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">data_path</span> <span class="o">=</span> <span class="s2">&#34;test.txt&#34;</span><span class="p">;</span>
+        <span class="nx">mkdirp</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">data_path</span><span class="p">)</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;push&#39;</span><span class="p">)</span>
+            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">data_path</span><span class="p">,</span> <span class="nx">chunk</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kr">const</span> <span class="nx">testStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Write</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">chance</span><span class="p">.</span><span class="nx">bool</span><span class="p">(</span><span class="p">{</span><span class="nx">likelihood</span><span class="o">:</span> <span class="mi">95</span><span class="p">}</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">is_continue_write_data</span> <span class="o">=</span> <span class="nx">testStream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span>
+            <span class="nx">chance</span><span class="p">.</span><span class="nx">string</span><span class="p">(</span><span class="p">{</span><span class="nx">length</span><span class="o">:</span> <span class="p">(</span><span class="mi">16</span><span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span> 
+        <span class="p">)</span><span class="p">;</span> 
+
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_continue_write_data</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Backpressure&#39;</span><span class="p">)</span><span class="p">;</span>
+            <span class="c1">//return testStream.once(&#39;drain&#39;, generateMoreData);
+</span><span class="c1"></span>        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後我們來看看執行後的結果，下面的意思就是說，我們丟第一次資料時水管就滿了，所以接下來丟的資料都進行不去，但這時我們還是硬給他一直丟(一堆<code>Backpressure </code>)，這時就只是浪費社會資源。</p>
+<pre><code>Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Backpressure
+Push
+Push
+Push
+Push
+</code></pre><p>那這時我們要如何解決呢，有一個事件叫<code>drain</code>，它就是用來通知我們水管可以丟了，所以我們現在就是監聽<code>drain</code>事件，當它通知我們時，就代表我們可以在丟資料了<code>generateMoreData</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">testStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Write</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">chance</span><span class="p">.</span><span class="nx">bool</span><span class="p">(</span><span class="p">{</span><span class="nx">likelihood</span><span class="o">:</span> <span class="mi">95</span><span class="p">}</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">is_continue_write_data</span> <span class="o">=</span> <span class="nx">testStream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span>
+            <span class="nx">chance</span><span class="p">.</span><span class="nx">string</span><span class="p">(</span><span class="p">{</span><span class="nx">length</span><span class="o">:</span> <span class="p">(</span><span class="mi">16</span><span class="o">*</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span> 
+        <span class="p">)</span><span class="p">;</span> 
+
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">is_continue_write_data</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Backpressure&#39;</span><span class="p">)</span><span class="p">;</span>
+            
+         	  <span class="c1">// 這邊 !
+</span><span class="c1"></span>            <span class="k">return</span> <span class="nx">testStream</span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s1">&#39;drain&#39;</span><span class="p">,</span> <span class="nx">generateMoreData</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">generateMoreData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>我們來看看增加這行的執行結果，這樣好多了，不會一直往水管中丟資料。</p>
+<pre><code>Backpressure
+push
+push
+Backpressure
+push
+push
+Backpressure
+push
+push
+</code></pre><p>##參考資料</p>
+<ul>
+<li><a href="https://nodejs.org/api/stream.html">官方文件</a></li>
+<li><a href="https://simeneer.blogspot.tw/2016/10/nodejs-streams.html">海納百川：Node.js Streams</a></li>
+<li><a href="http://www.books.com.tw/products/0010739151">Node.js設計模式</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node.js 的串流之旅之基本概念</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">串流的優點</a></li>
+    <li><a href="#heading1">緩衝與串流的程式碼實做比較</a>
+      <ul>
+        <li><a href="#heading2">緩衝讀取檔案實作</a></li>
+        <li><a href="#heading3">串流讀取檔案實作</a></li>
+      </ul>
+    </li>
+    <li><a href="#nodejs-">Node.js 的串流工具說明</a>
+      <ul>
+        <li><a href="#heading4">可讀取串流</a></li>
+        <li><a href="#heading5">可寫入串流</a></li>
+        <li><a href="#-backpressure">回壓 (Backpressure)</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

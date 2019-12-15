@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Node.js 的串流之旅之雙工串流與管道 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="nodejs, nodejs stream" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Node.js 的串流之旅之雙工串流與管道 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Node.js 的串流之旅之雙工串流與管道</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/nodejs' class="muted-link">
+  <span class="Label Label--gray">nodejs</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-06-02.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有<code>read</code>與<code>write</code>的功能。</p>
+<ul>
+<li>Tranform Stream</li>
+<li>Duplex Stream</li>
+</ul>
+<p>那這兩者有什麼差別呢，差別在於<code>duplex</code>的<code>寫出</code>與<code>讀入</code>可以完全的沒關係，你可以把他想像成兩個獨立的<code>readable</code>與<code>writable</code>的組成。</p>
+<p>而<code>tranform</code>就是<code>寫出</code>與<code>讀入</code>彼此間的資料存在有轉換關係，我們接下來會直接實作程式碼，更能夠看出它們兩個的差異。</p>
+<p>最後我們還會說到<code>pipe</code>，它的功用就是用來接串流組合起來。</p>
+<h2 id="tranform-stream">Tranform Stream</h2>
+<p>我們這邊會簡單做個替換指定字串的Transform串流，其中這個類別，我們需要實作兩個方法<code>_transform</code>與<code>_flust</code>。</p>
+<p><code>_transform</code>基本上與<code>readable</code>的<code>_read</code>很像，是將資料寫入<code>水缸</code>中，而不是直接將它寫到資源內，而我們在這個方法中實作了將指定字串連行替換。</p>
+<p><code>_flush</code>是在串流要結束時，如果還有事實沒有處理，這時就可以在<code>_flush</code>進行處理，像我們這個範例中，想要在最後加個<code>!!!!!</code>時，就是寫在這裡。</p>
+<p>基本上只要前一篇文章中的<code>readable</code>與<code>writable</code>基本概念都了解，那這些雙工串流你會學的很輕鬆的。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">TransofrmStream</span> <span class="kr">extends</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">Transform</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="nx">search_string</span><span class="p">,</span> <span class="nx">replace_string</span><span class="p">)</span><span class="p">{</span>
+    <span class="kr">super</span><span class="p">(</span><span class="p">{</span><span class="nx">decodeStrings</span><span class="o">:</span><span class="kc">false</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>    
+        <span class="k">this</span><span class="p">.</span><span class="nx">search_string</span><span class="o">=</span><span class="nx">search_string</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">replace_string</span> <span class="o">=</span> <span class="nx">replace_string</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="nx">_transform</span><span class="p">(</span><span class="nx">chunk</span><span class="p">,</span> <span class="nx">encoding</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span><span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">search_string</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">replace_string</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">cb</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="nx">_flush</span><span class="p">(</span><span class="nx">cb</span><span class="p">)</span><span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;!!!!&#39;</span><span class="p">)</span>
+        <span class="nx">cb</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">transofm_stream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TransofrmStream</span><span class="p">(</span><span class="s1">&#39;World&#39;</span><span class="p">,</span> <span class="s1">&#39;Mark&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">transofm_stream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span>
+
+<span class="nx">transofm_stream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">transofm_stream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;Mark ! you are my all World&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">transofm_stream</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>執行結果。</p>
+<pre><code>Hello Mark
+Mark ! you are my all Mark
+!!!!
+</code></pre><h2 id="duplex-stream">Duplex Stream</h2>
+<p>上面的<code>tranform Stream</code>是建立了一個<code>寫入</code>與<code>讀入</code>有關係的<code>stream</code>，而接下來我們要說明的<code>duplex stream</code>是這兩個是沒有關係的，也就是你做你的事，他做他的事，這種類形的串流在實物中，像<code>socket</code>就是一個<code>duplex</code>的實作，他傳送資料時，與接受資料時這兩個是完全沒有關係的。</p>
+<p><code>duplex stream</code>我們需要個別實作<code>_read</code>與<code>_write</code>，其中<code>_read</code>就如同前一篇所介紹過的<code>readable</code>中我們要實作的<code>_read</code>，都是要讀取資料到串流中用的。</p>
+<p>而<code>_write</code>也如同上一篇文章中，我們在<code>writable</code>裡實作的<code>_write</code>一樣，都是入了<code>寫入</code>資料到某個接受者中(ex. 檔案)。</p>
+<p>這兩個份別是獨立的，執行起來結果事實上和前一篇實作的差不多。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">stream</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;stream&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">mkdirp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mkdirp&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">class</span> <span class="nx">DuplexStream</span> <span class="kr">extends</span> <span class="nx">stream</span><span class="p">.</span><span class="nx">Duplex</span><span class="p">{</span>
+    <span class="nx">constructor</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="kr">super</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>    
+        <span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">_read</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+        <span class="k">if</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">)</span><span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&#34;hello mark&#34;</span><span class="p">)</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="kc">null</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nx">_write</span><span class="p">(</span><span class="nx">chunk</span><span class="p">,</span><span class="nx">encoding</span><span class="p">,</span><span class="nx">cb</span><span class="p">)</span><span class="p">{</span>
+        <span class="kr">const</span> <span class="nx">data_path</span> <span class="o">=</span> <span class="s2">&#34;test.txt&#34;</span><span class="p">;</span>
+        <span class="nx">mkdirp</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">dirname</span><span class="p">(</span><span class="nx">data_path</span><span class="p">)</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">cb</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nx">fs</span><span class="p">.</span><span class="nx">writeFile</span><span class="p">(</span><span class="nx">data_path</span><span class="p">,</span> <span class="nx">chunk</span><span class="p">,</span> <span class="nx">cb</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kr">const</span> <span class="nx">duplexStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DuplexStream</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">duplexStream</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">chunk</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">chunk</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+<span class="nx">duplexStream</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&#34;Hello mark , how are you today?&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">duplexStream</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">(</span><span class="p">)</span><span class="p">=&gt;</span><span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;finish&#39;</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><h2 id="pipe">Pipe</h2>
+<blockquote>
+<p>stream 實作上是個通用介面，而 pipe 則是能組合大多數介面的方法。</p>
+</blockquote>
+<p><code>pipe</code>這東西基本上的概念就是上面這句話，像我們在<code>unix</code>上用的<code>|</code>本身就是<code>pipe</code>的意思，像我們如果輸入下面的指令，它代表的意思就是將<code>ls</code>所讀入的資料串流<code>readable</code>與<code>grep node</code>所產生的串流組合起來。</p>
+<p>所以下面這個指令會顯示資料夾內有<code>node</code>這關鍵字的文件。</p>
+<pre><code>ls | grep node
+</code></pre><p>在用更白話文的說法，<code>pipe</code>就是將<code>stream</code>與<code>stream</code>連接在一起的工具。</p>
+<p><code>pipe</code>基本上會從<code>readable</code>串流中取得它讀入的資料，並將之資料寫入到指定的<code>writable</code>串流中，因此只要該串流為<code>readable</code>串流，便可以使用<code>pipe</code>來與其它串流進行組合。</p>
+<p>像上們面的的<code>Duplex </code>範別程式碼中，他本身有包含獨立的<code>readable</code>與<code>writable</code>，這也代表這我們可以使用<code>pipe</code>將這兩個連結起來，這樣我們就可以直接將<code>_read</code>讀入的資料，寫入到<code>_write</code>實作所產生的檔案中。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">duplexStream</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DuplexStream</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">duplexStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">duplexStream</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>在 node.js 中有很多都有應用到這個功能，像如果我們要讀取某個檔案內容，並且複制到新的檔案中也是這樣處理，如下程式碼，這樣就可以將<code>test_file.txt </code>的內容，複製到<code>destination.txt</code>。</p>
+<p>其中<code>fs.createReadStream</code>就是建立一個<code>readable</code>的串流，用來讀取資料用的，然後<code>fs.createWriteStream</code>就是建立一個<code>writable</code>串流，用來寫入到檔案用的，最後在後<code>pipe</code>來進行連結。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">readStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="s2">&#34;test_file.txt&#34;</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">writeStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="s2">&#34;destination.txt&#34;</span><span class="p">)</span><span class="p">;</span> 
+
+<span class="nx">readStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">writeStream</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><p>我們還可以在將程式碼改像像在<code>linux</code>時所使用的<code>cp</code>也就是複制檔案的方法。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// cp.js
+</span><span class="c1"></span><span class="kr">const</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">)</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">readStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createReadStream</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">writeStream</span> <span class="o">=</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">createWriteStream</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="p">)</span><span class="p">;</span> 
+
+<span class="nx">readStream</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">writeStream</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>執行方法。</p>
+<pre><code>node cp.js test.txt destination.txt
+</code></pre><h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="https://nodejs.org/api/stream.html#stream_duplex_and_transform_streams">官方文件</a></li>
+<li><a href="https://docs.nodejitsu.com/articles/advanced/streams/what-are-streams/">docs.nodejitsu.com</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Node.js 的串流之旅之雙工串流與管道</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#tranform-stream">Tranform Stream</a></li>
+    <li><a href="#duplex-stream">Duplex Stream</a></li>
+    <li><a href="#pipe">Pipe</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
