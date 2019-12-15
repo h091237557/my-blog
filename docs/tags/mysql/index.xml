@@ -7,10 +7,46 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <copyright>&amp;copy;Your Name 2019</copyright>
-    <lastBuildDate>Tue, 17 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Sep 2019 20:16:57 +0800</lastBuildDate>
     
 	<atom:link href="https://mark-lin.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</title>
+      <link>https://mark-lin.com/posts/20190929/</link>
+      <pubDate>Sun, 29 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190929/</guid>
+      <description>正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文</description>
+    </item>
+    
+    <item>
+      <title>30-28 之資料庫層擴展難題 -  MySQL 分散式事務處理</title>
+      <link>https://mark-lin.com/posts/20190928/</link>
+      <pubDate>Sat, 28 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190928/</guid>
+      <description>正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。 本篇分為以下幾個章節 : 分散式</description>
+    </item>
+    
+    <item>
+      <title>30-27之資料庫層的擴展 - 分區表</title>
+      <link>https://mark-lin.com/posts/20190927/</link>
+      <pubDate>Fri, 27 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190927/</guid>
+      <description>正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的</description>
+    </item>
+    
+    <item>
+      <title>30-26之資料庫層的擴展 - 分庫分表架構</title>
+      <link>https://mark-lin.com/posts/20190926/</link>
+      <pubDate>Thu, 26 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190926/</guid>
+      <description>正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用</description>
+    </item>
     
     <item>
       <title>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</title>

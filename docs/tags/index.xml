@@ -22,9 +22,18 @@
     </item>
     
     <item>
+      <title>mysql</title>
+      <link>https://mark-lin.com/tags/mysql/</link>
+      <pubDate>Sun, 29 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/tags/mysql/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>musql</title>
       <link>https://mark-lin.com/tags/musql/</link>
-      <pubDate>Sun, 29 Sep 2019 20:16:57 +0800</pubDate>
+      <pubDate>Wed, 25 Sep 2019 20:16:57 +0800</pubDate>
       
       <guid>https://mark-lin.com/tags/musql/</guid>
       <description></description>
@@ -54,15 +63,6 @@
       <pubDate>Fri, 20 Sep 2019 20:16:57 +0800</pubDate>
       
       <guid>https://mark-lin.com/tags/redis/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mysql</title>
-      <link>https://mark-lin.com/tags/mysql/</link>
-      <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/tags/mysql/</guid>
       <description></description>
     </item>
     
