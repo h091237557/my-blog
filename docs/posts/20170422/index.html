@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  排序之插入排序法 ( Insertion Sort ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, insertion sort" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="排序之插入排序法 ( Insertion Sort ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">排序之插入排序法 ( Insertion Sort )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-04-22.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。</p>
+<ul>
+<li>插入排序法的原理</li>
+<li>插入排序法的執行效能</li>
+<li><code>javascript</code>演算法實作</li>
+</ul>
+<h2 id="heading">插入排序法的原理</h2>
+<p>我們先來看看下圖，來理論一下它是著麼進行排序，該圖來源為此<a href="https://www.google.com.tw/search?q=insertion+sort&amp;source=lnms&amp;tbm=isch&amp;sa=X&amp;ved=0ahUKEwiYobap6dfRAhUGjZQKHXgLBJ8Q_AUICSgC&amp;biw=1280&amp;bih=703#imgrc=PJ68QwsZAj6I-M%3A">interactivepython</a>。</p>
+<p>首先，我們會將資料分成兩部份，已排序與未排序，然後我們會進行以下作業</p>
+<blockquote>
+<p>將已排序資料與後一個資料進行比較，如果已排序資料大於它，則進行位移</p>
+</blockquote>
+<p>我們下面將以前四行來進行說明。注意，下列的 A[0] 代表陣列的第一個位置。</p>
+<ul>
+<li>第一行 : 已排序資料為<code>54</code>，然後我們與後一個<code>26</code>進行比較，<code>54大於26</code>因此我們會將<code>26</code>的位置替換成<code>54</code>，並將<code>26</code>插入至<code>54的原位</code>，結果為第二行。</li>
+<li>第二行 : 已排序資料為<code>26、54</code>，然後我們與後一個<code>93</code>進行比較，<code>54小於93</code>因此不用進行位移，因為<code>26、54</code>為已排序資料，因此只需要比較<code>54</code>就好，結果為第三行。</li>
+<li>第三行 : 已排序資料為<code>26、54、93</code>，然後與<code>17</code>進行比較，首先<code>93大於17</code>因此將<code>93</code>位移置<code>A[3]</code>，則時還沒插入喔，還要繼續比較，接下來<code>54大於17</code>因此將<code>54</code>位移至<code>A[2]</code>，然後<code>26大於17</code>，因此將<code>26</code>位移至<code>A[1]</code>，最後在將<code>17</code>插入剩餘的空間<code>A[0]</code>，結果為第四行。</li>
+<li>第四行 : 已排序資料為<code>17、26、54、93</code>，開始與<code>77</code>進行比較，<code>93大於77</code>因此將<code>93</code>位移至<code>A[4]</code>的位置，然後<code>54小於77</code>，因此<code>54</code>不需要位移，最後將<code>77</code>插入至空缺的位置<code>A[3]</code>，當果為第五行。</li>
+</ul>
+<p><img src="http://yixiang8780.com/outImg/20170123-1.png" alt=""></p>
+<h2 id="heading1">插入排序法的執行效能</h2>
+<p>那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。</p>
+<h3 id="heading2">最好狀況</h3>
+<p><code>O(n)</code></p>
+<p>該演算法最好的情況是時間複雜度為<code>O(n)</code>，假設我們有下列陣列要排序。</p>
+<pre><code>[ 1 , 2 , 3 , 4 ] 
+</code></pre><p>我們一看就知道，他不用進行排序，但演算法還不知道，所以它至少還是要跑個<code>for迴圈</code>，跑個<code>4</code>次，才知道它不用排序，因為我們這時最好的狀況就是只要跑<code>4</code>次，也就是陣列的大小。</p>
+<h3 id="heading3">最壞狀況</h3>
+<p><code>O(n^2)</code></p>
+<p>假設我們要下列陣列要排序。</p>
+<pre><code>[ 4 , 3 , 2 , 1 ] 
+</code></pre><p>對就是完全相反的，我們首先要跑<code>for迴圈</code>，然後裡面還要一個<code>while比較</code>，而且因為我們的陣列是完全相反的。</p>
+<h3 id="heading4">平均狀況</h3>
+<p><code>O(n^2)</code></p>
+<p>我也不知道為啥平均是<code>O(n^2)</code>，真的。</p>
+<h3 id="heading5">建議使用情況</h3>
+<ul>
+<li>要排序的資料數量不大 : 平均是時間複雜度是<code>O(n^2)</code>，如果來個1百萬個 n，你看看會如何。</li>
+<li>大部份的資料已排序 : 上面有說過，該演算法會將資料分成已排序與未排序的來進行比較，也就是說如果已排序的資料越多，你就可以少做越少的比較。</li>
+</ul>
+<h2 id="javascript">javascript演算法實作</h2>
+<p>我們來看看它的演算法，我們採用<code>javascript</code>來進行撰寫。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">insertionSort</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">)</span>
+    <span class="k">throw</span> <span class="s1">&#39;elements is not array&#39;</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">pos</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">pos</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">=</span> <span class="nx">pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="nx">value</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span><span class="p">;</span>  <span class="c1">//正在處理的值
+</span><span class="c1"></span>		
+	<span class="c1">//判斷是否移位
+</span><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span> 
+      <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+      <span class="nx">i</span><span class="o">--</span><span class="p">;</span>
+    <span class="p">}</span>
+    
+    <span class="c1">// 插入新值
+</span><span class="c1"></span>    <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    
+      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>簡單的測試一下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">insertionSort</span><span class="p">(</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">54</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">33</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">58</span><span class="p">,</span><span class="mi">95</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">31</span><span class="p">]</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20170123-2.png" alt=""></p>
+<h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F"><a href="https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F</a></a></li>
+<li><a href="http://www.books.com.tw/products/0010741391"><a href="http://www.books.com.tw/products/0010741391">http://www.books.com.tw/products/0010741391</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>排序之插入排序法 ( Insertion Sort )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">插入排序法的原理</a></li>
+    <li><a href="#heading1">插入排序法的執行效能</a>
+      <ul>
+        <li><a href="#heading2">最好狀況</a></li>
+        <li><a href="#heading3">最壞狀況</a></li>
+        <li><a href="#heading4">平均狀況</a></li>
+        <li><a href="#heading5">建議使用情況</a></li>
+      </ul>
+    </li>
+    <li><a href="#javascript">javascript演算法實作</a></li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

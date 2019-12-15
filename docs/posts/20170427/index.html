@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  排序之桶子排序法(Bucket Sort) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, merge sort" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="排序之桶子排序法(Bucket Sort) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">排序之桶子排序法(Bucket Sort)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-04-27.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <ul>
+<li>比較排序法與非比較排序法</li>
+<li>桶子排序法原理</li>
+<li>桶子排序法使用時機</li>
+<li>桶子排序法複雜度</li>
+<li>javascript 演算法實作</li>
+</ul>
+<h2 id="heading">比較排序法與非比較排序法</h2>
+<p>前面幾篇我們學的排序演算法都被歸類為<code>比較排序法</code>，而另一種歸類為<code>非比較排序法</code>，桶子排序法<code>Bucket Sort</code>就是屬於該歸類。</p>
+<p>我們這邊簡單的說一下<code>比較排序法</code>與<code>非比較排序法</code>的差別，首先比較排序法是透過資料兩兩比較進行排序，而且它在效能上有根本的限制，在最差的情況下，任何一種比較排序法至少需要<code>O(nlogn)</code>比較操作。</p>
+<p>網上有個簡單的證明，就設我們有3個資料要進行排序，<code>1,4,5</code>，那們它有幾種排序組合 ?</p>
+<p>答案是 3! = 3 * 2 * 1 = 6，六種排序法，也就是說它六較次數至少為
+<code>Log(N!) = O ( N log N )</code>。</p>
+<p>而<code>非比較排序法</code>就沒有效能上的限制，通過非比較操作能在``O(n)`完成，但它缺少了靈活性，比較排序法能對各種數據型態進行排序，而非比較排序則不能，這種靈活性也導致了比較排序被更多的應用在大多數實際工作中。</p>
+<p>像在<code>Mozilla</code>的<code>javascript</code>的<code>sort</code>預設是<code>Merge Sort</code>，而<code>WebKit</code>則是<code>Selection Sort</code>，都是選用比較排序法。</p>
+<h2 id="heading1">桶子排序法原理</h2>
+<p>桶子排序法，它的原理是將陣列，分散到有限數量的桶子中，然後每個桶子再個別進行排序，其中每個桶子的個別排序可以運用其它的演算法來進行排序。</p>
+<p>桶子排序法有三個特點</p>
+<ul>
+<li>桶子排序法是穩定的。</li>
+<li>它是常見的排序法中最快的一種，大多數的情況下。</li>
+<li>它非常快，但缺點是非常的耗空間。</li>
+</ul>
+<blockquote>
+<p>上面有說到穩定，但穩定是什麼意思呢?例子，假設我們有個數列為3,5,19,3*,10，其中3*只是為了識別它和前面的3是不一樣的。</p>
+<p>穩定排序結果 =&gt; 1,3,3*,5,10,19</p>
+<p>不穩定排序結果 =&gt; 1,3*,3,5,10,19</p>
+<p>從上面結果可知穩定的它的順序會與原資料一樣3在3*前面，而不穩定則會有不同結果。</p>
+</blockquote>
+<p>桶子排序法基本的流程如下。</p>
+<ol>
+<li>建立桶子群。</li>
+<li>將資料丟到對應的桶子裡。</li>
+<li>個別桶子進行排序。</li>
+<li>然後在依順序取出結果。</li>
+</ol>
+<p>我們來看看下面的圖片說明，假設我們要排序的資料如下。</p>
+<p><code>[ 7 , 5 , 9 , 2 , 10 , 1 , 8 ]</code></p>
+<p>然後首先第一步，我們要將資料分配到<code>Bucket</code>中，但要著麼分呢 ? 我們會建立個<code>雜湊函式Hash(x)</code>，然後盡可能讓這個函式可以<code>平均</code>的分配資料，不然可能會發生最壞的情況。</p>
+<p>我們這邊假設<code>hash(x) = x/3</code>，並且每個桶子都給予值，來決定誰該放到那個桶子，例如桶子值為<code>1</code>則，我們只會將<code>x/3</code>為<code>1開頭</code>的放至到該桶子，如下圖<code>5/3 = 1.666..</code>的會放到值為<code>1</code>的桶子。</p>
+<p><img src="http://yixiang8780.com/outImg/20170206-1.png" alt=""></p>
+<p>接下來各別的桶子進行排序，排序的方法自由決定，可以是選擇排序、快速排序。</p>
+<p><img src="http://yixiang8780.com/outImg/20170206-2.png" alt=""></p>
+<p>最後呢再將資料從桶子取出，然後就完成囉。</p>
+<p><img src="http://yixiang8780.com/outImg/20170206-3.png" alt=""></p>
+<h2 id="heading2">桶子排序法使用時機</h2>
+<p>有以下兩點。</p>
+<ol>
+<li><code>資料均勻分布</code> : 輸入的資料必須是均勻分布於特別範圍，並依據這個範圍，建立<code>n</code>個桶子。</li>
+<li><code>有序的雜湊函</code> : 桶子必須是有序的。如果沒有順序那取出時又要再排序一次就沒意義了。</li>
+</ol>
+<h2 id="heading3">桶子排序法時間複雜度</h2>
+<h3 id="heading4">最好與平均</h3>
+<p><code>O ( n+k )</code></p>
+<h3 id="heading5">最壞</h3>
+<p><code>O ( n^2 )</code></p>
+<h2 id="heading6">桶子排序法空間複雜度</h2>
+<p><code>O ( n*k ) </code></p>
+<h2 id="javascript-">javascript 演算法說明</h2>
+<p>這邊我們根據上面的範例，來建立<code>Bucket Sort</code>。</p>
+<p>下列為<code>javascript</code>說明，而最下面為全部程式碼。不過先仔細看一下會發現，為什麼預設的桶子數為<code>5</code>，事實上這只是假設，實際上，它應該用其它方法來計算可能的桶子數，我們這邊的<code>Hash function</code>為<code>x/3</code>，並且我們是根據計算出的<code>Hash</code>值，來決定它該丟到那個桶子，例如<code>1.3</code>，我們就會丟到<code>1</code>的桶子。</p>
+<p>所以我們總共要設幾個桶子呢，這邊我們可以先找出陣列中的最大值，然後計算它的<code>Hash</code>值，並用該值來決定我們總共要建立多少個桶子。</p>
+<p>我們的最大值為<code>10</code>，所以根據<code>Hash function</code>計算出的結果為<code>3</code>，所以我們至少要建立<code>4</code>個桶子，因為陣列從<code>0</code>開始所以要加一個。</p>
+<blockquote>
+<p>桶子數嚴格來說要根據你的<code>Hash function</code>來進行決定。</p>
+</blockquote>
+<p>我們簡單的說明一下程式碼。首先我們先看<code>Hash function</code>，假設我們的<code>x</code>為<code>10</code>，則<code>hash</code>值為<code>3</code>，而假設為<code>2</code>，則出來的結果為<code>0</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="err"></span><span class="kd">function</span> <span class="nx">hashFun</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="p">{</span>
+	<span class="c1">// 取最小整數
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">x</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>然後我們建立桶子，並且每個桶子為陣列型式。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="c1">// create buckets 
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">bucketsCount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div><p>接下來我們會根據<code>hash function</code>計算出的<code>hash</code>值，來決定各資料要丟到那個桶子內。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// According to hashFun, we can distruibute data to buckets
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">hashFun</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div><p>再來我們將各別桶子內的值進行排序，我們直接使用<code>javascript</code>的預設排序，由於它的排序是依字母排序所以我們自訂排序規則<code>(a,b)=&gt;{return a-b}</code>。</p>
+<p>最後我們將每個排序好的桶子內資料，一個一個取出，然後就產生出已排序資料。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">buckets</span><span class="p">)</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+ <span class="c1">// By default the sort in js is elements alphabetically. so we must add sort function.
+</span><span class="c1"></span>    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span><span class="p">)</span>
+</code></pre></div><h2 id="heading7">全部程式碼</h2>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * bucketSort
+</span><span class="cm"> * bucketSort and hash function is x/3;
+</span><span class="cm"> * @param datas
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">bucketSort</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">bucketsCount</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+			<span class="nx">buckets</span> <span class="o">=</span> <span class="p">{</span><span class="p">}</span><span class="p">,</span>
+		 	<span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+		 	<span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+
+  <span class="c1">// create hash function
+</span><span class="c1"></span>  <span class="kd">function</span> <span class="nx">hashFun</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">// create buckets 
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">bucketsCount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+  <span class="p">}</span>
+
+	<span class="c1">// According to hashFun, we can distruibute data to buckets
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">hashFun</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">buckets</span><span class="p">)</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+ <span class="c1">// By default the sort in js is elements alphabetically. so we must add sort function.
+</span><span class="c1"></span>    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span><span class="p">)</span>
+
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">bucketSort</span><span class="p">(</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><h2 id="heading8">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%A1%B6%E6%8E%92%E5%BA%8F"><a href="https://zh.wikipedia.org/wiki/%E6%A1%B6%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E6%A1%B6%E6%8E%92%E5%BA%8F</a></a></li>
+<li><a href="https://en.wikipedia.org/wiki/Bucket_sort"><a href="https://en.wikipedia.org/wiki/Bucket_sort">https://en.wikipedia.org/wiki/Bucket_sort</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>排序之桶子排序法(Bucket Sort)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">比較排序法與非比較排序法</a></li>
+    <li><a href="#heading1">桶子排序法原理</a></li>
+    <li><a href="#heading2">桶子排序法使用時機</a></li>
+    <li><a href="#heading3">桶子排序法時間複雜度</a>
+      <ul>
+        <li><a href="#heading4">最好與平均</a></li>
+        <li><a href="#heading5">最壞</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">桶子排序法空間複雜度</a></li>
+    <li><a href="#javascript-">javascript 演算法說明</a></li>
+    <li><a href="#heading7">全部程式碼</a></li>
+    <li><a href="#heading8">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

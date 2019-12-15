@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  演算法策略---分治法 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, divid" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="演算法策略---分治法 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">演算法策略---分治法</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-03-24.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為<code>分治法</code>。</p>
+<h2 id="heading">分治法適用的情況</h2>
+<p>但並不是所有問題都適合分治法，有以下特性的問題才可以使用。</p>
+<ul>
+<li>問題的規模可小到一定的程式就可以容易解決。</li>
+<li>問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法)</li>
+<li>可使用這個問題分解出的子問題的解，合併成該問題的解。</li>
+<li>這個問題的子問題都是獨立的。</li>
+</ul>
+<h2 id="heading1">分治法的方法</h2>
+<p>要用分治法來解決一個問題，通常會有以下的步驟。</p>
+<ol>
+<li>分解 : 將大問題分解成小問題。</li>
+<li>解決 : 將每個小問題解決。</li>
+<li>合併 : 將每個子問題的解合併為原問題的解。</li>
+</ol>
+<p>分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。</p>
+<h2 id="heading2">實作練習</h2>
+<p>以下的問題都出自於<code>培養與鍛鍊程式設計的邏輯腦</code>這個本書裡或leetcode中找到的，但我們這邊的都會使用<code>JS</code>來進行實作。</p>
+<h3 id="--maximum-subarray-">最大子序列問題 ( Maximum Subarray )</h3>
+<p>最大子序列是個經典的問題，它的問題定義如下。</p>
+<blockquote>
+<p>在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。</p>
+</blockquote>
+<p>例如假設我們有陣列<code>[1,5,-8,7,4,1,-9,6]</code>，所以這時我們的最大子序列就為<code>7、4、1</code>。</p>
+<p>這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。<code>maxCrossover</code>是用來尋找中間那塊的最大子區塊值。</p>
+<p><img src="http://yixiang8780.com/outImg/20170324-1.png" alt=""></p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">start</span> <span class="o">==</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span><span class="p">;</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="kd">let</span> <span class="nx">middle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="p">(</span><span class="nx">start</span><span class="o">+</span><span class="nx">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;startM:&#34;</span> <span class="o">+</span> <span class="nx">start</span> <span class="o">+</span> <span class="s2">&#34; middleM:&#34;</span><span class="o">+</span><span class="nx">middle</span> <span class="o">+</span> <span class="s2">&#34; end :&#34;</span> <span class="o">+</span> <span class="nx">end</span><span class="p">)</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">)</span><span class="p">,</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">,</span><span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>		
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">currentLeftSum</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">leftSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">currentRightSum</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+	<span class="kd">var</span> <span class="nx">rightSum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;=</span><span class="nx">end</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">currentRightSum</span> <span class="o">+=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">currentRightSum</span> <span class="o">&gt;</span> <span class="nx">rightSum</span><span class="p">)</span><span class="p">{</span>
+			<span class="nx">rightSum</span> <span class="o">=</span> <span class="nx">currentRightSum</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span><span class="o">=</span><span class="nx">middle</span><span class="p">;</span><span class="nx">k</span><span class="o">&gt;=</span><span class="nx">start</span><span class="p">;</span><span class="nx">k</span><span class="o">--</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">currentLeftSum</span> <span class="o">+=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">currentLeftSum</span> <span class="o">&gt;</span> <span class="nx">leftSum</span><span class="p">)</span><span class="p">{</span>
+			<span class="nx">leftSum</span> <span class="o">=</span> <span class="nx">currentLeftSum</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="kd">let</span> <span class="nx">test</span> <span class="o">=</span> <span class="nx">rightSum</span><span class="o">+</span><span class="nx">leftSum</span><span class="p">;</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;!!!! start:&#34;</span> <span class="o">+</span> <span class="nx">start</span> <span class="o">+</span> <span class="s2">&#34; end:&#34;</span> <span class="o">+</span> <span class="nx">end</span> <span class="o">+</span> <span class="s2">&#34; middle&#34;</span><span class="o">+</span><span class="nx">middle</span><span class="o">+</span><span class="s2">&#34; : &#34;</span><span class="o">+</span> <span class="nx">test</span><span class="p">)</span><span class="p">;</span>
+	<span class="k">return</span> <span class="nx">rightSum</span> <span class="o">+</span> <span class="nx">leftSum</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+
+</code></pre></div><p>然後我們來研究看看輸出的結果和他的過程。</p>
+<pre><code>startM:0 middleM:3 end :7
+startM:0 middleM:1 end :3
+startM:0 middleM:0 end :1
+!!!! start:0 end:1 middle0 : 6
+startM:2 middleM:2 end :3
+!!!! start:2 end:3 middle2 : 7
+!!!! start:0 end:3 middle1 : 6
+startM:4 middleM:5 end :7
+startM:4 middleM:4 end :5
+!!!! start:4 end:5 middle4 : 5
+startM:6 middleM:6 end :7
+!!!! start:6 end:7 middle6 : 6
+!!!! start:4 end:7 middle5 : 5
+!!!! start:0 end:7 middle3 : 12
+</code></pre><p>前三行就是說明程式碼會先將左半邊的<code>1、5、-8、7</code>一直進行切割，也就是下面這段程式碼的第一個<code>maxSubarrary(datas,start,middle)</code>，它會一直遞回進去，然後直到切分到<code>1、5</code>時，會執行到<code>maxCrossover</code>，它會輸出最大交互子區塊<code>6</code>，也就是第四行的結果。所以在<code>1、5</code>這兩個陣列的最大子區間為<code>1、5</code>，因為相加為<code>6</code>大於個別的<code>1</code>與<code>5</code>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">middle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="p">(</span><span class="nx">start</span><span class="o">+</span><span class="nx">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+<span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">)</span><span class="p">,</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">,</span><span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><p>然後處理完<code>1、5</code>後，就來處理<code>-8、7</code>，根據上述的流程，它會取得最大子取間為<code>7</code>，因為它比<code>-8</code>和<code>-8、7</code>這兩個還大。</p>
+<p>在來處理<code>1、5、-8、7</code>，由於上述流程，我們已經計算出兩邊<code>1、5</code>與<code>-8、7</code>的最大子區間分別為<code>1、5</code>與<code>7</code>，這時我們還要計算誇兩邊的子區間，這邊我們計算出的結果為<code>1、5</code>，這時我們可以根據這三個區間<code>[1,5]、[7]、[1,5]</code>，取這三個中最大值的那個，來當做<code>1,5,-8,7</code>區間的最大子區間，因為我們取了<code>[7]</code>。</p>
+<p>右邊區塊的<code>[4,1,-9,6]</code>也可以用上述方法，一樣求出最大子區塊為<code>[6]</code>，最後我們左邊最大子區間為<code>[7]</code>，右邊最大子區間為<code>[6]</code>，而我們這邊還要計算交互區間的最大子區間，我們取出<code>[7,4,1]</code>，然後再將這三個區間進行比較，因為我們這個陣列的最大子區間為<code>[7,4,1]</code>。</p>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>演算法策略---分治法</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">分治法適用的情況</a></li>
+    <li><a href="#heading1">分治法的方法</a></li>
+    <li><a href="#heading2">實作練習</a>
+      <ul>
+        <li><a href="#--maximum-subarray-">最大子序列問題 ( Maximum Subarray )</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

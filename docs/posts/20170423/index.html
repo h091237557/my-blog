@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  排序之選擇排序法(Selection Sort) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, selection sort" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="排序之選擇排序法(Selection Sort) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">排序之選擇排序法(Selection Sort)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-04-23.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <ul>
+<li>選擇排序法的原理</li>
+<li>插入排序法的執行效能</li>
+<li><code>javascript</code>演算法實作</li>
+</ul>
+<h2 id="heading">選擇排序法的原理</h2>
+<p>選擇排序法，它基本的觀念為 :</p>
+<blockquote>
+<p>將資料分成已排序與未排序，然後在未排序的資料中尋找最小(大)值，並將它移置已排序資料的右邊。</p>
+</blockquote>
+<p>我們以下圖來簡單的進行說明。注意，下列的 A[0] 代表陣列的第一個位置。</p>
+<ul>
+<li>第一行 : 已排序資料為空，然後尋找未排序資料中最小值<code>8</code>，並將它移至已排序資料的右邊，也就是<code>A[0]</code>，結果如第二行。</li>
+<li>第二行 : 已排序資料為<code>8</code>，尋找未排序資料中最小值<code>23</code>，並將它移至已排序資料的尾端<code>A[1]</code>，結果如第三行。</li>
+<li>以此類推，最後可得到從小到大的排序資料。</li>
+</ul>
+<p><img src="http://yixiang8780.com/outImg/20170124-1.JPG" alt="">
+<a href="http://enelia90.blogspot.tw/2011/02/types-of-sorting-and-sorting-algorithms.html">圖片來源</a></p>
+<h2 id="heading1">插入排序法的執行效能</h2>
+<p>那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。</p>
+<h3 id="heading2">最好、最壞、平均狀況</h3>
+<p><code>O(n^2)</code></p>
+<p>對都是一樣的，就算是排序好的，也是<code>O(n^2)</code>的時間複雜度，我們來看個例子。</p>
+<pre><code>[1,2,3,4,5]
+</code></pre><p>我們有上面的陣列，它需要進行排序，我們知道它排序好了，但演算法不知，所以還是要跑。</p>
+<ul>
+<li>第一行 : 已排序資料為空，然後尋找未排序資料最小值，因為演算法不知道最小值是啥，所以還是要從頭找到尾，然後找出<code>1</code>，並將它放到<code>A[0]</code>位置。</li>
+<li>然後接下來，每一行還是要從未排序資料中，從頭掃到尾來尋找資料，不管你有沒有排序好。</li>
+</ul>
+<h3 id="heading3">建議使用情況</h3>
+<p>根據Wiki的說法，嗯……。</p>
+<blockquote>
+<p>原地操作幾乎是選擇排序的唯一優點，當空間複雜度要求較高時，可以考慮選擇排序；實際適用的場合非常罕見。</p>
+</blockquote>
+<h2 id="javascript">javascript演算法實作</h2>
+<p>我們來看看它的演算法，我們採用<code>javascript</code>來進行撰寫。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * selectionSort
+</span><span class="cm"> * Selection Sort Algorithmic
+</span><span class="cm"> * @param arr
+</span><span class="cm"> * @returns {Array} , Thie return&#39;s array has been Sorted.   
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">selectionSort</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+			<span class="nx">min</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">len</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+		<span class="nx">min</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>	
+		<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span><span class="o">=</span><span class="nx">i</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="nx">j</span><span class="o">&lt;</span><span class="nx">len</span><span class="p">;</span><span class="nx">j</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+			<span class="k">if</span><span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">min</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="p">)</span><span class="p">{</span>
+				<span class="nx">min</span> <span class="o">=</span> <span class="nx">j</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="nx">swap</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span><span class="nx">min</span><span class="p">,</span><span class="nx">i</span><span class="p">)</span><span class="p">;</span>
+		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">arr</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="cm">/**
+</span><span class="cm"> * swap
+</span><span class="cm"> * Swap the min element and now element location.
+</span><span class="cm"> * @param arr , array
+</span><span class="cm"> * @param min , the min element&#39;s postion 
+</span><span class="cm"> * @param pos , now postion
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">arr</span><span class="p">,</span><span class="nx">min</span><span class="p">,</span><span class="nx">pos</span><span class="p">)</span><span class="p">{</span>
+	<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">min</span><span class="p">]</span><span class="p">;</span>
+	<span class="nx">arr</span><span class="p">[</span><span class="nx">min</span><span class="p">]</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span><span class="p">;</span>
+	<span class="nx">arr</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>簡單的測試一下。</p>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">selectionSort</span><span class="p">(</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">54</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">33</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">58</span><span class="p">,</span><span class="mi">95</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">31</span><span class="p">]</span><span class="p">)</span>
+</code></pre></div><p><img src="http://yixiang8780.com/outImg/20170124-2.png" alt=""></p>
+<h2 id="heading4">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F"><a href="https://zh.wikipedia.org/wiki/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E9%80%89%E6%8B%A9%E6%8E%92%E5%BA%8F</a></a></li>
+<li><a href="http://www.books.com.tw/products/0010741391"><a href="http://www.books.com.tw/products/0010741391">http://www.books.com.tw/products/0010741391</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>排序之選擇排序法(Selection Sort)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">選擇排序法的原理</a></li>
+    <li><a href="#heading1">插入排序法的執行效能</a>
+      <ul>
+        <li><a href="#heading2">最好、最壞、平均狀況</a></li>
+        <li><a href="#heading3">建議使用情況</a></li>
+      </ul>
+    </li>
+    <li><a href="#javascript">javascript演算法實作</a></li>
+    <li><a href="#heading4">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

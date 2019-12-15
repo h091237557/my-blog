@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  排序之合併排序法(Merge Sort) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, merge sort" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="排序之合併排序法(Merge Sort) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">排序之合併排序法(Merge Sort)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-04-26.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <ul>
+<li>合併排序法的原理</li>
+<li>合併排序法的速度效能</li>
+<li>合併排序法的空間效能</li>
+<li>javascript 演算法實作</li>
+</ul>
+<h2 id="heading">合併排序法原理</h2>
+<p>合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。</p>
+<p>大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。</p>
+<p>合併排序法實作的概念基本上有分為兩個，<code>Top Down</code>與<code>Bottom Up</code></p>
+<p>首先請看下圖，它是<code>Top Down</code>的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。</p>
+<p><img src="http://yixiang8780.com/outImg/20170205-1.png" alt=""></p>
+<p>然後我們在看下圖，它為<code>Bottom Up</code>的概感，將資料以最小單位<code>2</code>為限制，拆分，然後進行排序，再組合成下一個單位<code>4</code>，再進行排序，以此類推，直到排序完成。</p>
+<p><img src="http://yixiang8780.com/outImg/20170205-2.png" alt=""></p>
+<h2 id="heading1">合併排序法的速度效能</h2>
+<h3 id="heading2">平均</h3>
+<p><code>O(nlogn)</code></p>
+<h3 id="heading3">最好</h3>
+<p><code>O(n)</code></p>
+<h3 id="heading4">最壞</h3>
+<p><code>O(nlogn)</code></p>
+<h2 id="heading5">合併排序法的空間效能</h2>
+<p><code>O(n)</code></p>
+<h2 id="javascript"><code>javascript</code>演算法實作</h2>
+<blockquote>
+<p>注意，基本上只有在拆分時作法不一樣，但在<code>merge</code>時，這邊都是呼叫它一個方法。</p>
+</blockquote>
+<h3 id="top-down"><code>Top Down實作</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
+
+<span class="cm">/**
+</span><span class="cm"> * mergeSort_TopDown 
+</span><span class="cm"> * @param datas
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">len</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">right</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+
+    <span class="c1">//將datas陣列分兩左子陣列與右子陣列
+</span><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">mid</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">left</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">right</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">leftSort</span> <span class="o">=</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">rightSort</span> <span class="o">=</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">leftSort</span><span class="p">,</span> <span class="nx">rightSort</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">datas</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="cm">/**
+</span><span class="cm"> * merge
+</span><span class="cm"> * 將已排序的左與右子陣列，進行合併
+</span><span class="cm"> * @param left
+</span><span class="cm"> * @param right
+</span><span class="cm"> * @returns {Array} sortedData
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">sortedData</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
+    <span class="nx">leftLen</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">rightLen</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">leftIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">rightIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">leftLen</span> <span class="o">+</span> <span class="nx">rightLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// 如果left陣列已比較完，則都輸入right陣列
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">leftIndex</span> <span class="o">==</span> <span class="nx">leftLen</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 如果right陣列已比較完，則都輸入left陣列 
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">rightIndex</span> <span class="o">==</span> <span class="nx">rightLen</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 相反的，則將right資料存放至sortedData
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">sortedData</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+</code></pre></div><h3 id="bottom-up"><code>Bottom Up</code>實作</h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * mergeSort_BottomUp
+</span><span class="cm"> *
+</span><span class="cm"> * @param datas
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">mergeSort_BottomUp</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+	<span class="c1">//2、4、8 這邊跑
+</span><span class="c1"></span>	<span class="c1">//例如 [1,2,3,4,5,6,7,8] 第一圈會跑[1,2]、[3,4]、[5,6]、[7,8]
+</span><span class="c1"></span>	<span class="c1">//第二圈會跑 [1,2,3,4]、[5,6,7,8
+</span><span class="c1"></span>	<span class="c1">//第三圈會跑 [1,2,3,4,5,6,7,8]
+</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">width</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>
+			<span class="kd">var</span> <span class="nx">sortedDatas</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">datas</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="p">)</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="o">+</span><span class="nx">width</span><span class="p">)</span><span class="p">)</span>	
+			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">k</span><span class="o">&lt;</span><span class="nx">sortedDatas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">k</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
+				<span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="o">+</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">sortedDatas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">;</span>	
+			<span class="p">}</span>	
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span><span class="p">;</span>
+			<span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+</span><span class="cm"> * merge
+</span><span class="cm"> * 將已排序的左與右子陣列，進行合併
+</span><span class="cm"> * @param left
+</span><span class="cm"> * @param right
+</span><span class="cm"> * @returns {Array} sortedData
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">sortedData</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
+    <span class="nx">leftLen</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">rightLen</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">leftIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nx">rightIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">leftLen</span> <span class="o">+</span> <span class="nx">rightLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// 如果left陣列已比較完，則都輸入right陣列
+</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">leftIndex</span> <span class="o">==</span> <span class="nx">leftLen</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 如果right陣列已比較完，則都輸入left陣列 
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">rightIndex</span> <span class="o">==</span> <span class="nx">rightLen</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="c1">// 相反的，則將right資料存放至sortedData
+</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">sortedData</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div><h2 id="heading6">參考資料</h2>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Merge_sort"><a href="https://en.wikipedia.org/wiki/Merge_sort">https://en.wikipedia.org/wiki/Merge_sort</a></a></li>
+<li><a href="http://stackoverflow.com/questions/10153393/mergesort-is-bottom-up-faster-than-top-down"><a href="http://stackoverflow.com/questions/10153393/mergesort-is-bottom-up-faster-than-top-down">http://stackoverflow.com/questions/10153393/mergesort-is-bottom-up-faster-than-top-down</a></a></li>
+<li><a href="https://www.google.com.tw/search?q=merge+sort+bottom+up+vs+top+down&amp;oq=merge+sort+bottom+up+vs+top+down&amp;aqs=chrome.0.69i59.1675j0j4&amp;sourceid=chrome&amp;ie=UTF-8"><a href="https://www.google.com.tw/search?q=merge+sort+bottom+up+vs+top+down&amp;oq=merge+sort+bottom+up+vs+top+down&amp;aqs=chrome.0.69i59.1675j0j4&amp;sourceid=chrome&amp;ie=UTF-8">https://www.google.com.tw/search?q=merge+sort+bottom+up+vs+top+down&amp;oq=merge+sort+bottom+up+vs+top+down&amp;aqs=chrome.0.69i59.1675j0j4&amp;sourceid=chrome&amp;ie=UTF-8</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>排序之合併排序法(Merge Sort)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">合併排序法原理</a></li>
+    <li><a href="#heading1">合併排序法的速度效能</a>
+      <ul>
+        <li><a href="#heading2">平均</a></li>
+        <li><a href="#heading3">最好</a></li>
+        <li><a href="#heading4">最壞</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading5">合併排序法的空間效能</a></li>
+    <li><a href="#javascript">javascript演算法實作</a>
+      <ul>
+        <li><a href="#top-down">Top Down實作</a></li>
+        <li><a href="#bottom-up">Bottom Up實作</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  排序之快速排序法(Quick Sort) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="algorithm, quick sort" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="排序之快速排序法(Quick Sort) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">排序之快速排序法(Quick Sort)</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-04-25.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <ul>
+<li>快速排序法的原理</li>
+<li>快速排序法的速度效能</li>
+<li>快速排序法的空間效能</li>
+<li>基準點的選擇</li>
+<li>javascript 演算法實作</li>
+</ul>
+<h2 id="heading">快速排序法的原理</h2>
+<p>快速排序法，又稱為<code>分割排序法(partioion exchange sort)</code>，是一種最快的排序法之一，它使用分治法的概念，將問題拆分成兩個獨立的問題來進行解決，再將兩個結果合成原問題的答案，這就是說所謂的<code>分治法</code><a href="http://marklin-blog.logdown.com/posts/1636923">(傳送門)</a>。</p>
+<p>快速排序的過程有四個步驟。</p>
+<blockquote>
+<p>注意以下皆以由小排到大的流程來進行說明。</p>
+</blockquote>
+<p>假設我們總共要排序的資料有<code>n</code>個，<code>D1,D2,D3,...,Dn</code>。</p>
+<ol>
+<li>選定一個基準值<code>(privot)</code>，並假設為<code>D</code>。</li>
+<li>由左至右尋找 <code>i=2,3,4,..,n</code>，一直到<code>Di &gt; D</code>。</li>
+<li>由右至左尋找 <code>j=n,n-1,n-2,...</code>，一直到<code>Dj &lt; D</code>。</li>
+<li>當<code>i&lt;j</code>時，<code>Di與Dj互換</code>，而當<code>i&gt;j</code>時<code>D與Dj互換</code>。</li>
+</ol>
+<h3 id="heading1">範例</h3>
+<p>我們下面來看看這個範例。</p>
+<p>假設我們的<code>基準值設為最左邊的值，也就是陣列的初始值</code>。</p>
+<blockquote>
+<p>基準值的選擇後面會說明</p>
+</blockquote>
+<p>而我們要排序的陣列如下。</p>
+<p>[ 39 , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]</p>
+<p>然後我們開始進行快速排序法，首先我們選定的基準值為<code>39</code>。</p>
+<p>[ <code>39</code> , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]</p>
+<p>然後開始由左至右尋找，直到比<code>39</code>大的值，選擇<code>89</code>。接下來由右至左找，直到比<code>39</code>小的值，選擇<code>32</code>。因<code>i (3) &lt; j (6)</code>，所以<code>89</code>與<code>32</code>位置進行互換，如下。</p>
+<p>[ <code>39</code> , 15 , 37 , <code>32</code> , 45 , 20 , <code>89</code> , 51 ]</p>
+<p>再繼續同樣的步驟，由左至右我們尋找到<code>45</code>，由右至左我們尋找到<code>20</code>。因<code>i (4) &lt; j (5)</code>，所以<code>20</code>與<code>45</code>互換，結果如下。</p>
+<p>[ <code>39</code> , 15 , 37 , 32 , <code>20</code> , <code>45</code> , 89 , 51 ]</p>
+<p>再來左至右尋找到<code>45</code>，然後由右至左尋找到<code>20</code>，這時因<code>i (5) &gt; j(4)</code>，所以<code>39</code>與<code>20</code>進行互換，結果如下。</p>
+<p>[ <code>20</code> , 15 , 37 , 32 , <code>39</code> , <code>45</code> , 89 , 51 ]</p>
+<p>現在我們看看上面的陣列，我們發現在<code>39</code>左邊的都是比它小的，而在右邊的都是比它大的，這時咱們就在將<code>39</code>左邊與右邊的陣列，繼續進行上述步驟。</p>
+<h4 id="--20--15--37--32-">左邊子陣列排序 [ 20 , 15 , 37 , 32 ]</h4>
+<p>首先我們先看<code>左邊的子陣列</code>，並且一樣選擇最左邊的資料為基準點。</p>
+<p>[ <code>20</code> , 15 , 37 , 32 ]</p>
+<p>然後從左至右開始尋找，直到比<code>20</code>還大的值<code>37</code>。接下來由右至左找，直到比<code>20</code>還小的值，選擇<code>15</code>，因<code>i (2) &gt; j (1)</code>，所以將基準點<code>20</code>與<code>15</code>進行交換，結果如下。</p>
+<p>[ 15 , 20 , 37 , 32 ]</p>
+<p>我們一樣又將<code>左邊的子陣列</code>根據基準點<code>20</code>，又分割成兩個陣列<code>[15]</code>與<code>[37,32]</code>，由於<code>[15]</code>只有一個值不需進行排序，因此只要再將<code>[37,32]</code>進行排序好，就完成<code>左邊子陣列的排序囉</code>，<code>左邊子陣列</code>結果如下。</p>
+<p>[ 15 , 20 , 32 , 37 ]</p>
+<h4 id="--45--89--51-">右邊子陣列排序 [ 45 , 89 , 51 ]</h4>
+<p>我們選擇<code>45</code>為基準點。</p>
+<p>[ <code>45</code> , 89 , 51 ]</p>
+<p>然後從右至左尋找，直到比<code>45</code>還大的值<code>89</code>。接下來由左至右找，直到比<code>45</code>還小值，沒有~ 這時我們的<code>j</code>事實上就是<code>0</code>這個位置，這時<code>i(1) &gt; j(0)</code>，所以基準點<code>45</code>與<code>j(0)</code>的值互換，這時注意，因為都是基準點，所以結果還是長的一樣。</p>
+<p>[ <code>45</code> , 89 , 51 ]</p>
+<p>這時要著麼處理呢 ? 記好，只要完全上述的步驟我們就可以拆分成兩個子陣列，所以上述的陣列會拆分為<code>[]</code>與<code>[ 89 , 51 ]</code>，沒錯，空陣列那個就可以不用做囉，我們只要繼續做右邊的那個陣列就行囉，結果如下。</p>
+<p>[ 51 , 89 ]</p>
+<p>然後再將這個主題的右邊子陣列內的子陣列全部合體，結果如下。</p>
+<p>[ 45 , 51 , 89 ]</p>
+<h4 id="39">然後將左子陣列與右子陣列排序的結果進行合體，不過別忘了最開始拆分的基準點<code>39</code>。</h4>
+<p>左子陣列結果。</p>
+<p>[ 15 , 20 , 32 , 37 ]</p>
+<p>右子陣列結果。</p>
+<p>[ 45 , 51 , 89 ]</p>
+<p>基準點。</p>
+<p>[ 39 ]</p>
+<p>合體為。</p>
+<p>[ 15 , 20 , 32 ,37 , 39 , 45 , 51 , 89 ]</p>
+<p>結束 ~</p>
+<h2 id="heading2">快速排序法的速度效能</h2>
+<h3 id="heading3">最好情況</h3>
+<p><code>O(n log n)</code></p>
+<h3 id="heading4">最壞情況</h3>
+<p><code>O(n^2)</code></p>
+<h3 id="heading5">平均情況</h3>
+<p><code>O(n log n)</code></p>
+<h2 id="heading6">快速排序法的空間效能</h2>
+<p>快速排序法的空間複雜度會依實作的方式而有所不同，例如下述範例程式碼，它有兩個快速排序的方法<code>quickSort_space</code>與<code>quickSort_inPlace</code>，其中<code>quickSort_space</code>，這種寫法比較簡單，但缺點就是需要比較多的空間。</p>
+<p>快速排序法還有一個東西會影響到空間複雜度，那就是遞迴的深度，深度越多，需要空間越大。</p>
+<h3 id="heading7">最好情況</h3>
+<p><code>O(log n)</code></p>
+<p>遞迴深度為 <code>log n</code></p>
+<h3 id="heading8">最壞情況</h3>
+<p><code>O(n)</code>
+遞迴深度為 <code>n-1</code></p>
+<h2 id="heading9">基準點的選擇</h2>
+<p>通常有三種選擇。</p>
+<ul>
+<li>選擇第一個或最後一個元素</li>
+</ul>
+<blockquote>
+<p>但注意，這種選擇在排序的資料，會跑出最壞情況<code>O(n^2)</code></p>
+</blockquote>
+<ul>
+<li>隨機亂數</li>
+</ul>
+<blockquote>
+<p>使用它會題供平均情況的效能</p>
+</blockquote>
+<ul>
+<li>三數中位數<code>(median-of-three)</code>，也就是第一、最後、中間的資料的中位數</li>
+</ul>
+<blockquote>
+<p>根據<code>Sedgewick</code>描述，這作法會有<code>5%</code>的效能提升，但些情況會不佳，想知細節請參考<code>(Musser,1997)</code>。</p>
+</blockquote>
+<h2 id="javascript-">javascript 演算法實作</h2>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
+<span class="cm">/**
+</span><span class="cm"> * quickSort
+</span><span class="cm"> * This method is easy , but it need more space , not good ~
+</span><span class="cm"> * @param datas
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">quickSort_space</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
+    <span class="nx">left</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
+    <span class="nx">right</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
+    <span class="nx">privot</span> <span class="o">=</span> <span class="p">[</span><span class="nx">datas</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">]</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">privot</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">left</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="nx">right</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;right : &#34;</span> <span class="o">+</span> <span class="nx">right</span><span class="p">)</span><span class="p">;</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;left :&#34;</span> <span class="o">+</span> <span class="nx">left</span><span class="p">)</span><span class="p">;</span>
+  <span class="k">return</span> <span class="nx">quickSort_space</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">privot</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">quickSort_space</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//console.log(quickSort_space([5, 3, 7, 4, 1, 9, 8, 6, 2]));
+</span><span class="c1"></span>
+
+<span class="kd">function</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
+  <span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span><span class="p">;</span>
+  <span class="nx">datas</span><span class="p">[</span><span class="nx">j</span><span class="p">]</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cm">/**
+</span><span class="cm"> * quickSort_inPlace
+</span><span class="cm"> * This method is better than quickSort_space
+</span><span class="cm"> * @param datas
+</span><span class="cm"> * @param left
+</span><span class="cm"> * @param right
+</span><span class="cm"> * @returns {undefined}
+</span><span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">quickSort_inPlace</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">left</span> <span class="o">&lt;</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">left</span><span class="p">,</span>
+      <span class="nx">j</span> <span class="o">=</span> <span class="nx">right</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nx">len</span> <span class="o">&amp;&amp;</span> <span class="nx">datas</span><span class="p">[</span><span class="o">++</span><span class="nx">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">left</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+
+      <span class="k">while</span> <span class="p">(</span><span class="nx">j</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="nx">datas</span><span class="p">[</span><span class="o">--</span><span class="nx">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">left</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">j</span><span class="p">)</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="nx">swap</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="nx">swap</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">j</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">quickSort_inPlace</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">left</span><span class="p">,</span> <span class="nx">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="p">;</span>
+    <span class="nx">quickSort_inPlace</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//quickSort_inPlace([39, 15, 37, 89, 45, 20, 32, 51], 0, 7);
+</span><span class="c1"></span>
+<span class="nx">quickSort_inPlace</span><span class="p">(</span><span class="p">[</span><span class="mi">45</span><span class="p">,</span><span class="mi">89</span><span class="p">,</span><span class="mi">51</span><span class="p">]</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h2 id="heading10">參考資料</h2>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F"><a href="https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">https://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F</a></a></li>
+<li><a href="https://en.wikipedia.org/wiki/Quicksort"><a href="https://en.wikipedia.org/wiki/Quicksort">https://en.wikipedia.org/wiki/Quicksort</a></a></li>
+<li><a href="http://notepad.yehyeh.net/Content/Algorithm/Sort/Quick/Quick.php"><a href="http://notepad.yehyeh.net/Content/Algorithm/Sort/Quick/Quick.php">http://notepad.yehyeh.net/Content/Algorithm/Sort/Quick/Quick.php</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>排序之快速排序法(Quick Sort)</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#heading">快速排序法的原理</a>
+      <ul>
+        <li><a href="#heading1">範例</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading2">快速排序法的速度效能</a>
+      <ul>
+        <li><a href="#heading3">最好情況</a></li>
+        <li><a href="#heading4">最壞情況</a></li>
+        <li><a href="#heading5">平均情況</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading6">快速排序法的空間效能</a>
+      <ul>
+        <li><a href="#heading7">最好情況</a></li>
+        <li><a href="#heading8">最壞情況</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading9">基準點的選擇</a></li>
+    <li><a href="#javascript-">javascript 演算法實作</a></li>
+    <li><a href="#heading10">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  VIM的五四三---vim &#43; syntastic &#43; eslint &#43; react的配置 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="vim" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="VIM的五四三---vim &#43; syntastic &#43; eslint &#43; react的配置 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">VIM的五四三---vim &#43; syntastic &#43; eslint &#43; react的配置</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/vim' class="muted-link">
+  <span class="Label Label--gray">vim</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-14. Published at: 2017-02-01.">
+        
+          Lastmod: 2019-12-14
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>本篇文章中，我們將要和讀者說明，在使用<code>vim</code>開發<code>javascript</code>應用時，如何可以在每一次儲存時，自動的檢查我們<code>js</code>是否有問題，讓我們在開發時，可以更快速的進行修正。</p>
+<p>配置完成果會如下圖，你可以看到他會自動顯示什麼地方需要修改，以及修改的原因。</p>
+<p><img src="http://yixiang8780.com/outImg/20170221-1.png" alt=""></p>
+<h2 id="step1-syntastic">Step1. 安裝syntastic</h2>
+<p>首先我們第一步，要先安裝<code>syntastic </code>，它是一個<code>vim</code>的套件，它的功用就是可以針對程式碼進行檢查，你可以針對不同的程式碼配置不同的檢查器，像我們要檢查<code>javascipt</code>時，就是配置了<code>eslint</code>這個檢查器。</p>
+<p>由於我是使用<code>vundle</code>，所以只要在<code>.vimrc</code>加入下面這行。然後再執行<code>PluginInstall</code>就會自動幫你裝好這套件了。</p>
+<pre><code> Plugin 'scrooloose/syntastic'
+</code></pre><p>接下來我們會在<code>.vimrc</code>檔案內加入以下的配置。</p>
+<pre><code> set statusline+=%#warningmsg#
+ set statusline+=%{SyntasticStatuslineFlag()}
+ set statusline+=%*
+ let g:syntastic_always_populate_loc_list = 1
+ let g:syntastic_auto_loc_list = 1
+ let g:syntastic_check_on_open = 1
+ let g:syntastic_check_on_wq = 0
+ let g:syntastic_javascript_checkers = ['standard']
+ let g:syntastic_javascript_standard_generic = 1
+ let g:syntastic_javascript_checkers = ['eslint']
+ let g:syntastic_javascript_eslint_exec = 'eslint'
+</code></pre><h2 id="step2-eslint-checker">Step2. 安裝eslint checker.</h2>
+<p>上面的步驟我們已經完成了<code>vim</code>的配置，並且已經設置好<code>javascript</code>的檢查器為<code>eslint</code>，但我們實際上還沒安裝好<code>eslint</code>，所以我們這裡將要說明如何安裝<code>eslint</code>。</p>
+<p>首先要安裝全域的<code>eslint</code>。</p>
+<pre><code>npm install -g eslint
+</code></pre><p>然後在有<code>packjson</code>下的專案，執行下列指令，該指令可以進行<code>eslint</code>的規則配置，它會問你是否用<code>es6</code>或<code>react</code>之類的問題，然後根據你的回答產生出配置檔。</p>
+<pre><code>eslint --init
+</code></pre><p>產生出配置檔如下。<code>eslint</code>會根據該配置檔，來檢查<code>javascript</code>檔案。正常來說，這樣就該可以使用，但有時還是會有問題。</p>
+<pre><code>module.exports = {
+  &quot;env&quot;: {
+    &quot;browser&quot;: true,
+    &quot;commonjs&quot;: true,
+    &quot;es6&quot;: true
+  },
+  &quot;extends&quot;: &quot;eslint:recommended&quot;,
+  &quot;parserOptions&quot;: {
+    &quot;ecmaFeatures&quot;: {
+      &quot;experimentalObjectRestSpread&quot;: true,
+      &quot;jsx&quot;: true
+    },
+    &quot;sourceType&quot;: &quot;module&quot;
+  },
+  &quot;plugins&quot;: [
+    &quot;react&quot;
+  ],
+  &quot;rules&quot;: {
+    &quot;indent&quot;: [
+      &quot;error&quot;,
+      &quot;tab&quot;
+    ],
+    &quot;linebreak-style&quot;: [
+      &quot;error&quot;,
+      &quot;unix&quot;
+    ],
+    &quot;quotes&quot;: [
+      &quot;error&quot;,
+      &quot;double&quot;
+    ],
+    &quot;semi&quot;: [
+      &quot;error&quot;,
+      &quot;always&quot;
+    ]
+  }
+};
+
+</code></pre><h2 id="bug">BUG&mdash;沒有出現錯誤訊息</h2>
+<p>正常來說，上面的流程有配置好，應該就可以使用，但是呢，我就在這邊<code>debug</code>了很久，它的錯誤提示一直沒有跑出來。我來說明一下我的<code>debug</code>流程。</p>
+<p>首先，我在<code>vim</code>中使用<code>:SyntasticInfo</code>來確定，我的<code>eslint checker</code>是否有設定好。根據輸出的資料，<code>Available checker</code>與<code>Currently enabled checker</code>都有設定好。那問題又出在那呢?</p>
+<pre><code>Syntastic version: 3.8.0-24 (Vim 704, Darwin, GUI)
+Info for filetype: javascript
+Global mode: active
+Filetype javascript is active
+The current file will be checked automatically
+Available checker: eslint
+Currently enabled checker: eslint
+</code></pre><p>接下來我上網查到，可以看到<code>syntastic</code>的<code>complie log</code>。首先你需要至<code>.vimrc</code>新增一行指令。</p>
+<pre><code>let g:syntastic_debug=3
+</code></pre><p>然後再回到要檢查的檔案，並開起，你就會自動看到它跑出的<code>complie log</code>，如果沒自動跑出來你可以執行<code>:mes</code>一樣會跑出來。</p>
+<p>開起後你就會看到一坨輸出。其中我看到這段輸出怪怪的，它說無法讀取到<code>eslint-plugin-react</code>。</p>
+<pre><code>syntastic: 2.113305: checker output: ['', 'Oops! Something went wrong! :(', '', 'ESLint couldn''t find the plugin &quot;eslint-plugin-react&quot;. This can happen for a
+ couple different reasons:', '', '1. If ESLint is installed globally, then make sure eslint-plugin-react is also installed globally. A globally-installed ESLi
+nt cannot find a locally-installed plugin.', '', '2. If ESLint is installed locally, then it''s likely that the plugin isn''t installed correctly. Try reinsta
+lling by running the following:', '', '    npm i eslint-plugin-react@latest --save-dev', '', 'If you still can''t figure out the problem, please stop by https
+://gitter.im/eslint/eslint to chat with the team.', '', '']
+</code></pre><p>所以最後我就根據它的說明，直接安裝全域的<code>eslint-plugin-react</code>就解決囉。</p>
+<pre><code>npm install -g eslint-plugin-react
+</code></pre><h2 id="reacteslint">React的eslint規則設定</h2>
+<p>以下為用來測試的<code>react</code>檔如下。</p>
+<pre><code>import React from &quot;react&quot;; 
+import ReactDOM from &quot;react-dom&quot;;
+var a ;
+function App ()  {
+	return (
+    &lt;div className=&quot;container&quot;&gt;Hello&lt;/div&gt;);
+}
+
+const app = document.createElement(&quot;div&quot;);
+document.body.appendChild(app);
+ReactDOM.render(&lt;App/&gt;, app);
+
+</code></pre><p>然後我們實際執行<code>eslint</code>時會出現這三個錯誤。</p>
+<pre><code>  1 app/app.jsx|1 col 8 error| 'React' is defined but never used. (no-unused-vars)                                            |~
+  2 app/app.jsx|4 col 5 error| 'a' is defined but never used. (no-unused-vars)                                                |~
+  3 app/app.jsx|5 col 10 error| 'App' is defined but never used. (no-unused-vars)
+
+</code></pre><p>但是我們發現，這幾個檢查在我們使用<code>react</code>時，都是一定會產生的，那要如何讓<code>eslint</code>不要略過這幾項呢?</p>
+<p>首先，我們先看第三個錯誤<code>'App' is defined but never used</code>，我們<code>App</code>實際上是有使用在<code>ReactDOM.render(&lt;App/&gt;, app)</code>這上面，但<code>eslint</code>卻沒判斷到，這時我們只要在<code>.eslintrc</code>裡加入下面這行，就可以解決。</p>
+<pre><code>&quot;react/jsx-uses-vars&quot;: [2]
+</code></pre><p>那第一個錯誤呢<code>'React' is defined but never used</code>，雖然我們的確沒用到它，但在<code>jsx</code>檔中一定需要它，這時我們可以用這招，在該行加入這行文字<code>// eslint-disable-line no-unused-vars</code>就解決囉~</p>
+<pre><code>import React from &quot;react&quot;; // eslint-disable-line no-unused-vars
+</code></pre><h2 id="syntastic">syntastic的顏色設定</h2>
+<p>一開始預設的的錯誤訊息以及提示的顏色不是很好看，如果你想修改，可以在<code>.vimrc</code>下加入這幾行。</p>
+<p>其中<code>SyntasticError </code>指的是程式碼內的錯誤提示，而<code>SyntasticErrorSign </code>則是提示那一行有錯誤的那個箭頭。</p>
+<pre><code>highlight link SyntasticError ErrorMsg
+highlight link SyntasticErrorSign WarningMsg
+</code></pre><p>而<code>ErrorMsg </code>與<code>WarningMsg </code>為顏色與樣式，你可以在<code>vim</code>中輸入<code>:highlight</code>就可以看到很多的顏色與樣式可給你選擇了。</p>
+<pre><code>:highlight
+</code></pre><p><img src="http://yixiang8780.com/outImg/20170221-2.png" alt=""></p>
+<h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="https://github.com/eslint/eslint/issues/3782"><a href="https://github.com/eslint/eslint/issues/3782">https://github.com/eslint/eslint/issues/3782</a></a></li>
+<li><a href="https://github.com/vim-syntastic/syntastic"><a href="https://github.com/vim-syntastic/syntastic">https://github.com/vim-syntastic/syntastic</a></a></li>
+<li><a href="https://github.com/vim-syntastic/syntastic#faqinfo"><a href="https://github.com/vim-syntastic/syntastic#faqinfo">https://github.com/vim-syntastic/syntastic#faqinfo</a></a></li>
+<li><a href="https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/"><a href="https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/">https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/</a></a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>VIM的五四三---vim &#43; syntastic &#43; eslint &#43; react的配置</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#step1-syntastic">Step1. 安裝syntastic</a></li>
+    <li><a href="#step2-eslint-checker">Step2. 安裝eslint checker.</a></li>
+    <li><a href="#bug">BUG沒有出現錯誤訊息</a></li>
+    <li><a href="#reacteslint">React的eslint規則設定</a></li>
+    <li><a href="#syntastic">syntastic的顏色設定</a></li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

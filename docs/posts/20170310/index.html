@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  樹狀結構的遍歷 Traversal ( Iteration ) &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="data structure, tree" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果|Describe what your web page is about">
+    
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="樹狀結構的遍歷 Traversal ( Iteration ) | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.3.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+  </div>
+
+
+  
+  
+</nav>
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">樹狀結構的遍歷 Traversal ( Iteration )</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/data-structure' class="muted-link">
+  <span class="Label Label--gray">data structure</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2019-12-15. Published at: 2017-03-10.">
+        
+          Lastmod: 2019-12-15
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :</p>
+<ul>
+<li><code>中序追蹤 (in-order)</code> : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG)</li>
+<li><code>前序追蹤 (pre-order)</code> : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG)</li>
+<li><code>後序追蹤 (post-order)</code> : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA)</li>
+<li><code>level-order</code> : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)</li>
+</ul>
+<blockquote>
+<p>補充: 這裡我們在補充第四種追蹤<code>level-order</code>，事實上它就是<code>BFS</code>，也就是一層一層的掃</p>
+</blockquote>
+<p><img src="http://yixiang8780.com/outImg/20170309-2.png" alt=""></p>
+<p>那為什麼我們這裡要在拿來說一次呢 ?</p>
+<blockquote>
+<p>因為我們之前實作的方法是用『 Recursion 』來實作。</p>
+</blockquote>
+<p>有寫過程式的人大概會知道，在使用<code>recursion </code>實作程式碼，常常有可能會發生<code>memory leak</code>事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。</p>
+<h2 id="-inorder">中序追蹤 (in-order)</h2>
+<blockquote>
+<p>左 =&gt; 根 =&gt; 右</p>
+</blockquote>
+<h3 id="iteration">iteration</h3>
+<ol>
+<li>直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。</li>
+<li>然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。</li>
+<li>接下來在從 pop 出的節點的右子樹開始重複第一個步驟。</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * Tree inordrTraversal (no recursive)
+</span><span class="cm"> * Tip: 左根右
+</span><span class="cm"> */</span>
+<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">inorderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">current</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="nx">current</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">while</span><span class="p">(</span><span class="nx">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+		  <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+          <span class="nx">current</span> <span class="o">=</span> <span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
+		<span class="p">}</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">val</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="recursion">recursion</h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">inOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+
+	<span class="kd">function</span> <span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+			<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>	
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h2 id="-preorder">前序追蹤 (pre-order)</h2>
+<blockquote>
+<p>根 =&gt; 左 =&gt; 右</p>
+</blockquote>
+<h3 id="iteration1">iteration</h3>
+<ol>
+<li>先將 root 存放到 stack 中。</li>
+<li>然後因為pre-order 是先根在子樹，所以直接從 stack pop 出節點輸出。</li>
+<li>接下來在將左右子樹放入 stack。</li>
+<li>重複第二個步驟。</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * Tree preorderTraversal (no recursive)
+</span><span class="cm"> * Tip: 根左右
+</span><span class="cm"> */</span>
+<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">preorderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">current</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="recursion1">recursion</h3>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">preOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+
+	<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+
+	<span class="kd">function</span> <span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>	
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h2 id="-postorder">後序追蹤 (post-order)</h2>
+<blockquote>
+<p>左 =&gt; 右 =&gt; 根</p>
+</blockquote>
+<h3 id="iteration2">iteration</h3>
+<ol>
+<li>將第一個節點丟到 stack 中。</li>
+<li>然後在進行 while</li>
+<li>pop 出節點，然後丟到 temp 陣列中。</li>
+<li>在將該節點的左右子樹丟到 stack 中。</li>
+<li>重複 while</li>
+<li>最後在將 temp 陣列中的節點取出。</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
+</span><span class="cm"> * Tree postOrder Traversal (no recursive)
+</span><span class="cm"> * Tip: 左右根
+</span><span class="cm"> */</span>
+<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">postOrderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">temp</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">current</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">isEnd</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+    <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">while</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">temp</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">while</span><span class="p">(</span><span class="nx">temp</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</code></pre></div><h3 id="recursion2">recursion</h3>
+<pre><code>BinaryTree.prototype.postOrderTraverse = function(callback) {
+
+	postOrderTraverseNode(this.root,callback);
+
+	function postOrderTraverseNode(node,callback) {
+		if(node !== null){
+			postOrderTraverseNode(node.left,callback);
+			postOrderTraverseNode(node.right,callback);
+			callback(node.data);
+		}
+	}	
+};
+</code></pre><h2 id="-levelorder-bfs">層級追蹤 (level-order BFS)</h2>
+<blockquote>
+<p>就是所謂的 BFS 廣度優先搜尋，也就是一層一層找。</p>
+</blockquote>
+<ol>
+<li>將第一個 root 丟入 queue 中 ( queue 是先進先出 )。</li>
+<li>從 queue 中取出節點。</li>
+<li>然後再將左右子樹丟進去 queue 中。</li>
+<li>然後就重複 2 的動作。</li>
+</ol>
+<p>下面的程式碼中多了一些記 level 的東西，那是因為我希望的輸出結果會像下面這樣，所以才有下面的其它步驟。</p>
+<pre><code>  1
+ 2  3
+ 
+[[1],[2,3]]
+</code></pre><h3 id="iteration3">iteration</h3>
+<pre><code>BinarySearchTree.prototype.bfsTraversal = function() {
+    let current;
+    let queue = [];
+    let result = [];
+    if(!this.root){
+        return [];
+    }
+    
+    queue.push({
+        node: this.root,
+        level: 0
+    });
+    
+    while (queue.length &gt; 0){
+        current = queue.shift();
+
+        if(result[current.level]){
+            result[current.level].push(current.node.data);
+        }else{
+            result[current.level] = [];
+            result[current.level].push(current.node.data);
+        }
+        
+        if(current.node.left != null){
+            queue.push({
+                node: current.node.left,
+                level: current.level + 1
+            });
+        }
+        
+        if(current.node.right != null){
+            queue.push({
+                node: current.node.right,
+                level: current.level + 1
+            })
+        }
+    }
+    return result;
+}
+
+let tree = new BinarySearchTree();
+tree.add(new Node(1));
+tree.add(new Node(2));
+tree.add(new Node(3));
+tree.add(new Node(4));
+tree.add(new Node(5));
+tree.add(new Node(6));
+tree.add(new Node(7));
+
+//輸出: [ [ 1 ], [ 2, 3 ], [ 4, 5, 6, 7 ] ]
+</code></pre><h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="http://www.geeksforgeeks.org/">geeksforgeeks</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>樹狀結構的遍歷 Traversal ( Iteration )</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#-inorder">中序追蹤 (in-order)</a>
+      <ul>
+        <li><a href="#iteration">iteration</a></li>
+        <li><a href="#recursion">recursion</a></li>
+      </ul>
+    </li>
+    <li><a href="#-preorder">前序追蹤 (pre-order)</a>
+      <ul>
+        <li><a href="#iteration1">iteration</a></li>
+        <li><a href="#recursion1">recursion</a></li>
+      </ul>
+    </li>
+    <li><a href="#-postorder">後序追蹤 (post-order)</a>
+      <ul>
+        <li><a href="#iteration2">iteration</a></li>
+        <li><a href="#recursion2">recursion</a></li>
+      </ul>
+    </li>
+    <li><a href="#-levelorder-bfs">層級追蹤 (level-order BFS)</a>
+      <ul>
+        <li><a href="#iteration3">iteration</a></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>
