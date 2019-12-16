@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
       
-  PHP Laravel 的 Container 理解 &ndash; 拿鐵派的馬克 Blog
+  PHP Laravel 的 Service Provider 理解 &ndash; 拿鐵派的馬克 Blog
 
     </title>
     
@@ -37,10 +37,15 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
-    <meta name="twitter:title" content="PHP Laravel 的 Container 理解 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:title" content="PHP Laravel 的 Service Provider 理解 | 拿鐵派的馬克 Blog">
     <meta name="twitter:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
+    <meta name="author" content="marklin">
+    <meta name="author" content="mark lin">
+    <meta name="author" content="馬克">
+    <meta name="author" content="拿鐵派">
+    <meta name="author" content="拿鐵派的馬克">
 
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
@@ -56,7 +61,7 @@
       <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
           拿鐵派的馬克 Blog
         </a>
-      <span class="logo-small">人生就是要慢慢的喝拿鐵 ~ 拿鐵才是王道</span>
+      <span class="logo-small">拿鐵才是王道</span>
   </div>
 
 
@@ -77,7 +82,7 @@
 
 <div class="Subhead">
   <div class="Subhead-heading">
-    <div class="h1 mt-3 mb-1">PHP Laravel 的 Container 理解</div>
+    <div class="h1 mt-3 mb-1">PHP Laravel 的 Service Provider 理解</div>
   </div>
   <div class="Subhead-description">
     
@@ -93,9 +98,9 @@
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-15. Published at: 2018-12-14.">
+      <span title="Lastmod: 2019-12-16. Published at: 2018-12-14.">
         
-          Lastmod: 2019-12-15
+          Lastmod: 2019-12-16
         
       </span>
     </div>
@@ -573,7 +578,7 @@ s.setAttribute('data-timestamp', +new Date());
           
   
     <div id="toc" class="Box Box--blue mb-3">
-      <b>PHP Laravel 的 Container 理解</b><nav id="TableOfContents">
+      <b>PHP Laravel 的 Service Provider 理解</b><nav id="TableOfContents">
   <ul>
     <li><a href="#-laravel-service-provider-">什麼是 Laravel Service Provider ?</a>
       <ul>
