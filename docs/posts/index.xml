@@ -85,7 +85,7 @@
     </item>
     
     <item>
-      <title>30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</title>
+      <title>30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0</title>
       <link>https://mark-lin.com/posts/20190922/</link>
       <pubDate>Sun, 22 Sep 2019 20:16:57 +0800</pubDate>
       
@@ -121,21 +121,21 @@
     </item>
     
     <item>
+      <title>30-18 之資料緩存層的服務 - Redis 概念與一致性難題</title>
+      <link>https://mark-lin.com/posts/20190918/</link>
+      <pubDate>Wed, 18 Sep 2019 20:16:57 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190918/</guid>
+      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能</description>
+    </item>
+    
+    <item>
       <title>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</title>
       <link>https://mark-lin.com/posts/20190917/</link>
       <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
       
       <guid>https://mark-lin.com/posts/20190917/</guid>
       <description>正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上</description>
-    </item>
-    
-    <item>
-      <title>30-18 之資料緩存層的服務 - Redis 概念與一致性難題</title>
-      <link>https://mark-lin.com/posts/20190918/</link>
-      <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20190918/</guid>
-      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能</description>
     </item>
     
     <item>
@@ -283,6 +283,15 @@
     </item>
     
     <item>
+      <title>PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</title>
+      <link>https://mark-lin.com/posts/20190515/</link>
+      <pubDate>Wed, 15 May 2019 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20190515/</guid>
+      <description>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項</description>
+    </item>
+    
+    <item>
       <title>PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式</title>
       <link>https://mark-lin.com/posts/20190513/</link>
       <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
@@ -298,15 +307,6 @@
       
       <guid>https://mark-lin.com/posts/20190514/</guid>
       <description>上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac</description>
-    </item>
-    
-    <item>
-      <title>PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</title>
-      <link>https://mark-lin.com/posts/20190515/</link>
-      <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20190515/</guid>
-      <description>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項</description>
     </item>
     
     <item>
@@ -1291,21 +1291,21 @@
     </item>
     
     <item>
+      <title>30-2之使用 Docker 來建構 MongoDB</title>
+      <link>https://mark-lin.com/posts/20160902/</link>
+      <pubDate>Fri, 02 Sep 2016 19:51:35 +0800</pubDate>
+      
+      <guid>https://mark-lin.com/posts/20160902/</guid>
+      <description>由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安</description>
+    </item>
+    
+    <item>
       <title>30-1 之 MongoDB 基礎知識</title>
       <link>https://mark-lin.com/posts/20160901/</link>
       <pubDate>Thu, 01 Sep 2016 19:51:35 +0800</pubDate>
       
       <guid>https://mark-lin.com/posts/20160901/</guid>
       <description>Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從0 → 1開始來學習MongoDB，咱們這30天的文章結構大至上會如下。 首先，先來個十篇的</description>
-    </item>
-    
-    <item>
-      <title>30-2之使用 Docker 來建構 MongoDB</title>
-      <link>https://mark-lin.com/posts/20160902/</link>
-      <pubDate>Thu, 01 Sep 2016 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20160902/</guid>
-      <description>由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安</description>
     </item>
     
     <item>

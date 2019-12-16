@@ -41,9 +41,9 @@
     
 
 
-    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.3.css">
+    <link rel="stylesheet" href="/assets/style-1.4.css">
   </head>
 
 
@@ -370,7 +370,7 @@
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190922/">
-        <div class="h2 mt-1 mb-1">30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</div>
+        <div class="h2 mt-1 mb-1">30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0</div>
       </a>
     </div>
     <div class="Subhead-description">
@@ -434,6 +434,710 @@
     
     正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行
     <a class="muted-link" href="/posts/20190921/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190920/">
+        <div class="h2 mt-1 mb-1">30-20 之資料緩存失效問題</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-20</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基
+    <a class="muted-link" href="/posts/20190920/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190919/">
+        <div class="h2 mt-1 mb-1">30-19 之資料庫層的優化  - 資料緩存策略</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-19</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，
+    <a class="muted-link" href="/posts/20190919/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190918/">
+        <div class="h2 mt-1 mb-1">30-18 之資料緩存層的服務 - Redis 概念與一致性難題</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/redis' class="muted-link">
+  <span class="Label Label--gray">redis</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-18</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能
+    <a class="muted-link" href="/posts/20190918/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190917/">
+        <div class="h2 mt-1 mb-1">30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-17</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上
+    <a class="muted-link" href="/posts/20190917/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190916/">
+        <div class="h2 mt-1 mb-1">30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-16</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾
+    <a class="muted-link" href="/posts/20190916/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190915/">
+        <div class="h2 mt-1 mb-1">30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-15</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性
+    <a class="muted-link" href="/posts/20190915/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190914/">
+        <div class="h2 mt-1 mb-1">30-14 之資料庫層的優化 - 表的設計</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-14</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時
+    <a class="muted-link" href="/posts/20190914/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190913/">
+        <div class="h2 mt-1 mb-1">30-13 之資料庫層的優化 - 索引設計與雷區</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-13</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演
+    <a class="muted-link" href="/posts/20190913/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190912/">
+        <div class="h2 mt-1 mb-1">30-12 之資料庫層的核心 - MySQL 的索引實現</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-12</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使
+    <a class="muted-link" href="/posts/20190912/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190911/">
+        <div class="h2 mt-1 mb-1">30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">it 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/mysql' class="muted-link">
+  <span class="Label Label--gray">mysql</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-11</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何
+    <a class="muted-link" href="/posts/20190911/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190910/">
+        <div class="h2 mt-1 mb-1">30-10 之資料庫層架構與優化方向</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-10</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。 在這裡先說一下一個重點
+    <a class="muted-link" href="/posts/20190910/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190909/">
+        <div class="h2 mt-1 mb-1">30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-09</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。 本篇文章分為以下幾
+    <a class="muted-link" href="/posts/20190909/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190908/">
+        <div class="h2 mt-1 mb-1">30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-08</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西
+    <a class="muted-link" href="/posts/20190908/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190907/">
+        <div class="h2 mt-1 mb-1">30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-07</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。 這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http
+    <a class="muted-link" href="/posts/20190907/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190906/">
+        <div class="h2 mt-1 mb-1">30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 )</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-06</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。
+    <a class="muted-link" href="/posts/20190906/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190905/">
+        <div class="h2 mt-1 mb-1">30-05 之應用層的 I/O 加速 - 零拷貝 ( Zero Copy )</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-05</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。 I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O
+    <a class="muted-link" href="/posts/20190905/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190904/">
+        <div class="h2 mt-1 mb-1">30-04 之應用層的運算加速 - 並行運算</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-04</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ? 假設你所在的機器是多核心
+    <a class="muted-link" href="/posts/20190904/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190903/">
+        <div class="h2 mt-1 mb-1">30-03 之應用層的運算加速 - 演算法</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-03</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能
+    <a class="muted-link" href="/posts/20190903/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190902/">
+        <div class="h2 mt-1 mb-1">30-02 之單機架構的性能優化方向與目標</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-02</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信
+    <a class="muted-link" href="/posts/20190902/">…</a>
+  </div>
+</div>
+
+  
+    
+    
+<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+  <div class="Subhead mb-2">
+    <div class="Subhead-heading">
+      <a href="/posts/20190901/">
+        <div class="h2 mt-1 mb-1">30-01 之何謂一個好的系統呢  ?</div>
+      </a>
+    </div>
+    <div class="Subhead-description">
+      
+
+
+
+
+<a href='/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019' class="muted-link">
+  <span class="Label Label--gray">It 鐵人賽 2019</span>
+</a>
+
+
+      <div class="float-md-right">
+        <span>2019-09-01</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    
+    何謂一個好的系統呢 ? 為什麼會問這個問題呢 ? 因為事實上這個是我原本想要撰寫的主題。咱們工程師在開發系統，所學習的大部份的技術，基本上都是為了追
+    <a class="muted-link" href="/posts/20190901/">…</a>
   </div>
 </div>
 
@@ -519,108 +1223,9 @@
               
           
           
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
-      
-          
-          
-          
-          
-              
-              
-          
-          
             
               
-              <a href="/posts/page/17/">17</a>
+              <a href="/posts/page/6/">6</a>
             
           
       

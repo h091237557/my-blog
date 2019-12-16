@@ -5,6 +5,7 @@ theme = "hugo-primer"
 languageCode = "ja"
 publishDir = "docs"
 disqusShortname = "mark-lin"
+paginate = 30
 
 # If you are using Chinese, Japanese, or Korean, I highly recommend you to set this true.
 hasCJKLanguage = true
@@ -32,3 +33,5 @@ useTwitterCard = true
 math = true
 
 showFooterCredits = true
+
+

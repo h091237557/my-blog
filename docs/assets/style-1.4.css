@@ -198,6 +198,24 @@ span {
   color: #afbac4 !important;
 }
 
+.markdown-body code {
+  background-color: #333;
+  margin-bottom: 0.1em;
+}
+
+.markdown-body blockquote code {
+  background-color: #e5ca39 !important;
+}
+
+.markdown-body img {
+  display: grid;
+}
+
+
+
+
+
+
 /* theme default*/
 
 html,

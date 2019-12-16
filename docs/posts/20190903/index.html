@@ -43,9 +43,9 @@
     
 
 
-    <link rel="stylesheet" href="/assets/syntax-1.0.css">
+    <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.3.css">
+    <link rel="stylesheet" href="/assets/style-1.4.css">
   </head>
 
 
@@ -97,9 +97,9 @@
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-15. Published at: 2019-09-03.">
+      <span title="Lastmod: 2019-12-16. Published at: 2019-09-03.">
         
-          Lastmod: 2019-12-15
+          Lastmod: 2019-12-16
         
       </span>
     </div>
@@ -111,7 +111,6 @@
   <section class="pb-6 mb-3 border-bottom">
     <p><img src="https://ithelp.ithome.com.tw/upload/images/20190918/20089358YWcXuY0jDd.png" alt=""></p>
 <h2 id="heading">正文開始</h2>
-<hr>
 <p>本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?</p>
 <p>這首先第一部份，我們要探討以下主題 :</p>
 <blockquote>
@@ -126,7 +125,6 @@
 </ul>
 <p>接下來正文開始。</p>
 <h2 id="-">一個好與不好的演算法性能差距多大呢 ?</h2>
-<hr>
 <p>一個演算法的效能基本上有兩個東東 :</p>
 <ul>
 <li>時間複雜度: 你可以把它想成演算法的運行時間。</li>
@@ -186,7 +184,6 @@ bad time: 17315.706ms
 原本想順到印出 stack 記憶體使用量，但是好像沒啥方法可以印出……。如果不太分的清楚 stack 與 heap 的差別可以參考此篇文章。</p>
 <p><a href="https://www.valentinog.com/blog/memory-usage-node-js/">How to inspect the memory usage of a process in Node.Js</a></p>
 <h2 id="heading1">演算法運算時間的分類</h2>
-<hr>
 <p>這裡最重要的重點就在於，你要知道你寫的程式碼時間複雜度是屬於那個分級，如果你分不起來，然後寫到 O(2^n) 分級的演算法，那明眼人應該知道會發生什麼事情。</p>
 <p>比較常見的分類，分為以下幾種，花費時間由小到大 :</p>
 <ul>
@@ -231,7 +228,6 @@ bad time: 17315.706ms
 </code></pre></div><h4 id="o--2--n-">O ( 2 ^ n )</h4>
 <p>這種時間複雜度很容易出現在一種情境下，那就是<code>選</code>與<code>不選</code>的情境，不過這種情況比較常在考演算法題時看到，實務應該是不常看到。</p>
 <h2 id="-cpu--memory-">實務上 CPU 與 Memory 優化建議</h2>
-<hr>
 <p>這裡我覺得要讓應用層以最少的 cpu 與 memory 做最多事情的要幾個要點 :</p>
 <h3 id="-1--">小建議 1 : 可以理解你寫的程式碼的時間與空間複雜度</h3>
 <p>簡單的說，你要可以知道你寫的程式碼的時間與空間複雜度，不要寫到了 n^5 的迴圈程式都不知道。然後當寫到這種多層迴圈的情況下，你要仔細的想想兩件事 :</p>
@@ -276,7 +272,6 @@ bad time: 17315.706ms
 </ul>
 <p>這裡只是很淺淺的說明，未來有機會希望可以開篇來詳談。</p>
 <h2 id="heading2">結論與心得</h2>
-<hr>
 <p>這一篇文章中，咱們討論如何以最少的 CPU 與 Memory 來做最多事情的一個重點，那就是 :</p>
 <blockquote>
 <p>演算法</p>
@@ -291,7 +286,6 @@ bad time: 17315.706ms
 </ul>
 <p>但是我覺得可以簡單的考一些演算法的概念當參考評分比較用，但請不要第一關演算法題目沒過就刷人，除非公司是萬人想進那種類型，或是開得起 $$ 的則例外。</p>
 <h2 id="heading3">參考資料</h2>
-<hr>
 <ul>
 <li><a href="https://kknews.cc/zh-tw/tech/38yyl3g.html">時間複雜度 講解- 簡單易懂</a></li>
 </ul>
