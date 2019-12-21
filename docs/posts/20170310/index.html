@@ -99,9 +99,9 @@
 
     
     <div class="float-md-right">
-      <span title="Lastmod: 2019-12-15. Published at: 2017-03-10.">
+      <span title="Lastmod: 2019-12-16. Published at: 2017-03-10.">
         
-          Lastmod: 2019-12-15
+          Lastmod: 2019-12-16
         
       </span>
     </div>
@@ -256,19 +256,19 @@
 
 <span class="p">}</span>
 </code></pre></div><h3 id="recursion2">recursion</h3>
-<pre><code>BinaryTree.prototype.postOrderTraverse = function(callback) {
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">postOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
 
-	postOrderTraverseNode(this.root,callback);
+	<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
 
-	function postOrderTraverseNode(node,callback) {
-		if(node !== null){
-			postOrderTraverseNode(node.left,callback);
-			postOrderTraverseNode(node.right,callback);
-			callback(node.data);
-		}
-	}	
-};
-</code></pre><h2 id="-levelorder-bfs">層級追蹤 (level-order BFS)</h2>
+	<span class="kd">function</span> <span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+			<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>	
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><h2 id="-levelorder-bfs">層級追蹤 (level-order BFS)</h2>
 <blockquote>
 <p>就是所謂的 BFS 廣度優先搜尋，也就是一層一層找。</p>
 </blockquote>
@@ -284,57 +284,57 @@
  
 [[1],[2,3]]
 </code></pre><h3 id="iteration3">iteration</h3>
-<pre><code>BinarySearchTree.prototype.bfsTraversal = function() {
-    let current;
-    let queue = [];
-    let result = [];
-    if(!this.root){
-        return [];
-    }
+<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bfsTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nx">current</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">queue</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span><span class="p">{</span>
+        <span class="k">return</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+    <span class="p">}</span>
     
-    queue.push({
-        node: this.root,
-        level: 0
-    });
+    <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
+        <span class="nx">node</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span>
+        <span class="nx">level</span><span class="o">:</span> <span class="mi">0</span>
+    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
     
-    while (queue.length &gt; 0){
-        current = queue.shift();
+    <span class="k">while</span> <span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
+        <span class="nx">current</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
 
-        if(result[current.level]){
-            result[current.level].push(current.node.data);
-        }else{
-            result[current.level] = [];
-            result[current.level].push(current.node.data);
-        }
+        <span class="k">if</span><span class="p">(</span><span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
         
-        if(current.node.left != null){
-            queue.push({
-                node: current.node.left,
-                level: current.level + 1
-            });
-        }
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
+                <span class="nx">node</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
+                <span class="nx">level</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span class="p">}</span>
         
-        if(current.node.right != null){
-            queue.push({
-                node: current.node.right,
-                level: current.level + 1
-            })
-        }
-    }
-    return result;
-}
+        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
+            <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
+                <span class="nx">node</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span>
+                <span class="nx">level</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="p">}</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">}</span>
 
-let tree = new BinarySearchTree();
-tree.add(new Node(1));
-tree.add(new Node(2));
-tree.add(new Node(3));
-tree.add(new Node(4));
-tree.add(new Node(5));
-tree.add(new Node(6));
-tree.add(new Node(7));
+<span class="kd">let</span> <span class="nx">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BinarySearchTree</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
 
-//輸出: [ [ 1 ], [ 2, 3 ], [ 4, 5, 6, 7 ] ]
-</code></pre><h2 id="heading">參考資料</h2>
+<span class="c1">//輸出: [ [ 1 ], [ 2, 3 ], [ 4, 5, 6, 7 ] ]
+</span></code></pre></div><h2 id="heading">參考資料</h2>
 <ul>
 <li><a href="http://www.geeksforgeeks.org/">geeksforgeeks</a></li>
 </ul>
