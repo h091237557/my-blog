@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Cordova on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Wed, 10 Feb 2016 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/cordova/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/cordova/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +18,30 @@
       <pubDate>Wed, 10 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160210/</guid>
-      <description>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome來進行Cordova的Debug。
-Step1 將模擬器的Developer USB Debug打開 首先打開你的模擬器，然後到Settings，然後往下拉，找找Developer options，發現著找不到，因為預設是隱藏的，喝喝。
-所以要將它打開需要先到About Phone，然後你會看到Build number，這時就『點』下去，記憶中是要點3到4次，然後點完後在回去找Develper options。
-發現Magic~Developer options出現了。
-最後在將USB debugging打勾就可以了。
-Step2 打開chrome://inspect/#devices 首先在Chrome上打chrome://inspect/#devices然後可以看有你的模擬器(記得模擬器要先打開)，但空空的沒地方點。
-Step3 執行Corodva Anroid 則時就在你的專案上面執行Cordova run Android，確定有正確的執行後，在Devices你就會看到你執行的專案名稱，然後點一下Inspect，你就可以看到熟悉的Debug方法了。
-你看看，親切~!
-參考資料  http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/  </description>
+      <description>&lt;p&gt;在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在&lt;code&gt;Cordova&lt;/code&gt;上呢?這篇文章就是要介紹如何時用Chrome來進行&lt;code&gt;Cordova&lt;/code&gt;的Debug。&lt;/p&gt;
+&lt;h2 id=&#34;step1-developer-usb-debug&#34;&gt;Step1 將模擬器的Developer USB Debug打開&lt;/h2&gt;
+&lt;p&gt;首先打開你的模擬器，然後到&lt;code&gt;Settings&lt;/code&gt;，然後往下拉，找找&lt;code&gt;Developer options&lt;/code&gt;，發現著找不到，因為預設是隱藏的，喝喝。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-1.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以要將它打開需要先到&lt;code&gt;About Phone&lt;/code&gt;，然後你會看到&lt;code&gt;Build number&lt;/code&gt;，這時就『點』下去，記憶中是要點3到4次，然後點完後在回去找&lt;code&gt;Develper options&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-2.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;發現Magic~&lt;code&gt;Developer options&lt;/code&gt;出現了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-3.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;最後在將&lt;code&gt;USB debugging&lt;/code&gt;打勾就可以了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-4.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step2-chromeinspectdevices&#34;&gt;Step2 打開chrome://inspect/#devices&lt;/h2&gt;
+&lt;p&gt;首先在Chrome上打&lt;code&gt;chrome://inspect/#devices&lt;/code&gt;然後可以看有你的模擬器(記得模擬器要先打開)，但空空的沒地方點。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-6.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-5.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step3-corodva-anroid&#34;&gt;Step3 執行Corodva Anroid&lt;/h2&gt;
+&lt;p&gt;則時就在你的專案上面執行&lt;code&gt;Cordova run Android&lt;/code&gt;，確定有正確的執行後，在&lt;code&gt;Devices&lt;/code&gt;你就會看到你執行的專案名稱，然後點一下&lt;code&gt;Inspect&lt;/code&gt;，你就可以看到熟悉的Debug方法了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-7.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;你看看，親切~!&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20160901-8.png&#34; alt=&#34;screenshot.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/&#34;&gt;&lt;a href=&#34;http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/&#34;&gt;http://geeklearning.io/apache-cordova-and-remote-debugging-on-android/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>

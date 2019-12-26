@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>socket.io on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Fri, 08 Mar 2019 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/socket.io/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/socket.io/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +18,161 @@
       <pubDate>Fri, 08 Mar 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190325/</guid>
-      <description>socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
-而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
- 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
- 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
-本篇文章架構如下 :
- 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
-這裡我們就要先從 socket.io 建立連線的流程開始說啟。
-Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
-var socket = require(&amp;#39;socket.io-client&amp;#39;)(&amp;#39;http://localhost&amp;#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :</description>
+      <description>&lt;p&gt;socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。&lt;/p&gt;
+&lt;p&gt;而這時如果你選擇使用&lt;code&gt;AWS ALB (Application Load Balancer)&lt;/code&gt;來建立 load balance 你會發現它有個很大的問題，那就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?&lt;/p&gt;
+&lt;p&gt;本篇文章架構如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;原因&lt;/li&gt;
+&lt;li&gt;解法&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading&#34;&gt;原因&lt;/h2&gt;
+&lt;p&gt;為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?&lt;/p&gt;
+&lt;p&gt;這裡我們就要先從 socket.io 建立連線的流程開始說啟。&lt;/p&gt;
+&lt;h3 id=&#34;socketio-&#34;&gt;Socket.io 建立連線原理&lt;/h3&gt;
+&lt;p&gt;假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用&lt;code&gt;socket.io client&lt;/code&gt;來建立連線。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-client&amp;#39;&lt;/span&gt;)(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;polling&lt;/li&gt;
+&lt;li&gt;websocket&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這兩者差別在於 polling 就是一直用 http 長連線去 server 看看有沒有資料，而 websocket 是有資料時 server 會自動的推送。&lt;/p&gt;
+&lt;p&gt;那如果我們在建立連線時，沒有設定要用那個，那它會選用那種方式呢 ?&lt;/p&gt;
+&lt;p&gt;它會先使用 polling 來進行連線與資料傳輸，然後等到確定可以升級 websocket 後，就會將它轉成使用 websocket，然後將原本 polling 的那條給移除。&lt;/p&gt;
+&lt;p&gt;建立連線的概念圖如下，而這個建立連程的核心就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;sid 也就是 session id&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20190325-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-aws-alb-load-balance&#34;&gt;使用 AWS ALB Load Balance&lt;/h3&gt;
+&lt;p&gt;接下來我們建立 aws alb 來檔我們的 load Balance 架構如下圖，這裡提醒一下，如果是使用 alb 來建立連線，那當連線是屬於 websocket 時，這條 websocket 連線實際上是，client 到 alb 一條，而 alb 在到 server 一條這樣，而不是 client 直接與 server 建立一條 websocket。&lt;/p&gt;
+&lt;p&gt;當然有人會說那這樣貧頸不是會在 alb 上，但目前已知，它有提供自動 auto scalling 的機制，這裡就先暫時的相信 aws。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20190325-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;heading1&#34;&gt;然後接下來你會發現這連線有很高的機率連線無法建立。&lt;/h4&gt;
+&lt;p&gt;當你使用下面的 client 來建立連線時，會發現很高的機率無法建立。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-client&amp;#39;&lt;/span&gt;)(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;問題就在於 sid&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;基本上建立一條完整可運行的 socket.io 連線時，至少可能會產生的三次請求。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;polling 連線建立，取得 sid。&lt;/li&gt;
+&lt;li&gt;升級為 ws (它會帶 sid 發送請求)。&lt;/li&gt;
+&lt;li&gt;使用 polling 看看是否有資料 (它會帶 sid 發送請求)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;然後你想想，如果你第一次建立連線時，是在 server A 取得 sid，那你第二、三次使用時，如果連到 server B 或 C 時，server 會知道你要連的 socket 是誰嗎 ? 然後接下來 client 就會以為連線斷了，就自動的幫你斷線了，這就是失敗的原因。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20190325-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-aws-sticky-session-&#34;&gt;使用 AWS Sticky Session 的問題&lt;/h3&gt;
+&lt;p&gt;然後有用過 aws alb 的人就會說，你可以使用它提供的 sticky session 功能，它可以讓某個 client 在一定的時間內的請求，都發送到同一台 server 上。&lt;/p&gt;
+&lt;p&gt;這樣應該是可以解決問題沒錯。&lt;/p&gt;
+&lt;p&gt;但是筆者那時一直試怎麼樣都無法成功建立。&lt;/p&gt;
+&lt;p&gt;後來發現，問題是出在 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;aws sticky session 是使用 cookie 來處理&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而筆者是用 nodejs 加上 socket.io client 來建立連線，因此如果沒有像瀏覽器一樣的幫我們自動處理 cookie， 那這個 sticky session 就會失效。&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;解法&lt;/h2&gt;
+&lt;p&gt;事實上從上面的原因探討可以得知問題的核心在於兩點 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;polling 建立連線與請求資料，都會發送多條 http，並且用 sid 來標示這條連線，所以如果發送到沒有 sid 的那台 server 就會失敗。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;aws sticky session 在非瀏覽器情況(未處理 cookie) 時會失效。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這我們就來想一想假設我們真的需要支援非瀏覽器情況要如何解決呢 ?&lt;/p&gt;
+&lt;p&gt;筆者這裡有想到幾種解法，然後分為以下兩類。&lt;/p&gt;
+&lt;h3 id=&#34;--&#34;&gt;第一類 : 還沒有用戶在開始使用時&lt;/h3&gt;
+&lt;h4 id=&#34;1--client--websocket-&#34;&gt;1. 強制讓 Client 端使用 Websocket 連線&lt;/h4&gt;
+&lt;p&gt;首先第一個方法，就是直接指定 client 端直接強制使用 websocket 連線，socket.io client 強制使用的方法如下 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-client&amp;#39;&lt;/span&gt;)(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;,{
+  &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;transports&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;websocket&amp;#39;&lt;/span&gt;]
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這樣在建立連線時它就直接使用 websocket 來建立，而由於 websocket 屬於永久連線，也就是說一但你在 server A 建立完連線後，你接下來傳送的請求，都是一定是透過那台 server 來進行處理，因此就不會有上述的問題。&lt;/p&gt;
+&lt;h4 id=&#34;2--client--cookie&#34;&gt;2. 讓 Client 處理 Cookie&lt;/h4&gt;
+&lt;p&gt;假設如果你的 client 或 server 其中一方沒有辦法提供 websocket 協議，而你真的只能使用 polling 來處理，那你就需要想辦法讓 client 處理 cookie。&lt;/p&gt;
+&lt;p&gt;處理原理如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;server 在 http 表頭設定 set-cookie 表頭&lt;/li&gt;
+&lt;li&gt;application 中如果收到 response 中有 set-cookie 就將它取出並存成某個暫存檔。&lt;/li&gt;
+&lt;li&gt;每當 application 要發送 http 請求時，就自動的將它帶到 header 中。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;事實上，上面的過程就是瀏覽器運行 cookie 的原理，而我們就只是實作一次。&lt;/p&gt;
+&lt;h3 id=&#34;--1&#34;&gt;第二類 : 已經有用戶開始使用且無法強制所有人更新&lt;/h3&gt;
+&lt;h4 id=&#34;1--aws-alb&#34;&gt;1. 不要使用 AWS ALB&lt;/h4&gt;
+&lt;p&gt;不要使用 aws alb 來處理 load Balance，而選用其它的應用如 nginx，因為它有提到 ip hash 的分配演算法，它可以讓同一個 ip 都打到同一台。&lt;/p&gt;
+&lt;p&gt;但是這種方案就有幾個麻煩處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;你要自已處理 nginx 的 HA 機制。&lt;/li&gt;
+&lt;li&gt;你需要注意 nginx 單機的最大連線量 (也就是連線貧頸會出現在 nginx 這台)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;別問我 alb 如何處理貧頸，反正官網說可以自動 scalling。&lt;/p&gt;
+&lt;h4 id=&#34;2--aws-alb--websocket--polling&#34;&gt;2. 使用 AWS ALB 分流 Websocket 與 Polling&lt;/h4&gt;
+&lt;p&gt;但這種情況有個假設，那就的是 polling 的使用量不多。&lt;/p&gt;
+&lt;p&gt;這種情況的做法順序如下 :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;將之後新出版本的 client 都強制使用 websocket。&lt;/li&gt;
+&lt;li&gt;在 alb 將 websocket 與 polling 進行分流 (alb 可以根據 path 或 header 分流)。&lt;/li&gt;
+&lt;li&gt;等到大部份的用啟都慢慢的升級到新版本後，那 polling 的那可以慢慢的下掉。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;架構圖如下 :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20190325-4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;但是這裡要注意，你的 polling 用的 server 只能有一台，這也是為什麼要假設 polling 使用量不多，因為它無法擴展。&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;結論&lt;/h2&gt;
+&lt;p&gt;最後來說說感想。&lt;/p&gt;
+&lt;p&gt;socket.io client 使用了 polling 與 websocket 方法來幫助我們建立與 client 與 server 的即時溝通，即時不支援 websocket 它也可以用 polling 來處理，但是我覺得這同時間也是雙刃劍，因為這代表你在做任何事情時，你都要考慮兩種情況是否可以運行。&lt;/p&gt;
+&lt;p&gt;最後筆者建議，真的準備要開始使用 socketio 的人並且要支援不同 client 的人，請直接指定使用 websocket，這樣真的會省下不少麻煩，現階段大部份的 client 應該是都有提供 websocket 的處理，沒有就叫他滾 !&lt;/p&gt;
+&lt;h2 id=&#34;-socketio-&#34;&gt;參考資料 Socket.io 建立連線實際過程&lt;/h2&gt;
+&lt;p&gt;它的建立連線實際過程如下。&lt;/p&gt;
+&lt;p&gt;以下看到的資訊都是使用 socket.io 所提供的 debug log 所取得，開啟方式如下。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;DEBUG=* node xxxx.js
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;首先他會發送以下的 url 來請求建立 socket 連線。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;xhr open 
+GET:http://localhost:8080/socket.io/EIO=3&amp;amp;transport=polling&amp;amp;t=MckJUI4&amp;amp;b64=1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下來它會收到一段回應，其它他包含了以下幾個資訊 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;sid : session id，接下 polling 的 http 請求都會帶它。&lt;/li&gt;
+&lt;li&gt;uprades : 表示可以升級為 websocket。&lt;/li&gt;
+&lt;li&gt;pingInterval : 每幾 ms 會發送一次 ping packet，用來確定這條連線還存在。&lt;/li&gt;
+&lt;li&gt;pingTimeout : 如果超過此 ms 沒有收到 pong，這代表此連線已斷。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;polling got data 
+
+{
+  &amp;quot;sid&amp;quot;:&amp;quot;Va6Nnm8ia_8ioOAvAAAA&amp;quot;,
+  &amp;quot;upgrades&amp;quot;:[&amp;quot;websocket&amp;quot;],
+  &amp;quot;pingInterval&amp;quot;:25000,
+  &amp;quot;pingTimeout&amp;quot;:5000
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後執行到了這裡基本上這條連線的 socket 就算完成了。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;socket receive: 
+type &amp;quot;open&amp;quot;, data &amp;quot;{&amp;quot;sid&amp;quot;:&amp;quot;Va6Nnm8ia_8ioOAvAAAA&amp;quot;,&amp;quot;upgrades&amp;quot;:[&amp;quot;websocket&amp;quot;],&amp;quot;pingInterval&amp;quot;:25000,&amp;quot;pingTimeout&amp;quot;:5000}&amp;quot;
+
+socket open
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後接下來它會嘗試的進行升級，它事實上會發一個 ping 給 server。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;engine.io-client:socket starting upgrade probes +1ms
+engine.io-client:socket probing transport &amp;quot;websocket&amp;quot;
+engine.io-client:socket creating transport &amp;quot;websocket&amp;quot;
+engine.io-client:socket probe transport &amp;quot;websocket&amp;quot; opened
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;ws://localhost:8080/socket.io/?EIO=3&amp;amp;transport=websocket&amp;amp;sid=Va6Nnm8ia_8ioOAvAAAA
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是注意，在升級的中間，polling 還是會繼續的去 server 看看有沒有資料。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;engine.io-client:polling-xhr xhr poll
+  engine.io-client:polling-xhr xhr open GET: http://localhost:8080/socket.io/?EIO=3&amp;amp;transport=polling&amp;amp;t=MckJUJ3&amp;amp;b64=1&amp;amp;sid=Va6Nnm8ia_8ioOAvAAAA
+  engine.io-client:polling-xhr xhr data null
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後接下偵測到 server 有回收到升級用的 pong 回來，因此正式的將 transport 轉換成 websocket，並且將 polling 關掉。到了這時基本上 websocket 連線就就算正式的完成了。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;engine.io-client:socket probe transport &amp;quot;websocket&amp;quot; pong
+engine.io-client:socket pausing current transport &amp;quot;polling&amp;quot;
+engine.io-client:socket changing transport and sending upgrade packet
+engine.io-client:socket setting transport websocket +0ms
+engine.io-client:socket clearing existing transport polling
+&lt;/code&gt;&lt;/pre&gt;</description>
     </item>
     
     <item>
@@ -36,13 +181,289 @@ var socket = require(&amp;#39;socket.io-client&amp;#39;)(&amp;#39;http://localho
       <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170915/</guid>
-      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
-var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
-Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
-前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io(&#39;xxxx&#39;)時，他就會去後端建立連線。
-&amp;lt;script src=&amp;#34;/socket.io/socket.io.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script&amp;gt; var socket = io(&amp;#39;http://localhost&amp;#39;); socket.on(&amp;#39;connect&amp;#39;, function(){}); &amp;lt;/script&amp;gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
-lookup 原始碼
-function lookup (uri, opts) { .... if (newConnection) { debug(&amp;#39;ignoring socket cache for %s&amp;#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&amp;#39;new io instance for %s&amp;#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.</description>
+      <description>&lt;p&gt;首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sockets&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello xxxx client&amp;#34;&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下來我們要從前端開始追蹤它做了那些事情。&lt;/p&gt;
+&lt;h2 id=&#34;client--&#34;&gt;Client 端它做了什麼呢 ??&lt;/h2&gt;
+&lt;h3 id=&#34;socketioclient-&#34;&gt;Socket.io-client 建立連線的地方&lt;/h3&gt;
+&lt;p&gt;在最開始時，一定是前端會去進行連線，那我們來看看他在&lt;code&gt;socket.io-client&lt;/code&gt;中什麼地方行處理。&lt;/p&gt;
+&lt;p&gt;前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行&lt;code&gt;io(&#39;xxxx&#39;)&lt;/code&gt;時，他就會去後端建立連線。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/socket.io/socket.io.js&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;p&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;t&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){});
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;p&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;t&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意&lt;code&gt;newConnection&lt;/code&gt;裡面做的事情，因為我們是要建立新的連線。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io-client/blob/master/lib/index.js#L36&#34;&gt;lookup 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;lookup&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;) {
+  ....
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;newConnection&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ignoring socket cache for %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;source&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;source&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;]) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;new io instance for %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;source&lt;/span&gt;);
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;source&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+    }
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cache&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;];
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;parsed&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parsed&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;;
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;parsed&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;path&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下面這段程式碼為&lt;code&gt;manager&lt;/code&gt;裡面的程式碼，大部份都是在進行屬性初使化，並且還有一些重連機制的設定，這邊我們直接來看最下面的&lt;code&gt;this.open&lt;/code&gt;部份。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io-client/blob/master/lib/manager.js#L36&#34;&gt;Manger 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;instanceof&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;)) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;object&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;)) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;undefined&lt;/span&gt;;
+  }
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; {};
+
+  ...
+  
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;autoConnect&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;();
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;this.open 裡面的程式碼如下，這段就是&lt;code&gt;socket.io-client&lt;/code&gt;建立連線的地方，但這邊要注意，我們實際建立連線的地方為&lt;code&gt;eio(this.uri, this.opts)&lt;/code&gt;這段程式碼，所以我們接下來要去看&lt;code&gt;engion.io-client&lt;/code&gt;的程式碼。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io-client/blob/master/lib/manager.js#L220&#34;&gt;Manger.prototype.open 原始碼傳送門&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;Manager&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;fn&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;) {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;readyState %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;indexOf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open&amp;#39;&lt;/span&gt;)) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;opening %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;eio&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;uri&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;opening&amp;#39;&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;skipReconnect&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+
+ ....
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;engineioclient-&#34;&gt;engine.io-client 實際建立連線的地方&lt;/h3&gt;
+&lt;p&gt;這段程式碼是我們實際建立連線的地方，首先他會判斷我們的&lt;code&gt;transport&lt;/code&gt;是什麼，是要用&lt;code&gt;websocket&lt;/code&gt;還是&lt;code&gt;polling&lt;/code&gt;，然後確定好後，就使用&lt;code&gt;this.createTransport&lt;/code&gt;來建立實際上要用的&lt;code&gt;transport&lt;/code&gt;，最後在將要使用的 transport 開啟，然後他裡面將會建立連線了。&lt;/p&gt;
+&lt;p&gt;這裡要注意一下，如果在建立連線時什麼都沒有指定，那他會先使用 polling 來進行連線，並且在升級為 websocket。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/engine.io-client/blob/master/lib/socket.js#L220&#34;&gt; Socket.prototype.open 原始碼傳送門&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;rememberUpgrade&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;priorWebsocketSuccess&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transports&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;indexOf&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;websocket&amp;#39;&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;!==&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;websocket&amp;#39;&lt;/span&gt;;
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transports&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;) {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// Emit error on next tick so it can be listened to
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;error&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;No transports available&amp;#39;&lt;/span&gt;);
+    }, &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transports&lt;/span&gt;[&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;];
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;opening&amp;#39;&lt;/span&gt;;
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Retry with the next transport if the transport is disabled (jsonp: false)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createTransport&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;);
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transports&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;shift&lt;/span&gt;();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;();
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  }
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;open&lt;/span&gt;(); &lt;span style=&#34;color:#75715e&#34;&gt;// 使用指定的 transport 來建立連線
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;setTransport&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;);
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;heading&#34;&gt;前端流程圖&lt;/h3&gt;
+&lt;p&gt;前端這邊，我們最後補上一張流程圖，好讓各位官爺更好的追 code 。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20171026-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-&#34;&gt;後端接受到請求後，它做了啥 ??&lt;/h2&gt;
+&lt;p&gt;每當我們 socket io server 啟動時，會將 engine io server attach 到 http server (srv) 上監聽&lt;code&gt;request&lt;/code&gt;事件，下面程式碼的 srv 就是我們 attach 的 server。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io/blob/master/lib/index.js#L271&#34;&gt;attachServe 傳送門&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;initEngine&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;){
+  &lt;span style=&#34;color:#75715e&#34;&gt;// initialize engine
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;creating engine.io instance with opts %j&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;eio&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;attach&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;opts&lt;/span&gt;);
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// attach static file serving
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;_serveClient&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;attachServe&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt;);
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// Export http server
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;httpServer&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt;;
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// bind to engine events
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;bind&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;eio&lt;/span&gt;);
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當收到一個 http 請求時，會轉到 engine.io 下面這段程式碼中，然後會在&lt;code&gt;handleRequest進行主要處理&lt;/code&gt;，它這裡只會簡單的檢查一下 req 這個參數，而這參數就是我們 http request 請求內容。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/engine.io/blob/master/lib/server.js#L445&#34;&gt;server.on 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;check&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;)) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;intercepting request for path &amp;#34;%s&amp;#34;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;path&lt;/span&gt;);
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;OPTIONS&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;method&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;function&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;typeof&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;options&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handlePreflightRequest&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;options&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handlePreflightRequest&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;call&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;);
+      } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handleRequest&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;);
+      }
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;l&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;listeners&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;l&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;listeners&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;call&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;);
+      }
+    }
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下來，下面這段程式碼為&lt;code&gt;handleRequest&lt;/code&gt;程式碼，主要用來處理這個請求。首先他會先使用&lt;code&gt;verify&lt;/code&gt;進行檢查，看看這一次的請求是不是合法的，而它主要檢查兩個點，首先是&lt;code&gt;transport&lt;/code&gt;的檢查，我們要先確定&lt;code&gt;req._query.transport&lt;/code&gt;這個參數是否合法，因為我們是要用這參數來決定我們要用那種傳輸方式，而第二個檢查為&lt;code&gt;sid check&lt;/code&gt;，&lt;code&gt;sid&lt;/code&gt;就是每個 client 的 session id，在這邊會檢查該條 sid 是否存在以及如果存在是否合法。&lt;/p&gt;
+&lt;p&gt;檢查完這個 request 請求後，接下來就看看這個請求的 client 有沒有建立請起，如果沒有則執行&lt;code&gt;handshake&lt;/code&gt;，有的話則執行&lt;code&gt;onRequest&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/engine.io/blob/master/lib/server.js#L222&#34;&gt;handleRequest 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handleRequest&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;) {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;handling &amp;#34;%s&amp;#34; http request &amp;#34;%s&amp;#34;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;method&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prepare&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;;
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;verify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;sendErrorMessage&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+    }
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;_query&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sid&lt;/span&gt;) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;setting new request for existing client&amp;#39;&lt;/span&gt;);
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;clients&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;_query&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sid&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onRequest&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+    } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handshake&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;_query&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+    }
+  });
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下來我們來看看，如果這個 client 還沒建立的流程，也就是要進行&lt;code&gt;handshake&lt;/code&gt;，
+這個方法最主要的功能就是用來建立一條新的連線，然後最後會發送一個&lt;code&gt;connection&lt;/code&gt;事件到&lt;code&gt;socket.io&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/engine.io/blob/master/lib/server.js#L296&#34;&gt;Server.prototype.handshake 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handshake&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;transportName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;generateId&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;sendErrorMessage&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;errors&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;BAD_REQUEST&lt;/span&gt;);
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+    }
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;handshaking client &amp;#34;%s&amp;#34;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;transports&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;transportName&lt;/span&gt;](&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+      &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;…&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;…&lt;/span&gt;
+    
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+     &lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;…&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;…&lt;/span&gt;
+   
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onRequest&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;clients&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;clientsCount&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;once&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;close&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;delete&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;clients&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;];
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;clientsCount&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;;
+    });
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;);
+  });
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;當我們&lt;code&gt;engion.io&lt;/code&gt;已經建立好連線後，它會發送&lt;code&gt;connection&lt;/code&gt;訊息到&lt;code&gt;socket.io&lt;/code&gt;，然後它在下面這段程式碼，會收到這個事件，然後他這邊會建立一個 client，並且處理一些連線的事務。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io/blob/master/lib/index.js#L381&#34;&gt;bind 與 onconnection 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;bind&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;){
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onconnection&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;bind&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;));
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+};
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;Server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onconnection&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;incoming connection with id %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Client&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後我們來看看&lt;code&gt;client.connection&lt;/code&gt;這段程式碼做的事情，這裡它主要會將這位&lt;code&gt;client&lt;/code&gt;加入到&lt;code&gt;nsp&lt;/code&gt;中也就是 io 的 namespace 裡，但這邊 socket 還沒有產生喔。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io/blob/master/lib/client.js#L62&#34;&gt;Client.prototype.connect 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connecting to namespace %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsps&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;];
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ERROR&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Invalid namespace&amp;#39;&lt;/span&gt;});
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  }
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsps&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;]) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connectBuffer&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+  }
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sockets&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsps&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;;
+
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connectBuffer&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connectBuffer&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;forEach&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;);
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connectBuffer&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    }
+  });
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後在&lt;code&gt;add&lt;/code&gt;中，會將這個 client 產生一個 socket，然後將這條 socket 進行&lt;code&gt;onconnect&lt;/code&gt;，並且在最後，會執行&lt;code&gt;self.emit(&#39;connection&#39;, socket)&lt;/code&gt;這裡也就是我們在最上面，實際上觸發&lt;code&gt;connection&lt;/code&gt;事件的地方。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io/blob/master/lib/namespace.js#L159&#34;&gt;Namespace.prototype.add 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Namespace&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;fn&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;adding socket to nsp %s&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;){
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nextTick&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;conn&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;message&lt;/span&gt;);
+
+        &lt;span style=&#34;color:#75715e&#34;&gt;// track socket
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sockets&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;;
+
+        &lt;span style=&#34;color:#75715e&#34;&gt;// it&amp;#39;s paramount that the internal `onconnect` logic
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// fires before user-set events to prevent state order
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// violations (such as a disconnection before the connection
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// logic is complete)
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onconnect&lt;/span&gt;();
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;fn&lt;/span&gt;) &lt;span style=&#34;color:#a6e22e&#34;&gt;fn&lt;/span&gt;();
+
+        &lt;span style=&#34;color:#75715e&#34;&gt;// fire user-set events
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;);
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;);
+      } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;next called after client was closed - ignoring socket&amp;#39;&lt;/span&gt;);
+      }
+    });
+  });
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;;
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;我們最後來看一下&lt;code&gt;onconnect&lt;/code&gt;實際上做了那些事情，這個方法是當我們 connect 確定建立起來後，會進行的動作，它會將這條 socket 連線加入到 nsp 裡的 connected 這個地方，這個屬性也可以讓我們知道，一個 nsp 中有那些 socket 在進行連線。&lt;/p&gt;
+&lt;p&gt;然後並且會將這條 socket ，加入到一個已自已 id 為名的房間，所以假設我們要追蹤某個 client ，也可以選擇加入到該名使用者為名的房間，這樣該名使用者收到的事件，我們也都可以收到，不過這只是變化用法，到不是這邊的重點。&lt;/p&gt;
+&lt;p&gt;最後他會執行&lt;code&gt;this.packet&lt;/code&gt;就是會將這個訊息，傳送到 client 端。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/socketio/socket.io/blob/master/lib/socket.js#L299&#34;&gt;onconnect 原始碼&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onconnect&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket connected - writing packet&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connected&lt;/span&gt;[&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;join&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;skip&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;nsp&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;fns&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;skip&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;packet already sent in initial handshake&amp;#39;&lt;/span&gt;);
+  } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;({ &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;CONNECT&lt;/span&gt; });
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;heading1&#34;&gt;後端的流程圖&lt;/h3&gt;
+&lt;p&gt;最後，這邊將提供後端的流程圖，讓我們更容易的理解它的流程。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20171026-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -51,15 +472,115 @@ function lookup (uri, opts) { .... if (newConnection) { debug(&amp;#39;ignoring 
       <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170914/</guid>
-      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
-你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
-但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
-websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
-那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
-Socket.io 的組成 請參考筆者的這篇文章。
-Socketio 的架構
-簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &amp;quot;world&amp;quot;}訊息。
-var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.</description>
+      <description>&lt;p&gt;socket io 是 nodejs 所提供的套件，它主要可以做的事情就是&lt;code&gt;推播功能&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ?
+在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是&lt;code&gt;輪詢&lt;/code&gt;，固名思意就是指定時的去 server 找資料。&lt;/p&gt;
+&lt;p&gt;但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;websocket&lt;/code&gt;就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。&lt;/p&gt;
+&lt;p&gt;那&lt;code&gt;socket.io&lt;/code&gt;是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。&lt;/p&gt;
+&lt;h2 id=&#34;socketio-&#34;&gt;Socket.io 的組成&lt;/h2&gt;
+&lt;p&gt;請參考筆者的這篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://marklin-blog.logdown.com/posts/2906519&#34;&gt;Socketio 的架構&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-client--server-&#34;&gt;簡單 client 與 server 的溝通範例&lt;/h2&gt;
+&lt;p&gt;server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個&lt;code&gt;{hello: &amp;quot;world&amp;quot;}&lt;/code&gt;訊息。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sockets&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;world&amp;#39;&lt;/span&gt; });
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;my other event&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+    });
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;前端 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/socket.io/socket.io.js&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;p&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;t&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;script&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost:8080&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;my other event&amp;#39;&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;my&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;data&amp;#39;&lt;/span&gt; });
+    });
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;/&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;s&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;c&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;r&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;p&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;t&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這樣就可以完成簡單的推播功能囉。&lt;/p&gt;
+&lt;h2 id=&#34;socketio--rooms--namespaces&#34;&gt;Socket.io 的 Rooms 與 Namespaces&lt;/h2&gt;
+&lt;p&gt;在 socket.io 有兩個很重要的概念&lt;code&gt;rooms&lt;/code&gt;與&lt;code&gt;namespaces&lt;/code&gt;，這邊你只需要記好一件事，那就是它們兩個存在的原因都是為了&lt;code&gt;分組&lt;/code&gt;，把要傳送的訊息，送到你想要的群組中。&lt;/p&gt;
+&lt;h3 id=&#34;namespaces&#34;&gt;Namespaces&lt;/h3&gt;
+&lt;p&gt;我們先看看&lt;code&gt;namespaces&lt;/code&gt;，上面的範例中有沒有注意到，我們都是用&lt;code&gt;io&lt;/code&gt;來進行所有的操作，假設我們要放送訊息到所有連線的 socket，那我們只要下達該指令 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hi I am Mark&amp;#39;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下來然後我們也可以使用 rooms 來將 io 裡面的 socket 分類到不同的房間中，所以當我們要傳送指定的訊息到某個房間中只要下達下面的指令 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;to&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;全家就是我家&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hi I am Mark&amp;#39;&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那這邊我想問問，有沒有辦法建立另一個 io 呢 ? 例如我想建立一個是專門處理股票的 io ，而另一個是專門處理期貨的 io ，這時我們就可以使用&lt;code&gt;namespaces&lt;/code&gt;裡的&lt;code&gt;of&lt;/code&gt;這方法來處理。&lt;/p&gt;
+&lt;p&gt;例如我們先來建立一個股價的 namespaces :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;stock_io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#66d9ef&#34;&gt;of&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/stock&amp;#39;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後我們就可以使用這個&lt;code&gt;stock_io&lt;/code&gt;來進行我們上面提到的所有動作。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;namespaces 你可以想成， 子 io ，它可以做所有 io 可以做的事情 (基本上)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;room&#34;&gt;Room&lt;/h3&gt;
+&lt;p&gt;接下來我們來說說&lt;code&gt;rooms&lt;/code&gt;，這東東的概念和&lt;code&gt;namespace&lt;/code&gt;事實上很像，但記好，&lt;code&gt;rooms 是在 namespaces 底下的&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;假設你有一個需求，有3個用戶在用你的股價報價系統，其中兩個是在看 1101 台泥的股價，而其中一個是在看 2330 台積電 的股價，這時你應該要注意，不能將 2330 的股價推到在看 1101 股價的使用者那。&lt;/p&gt;
+&lt;p&gt;socket.io 的 rooms 的功能就可以解決上面的需求，&lt;code&gt;rooms&lt;/code&gt;的功能白話文就是你可以&lt;code&gt;發送訊息到指定的房間&lt;/code&gt;，像 1101 就是一個房間，而 2330 就是另一個房間，所以假設有 1101 的訊息要推送，只要針對該 room 的用戶進行推送就夠了。&lt;/p&gt;
+&lt;h4 id=&#34;-&#34;&gt;那要如何加入到房間呢 ?&lt;/h4&gt;
+&lt;p&gt;如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;io.on(&#39;connection&#39;, function(socket){
+  socket.join(&#39;1101&#39;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-1&#34;&gt;那要如何傳送訊息到指定的房間呢 ?&lt;/h4&gt;
+&lt;p&gt;如下園式碼，你就可以發送訊息到這個房間裡。注意這邊是用&lt;code&gt;io&lt;/code&gt;來發送訊息，上面簡單的範例是用&lt;code&gt;socket.emit&lt;/code&gt;來送是因為上面範例只需要發送訊息給那條 socket 連線就好，而這邊我們是要發送給&lt;code&gt;1101 這個 room&lt;/code&gt;中的 socket，所以要用&lt;code&gt;io&lt;/code&gt;來發送。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; io.to(&#39;1101&#39;).emit(&#39;xxxx股價&#39;)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;heading&#34;&gt;這兩個的差別&lt;/h3&gt;
+&lt;p&gt;最後終結一下這兩個的差別&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你可以把 namespace 的功能想成可以建立多個子 io ，不同的子 io 可以處理自已的事情，也代表有自已的 rooms ，io1 與 io2 兩個如果都有 room 為 movie 的，也不會影響到什麼，因為它們是分屬不同的 io 了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;-socketio--middleware&#34;&gt;在 Socket.io 中使用 middleware&lt;/h2&gt;
+&lt;p&gt;在平常我們 web 開發時，有時後會有下面這種需求 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每一個 http 請求進來前，需要先檢查登入狀態&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;通常這種時後我們就會建立一個 middleware 來處理登入狀態，這邊要注意 middleware 不是用來專門處理登入的東東，它只是一個概念，它真正的定義如下 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;middleware 又稱中介層，用來處理所有進入或離開&lt;code&gt;主體&lt;/code&gt;前的事務。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;像我們每個 http 請求進到主體前，我們需要先確認它的狀態，又或者是進到主題前就先將 log 寫好，這些都是可以放置到&lt;code&gt;middleware&lt;/code&gt;來處理，你只要記好，主體就只做主體要做的事情就好。&lt;/p&gt;
+&lt;p&gt;當然在 socket.io 中我們也是有這個需求，例如每當要建立 websocket 連線時，要預先處理的事情，我們都可以建立 middleware 來處理。&lt;/p&gt;
+&lt;p&gt;socket.io 提供&lt;code&gt;use&lt;/code&gt;方法來讓我們建立 middleware ，範例程式碼如下 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;createServer&lt;/span&gt;();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io&amp;#39;&lt;/span&gt;)(&lt;span style=&#34;color:#a6e22e&#34;&gt;srv&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;use&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// 0 -&amp;gt; 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;();
+});
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-client&amp;#39;&lt;/span&gt;)();
+&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+  &lt;span style=&#34;color:#75715e&#34;&gt;// run == 2 at this time
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;});
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;像上面的官方程式碼中，下面這段就是 midddleware 的使用方法，裡面的 use 就是一個 middleware 方法，在建立 websocket 前會先處理的事情。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;use&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;run&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;; &lt;span style=&#34;color:#75715e&#34;&gt;// 0 -&amp;gt; 1
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;();
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;所以假設我們需要先處理&lt;code&gt;log 事務&lt;/code&gt;與&lt;code&gt;快取事務&lt;/code&gt;時，我們程式碼就大概會長如下 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;use&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;logMiddleWare&lt;/span&gt;);
+&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;use&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;cacheMiddleWare&lt;/span&gt;);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;logMiddleWare&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;){
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;寫&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;~&lt;/span&gt;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;();
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cacheMiddleWare&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;){
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;取得暫存資料&lt;/span&gt;.....
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;next&lt;/span&gt;();
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;heading1&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://socket.io/docs/server-api/&#34;&gt;SOCKETIO 官網&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -68,13 +589,182 @@ var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.</description>
       <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170913/</guid>
-      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
-socket.io 主要由以下幾個東東構成的 :
- engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
-engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
-目前 engine.io 所提供的溝通方式有以下幾種 :
- polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
-var engine = require(&amp;#39;engine.io&amp;#39;); var server = engine.listen(80); server.on(&amp;#39;connection&amp;#39;, function(socket){ socket.send(&amp;#39;utf 8 string&amp;#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.</description>
+      <description>&lt;p&gt;socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。&lt;/p&gt;
+&lt;p&gt;socket.io 主要由以下幾個東東構成的 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;engine.io、engino.io-client&lt;/li&gt;
+&lt;li&gt;socket.io-parser&lt;/li&gt;
+&lt;li&gt;socket.io-adapter&lt;/li&gt;
+&lt;li&gt;socket.io-client&lt;/li&gt;
+&lt;li&gt;socket.io-protocol&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。&lt;/p&gt;
+&lt;h2 id=&#34;engineio&#34;&gt;engine.io&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;engine.io&lt;/code&gt;是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，&lt;code&gt;socket.io 的核心就是engine.io&lt;/code&gt;，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。&lt;/p&gt;
+&lt;p&gt;目前 engine.io 所提供的溝通方式有以下幾種 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;polling-jsonp&lt;/li&gt;
+&lt;li&gt;polling-xhr&lt;/li&gt;
+&lt;li&gt;pollin&lt;/li&gt;
+&lt;li&gt;websocket&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;engine.io&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;engine&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;80&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;){
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;utf 8 string&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;send&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Buffer&lt;/span&gt;([&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;])); &lt;span style=&#34;color:#75715e&#34;&gt;// binary data
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;enginoioclient&#34;&gt;engino.io-client&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;engine.io-client&lt;/code&gt;是&lt;code&gt;socket.io-client&lt;/code&gt;的核心，所有關鍵的連線、選擇傳輸方式，都是在這裡面執行。&lt;/p&gt;
+&lt;p&gt;我們這裡來看看，它是從那決定要用那種的&lt;code&gt;傳輸方式&lt;/code&gt;(websocket、polling)。&lt;/p&gt;
+&lt;p&gt;在&lt;code&gt;engine.io-client&lt;/code&gt;下面這段程式碼(&lt;a href=&#34;https://github.com/socketio/engine.io-client/blob/master/lib/socket.js#L405&#34;&gt;程式碼傳送門&lt;/a&gt;)中 ，這段&lt;code&gt;onOpen&lt;/code&gt;是在 socket 要與 server 進行連線時，會先執行的事件，其中，就是由&lt;code&gt;this.probe(this.upgrades[i])&lt;/code&gt;這個方法來決定要用什麼方式(websocket、polling)來進行傳輸。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;prototype&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onOpen&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket open&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open&amp;#39;&lt;/span&gt;;
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;Socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;priorWebsocketSuccess&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;websocket&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;flush&lt;/span&gt;();
+
+  &lt;span style=&#34;color:#75715e&#34;&gt;// we check for `readyState` in case an `open`
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;// listener already closed the socket
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;open&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;readyState&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;upgrade&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;transport&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;pause&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;debug&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;starting upgrade probes&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;l&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;upgrades&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;l&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;probe&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;upgrades&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;]);
+    }
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後在後端 server ，也就是&lt;code&gt;engine.io&lt;/code&gt;裡根據前端傳送回來的&lt;code&gt;url&lt;/code&gt;參數的&lt;code&gt;Transport&lt;/code&gt;來決定要用什麼來進行傳輸 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;url 範例 : 
+
+/engine.io/default/?transport=polling
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;engine.io&lt;/code&gt;的下面這段程式碼裡，&lt;code&gt;check&lt;/code&gt;用來驗證傳進來的參數是否合法，來決定這個&lt;code&gt;transport&lt;/code&gt;參數是否合法，然後再來將 http 升級為 websocket 協義。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;upgrade&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;head&lt;/span&gt;) {
+      &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;check&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;)) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;handleUpgrade&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;req&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;head&lt;/span&gt;);
+      } &lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;!==&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;options&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;destroyUpgrade&lt;/span&gt;) {
+        &lt;span style=&#34;color:#75715e&#34;&gt;// default node behavior is to disconnect when no handlers
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// but by adding a handler, we prevent that
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// and if no eio thing handles the upgrade
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#75715e&#34;&gt;// then the socket needs to die!
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;        &lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+          &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;writable&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;bytesWritten&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;) {
+            &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;();
+          }
+        }, &lt;span style=&#34;color:#a6e22e&#34;&gt;destroyUpgradeTimeout&lt;/span&gt;);
+      }
+    });
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;socketioparser&#34;&gt;socket.io-parser&lt;/h2&gt;
+&lt;p&gt;在 socket.io 的世界中，有一個東西叫做 &lt;code&gt;packet&lt;/code&gt;，它是所有溝通的基礎包，事實上它也就是 socket.io 的協議，有一個東西叫&lt;code&gt;socket.io-protocol&lt;/code&gt;(&lt;a href=&#34;https://github.com/socketio/socket.io-protocol&#34;&gt;傳送門&lt;/a&gt;)，它裡面有定議好，你這個 packet 要長什麼樣子。&lt;/p&gt;
+&lt;p&gt;下面為最簡單的 packet 包 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    type: 2,
+    data: [{
+        word: &amp;quot;hello mark&amp;quot;
+    },{
+        word: &amp;quot;hello gg&amp;quot;
+    }]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中&lt;code&gt;2&lt;/code&gt;所代表的為這個 packet 是要用來處理&lt;code&gt;event&lt;/code&gt;事件，像要傳送到前端的事件也是用這個代號，這個數字會由 socket.io-protocol 裡定義好。&lt;/p&gt;
+&lt;p&gt;然後每當我們要傳送 packet 到前端時，都會先使用socket.io-parser`將 packet 給 encode ，而致於為什麼要 encode 後在傳呢 ? 主要原因，可能是希望儘可能的將要傳送出去的 packet 縮小已節省傳輸成本。&lt;/p&gt;
+&lt;p&gt;像官方所提供的&lt;code&gt;socket.io-parser&lt;/code&gt;會將上面的 packet 包 encode 成如下數據 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;2[{&amp;quot;word&amp;quot;:&amp;quot;hello mark&amp;quot;},{&amp;quot;word&amp;quot;:&amp;quot;hello gg&amp;quot;}]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;它的確比原本要傳輸的資料還少點兒東西，然後前端在再用相同的&lt;code&gt;socket.io-parser&lt;/code&gt;來進行&lt;code&gt;decode&lt;/code&gt;，變成原來的 packet 包。&lt;/p&gt;
+&lt;p&gt;這就是&lt;code&gt;socket.io-parser&lt;/code&gt;所做的事情，當然我們也可以自訂一個 parser ，如果你有需要的話，例如你想使用 xml 來當傳輸格式，這時你就要自訂一個 parser 了，雖然覺得應該不會想用xml來傳。&lt;/p&gt;
+&lt;h2 id=&#34;socketioadapter&#34;&gt;socket.io-adapter&lt;/h2&gt;
+&lt;p&gt;在理解這套件之前，我們先看看&lt;code&gt;adapter&lt;/code&gt;這代表什麼意思呢 ? 我們直接用這個單字去 google 圖片一下，然後可以看到下圖的結果 :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20171011-2.jpg&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;嗯哼，就是電源轉接器，在插頭和我們的機器之間所需要的東西，在程式開發中，你有沒有遇過下面這種問題呢 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我和 A 要 api 來使用，但發覺它的 api 我需要調整過後才能使用。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以通常你這時，應該中間會有一個東西，來呼叫這隻 api ，然後再裡面先整理一下，然後才傳出去給主要的方法來使用，對吧 ? 這時那中間的東東就是所謂的&lt;code&gt;adapter&lt;/code&gt;它本身就是一種設計模式。&lt;/p&gt;
+&lt;p&gt;好回來到&lt;code&gt;socket.io-adapter&lt;/code&gt;，那我們的插頭和機器各代表什麼呢 ? 先來說說機器，機器就是我們的 socket.io 那插頭呢 ? 嚴格來說是&lt;code&gt;儲存空間&lt;/code&gt;，儲啥呢 ? 就是&lt;code&gt;namespace、rooms、sids&lt;/code&gt;這些東東。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;socket.io-adapter&lt;/code&gt;預設是存放在記憶體之內，所以如果你要用 redis 或 mq 之類的來做儲放，你就只要調整你的 adapter 就好，目前官方有提供&lt;code&gt;socket.io-redis&lt;/code&gt;可使用，它也是一個 adapter。&lt;/p&gt;
+&lt;p&gt;基本上你要進行任何 socket.io 提供的 emit、broadcast、join room 這些功能，都一定會到這一層來做處理。&lt;/p&gt;
+&lt;h2 id=&#34;socketioclient&#34;&gt;socket.io-client&lt;/h2&gt;
+&lt;p&gt;這個東東就是讓我們在前端使用的東西，假設我們在後端 server 建立好喔，我們就可以如下面這樣，連建立連線 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/socket.io/socket.io.js&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){});
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;event&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){});
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;disconnect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){});
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後如果你在後端要寫整合測試時，想要模擬前端，也可以如下使用 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-client&amp;#39;&lt;/span&gt;)(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){});
+&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;event&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){});
+&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;disconnect&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這邊還有一個重點，它與 socket.io 一樣核心都是&lt;code&gt;engine.io-client&lt;/code&gt;並且也是由它來決定我們要用什麼傳輸方式(polling、websocket)。&lt;/p&gt;
+&lt;h2 id=&#34;socketioprotocol&#34;&gt;socket.io-protocol&lt;/h2&gt;
+&lt;p&gt;最後是&lt;code&gt;socket.io-protocol&lt;/code&gt;，這個事實上上面有說明過了，我們在來複習一次。&lt;/p&gt;
+&lt;p&gt;它是個協定，它不是程式碼、套件或其它可以執行的東西，&lt;code&gt;它是一個規定&lt;/code&gt;，它定議好socket.io 要如何的傳輸資料，它主要定義了以下二個主題 :&lt;/p&gt;
+&lt;h3 id=&#34;parser-api&#34;&gt;Parser API&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Parser API&lt;/code&gt;上面有提到，它是用來將 packet 包進行 encode 與 decode 的東東，在 protocol 中，它實際定義一個 parser api 需要有那些東西。&lt;/p&gt;
+&lt;p&gt;下面為它的主要定義&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Encoder.encode(Object: packet, Function: callback)&lt;/li&gt;
+&lt;li&gt;Decoder.add(Object:encoding)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;Encoder&lt;/code&gt;就是用來進行 encode 的類別，然後它需要提供&lt;code&gt;encode&lt;/code&gt;方法，並且有兩個參數分別為&lt;code&gt;packet 和 callback&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;而&lt;code&gt;Decoder&lt;/code&gt;就是要將 packet 進行 decod 會類別，並且需要有個&lt;code&gt;add&lt;/code&gt;方法，來進行處理。&lt;/p&gt;
+&lt;p&gt;像我們上面提到的&lt;code&gt;socket.io-parser&lt;/code&gt;就是根據&lt;code&gt;socket.io-protocol&lt;/code&gt;所定義的&lt;code&gt;parser api&lt;/code&gt;實作出的程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io-parser&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;encoder&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Encoder&lt;/span&gt;();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;type&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;EVENT&lt;/span&gt;,
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;test-packet&amp;#39;&lt;/span&gt;,
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;13&lt;/span&gt;
+};
+&lt;span style=&#34;color:#a6e22e&#34;&gt;encoder&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;encode&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;encodedPackets&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;decoder&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;parser&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Decoder&lt;/span&gt;();
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;decoder&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;decoded&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;decodedPacket&lt;/span&gt;) {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// decodedPacket.type == parser.EVENT
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// decodedPacket.data == &amp;#39;test-packet&amp;#39;
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#75715e&#34;&gt;// decodedPacket.id == 13
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;  });
+
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;for&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;encodedPackets&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt;; &lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;decoder&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;add&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;encodedPackets&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;i&lt;/span&gt;]);
+  }
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;packet&#34;&gt;Packet&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;Packet&lt;/code&gt;是&lt;code&gt;socket.io&lt;/code&gt;世界裡的溝通包包，像你如果要放送訊息或是進行 connect 時，它們都是傳送的都是&lt;code&gt;packet&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;在 protocol 中，它定義好了，一個 packet 要長什麼樣子 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+    type: Number,
+    data: [],
+    id: Number,
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;type&#34;&gt;type&lt;/h4&gt;
+&lt;p&gt;就是用來決定，這個包是要做什麼事情，protocol 它定義了以下幾種類型 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CONNECT(0)&lt;/li&gt;
+&lt;li&gt;DISCONNECT(1)&lt;/li&gt;
+&lt;li&gt;EVENT(2)&lt;/li&gt;
+&lt;li&gt;ACK(3)&lt;/li&gt;
+&lt;li&gt;ERROR(4)&lt;/li&gt;
+&lt;li&gt;BINARY_EVENT(5)&lt;/li&gt;
+&lt;li&gt;INARRY_ACK(6)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;data&#34;&gt;data&lt;/h4&gt;
+&lt;p&gt;就是你這個包傳送的資訊，它常都是我們自已的，不過記好，它是要放成一個陣列。&lt;/p&gt;
+&lt;h4 id=&#34;id&#34;&gt;id&lt;/h4&gt;
+&lt;p&gt;用來識別這個包是誰的，需要時在設定。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;總結&lt;/h2&gt;
+&lt;p&gt;最後我們來使用下面這張圖，來總結一下 socket.io 這個 framework 的架構 :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20171011-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上圖為 socket.io 的整體架構，我們最後來複習一次。&lt;/p&gt;
+&lt;p&gt;首先最主要的主體為&lt;code&gt;engino.io&lt;/code&gt;，所有的連線、傳輸方式的核心都是他，然後當你想要與其它東西進行溝通時，它們統一的溝通元件&lt;code&gt;packet&lt;/code&gt;都需要使用&lt;code&gt;socket.io-parser&lt;/code&gt;來進行 encode 與 decode ，因為某些傳輸方式 websocket 只能用文字與二進位數據，還有這些定義都會寫在 &lt;code&gt;socket.io-protocol&lt;/code&gt;裡面，最後如果想你要與儲存元件溝通，請建立一個 &lt;code&gt;adapter&lt;/code&gt; 來處理。&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/socketio&#34;&gt;Socket.io Github&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>

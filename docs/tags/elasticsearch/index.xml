@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>elasticsearch on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Thu, 09 Aug 2018 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,14 +18,97 @@
       <pubDate>Thu, 09 Aug 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180809/</guid>
-      <description>在之前筆者的這篇文章中：
-一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
-在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
-但是這篇文章中所提到的架構有個問題。
-這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
-ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
-會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
-如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網</description>
+      <description>&lt;p&gt;在之前筆者的這篇文章中：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7801415-establishment-of-a-log-system-based-on-aws-elasticsearch&#34;&gt;一個基於 AWS Elasticsearch 的用戶行為 log 系統建立&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。&lt;/p&gt;
+&lt;p&gt;但是這篇文章中所提到的架構有個問題。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;這個版本有什麼問題呢　？&lt;/h2&gt;
+&lt;p&gt;那就是在某些情況下它會一直噴以下錯誤 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ServiceUnavailableException: Slow down.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那為什麼會一直噴 Slow down 呢 ?&lt;/p&gt;
+&lt;p&gt;會發生這個的原因在於，我們有採到 aws firehose 的限制，如下：
+Amazon Kinesis Data Firehose 有以下限制。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束：
+
+* 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。
+* 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。
+
+
+! 注意
+当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/firehose/latest/dev/limits.html&#34;&gt;來源 : 官網&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;加強版&lt;/h2&gt;
+&lt;p&gt;原本的版本如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-3-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然後我們會將它修改成如下圖，就是在資料源與 firehose 之間多增加了 data stream。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用 AWS data stream 有以下幾個好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以自由的調整傳輸限制。(這樣就可以解決上述的問題)&lt;/li&gt;
+&lt;li&gt;未來如果有其它單位想要接受這個資料源，那只要請對方接上這個 data stream，它就可以受到資料了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;aws-kinesis-data-stream-&#34;&gt;AWS Kinesis Data Stream 申請&lt;/h2&gt;
+&lt;p&gt;事實上就只有兩個東西要填寫&lt;code&gt;Stream Name&lt;/code&gt;與&lt;code&gt;Shard Number&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;其中這裡簡單的說一下 Shard 概念。&lt;/p&gt;
+&lt;h2 id=&#34;stream-shard-&#34;&gt;Stream Shard (碎片)&lt;/h2&gt;
+&lt;p&gt;在 AWS kinesis data stream 中有個 shard 的概念，它就是指 stream 的子集合。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;每條 stream 都是由 1 至 n 個 shard 所組合成，這樣有幾個好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在傳輸資料給 stream 時，可以將傳輸量平均的分散給不同 shard，這樣可以避免觸碰到每個 shard 的傳輸限制。&lt;/li&gt;
+&lt;li&gt;你可以指定那一些類型的資料傳輸到 A Shard，那些類型的資料傳輸到 B Shard，這樣有助於你放便管理資料流。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;shard-&#34;&gt;Shard 的限制&lt;/h3&gt;
+&lt;p&gt;上面有提到每個 stream 都有傳輸限制，這裡我們就來看一下它的限制有那些。&lt;/p&gt;
+&lt;p&gt;以下從 Aws &lt;a href=&#34;https://docs.aws.amazon.com/zh_tw/streams/latest/dev/service-sizes-and-limits.html&#34;&gt;官網&lt;/a&gt;擷取 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;單一碎片每秒可擷取多達 1 MiB 的資料 (包括分割區索引鍵) 或每秒寫入 1,000 筆記錄。同樣地，如果您將串流擴展到 5,000 個碎片，串流每秒即可擷取多達 5 GiB 或每秒 500 萬筆記錄。若您需要更多的擷取容量，可以使用 AWS Management Console 或 UpdateShardCount API 輕鬆擴展串流中的碎片數目。&lt;/li&gt;
+&lt;li&gt;GetRecords 每次呼叫可從單一碎片擷取最多 10 MiB 的資料，每次呼叫最多 10,000 筆記錄。每呼叫一次 GetRecords 即計為一筆讀取交易。&lt;/li&gt;
+&lt;li&gt;每個碎片每秒可支援最多 5 筆讀取交易。每筆讀取交易可提供多達 10,000 筆記錄，每筆交易的上限為 10 MiB。&lt;/li&gt;
+&lt;li&gt;每個碎片透過 GetRecords 每秒可支援最多 2 MiB 的總資料讀取速率。如果呼叫 GetRecords 傳回 10 MiB，在接下來的 5 秒內發出的後續呼叫將擲回例外狀況。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;-shard&#34;&gt;如何將資料傳輸到指定的 Shard&lt;/h4&gt;
+&lt;p&gt;下面為一段 nodejs 寫入資料到 stream 的範例碼，其中注意到&lt;code&gt;PartitionKey&lt;/code&gt;這個東東，它就是可以幫助你指定到想要的 Shard。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;aws-sdk&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;AWS_KINESIS_STREAM&amp;#39;&lt;/span&gt;];
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uuidv1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;uuid/v1&amp;#39;&lt;/span&gt;);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;kinesis&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Kinesis&lt;/span&gt;({&lt;span style=&#34;color:#a6e22e&#34;&gt;region&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;AWS_KINESIS_REGION&amp;#39;&lt;/span&gt;]});
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;exports&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Promise((&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 多加換行符號是因為這樣才能在 aws athena 進行解析
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;StreamName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;PartitionKey&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uuidv1&lt;/span&gt;()
+      };
+
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;kinesis&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+          &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+        }
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;();
+      });
+    });
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;PartitionKey&lt;/code&gt;基本上就是用來讓 AWS kinesis 來決定你要去那一個 Shard。&lt;/p&gt;
+&lt;p&gt;假設你的文件 A 傳輸時 PartitionKey 設為 GroupA 這個文字，那它就會跑到某個 Shard A 去，如果這時再傳輸個文件 B 並且 PartitionKey 也設定為 GroupA，那這一份文件也會傳輸到 Shard A。&lt;/p&gt;
+&lt;p&gt;所以當你想將同一類型的文件，都傳輸到同一個 Shard 時，記得將 PartitionKey 設為相同。&lt;/p&gt;
+&lt;p&gt;但如果是想將它平均分散到每一個 Shard 呢 ?&lt;/p&gt;
+&lt;p&gt;事實上有兩個方法，首先第一種方法就是每一丟資料時，先去抓這個 stream 看它有幾個 shards，然後再根據它的數量，來隨機產生個數字，例如有 4 個 shards 那你每次丟資料時，就從 1 ~ 4 隨機產生一個數字，然後再將它設到 PartitionKey 中，那這樣基本上就會平均分配。&lt;/p&gt;
+&lt;p&gt;而另一種方法就是每一次的 PartitionKey 都使用 uid 來設定，這樣也可以將他平均的進行分配。&lt;/p&gt;
+&lt;p&gt;不過我是比較建議用第二種，因為第一種每一次都要去 AWS 那抓取 stream 裡的 shards 大小，這樣太耗時間了。&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_tw/streams/latest/dev/introduction.html&#34;&gt;AWS-kinesis-data-stream 官網&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -35,14 +117,201 @@ ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
       <pubDate>Wed, 08 Aug 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180808/</guid>
-      <description>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
-在開始搞前先說說我的簡單需求:
- 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
- 這時通常時間的儲法會有兩種選擇:
- Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
-其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
-const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&amp;gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
-curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;, &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;, &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;, &amp;quot;_score&amp;quot; : 1.</description>
+      <description>&lt;p&gt;我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。&lt;/p&gt;
+&lt;p&gt;在開始搞前先說說我的簡單需求:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如&lt;code&gt;2017-07-16T19:20:30&lt;/code&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這時通常時間的儲法會有兩種選擇:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Timestamp&lt;/li&gt;
+&lt;li&gt;ISO 標準&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;-timestamp-&#34;&gt;咱們先來看看 Timestamp 的儲法與查找&lt;/h2&gt;
+&lt;p&gt;下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。&lt;/p&gt;
+&lt;p&gt;其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: Date.now() // timestamp 1533634630945 ,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;elasticsearch-&#34;&gt;Elasticsearch 查找&lt;/h3&gt;
+&lt;p&gt;然後我們直接下來找找剛剛新增的那一筆。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;{
+        &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;,
+        &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;,
+        &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;,
+        &amp;quot;_score&amp;quot; : 1.0,
+        &amp;quot;_source&amp;quot; : {
+          &amp;quot;name&amp;quot; : &amp;quot;Mark III&amp;quot;,
+          &amp;quot;age&amp;quot; : 40,
+          &amp;quot;created_at&amp;quot; : 1533634726145 (2018年08月07日17點38分46秒),
+        }
+      }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那接下來我們在來根據時間區間來進行搜尋會如何呢??&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T17:00:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T18:00:22&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;找不到 !!!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;然後我們如果改成如下的 query，就找的到了……&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T09:00:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T10:00:22&amp;quot;
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-timestamp--8--&#34;&gt;為什麼儲 timestamp 的搜尋要將時間減 8 小時呢 ??&lt;/h3&gt;
+&lt;p&gt;先來看看 timestamp 的意思為啥 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;timestamp 是指格林威治時間1970年01月01日00时00分00秒到現在的總秒數。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那格林威治時間離咱(台灣)這裡多遠 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;8 個小時&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以說 1533634726145 實際上儲放是指&lt;code&gt;2018年08月07日9點38分46秒&lt;/code&gt;而不是&lt;code&gt;2018年08月07日17點38分46秒&lt;/code&gt;，所以假設我們不給時間區域而直接下 query 就會發生找不到的情況，下面為我們有給時間區域的下法，這樣就找的到了。&lt;/p&gt;
+&lt;p&gt;這種下法的意思就是，我們要找這段時間的資料，並且我們的時間區域為&lt;code&gt;+8&lt;/code&gt;小時。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T17:00:22&amp;quot;,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T18:00:22&amp;quot;,
+                &amp;quot;time_zone&amp;quot;: &amp;quot;+08:00&amp;quot;
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-kibana--discover--query-&#34;&gt;那在 kibana 的 discover 要如何下 query ?&lt;/h3&gt;
+&lt;p&gt;在 kibana 如果執行下面的 lucene query 的話，會找到不到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T17:00:22 TO 2018-08-07T18:00:22]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一樣要和他說明你現在在什麼時區才可以找到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T17:00:22+08:00 TO 2018-08-07T18:00:22+08:00]
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;-iso-&#34;&gt;再來看看 ISO 標準的儲法&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: &amp;quot;2018-08-07T17:00:22Z&amp;quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-elasticsearch--&#34;&gt;先單純的看 Elasticsearch 查找有沒有問題 ~&lt;/h3&gt;
+&lt;p&gt;然後我們一樣先用 es 的 search 來找找。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T16:30:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T17:30:22&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後發現 &lt;strong&gt;找得到 !!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;主要原因是我們直接是儲放固定的 ISO 時間，而不像是上面 timestamp 它會幫你先轉一下成 ISO 然後你在查找，它在幫你轉時，會轉成 +0 的時間，所以才會找不到。&lt;/p&gt;
+&lt;h3 id=&#34;-kibana--&#34;&gt;再來看看 kibana 內的顯示與查找有沒有問題 ~&lt;/h3&gt;
+&lt;h4 id=&#34;-kibana--1&#34;&gt;首先 kibana 內顯示會有問題 !&lt;/h4&gt;
+&lt;p&gt;首先你只會看到下面這個資料，注意我們上面儲的是&lt;code&gt;2018-08-07T17:00:22Z&lt;/code&gt;，WTF 為啥kibana 顯示變成&lt;code&gt;2018-08-08T01:00:22.22&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;問題在於 kibana 認為 Elasticsearch 裡所儲放的時間區段為&lt;code&gt;+0&lt;/code&gt;，所以到了 kibana 預設會判斷你的 browser 設定那個時區，然後咱們這是台灣所以會自動的轉換成:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2018-08-07T17:00:22Z + 8 h = 2018-08-08T01:00:22.22&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;name:Mark III 
+age:40 
+created_at: 2018-08-08T01:00:22.22 
+_id:49585877623136865488831537954762517193201839360268304386.0 _type:log 
+_index:api 
+_score:1
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-&#34;&gt;搜尋沒問題 !&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T16:30:22 TO 2018-08-07T17:30:22]
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-1&#34;&gt;那要如何顯示的問題呢 ?&lt;/h4&gt;
+&lt;p&gt;建立在 elasticsearch 時，儲 ISO 時和他說時間區段，如下，注意多了&lt;code&gt;+08:00&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: &amp;quot;2018-08-07T17:30:22+08:00&amp;quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後不論是在 elasticsearch 或 kibana 搜尋時，時間都要多加時間區段:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T16:30:22+08:00 TO 2018-08-07T17:30:22+08:00]
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T16:30:22+08:00&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T17:30:22+08:00&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading&#34;&gt;結論&lt;/h2&gt;
+&lt;p&gt;基本上如何一開始就選擇儲 timestamp 那後來只要在查找時，標示你現在是在那個時區，那就都可以搜尋到。但是如果一開始就要儲 ISO 標準時，就要用上面的儲法，這樣在 es 與 kibana 才能查找到你需要的資料。&lt;/p&gt;
+&lt;p&gt;順到說一下，我一開始選擇時會選擇 ISO 標準有以下幾個原因:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;服務沒有多時區的問題。&lt;/li&gt;
+&lt;li&gt;希望 es 中儲放 iso 標準，有助於直接尋找時，可以很容易知道他的時間點，不需要在透過 kibana 或其它工具來轉換顯示。&lt;/li&gt;
+&lt;li&gt;因為同時間還有一份 log 會儲放到 s3，如果是儲 timestamp 我們使用 athena 查找後的顯示，也很難看，而且如果是將檔案抓下來用 grep，就更麻煩了。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
     </item>
     
     <item>
@@ -51,17 +320,132 @@ curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;q
       <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180629/</guid>
-      <description>本篇文章中，我們要說明的主題為 :
- 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
- 本篇文章中，我們將分成以下的主題:
- Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
-其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
-這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
- 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
-V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
-所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
-這裡我們選擇了AWS kinesis，它的優點如下:
- 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !</description>
+      <description>&lt;p&gt;本篇文章中，我們要說明的主題為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本篇文章中，我們將分成以下的主題:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Log 系統的架構說明&lt;/li&gt;
+&lt;li&gt;AWS 的工具申請 (Elasticsearch、Kinesis、S3)&lt;/li&gt;
+&lt;li&gt;Log client 端的小實作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;log-&#34;&gt;Log 系統的架構說明&lt;/h2&gt;
+&lt;h3 id=&#34;v1&#34;&gt;V1&lt;/h3&gt;
+&lt;p&gt;一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。&lt;/p&gt;
+&lt;p&gt;其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。&lt;/p&gt;
+&lt;p&gt;這裡我們選擇了使用&lt;code&gt;Elasticsearch&lt;/code&gt;來當接受端，主要的理由如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以進行快速的搜尋&lt;/li&gt;
+&lt;li&gt;可擴展性強&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-1-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;v2&#34;&gt;V2&lt;/h3&gt;
+&lt;p&gt;那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。&lt;/p&gt;
+&lt;p&gt;所以這裡我們會增加一個&lt;code&gt;Broker&lt;/code&gt;，架構圖如下，所有的資料來源都會先送到&lt;code&gt;Broker&lt;/code&gt;來後在送到儲放點。&lt;/p&gt;
+&lt;p&gt;這裡我們選擇了&lt;code&gt;AWS kinesis&lt;/code&gt;，它的優點如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。&lt;/li&gt;
+&lt;li&gt;AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。&lt;/li&gt;
+&lt;li&gt;可以設定 log 同步也備份到 S3。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;-20181102-updated&#34;&gt;!!! 2018-11-02 Updated&lt;/h4&gt;
+&lt;p&gt;注意關於第二點，AWS Kinesis 可以處理任何數量的串流這句話，是有條件的，要使用 AWS Kinesis Data Streams 然後在接到 AWS kinesis firhose stream 才能擴展數量。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-2-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;v3&#34;&gt;V3&lt;/h3&gt;
+&lt;p&gt;那 V2 有啥缺點呢 ? 事實上已經沒啥太大的缺點，但是有個問題，因為我們資料來源端是儲放在 Elasticsearch ，而它的缺點就是，成本比較高，基本上 1 MB 的壓縮文檔 log ，轉換到 Elasticsarch 中大約會乘上 10 ~ 15 倍，所以除非公司錢很多，不然不會將太多的 log 儲到 Elasticsearch 中。&lt;/p&gt;
+&lt;p&gt;所以這裡我們的方案是，只在 Elasticsearch 中儲放約 1 個月的資料，然後超過一個月的資料都將儲放到 S3 中，有需要時在時用&lt;code&gt;AWS Athena&lt;/code&gt;來查詢。&lt;/p&gt;
+&lt;p&gt;最後架構就長的如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-3-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;aws--elasticsearchkinesiss3&#34;&gt;AWS 的工具申請 (Elasticsearch、Kinesis、S3)&lt;/h2&gt;
+&lt;p&gt;由於 Elasticsearch 與 S3 建立資訊，網路上都很多了，所以本篇就不多說囉。&lt;/p&gt;
+&lt;h3 id=&#34;aws-elasticsearch&#34;&gt;AWS Elasticsearch&lt;/h3&gt;
+&lt;p&gt;下圖為 aws elasticsearch 建立好的狀態，然後你只要用 curl 打它給的網址，有出現像下面的訊息輸出，那就建立成功囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-4-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-6-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;aws-s3&#34;&gt;AWS S3&lt;/h3&gt;
+&lt;p&gt;就是點個 create bucket 那個鈕，然後一直按就好了，然後其它細節 google 一下就有囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-5-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;aws-kinesis&#34;&gt;AWS Kinesis&lt;/h3&gt;
+&lt;p&gt;接下來 AWS Kinesis 的設定 google 比較難找到，所以來個比較詳細點兒的說明。&lt;/p&gt;
+&lt;p&gt;AWS Kinesis 有分為四種，其中我們要使用的為&lt;code&gt;Amazon Kinesis Data Firehose&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;然後建立步驟如下。&lt;/p&gt;
+&lt;h4 id=&#34;1--delivery-stream-name&#34;&gt;1. 填寫它的 Delivery stream name&lt;/h4&gt;
+&lt;p&gt;到時我們要丟 log 到 stream 時需要使用到他。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-8-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-&#34;&gt;2. 選擇資料來源&lt;/h4&gt;
+&lt;p&gt;它有兩個選項分別為 Direct PUT or other sources 與 Kinesis stream ，這裡我們選擇 Direct PUT or other sources，我們只要知道選了它，就可以使用 AWS SDK 的 PUT APIs 來將資料丟到 Kinesis 中。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-9-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3-&#34;&gt;3. 選擇是否要將資料進行加工後，再丟到儲放端&lt;/h4&gt;
+&lt;p&gt;這裡可以讓我們決定，是不是要將 kinesis 中的資料，經過『加工』後，再丟到儲放端，加工的選擇有 AWS Lambda 或是 AWS Glue ，這裡我們先不需要處理，所以都選&lt;code&gt;Disable&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-10-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4---aws-elasticsearch&#34;&gt;4. 選擇資料儲放端 - AWS Elasticsearch&lt;/h4&gt;
+&lt;p&gt;然後選擇我們要把資料丟到 Amzaon Elasticsearch Service。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-11-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5--aws-elasticsearch-&#34;&gt;5. 設定 AWS Elasticsearch 的目的&lt;/h4&gt;
+&lt;p&gt;這裡我們一個一個來看要填啥。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Domain&lt;/strong&gt;: 就是選擇你建立好的 AWS ES 的 domain，正常來說你點那個選項鈕應該都會跑出你剛剛建立的 AWS ES。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Index&lt;/strong&gt;: 選擇你要將資料丟到 ES 的那個索引，如果那個索引不在則會自動新建一個。這裡我們建立一開始先預先建好，如果沒有，它會依據你丟的 doc 來建立一個索引，而這索引可能有很多你用不到的東西。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Index rotation&lt;/strong&gt;: 這個地方你可以設定是否給你的索引設定時間簽，假設你上面設的索引為&lt;code&gt;api&lt;/code&gt;，那如果選擇&lt;code&gt;一天&lt;/code&gt;，那生出來的索引會長成&lt;code&gt;api-2018-01-01&lt;/code&gt;這樣，然後你到第二天時再丟個 doc 索引會長成&lt;code&gt;api-2018-01-2&lt;/code&gt;，這裡關係到索引策略的問題，如果只是簡單試用，就不用設這個 (會另開一篇來討論索引策略)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: 就是設定 ES Index 中 type 選擇。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Retry duration&lt;/strong&gt;: 就是重試時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-12-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;6--s3-&#34;&gt;6. 設定 S3 備份&lt;/h4&gt;
+&lt;p&gt;這就是 kinesis 方便的地方，他可以自動的幫我們將 log 備份到 S3，而你可以選擇全部備份或是失敗的 log 才記錄。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-13-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;7--aws-kinesis-&#34;&gt;7. 設定 AWS kinesis 的執行區間&lt;/h4&gt;
+&lt;p&gt;AWS kinesis 並不是一收到資料就直接將它丟到儲放端，它有兩個條件。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Queue 的 buffer 大小 (1 - 100 MB)。&lt;/li&gt;
+&lt;li&gt;幾秒鐘一次 (60 - 900 sec)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;所以記好，這個系統架構，並不是丟了一個 log 指令後，馬上就會在 Elasticsearch 看到 ! 最快也要一分鐘後。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-14-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;8--s3--end&#34;&gt;8. 設定 S3 是否要壓縮與加密 (END)&lt;/h4&gt;
+&lt;p&gt;這個地方就是決定 S3 備份要不要壓縮與加密，這裡會不會影響到&lt;code&gt;AWS Athena&lt;/code&gt;查詢，需待查。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-15-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;log-client-&#34;&gt;Log client 端的實作&lt;/h2&gt;
+&lt;p&gt;要使用 AWS SDK APIs 要先在我們的家目錄中的&lt;code&gt;~/.aws/credentials&lt;/code&gt;設定一個檔案，內容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[default]
+aws_access_key_id=your access key
+aws_secret_access_key=your secret access key
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們就可來進行實做，咱們使用&lt;code&gt;nodejs&lt;/code&gt;來將 log 丟到&lt;code&gt;AWS kinesis&lt;/code&gt;中。&lt;/p&gt;
+&lt;p&gt;下面的程式碼就是將 log 丟到 AWS kinesis 中，就是如此的簡單。這裡有兩個東西要注意一下，首先是&lt;code&gt;region&lt;/code&gt;記得要選擇你所建立 kineses 所在的區域 ; 另一個就是&lt;code&gt;streamName&lt;/code&gt;，這個記得要改成你所建立的 stream 名稱。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;aws-sdk&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;firehose&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Firehose&lt;/span&gt;({&lt;span style=&#34;color:#a6e22e&#34;&gt;region&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ap-northeast-1&amp;#39;&lt;/span&gt;});
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;dStreamName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Record&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;)
+    },
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;DeliveryStreamName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dStreamName&lt;/span&gt;
+  };
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;firehose&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;);
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mark-api-stream&amp;#39;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date()).&lt;span style=&#34;color:#a6e22e&#34;&gt;toISOString&lt;/span&gt;();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;HI Mark &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+};
+&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;-elasticsearch--s3-&#34;&gt;最後送完後等一分鐘在去 Elasticsearch 與 S3 應該就會有資料了。&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl &#39;your aws elasticsearch ul&#39;/{index}/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/firehose/latest/dev/before-you-begin.html&#34;&gt;ONLY AWS 開發文件&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -70,13 +454,131 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
       <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180702/</guid>
-      <description>上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:
- 要如何定期的清除 Elasticsearch 文件 ?
- 然後我們會分成以下幾個章節:
- 最直覺式的定期刪除方法與缺點。 為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ? 大量文件清除方法 - 時間索引策略。  最直覺式的定期刪除方法與缺點 假設有以下的資料:
-{ data: &#39;Hi Mark ~&#39;, created_at: &#39;20180101&#39; }, { data: &#39;HI Fuc u Mark&#39;, created_at: &#39;20180201&#39; } 那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:
- 搜尋所有 created_at 為 1 月的 doc。 再將所有搜尋出的 doc 給清除。   上面這方法在小量資料時，是沒問題的，問題是出在大量資料。
- 那為什麼大量資料刪除會有問題呢 ?</description>
+      <description>&lt;p&gt;上一篇文章&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7801415-establishment-of-a-log-system-based-on-aws-elasticsearch&#34;&gt;『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』&lt;/a&gt;中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;要如何定期的清除 Elasticsearch 文件 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後我們會分成以下幾個章節:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;最直覺式的定期刪除方法與缺點。&lt;/li&gt;
+&lt;li&gt;為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ?&lt;/li&gt;
+&lt;li&gt;大量文件清除方法 - 時間索引策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading&#34;&gt;最直覺式的定期刪除方法與缺點&lt;/h2&gt;
+&lt;p&gt;假設有以下的資料:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  data: &#39;Hi Mark ~&#39;,
+  created_at: &#39;20180101&#39;
+},
+{
+  data: &#39;HI Fuc u Mark&#39;,
+  created_at: &#39;20180201&#39;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;搜尋所有 created_at 為 1 月的 doc。&lt;/li&gt;
+&lt;li&gt;再將所有搜尋出的 doc 給清除。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;上面這方法在小量資料時，是沒問題的，問題是出在大量資料。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那為什麼大量資料刪除會有問題呢 ?&lt;/p&gt;
+&lt;p&gt;Elasticsearch 在進行刪除時，它是將 doc 給一個此 doc 已刪除的 tag ，然後再接下來的搜尋時，會自動將有 tag 的 doc 給過濾掉，這也代表在清除的當下資源沒有被釋放出來。&lt;/p&gt;
+&lt;p&gt;接下來 Elasticsearch 會在某個條件下，會執行&lt;code&gt;segment merging&lt;/code&gt;的工作，這個時後它才會將實際上的文件清除，而且這個工作在大量資料下，會非常的消耗 cpu 與 i/o 的資源。&lt;/p&gt;
+&lt;h2 id=&#34;-elasticsearch--&#34;&gt;為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ?&lt;/h2&gt;
+&lt;p&gt;要理解這個問題，我們就要從&lt;code&gt;倒排索引&lt;/code&gt;開始說起，不熟可以去我這篇&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7346272&#34;&gt;Elasticsearch 的 Document 建立原理&lt;/a&gt;看個兩三下。&lt;/p&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;倒排索引的建立&lt;/h3&gt;
+&lt;p&gt;首先，每當一個 doc 建立時，它會先被丟到一個叫 memory buffer 的地方，等到一段時間 or buffer 滿了，系統會將它建立成一個&lt;code&gt;segment&lt;/code&gt;，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-01-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;而這個 segment 就是我們的&lt;code&gt;倒排索引&lt;/code&gt;集合，它也是在我們在進行搜尋時，會實際去尋找的地方。這裡有一個很重要的事情要說:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每一個 segment 內的倒排索引是不可以變的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以說如果你新增了第二個 doc ，它會在去新增一個 segment，那你在『某段時間』內，會有 2 個 segment，然後搜尋時，就是去每個 segment 中搜尋，然後將結果進行合併，得出結果。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-02-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-segment--&#34;&gt;多個 segment 會有什麼問題呢 ?&lt;/h3&gt;
+&lt;p&gt;首先 segment 裡面是存放倒排索引的資訊，而這個東西，它是寫在&lt;code&gt;硬碟&lt;/code&gt;中。所以如果每一次進行搜尋時，有 100 segment 個代表你要開啟 100 個檔案，如果越來越多，你的 i/o 與 file descriptor 遲早會出問題。&lt;/p&gt;
+&lt;h3 id=&#34;-segment--segment-merging&#34;&gt;解決多個 segment 的方法 segment merging，但它很耗資源&lt;/h3&gt;
+&lt;p&gt;所以 Elasticsearch 提出了一個機制，那就是&lt;code&gt;segment merging&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;這個東東將是會定時的將小 segment 合成一個大的 segment，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-03-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;這項工作是非常的消耗資源的，如果你有 100 個小的 segment，你就要將開啟 100 條的 i/o 並且需要進行大量的運算。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;而且如果你還大量刪除了 doc ，它還要去某個檔案中，抓取已刪除的檔案編號，然後在和原本的每一個 segment 進行比對，再組合成 1 個新的 segment。這想也知道會非常的耗 CPU 與 i/o 資源。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;--&#34;&gt;大量文件清除方法 - 時間索引策略&lt;/h2&gt;
+&lt;p&gt;所以為了解決這個問題，我們將會使用時間索引策略來進行 doc 的刪除。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;這策略概念就是每天(or 區間)產生一個 index，然後過時了再砍掉它&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;首先為了別讓人搞混，我先畫張圖，此索引非倒排索引。從下圖中我們可以知道一個 Elasticsearch  的 Index 是由不同節點的 shard 組合而成，然後每個 shard 裡面包含了 doc 與 segment。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-04-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以說，我們可以知道每個 segment 都是包含在一個 index 中，那我們想想看下面這個問題 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;假如我們直接刪除了 index 後，segment 會著麼樣呢 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;答案就是 doc 與 segment 都一起消失，不需要在做那些 segment merging 啥的。&lt;/p&gt;
+&lt;p&gt;所以我們這裡的策略就是:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;根據時間來建立 index (假設每天) ，然後每當要清除舊 log 時，我們就將指定的 index 給清除就好，這樣就不需要執行 segment merging 這種耗資源的工作了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;-part1---index-template&#34;&gt;時間索引策略 part1 - 建立 index template&lt;/h3&gt;
+&lt;p&gt;首先我們要建立一個 index 的 template，如下，建立完成以後，我們接下來每次只要建立的索引名稱為&lt;code&gt;api-*&lt;/code&gt;這種類型 (ex. api-2018-01-01) ，系統就會依照下面的範本來進行建立。&lt;/p&gt;
+&lt;p&gt;然後&lt;code&gt;aliases&lt;/code&gt;就是別命，假設建立出來的索引為 api-2018-01-01，我們就可以使用 api 這個別命來操作它，所以這也代表我們每一次新增 doc 指令索引時，不用一直換啊換。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; await client.indices.putTemplate({
+      name: &#39;api-template&#39;,
+      template: &#39;api-*&#39;,
+      body: {
+        &#39;settings&#39;: {
+          &#39;number_of_shards&#39;: 5,
+          &#39;number_of_replicas&#39;: 1
+        },
+        &#39;aliases&#39;: {
+          &#39;api&#39;: {}
+        },
+        &#39;mappings&#39;: {
+          &#39;log&#39;: logMapping
+        }
+      }
+    });
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-part2--&#34;&gt;時間索引策略 part2 - 排程每天建立一個新的索引，並將操作指向它&lt;/h3&gt;
+&lt;p&gt;下面這個 api 就是會依據&lt;code&gt;max_age&lt;/code&gt;與&lt;code&gt;max_docs&lt;/code&gt;的條件，來決定是否建立索引，其中一個符合，那就會建立新的索引，並且將操作(新增 doc)指向這個新建立的索引。&lt;/p&gt;
+&lt;p&gt;下面這個範例，rollover 會自動依流水號來建立 index，當然也可以依據時間來建立，請參考&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-rollover-index.html&#34;&gt;官網這篇文章&lt;/a&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_rollover
+{
+  &amp;quot;conditions&amp;quot;: {
+    &amp;quot;max_age&amp;quot;:   &amp;quot;1d&amp;quot;,
+    &amp;quot;max_docs&amp;quot;:  5
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;old_index&amp;quot;: &amp;quot;api-logs-1&amp;quot;,
+  &amp;quot;new_index&amp;quot;: &amp;quot;api-logs-2&amp;quot;,
+  &amp;quot;rolled_over&amp;quot;: true,
+  &amp;quot;dry_run&amp;quot;: false,
+  &amp;quot;conditions&amp;quot;: {
+    &amp;quot;[max_docs: 5]&amp;quot;: true,
+    &amp;quot;[max_age: 7d]&amp;quot;: false
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;P.S 如果是使用 AWS kinesis 的話，這一步可以不用做，在設定它時，有個叫 Index rotation 的參數可以設定，它可以設定 hour、day、week、month，功能就和上面的一樣&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;-part3--&#34;&gt;時間索引策略 part3 - 定時的清除索引&lt;/h3&gt;
+&lt;p&gt;如果你的索引名稱如&lt;code&gt;api-2018-01-01&lt;/code&gt;這種類型的話，你可以依據它來選擇清除，而如果你的命名不是這樣的話，那你可以使用下面這個 api 來知道每一個索引的建立時間。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl http://localhost:9200/_cat/indices\?h\=h,s,i,id,p,r,dc,dd,ss,creation.date.string
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;結果如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-05-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-part4--&#34;&gt;時間索引策略 part4 - 搜尋的操作&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;rollover&lt;/code&gt; api 上面有提到，會將所以的操作自動的轉向到新的索引，所以你如果要進行搜尋操作時，你可以執行下面的指令，這樣你所有的索引都可以尋找到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl http:127.0.0.1:9200/api-*/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/guide/cn/elasticsearch/guide/current/inside-a-shard.html&#34;&gt;官網-分配內部原理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-rollover-index.html&#34;&gt;官網 rollover api&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/blog/managing-time-based-indices-efficiently&#34;&gt;managing-time-based-indices-efficiently&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -85,16 +587,170 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
       <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180411/</guid>
-      <description>在這一篇文章中，我們將要理解兩個問題 :
- 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ?  在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。
-Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆 document 應該是會長的像下面這樣。
- POST /markcorp/employee (/(index)/(type))
-上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別 (type)
- { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。
-新增一個 document 時資料會存放到那 ?? 像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。</description>
+      <description>&lt;p&gt;在這一篇文章中，我們將要理解兩個問題 :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ?&lt;/li&gt;
+&lt;li&gt;而在建立索引時，它又存放了什麼東東 ?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。&lt;/p&gt;
+&lt;h2 id=&#34;elasticsearch--es--&#34;&gt;Elasticsearch ( ES ) 的前提觀念概要&lt;/h2&gt;
+&lt;p&gt;Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-01-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以假設我們要新增一筆 document 應該是會長的像下面這樣。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;POST /markcorp/employee (/(index)/(type))&lt;/p&gt;
+&lt;p&gt;上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別
+(type)&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;{
+  id: 123
+  name: ‘Mark’,
+  age: 18
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GET 127.0.0.1:9200/markcorp/employee/123&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。&lt;/p&gt;
+&lt;h2 id=&#34;-document--&#34;&gt;新增一個 document 時資料會存放到那 ??&lt;/h2&gt;
+&lt;p&gt;像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。&lt;/p&gt;
+&lt;p&gt;嚴格來說它是存放在 markcorp 這個 index 裡面，並且它的類型是 employee 。&lt;/p&gt;
+&lt;p&gt;那 index 裡的實體 document 又是放在那裡呢 ??&lt;/p&gt;
+&lt;p&gt;答案是在&lt;code&gt;shards&lt;/code&gt;裡，咱們可以執行下面的指定看到 index 底下有那些 shards&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1:9200/markcorp/_search_shards
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那 shards 是什麼，不如我們先來說說為什麼要有 shards ，一個 index 有可能會存放大量的 document ，這時所有的 document 都存放在同一個地方，一定會產生硬體貧頸，所以為了解決這個問題 ES 提供了方法可以將 index 分散成塊，而這個塊就被稱為『 shards 』。&lt;/p&gt;
+&lt;p&gt;所以簡單的說 index 是由多個 shard 所組成，然後 document 會實際存放在 shards 中。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-02-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然後不同的 shards 可能會存放在不同的節點上，而這裡指的節點就是指不同實體，你也可以先想簡單一點就是機器。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-03-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;上面這張圖就是 ES 的 Cluster 基本架構，每當有文檔要建立時，它會依據 index 有那些分片，然後來將它丟到『某一個』分片中，當然它有辦法指定到分片中，不過這不是該篇文章要討論的主題。&lt;/p&gt;
+&lt;p&gt;我相信有人看到上面那張圖時會想說，如果其中一個節點上天堂了，那不就代表那個節點的 document 都會找不到嗎 ? 沒錯 ~ 不過你想想你都想得到了，那開發 ES 的人會想不到嗎 ??&lt;/p&gt;
+&lt;p&gt;ES 的解法就是每一個節點除了存放你上面看到的分片，它事實上還多存放了其它節點的備份分片，如下圖，假設我們有三個節點，然後每個節點上面有一個分片和另一個分片的備份，而當節點 2 上天堂時，我們在節點 1 還有分片 2 的備份，所以還是可以找的到分片 2 的 document 。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-04-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-document--1&#34;&gt;那它除了將 document 實體建立起來，還有建立什麼東西嗎 ??&lt;/h2&gt;
+&lt;p&gt;有的，那就是建立一些索引(此索引不是上面說的 index )，來幫助我們更快速的搜尋到它。&lt;/p&gt;
+&lt;p&gt;而要理解它存了啥，那就要來理解理解 ES 的&lt;code&gt;倒排索引&lt;/code&gt;，如下圖，它的方向就是 ES 要搜尋時跑的方向，它會先去 term index 中尋找某個東西，然後可以指到 term dictionary ，接下來在從 dictionary 可以找到指定的 posting list ，最後 posting list 裡面就列了，你要的 document 編號。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-06-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;接下來我們將從 posting list 開始來說起，以下為範例 documents 。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  id: 1,
+  name: ‘Mark&#39;,
+  age: 18
+},
+{
+  id: 2,
+  name: ‘Ack&#39;,
+  age: 28
+},{
+  id: 3,
+  name: ‘Ad&#39;
+  age: 17
+}
+{
+  id: 4,
+  name: ‘Ban&#39;
+  age: 28
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;posting-list&#34;&gt;Posting List&lt;/h3&gt;
+&lt;p&gt;上面的 documents 會被轉換下面的列表，所以如果 client 要搜尋 age 為 28 歲的，馬上就能找到對應的 2 與 4 號 document。&lt;/p&gt;
+&lt;h4 id=&#34;name&#34;&gt;name&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;Posting List&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Mark&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ad&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ban&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;age&#34;&gt;age&lt;/h4&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;Posting List&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;18&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;17&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;28&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;[2,4]&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;term-dictionary&#34;&gt;Term Dictionary&lt;/h3&gt;
+&lt;p&gt;上面搜尋的方法看試可以，但假設有成千上萬個 term 呢 ? 例如你 name 的 term 有好幾千萬筆，所以為了解決這個問題 ES 會將所有的 term 進行排序，這樣就可以使用二分搜尋法來達到 O(logn) 的時間複雜度囉。( 二分搜尋可參考哥的這篇文章 &lt;a href=&#34;http://marklin-blog.logdown.com/posts/1731603&#34;&gt;傳送門&lt;/a&gt;)&lt;/p&gt;
+&lt;p&gt;所以 name 這個會變成下面像下面這張表一樣，有排序過的 term。&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Term Dictionary&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;Posting List&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Ack&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;2&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ad&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Ban&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Mark&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h3 id=&#34;term-index&#34;&gt;Term Index&lt;/h3&gt;
+&lt;p&gt;上面這些東西如果數量小時，放在記憶體內還行，但問題是如果 term 很多，導致 term dictionary 非常大的話，放在記憶體內會出事情的，所以 ES 的解法就是&lt;code&gt;Term Index &lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Term Index&lt;/code&gt; 本身就是像個樹，它會根據上面的 term dictionary 產生出樹如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-07-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Term Index&lt;/code&gt; 基本上是存放在&lt;code&gt;記憶體&lt;/code&gt;中，每當進行搜尋時會先去這裡尋找到對應的 index ，然後再根據它去硬碟中尋找到對應的 term dictionary 最後就可以成功的找到指定的 document 囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-08-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;結論&lt;/h2&gt;
+&lt;p&gt;最後簡單的總結一下本篇文章所提的兩個問題的結論。&lt;/p&gt;
+&lt;p&gt;1 . 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ?&lt;/p&gt;
+&lt;p&gt;Ans: 會存放到某一個 shard 中，而 shard 又存放在每個節點裡面。&lt;/p&gt;
+&lt;p&gt;2 . 而在建立索引時，它又存放了什麼東東 ?&lt;/p&gt;
+&lt;p&gt;Ans: 會建立三個東西分別為 Posting List 、Dictionary 與 Term Index ，其中前兩者是存放在硬碟中，而最後的 index 是存放在記憶體中。&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://es.xiaoleilu.com/index.html&#34;&gt;Elasticsearch 權威指南&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://read01.com/nxD57.html#.WsL-ZtNuZ7o&#34;&gt;壹讀-時下最火搜尋引擎：ElasticSearch詳解與優化&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.pengqiuyuan.com/ji-chu-jie-shao-ji-suo-yin-yuan-li-fen-xi/&#34;&gt;Elasticsearch－基础介绍及索引原理分析-&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -103,15 +759,215 @@ Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜�
       <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180401/</guid>
-      <description>本篇文章中，我們將要很快速的學習以下幾個重點:
- elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 document。 搜尋 document。  elasticsearch 的基本觀念 Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。
-Elasticserach 有這和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:
-index: markcorp type: employee { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 使用 docker 建立 elastisearch 服務 接下來的教學可以直接用這個專案來直接執行:
-git clone https://github.com/h091237557/docker-composer-tools.git cd elasticsearch/ docker-compose up 下面為官網所直接使用的docker compose的檔案。(官網傳送門)
-version: &amp;#39;2.</description>
+      <description>&lt;p&gt;本篇文章中，我們將要很快速的學習以下幾個重點:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;elasticsearch 的基本觀念。&lt;/li&gt;
+&lt;li&gt;使用 docker 建立 elastisearch 服務。&lt;/li&gt;
+&lt;li&gt;新增 document。&lt;/li&gt;
+&lt;li&gt;取得 document。&lt;/li&gt;
+&lt;li&gt;修改 document。&lt;/li&gt;
+&lt;li&gt;搜尋 document。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;elasticsearch-&#34;&gt;elasticsearch 的基本觀念&lt;/h2&gt;
+&lt;p&gt;Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。&lt;/p&gt;
+&lt;p&gt;Elasticserach 有這和關聯式資料庫相似的結構，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180411-01-elasticsearch.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;index: markcorp
+type: employee
+
+{
+  id: 123
+  name: ‘Mark’,
+  age: 18
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;GET 127.0.0.1:9200/markcorp/employee/123&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;-docker--elastisearch-&#34;&gt;使用 docker 建立 elastisearch 服務&lt;/h2&gt;
+&lt;p&gt;接下來的教學可以直接用這個專案來直接執行:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;git clone https://github.com/h091237557/docker-composer-tools.git
+cd elasticsearch/
+docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;下面為官網所直接使用的&lt;code&gt;docker compose&lt;/code&gt;的檔案。(&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html&#34;&gt;官網傳送門&lt;/a&gt;)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;version: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;2.2&amp;#39;&lt;/span&gt;
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:&lt;span style=&#34;color:#ae81ff&#34;&gt;6.2&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.3&lt;/span&gt;
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+      - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ES_JAVA_OPTS=-Xms512m -Xmx512m&amp;#34;&lt;/span&gt;
+    ulimits:
+      memlock:
+        soft: -&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        hard: -&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - &lt;span style=&#34;color:#ae81ff&#34;&gt;9200&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;9200&lt;/span&gt;
+    networks:
+      - esnet
+  elasticsearch2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:&lt;span style=&#34;color:#ae81ff&#34;&gt;6.2&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.3&lt;/span&gt;
+    container_name: elasticsearch2
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=&lt;span style=&#34;color:#66d9ef&#34;&gt;true&lt;/span&gt;
+      - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;ES_JAVA_OPTS=-Xms512m -Xmx512m&amp;#34;&lt;/span&gt;
+      - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;discovery.zen.ping.unicast.hosts=elasticsearch&amp;#34;&lt;/span&gt;
+    ulimits:
+      memlock:
+        soft: -&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+        hard: -&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;
+    volumes:
+      - esdata2:/usr/share/elasticsearch/data
+    networks:
+      - esnet
+
+volumes:
+  esdata1:
+    driver: local
+  esdata2:
+    driver: local
+
+networks:
+  esnet:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;以下有幾個配置要注意一下。&lt;/p&gt;
+&lt;h3 id=&#34;environment&#34;&gt;environment&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;cluster.name : 這個就是設定這個 ES cluster 的名稱，所有在相同機器上且命名相同 cluster.name 的都將在相同的 cluster 裡。&lt;/li&gt;
+&lt;li&gt;bootstrap.memory_lock : 這個設定 true 是為了要防止 swapping 抓到 ES 的 memory 來用，導致節點不穩而脫離 cluster。&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/master/setup-configuration-memory.html&#34;&gt;官網&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;ES_JAVA_OPTS: &lt;code&gt;-Xms512m -Xmx512m&lt;/code&gt; 代表設定 ES 的最大與最小的 heap 空間為 512 mb。&lt;/li&gt;
+&lt;li&gt;discovery.zen.ping.unicast.hosts: 這是為了讓此節點知道去連結 elasticsearch ( docker 節點 )。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;ulimits&#34;&gt;ulimits&lt;/h3&gt;
+&lt;p&gt;這個參數就是可以設定 docker 容器的 ulimits 參數，其中官網這裡會設定 memlock，事實上我還在研究它。不過主要事實和上面的 bootstrap.memory_lock 的原因有關，待調查。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-elasticsearch-&#34;&gt;確保 Elasticsearch 有成功執行&lt;/h3&gt;
+&lt;p&gt;請指定執行下面的執令，然後該會看到如下的資訊。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1:9200
+
+---
+{
+  &amp;quot;name&amp;quot; : &amp;quot;OcaPXYM&amp;quot;,
+  &amp;quot;cluster_name&amp;quot; : &amp;quot;docker-cluster&amp;quot;,
+  &amp;quot;cluster_uuid&amp;quot; : &amp;quot;Cg2ogE6ETbOhSEh0E8m-3w&amp;quot;,
+  &amp;quot;version&amp;quot; : {
+    &amp;quot;number&amp;quot; : &amp;quot;6.2.3&amp;quot;,
+    &amp;quot;build_hash&amp;quot; : &amp;quot;c59ff00&amp;quot;,
+    &amp;quot;build_date&amp;quot; : &amp;quot;2018-03-13T10:06:29.741383Z&amp;quot;,
+    &amp;quot;build_snapshot&amp;quot; : false,
+    &amp;quot;lucene_version&amp;quot; : &amp;quot;7.2.1&amp;quot;,
+    &amp;quot;minimum_wire_compatibility_version&amp;quot; : &amp;quot;5.6.0&amp;quot;,
+    &amp;quot;minimum_index_compatibility_version&amp;quot; : &amp;quot;5.0.0&amp;quot;
+  },
+  &amp;quot;tagline&amp;quot; : &amp;quot;You Know, for Search&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading&#34;&gt;新增與取得文檔&lt;/h2&gt;
+&lt;p&gt;我們試這新增一筆 markcorp 的一筆員工資料看看，上面有提到 ES 提供了 restful api 給我們操作，所以我們只要準備好員工資料的 json 檔。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  name: &#39;Mark&#39;,
+  age: 18,
+  habit: &#39;Cut someone&#39; 
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後使用 curl 執行下面的指令就可以新增一筆資料到裡面囉。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl -X POST -H &amp;quot;Content-Type: application/json&amp;quot; -d @./post.json 127.0.0.1:9200/markcorp/employee
+
+執行完的訊息
+{&amp;quot;_index&amp;quot;:&amp;quot;markcorp&amp;quot;,&amp;quot;_type&amp;quot;:&amp;quot;employee&amp;quot;,&amp;quot;_id&amp;quot;:&amp;quot;Mmbls2IBnSbSo4fQfVml&amp;quot;,&amp;quot;_version&amp;quot;:1,&amp;quot;result&amp;quot;:&amp;quot;created&amp;quot;,&amp;quot;_shards&amp;quot;:{&amp;quot;total&amp;quot;:2,&amp;quot;successful&amp;quot;:1,&amp;quot;failed&amp;quot;:0},&amp;quot;_seq_no&amp;quot;:0,&amp;quot;_primary_term&amp;quot;:1}%
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的指令重點有兩個，第一個就是&lt;code&gt;post&lt;/code&gt;在 restful api 中就代表這&lt;code&gt;新增&lt;/code&gt;的意思，然後第二個重點就是下面這段 uri ，它說明了這筆資料要新增的地點，markcorp 就是 index 而 employee 就是 type 的意思。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;127.0.0.1:9200/markcorp/employee
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們就可以使用下面的 restful api 來取得該筆資料，其中 employee 後面的那個英文就是文檔 id。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1:9200/markcorp/employee/Mmbls2IBnSbSo4fQfVml?pretty
+
+執行完結果
+{
+  &amp;quot;_index&amp;quot; : &amp;quot;markcorp&amp;quot;,
+  &amp;quot;_type&amp;quot; : &amp;quot;employee&amp;quot;,
+  &amp;quot;_id&amp;quot; : &amp;quot;Mmbls2IBnSbSo4fQfVml&amp;quot;,
+  &amp;quot;_version&amp;quot; : 1,
+  &amp;quot;found&amp;quot; : true,
+  &amp;quot;_source&amp;quot; : {
+    &amp;quot;name&amp;quot; : &amp;quot;Mark&amp;quot;,
+    &amp;quot;age&amp;quot; : 18,
+    &amp;quot;habit&amp;quot; : &amp;quot;cut someone&amp;quot;
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading1&#34;&gt;更新文檔&lt;/h2&gt;
+&lt;p&gt;更新文檔的方法也是相同的，使用 put 方法，然後在指定要更新誰就可以囉。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;127.0.0.1:9200/markcorp/employee/Mmbls2IBnSbSo4fQfVml
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;curl -X PUT -H &amp;quot;Content-Type: application/json&amp;quot; -d @./update.json 127.0.0.1:9200/markcorp/employee/Mmbls2IBnSbSo4fQfVml?pretty
+
+{
+  &amp;quot;_index&amp;quot; : &amp;quot;markcorp&amp;quot;,
+  &amp;quot;_type&amp;quot; : &amp;quot;employee&amp;quot;,
+  &amp;quot;_id&amp;quot; : &amp;quot;Mmbls2IBnSbSo4fQfVml&amp;quot;,
+  &amp;quot;_version&amp;quot; : 3,
+  &amp;quot;result&amp;quot; : &amp;quot;updated&amp;quot;,
+  &amp;quot;_shards&amp;quot; : {
+    &amp;quot;total&amp;quot; : 2,
+    &amp;quot;successful&amp;quot; : 2,
+    &amp;quot;failed&amp;quot; : 0
+  },
+  &amp;quot;_seq_no&amp;quot; : 2,
+  &amp;quot;_primary_term&amp;quot; : 1
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading2&#34;&gt;搜尋文檔&lt;/h2&gt;
+&lt;p&gt;假設我們現在有兩筆資料。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  name: &amp;quot;Mark&amp;quot;,
+  age: 18,
+  habit: &amp;quot;cut someone&amp;quot;
+},
+{
+  name: &amp;quot;Ian&amp;quot;,
+  age: 18,
+  habit: &amp;quot;hack someone&amp;quot;
+
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們現在要搜尋興趣為&lt;code&gt;cut&lt;/code&gt;的員工，就執行下面的指令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1:9200/markcorp/employee/_search?q=habit:&#39;cut&#39;
+
+---
+執行結果
+
+{
+    &amp;quot;took&amp;quot;: 146,
+    &amp;quot;timed_out&amp;quot;: false,
+    &amp;quot;_shards&amp;quot;: {
+        &amp;quot;total&amp;quot;: 5,
+        &amp;quot;successful&amp;quot;: 5,
+        &amp;quot;skipped&amp;quot;: 0,
+        &amp;quot;failed&amp;quot;: 0
+    },
+    &amp;quot;hits&amp;quot;: {
+        &amp;quot;total&amp;quot;: 1,
+        &amp;quot;max_score&amp;quot;: 0.2876821,
+        &amp;quot;hits&amp;quot;: [
+            {
+                &amp;quot;_index&amp;quot;: &amp;quot;markcorp&amp;quot;,
+                &amp;quot;_type&amp;quot;: &amp;quot;employee&amp;quot;,
+                &amp;quot;_id&amp;quot;: &amp;quot;YGYhtGIBnSbSo4fQe2Lh&amp;quot;,
+                &amp;quot;_score&amp;quot;: 0.2876821,
+                &amp;quot;_source&amp;quot;: {
+                    &amp;quot;name&amp;quot;: &amp;quot;Mark&amp;quot;,
+                    &amp;quot;age&amp;quot;: 18,
+                    &amp;quot;habit&amp;quot;: &amp;quot;cut someone&amp;quot;
+                }
+            }
+        ]
+    }
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面的搜尋是最最基本的搜尋，elasticserach 他提供了非常強大的分析與搜尋工具，將留到下一篇文章中來說明。&lt;/p&gt;
+</description>
     </item>
     
   </channel>

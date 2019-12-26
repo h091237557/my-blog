@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>service monitor on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Thu, 09 Aug 2018 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/service-monitor/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/service-monitor/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,14 +18,97 @@
       <pubDate>Thu, 09 Aug 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180809/</guid>
-      <description>在之前筆者的這篇文章中：
-一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
-在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
-但是這篇文章中所提到的架構有個問題。
-這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
-ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
-會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
-如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網</description>
+      <description>&lt;p&gt;在之前筆者的這篇文章中：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7801415-establishment-of-a-log-system-based-on-aws-elasticsearch&#34;&gt;一個基於 AWS Elasticsearch 的用戶行為 log 系統建立&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。&lt;/p&gt;
+&lt;p&gt;但是這篇文章中所提到的架構有個問題。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;這個版本有什麼問題呢　？&lt;/h2&gt;
+&lt;p&gt;那就是在某些情況下它會一直噴以下錯誤 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ServiceUnavailableException: Slow down.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那為什麼會一直噴 Slow down 呢 ?&lt;/p&gt;
+&lt;p&gt;會發生這個的原因在於，我們有採到 aws firehose 的限制，如下：
+Amazon Kinesis Data Firehose 有以下限制。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束：
+
+* 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。
+* 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。
+
+
+! 注意
+当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/firehose/latest/dev/limits.html&#34;&gt;來源 : 官網&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;加強版&lt;/h2&gt;
+&lt;p&gt;原本的版本如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-3-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然後我們會將它修改成如下圖，就是在資料源與 firehose 之間多增加了 data stream。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;使用 AWS data stream 有以下幾個好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以自由的調整傳輸限制。(這樣就可以解決上述的問題)&lt;/li&gt;
+&lt;li&gt;未來如果有其它單位想要接受這個資料源，那只要請對方接上這個 data stream，它就可以受到資料了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;aws-kinesis-data-stream-&#34;&gt;AWS Kinesis Data Stream 申請&lt;/h2&gt;
+&lt;p&gt;事實上就只有兩個東西要填寫&lt;code&gt;Stream Name&lt;/code&gt;與&lt;code&gt;Shard Number&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;其中這裡簡單的說一下 Shard 概念。&lt;/p&gt;
+&lt;h2 id=&#34;stream-shard-&#34;&gt;Stream Shard (碎片)&lt;/h2&gt;
+&lt;p&gt;在 AWS kinesis data stream 中有個 shard 的概念，它就是指 stream 的子集合。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20181121-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;每條 stream 都是由 1 至 n 個 shard 所組合成，這樣有幾個好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在傳輸資料給 stream 時，可以將傳輸量平均的分散給不同 shard，這樣可以避免觸碰到每個 shard 的傳輸限制。&lt;/li&gt;
+&lt;li&gt;你可以指定那一些類型的資料傳輸到 A Shard，那些類型的資料傳輸到 B Shard，這樣有助於你放便管理資料流。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;shard-&#34;&gt;Shard 的限制&lt;/h3&gt;
+&lt;p&gt;上面有提到每個 stream 都有傳輸限制，這裡我們就來看一下它的限制有那些。&lt;/p&gt;
+&lt;p&gt;以下從 Aws &lt;a href=&#34;https://docs.aws.amazon.com/zh_tw/streams/latest/dev/service-sizes-and-limits.html&#34;&gt;官網&lt;/a&gt;擷取 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;單一碎片每秒可擷取多達 1 MiB 的資料 (包括分割區索引鍵) 或每秒寫入 1,000 筆記錄。同樣地，如果您將串流擴展到 5,000 個碎片，串流每秒即可擷取多達 5 GiB 或每秒 500 萬筆記錄。若您需要更多的擷取容量，可以使用 AWS Management Console 或 UpdateShardCount API 輕鬆擴展串流中的碎片數目。&lt;/li&gt;
+&lt;li&gt;GetRecords 每次呼叫可從單一碎片擷取最多 10 MiB 的資料，每次呼叫最多 10,000 筆記錄。每呼叫一次 GetRecords 即計為一筆讀取交易。&lt;/li&gt;
+&lt;li&gt;每個碎片每秒可支援最多 5 筆讀取交易。每筆讀取交易可提供多達 10,000 筆記錄，每筆交易的上限為 10 MiB。&lt;/li&gt;
+&lt;li&gt;每個碎片透過 GetRecords 每秒可支援最多 2 MiB 的總資料讀取速率。如果呼叫 GetRecords 傳回 10 MiB，在接下來的 5 秒內發出的後續呼叫將擲回例外狀況。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;-shard&#34;&gt;如何將資料傳輸到指定的 Shard&lt;/h4&gt;
+&lt;p&gt;下面為一段 nodejs 寫入資料到 stream 的範例碼，其中注意到&lt;code&gt;PartitionKey&lt;/code&gt;這個東東，它就是可以幫助你指定到想要的 Shard。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;aws-sdk&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;AWS_KINESIS_STREAM&amp;#39;&lt;/span&gt;];
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uuidv1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;uuid/v1&amp;#39;&lt;/span&gt;);
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;kinesis&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Kinesis&lt;/span&gt;({&lt;span style=&#34;color:#a6e22e&#34;&gt;region&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;env&lt;/span&gt;[&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;AWS_KINESIS_REGION&amp;#39;&lt;/span&gt;]});
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;module&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;exports&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Promise((&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 多加換行符號是因為這樣才能在 aws athena 進行解析
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;      &lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;packet&lt;/span&gt;) &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;StreamName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt;,
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;PartitionKey&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;uuidv1&lt;/span&gt;()
+      };
+
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;kinesis&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+          &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+        }
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;();
+      });
+    });
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;PartitionKey&lt;/code&gt;基本上就是用來讓 AWS kinesis 來決定你要去那一個 Shard。&lt;/p&gt;
+&lt;p&gt;假設你的文件 A 傳輸時 PartitionKey 設為 GroupA 這個文字，那它就會跑到某個 Shard A 去，如果這時再傳輸個文件 B 並且 PartitionKey 也設定為 GroupA，那這一份文件也會傳輸到 Shard A。&lt;/p&gt;
+&lt;p&gt;所以當你想將同一類型的文件，都傳輸到同一個 Shard 時，記得將 PartitionKey 設為相同。&lt;/p&gt;
+&lt;p&gt;但如果是想將它平均分散到每一個 Shard 呢 ?&lt;/p&gt;
+&lt;p&gt;事實上有兩個方法，首先第一種方法就是每一丟資料時，先去抓這個 stream 看它有幾個 shards，然後再根據它的數量，來隨機產生個數字，例如有 4 個 shards 那你每次丟資料時，就從 1 ~ 4 隨機產生一個數字，然後再將它設到 PartitionKey 中，那這樣基本上就會平均分配。&lt;/p&gt;
+&lt;p&gt;而另一種方法就是每一次的 PartitionKey 都使用 uid 來設定，這樣也可以將他平均的進行分配。&lt;/p&gt;
+&lt;p&gt;不過我是比較建議用第二種，因為第一種每一次都要去 AWS 那抓取 stream 裡的 shards 大小，這樣太耗時間了。&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_tw/streams/latest/dev/introduction.html&#34;&gt;AWS-kinesis-data-stream 官網&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -35,14 +117,201 @@ ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
       <pubDate>Wed, 08 Aug 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180808/</guid>
-      <description>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
-在開始搞前先說說我的簡單需求:
- 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
- 這時通常時間的儲法會有兩種選擇:
- Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
-其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
-const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&amp;gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
-curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;, &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;, &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;, &amp;quot;_score&amp;quot; : 1.</description>
+      <description>&lt;p&gt;我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。&lt;/p&gt;
+&lt;p&gt;在開始搞前先說說我的簡單需求:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如&lt;code&gt;2017-07-16T19:20:30&lt;/code&gt;。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這時通常時間的儲法會有兩種選擇:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Timestamp&lt;/li&gt;
+&lt;li&gt;ISO 標準&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;-timestamp-&#34;&gt;咱們先來看看 Timestamp 的儲法與查找&lt;/h2&gt;
+&lt;p&gt;下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。&lt;/p&gt;
+&lt;p&gt;其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: Date.now() // timestamp 1533634630945 ,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;elasticsearch-&#34;&gt;Elasticsearch 查找&lt;/h3&gt;
+&lt;p&gt;然後我們直接下來找找剛剛新增的那一筆。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl 127.0.0.1/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;{
+        &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;,
+        &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;,
+        &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;,
+        &amp;quot;_score&amp;quot; : 1.0,
+        &amp;quot;_source&amp;quot; : {
+          &amp;quot;name&amp;quot; : &amp;quot;Mark III&amp;quot;,
+          &amp;quot;age&amp;quot; : 40,
+          &amp;quot;created_at&amp;quot; : 1533634726145 (2018年08月07日17點38分46秒),
+        }
+      }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那接下來我們在來根據時間區間來進行搜尋會如何呢??&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T17:00:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T18:00:22&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;找不到 !!!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;然後我們如果改成如下的 query，就找的到了……&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T09:00:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T10:00:22&amp;quot;
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-timestamp--8--&#34;&gt;為什麼儲 timestamp 的搜尋要將時間減 8 小時呢 ??&lt;/h3&gt;
+&lt;p&gt;先來看看 timestamp 的意思為啥 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;timestamp 是指格林威治時間1970年01月01日00时00分00秒到現在的總秒數。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那格林威治時間離咱(台灣)這裡多遠 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;8 個小時&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以說 1533634726145 實際上儲放是指&lt;code&gt;2018年08月07日9點38分46秒&lt;/code&gt;而不是&lt;code&gt;2018年08月07日17點38分46秒&lt;/code&gt;，所以假設我們不給時間區域而直接下 query 就會發生找不到的情況，下面為我們有給時間區域的下法，這樣就找的到了。&lt;/p&gt;
+&lt;p&gt;這種下法的意思就是，我們要找這段時間的資料，並且我們的時間區域為&lt;code&gt;+8&lt;/code&gt;小時。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T17:00:22&amp;quot;,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T18:00:22&amp;quot;,
+                &amp;quot;time_zone&amp;quot;: &amp;quot;+08:00&amp;quot;
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-kibana--discover--query-&#34;&gt;那在 kibana 的 discover 要如何下 query ?&lt;/h3&gt;
+&lt;p&gt;在 kibana 如果執行下面的 lucene query 的話，會找到不到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T17:00:22 TO 2018-08-07T18:00:22]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;一樣要和他說明你現在在什麼時區才可以找到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T17:00:22+08:00 TO 2018-08-07T18:00:22+08:00]
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;-iso-&#34;&gt;再來看看 ISO 標準的儲法&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: &amp;quot;2018-08-07T17:00:22Z&amp;quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-elasticsearch--&#34;&gt;先單純的看 Elasticsearch 查找有沒有問題 ~&lt;/h3&gt;
+&lt;p&gt;然後我們一樣先用 es 的 search 來找找。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T16:30:22&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T17:30:22&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後發現 &lt;strong&gt;找得到 !!!&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;主要原因是我們直接是儲放固定的 ISO 時間，而不像是上面 timestamp 它會幫你先轉一下成 ISO 然後你在查找，它在幫你轉時，會轉成 +0 的時間，所以才會找不到。&lt;/p&gt;
+&lt;h3 id=&#34;-kibana--&#34;&gt;再來看看 kibana 內的顯示與查找有沒有問題 ~&lt;/h3&gt;
+&lt;h4 id=&#34;-kibana--1&#34;&gt;首先 kibana 內顯示會有問題 !&lt;/h4&gt;
+&lt;p&gt;首先你只會看到下面這個資料，注意我們上面儲的是&lt;code&gt;2018-08-07T17:00:22Z&lt;/code&gt;，WTF 為啥kibana 顯示變成&lt;code&gt;2018-08-08T01:00:22.22&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;問題在於 kibana 認為 Elasticsearch 裡所儲放的時間區段為&lt;code&gt;+0&lt;/code&gt;，所以到了 kibana 預設會判斷你的 browser 設定那個時區，然後咱們這是台灣所以會自動的轉換成:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2018-08-07T17:00:22Z + 8 h = 2018-08-08T01:00:22.22&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code&gt;name:Mark III 
+age:40 
+created_at: 2018-08-08T01:00:22.22 
+_id:49585877623136865488831537954762517193201839360268304386.0 _type:log 
+_index:api 
+_score:1
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-&#34;&gt;搜尋沒問題 !&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T16:30:22 TO 2018-08-07T17:30:22]
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-1&#34;&gt;那要如何顯示的問題呢 ?&lt;/h4&gt;
+&lt;p&gt;建立在 elasticsearch 時，儲 ISO 時和他說時間區段，如下，注意多了&lt;code&gt;+08:00&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const streamName = &#39;mark-stream&#39;;
+
+const test = {
+  name: &#39;Mark III&#39;,
+  age: 40,
+  created_at: &amp;quot;2018-08-07T17:30:22+08:00&amp;quot; //這個時間已經有先加 8 個小時了,
+};
+
+putRecord(streamName, test, (err, res) =&amp;gt; {
+  console.log(err);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後不論是在 elasticsearch 或 kibana 搜尋時，時間都要多加時間區段:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;created_at: [2018-08-07T16:30:22+08:00 TO 2018-08-07T17:30:22+08:00]
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;POST _search
+{
+    &amp;quot;query&amp;quot;: {
+        &amp;quot;range&amp;quot; : {
+            &amp;quot;created_at&amp;quot; : {
+                &amp;quot;gt&amp;quot; : &amp;quot;2018-08-07T16:30:22+08:00&amp;quot; ,
+                &amp;quot;lt&amp;quot; : &amp;quot;2018-08-07T17:30:22+08:00&amp;quot;,
+            }
+        }
+    },
+    &amp;quot;sort&amp;quot;: [
+    {
+      &amp;quot;created_at&amp;quot;: &amp;quot;asc&amp;quot;
+    }
+  ]
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading&#34;&gt;結論&lt;/h2&gt;
+&lt;p&gt;基本上如何一開始就選擇儲 timestamp 那後來只要在查找時，標示你現在是在那個時區，那就都可以搜尋到。但是如果一開始就要儲 ISO 標準時，就要用上面的儲法，這樣在 es 與 kibana 才能查找到你需要的資料。&lt;/p&gt;
+&lt;p&gt;順到說一下，我一開始選擇時會選擇 ISO 標準有以下幾個原因:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;服務沒有多時區的問題。&lt;/li&gt;
+&lt;li&gt;希望 es 中儲放 iso 標準，有助於直接尋找時，可以很容易知道他的時間點，不需要在透過 kibana 或其它工具來轉換顯示。&lt;/li&gt;
+&lt;li&gt;因為同時間還有一份 log 會儲放到 s3，如果是儲 timestamp 我們使用 athena 查找後的顯示，也很難看，而且如果是將檔案抓下來用 grep，就更麻煩了。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
     </item>
     
     <item>
@@ -51,17 +320,132 @@ curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;q
       <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180629/</guid>
-      <description>本篇文章中，我們要說明的主題為 :
- 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
- 本篇文章中，我們將分成以下的主題:
- Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
-其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
-這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
- 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
-V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
-所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
-這裡我們選擇了AWS kinesis，它的優點如下:
- 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !</description>
+      <description>&lt;p&gt;本篇文章中，我們要說明的主題為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本篇文章中，我們將分成以下的主題:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Log 系統的架構說明&lt;/li&gt;
+&lt;li&gt;AWS 的工具申請 (Elasticsearch、Kinesis、S3)&lt;/li&gt;
+&lt;li&gt;Log client 端的小實作&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;log-&#34;&gt;Log 系統的架構說明&lt;/h2&gt;
+&lt;h3 id=&#34;v1&#34;&gt;V1&lt;/h3&gt;
+&lt;p&gt;一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。&lt;/p&gt;
+&lt;p&gt;其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。&lt;/p&gt;
+&lt;p&gt;這裡我們選擇了使用&lt;code&gt;Elasticsearch&lt;/code&gt;來當接受端，主要的理由如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;可以進行快速的搜尋&lt;/li&gt;
+&lt;li&gt;可擴展性強&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-1-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;v2&#34;&gt;V2&lt;/h3&gt;
+&lt;p&gt;那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。&lt;/p&gt;
+&lt;p&gt;所以這裡我們會增加一個&lt;code&gt;Broker&lt;/code&gt;，架構圖如下，所有的資料來源都會先送到&lt;code&gt;Broker&lt;/code&gt;來後在送到儲放點。&lt;/p&gt;
+&lt;p&gt;這裡我們選擇了&lt;code&gt;AWS kinesis&lt;/code&gt;，它的優點如下:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。&lt;/li&gt;
+&lt;li&gt;AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。&lt;/li&gt;
+&lt;li&gt;可以設定 log 同步也備份到 S3。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;-20181102-updated&#34;&gt;!!! 2018-11-02 Updated&lt;/h4&gt;
+&lt;p&gt;注意關於第二點，AWS Kinesis 可以處理任何數量的串流這句話，是有條件的，要使用 AWS Kinesis Data Streams 然後在接到 AWS kinesis firhose stream 才能擴展數量。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-2-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;v3&#34;&gt;V3&lt;/h3&gt;
+&lt;p&gt;那 V2 有啥缺點呢 ? 事實上已經沒啥太大的缺點，但是有個問題，因為我們資料來源端是儲放在 Elasticsearch ，而它的缺點就是，成本比較高，基本上 1 MB 的壓縮文檔 log ，轉換到 Elasticsarch 中大約會乘上 10 ~ 15 倍，所以除非公司錢很多，不然不會將太多的 log 儲到 Elasticsearch 中。&lt;/p&gt;
+&lt;p&gt;所以這裡我們的方案是，只在 Elasticsearch 中儲放約 1 個月的資料，然後超過一個月的資料都將儲放到 S3 中，有需要時在時用&lt;code&gt;AWS Athena&lt;/code&gt;來查詢。&lt;/p&gt;
+&lt;p&gt;最後架構就長的如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-3-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;aws--elasticsearchkinesiss3&#34;&gt;AWS 的工具申請 (Elasticsearch、Kinesis、S3)&lt;/h2&gt;
+&lt;p&gt;由於 Elasticsearch 與 S3 建立資訊，網路上都很多了，所以本篇就不多說囉。&lt;/p&gt;
+&lt;h3 id=&#34;aws-elasticsearch&#34;&gt;AWS Elasticsearch&lt;/h3&gt;
+&lt;p&gt;下圖為 aws elasticsearch 建立好的狀態，然後你只要用 curl 打它給的網址，有出現像下面的訊息輸出，那就建立成功囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-4-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-6-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;aws-s3&#34;&gt;AWS S3&lt;/h3&gt;
+&lt;p&gt;就是點個 create bucket 那個鈕，然後一直按就好了，然後其它細節 google 一下就有囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-5-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;aws-kinesis&#34;&gt;AWS Kinesis&lt;/h3&gt;
+&lt;p&gt;接下來 AWS Kinesis 的設定 google 比較難找到，所以來個比較詳細點兒的說明。&lt;/p&gt;
+&lt;p&gt;AWS Kinesis 有分為四種，其中我們要使用的為&lt;code&gt;Amazon Kinesis Data Firehose&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;然後建立步驟如下。&lt;/p&gt;
+&lt;h4 id=&#34;1--delivery-stream-name&#34;&gt;1. 填寫它的 Delivery stream name&lt;/h4&gt;
+&lt;p&gt;到時我們要丟 log 到 stream 時需要使用到他。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-8-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2-&#34;&gt;2. 選擇資料來源&lt;/h4&gt;
+&lt;p&gt;它有兩個選項分別為 Direct PUT or other sources 與 Kinesis stream ，這裡我們選擇 Direct PUT or other sources，我們只要知道選了它，就可以使用 AWS SDK 的 PUT APIs 來將資料丟到 Kinesis 中。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-9-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;3-&#34;&gt;3. 選擇是否要將資料進行加工後，再丟到儲放端&lt;/h4&gt;
+&lt;p&gt;這裡可以讓我們決定，是不是要將 kinesis 中的資料，經過『加工』後，再丟到儲放端，加工的選擇有 AWS Lambda 或是 AWS Glue ，這裡我們先不需要處理，所以都選&lt;code&gt;Disable&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-10-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;4---aws-elasticsearch&#34;&gt;4. 選擇資料儲放端 - AWS Elasticsearch&lt;/h4&gt;
+&lt;p&gt;然後選擇我們要把資料丟到 Amzaon Elasticsearch Service。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-11-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;5--aws-elasticsearch-&#34;&gt;5. 設定 AWS Elasticsearch 的目的&lt;/h4&gt;
+&lt;p&gt;這裡我們一個一個來看要填啥。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Domain&lt;/strong&gt;: 就是選擇你建立好的 AWS ES 的 domain，正常來說你點那個選項鈕應該都會跑出你剛剛建立的 AWS ES。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Index&lt;/strong&gt;: 選擇你要將資料丟到 ES 的那個索引，如果那個索引不在則會自動新建一個。這裡我們建立一開始先預先建好，如果沒有，它會依據你丟的 doc 來建立一個索引，而這索引可能有很多你用不到的東西。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Index rotation&lt;/strong&gt;: 這個地方你可以設定是否給你的索引設定時間簽，假設你上面設的索引為&lt;code&gt;api&lt;/code&gt;，那如果選擇&lt;code&gt;一天&lt;/code&gt;，那生出來的索引會長成&lt;code&gt;api-2018-01-01&lt;/code&gt;這樣，然後你到第二天時再丟個 doc 索引會長成&lt;code&gt;api-2018-01-2&lt;/code&gt;，這裡關係到索引策略的問題，如果只是簡單試用，就不用設這個 (會另開一篇來討論索引策略)。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Type&lt;/strong&gt;: 就是設定 ES Index 中 type 選擇。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Retry duration&lt;/strong&gt;: 就是重試時間。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-12-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;6--s3-&#34;&gt;6. 設定 S3 備份&lt;/h4&gt;
+&lt;p&gt;這就是 kinesis 方便的地方，他可以自動的幫我們將 log 備份到 S3，而你可以選擇全部備份或是失敗的 log 才記錄。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-13-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;7--aws-kinesis-&#34;&gt;7. 設定 AWS kinesis 的執行區間&lt;/h4&gt;
+&lt;p&gt;AWS kinesis 並不是一收到資料就直接將它丟到儲放端，它有兩個條件。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Queue 的 buffer 大小 (1 - 100 MB)。&lt;/li&gt;
+&lt;li&gt;幾秒鐘一次 (60 - 900 sec)。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;所以記好，這個系統架構，並不是丟了一個 log 指令後，馬上就會在 Elasticsearch 看到 ! 最快也要一分鐘後。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-14-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;8--s3--end&#34;&gt;8. 設定 S3 是否要壓縮與加密 (END)&lt;/h4&gt;
+&lt;p&gt;這個地方就是決定 S3 備份要不要壓縮與加密，這裡會不會影響到&lt;code&gt;AWS Athena&lt;/code&gt;查詢，需待查。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180628-15-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;log-client-&#34;&gt;Log client 端的實作&lt;/h2&gt;
+&lt;p&gt;要使用 AWS SDK APIs 要先在我們的家目錄中的&lt;code&gt;~/.aws/credentials&lt;/code&gt;設定一個檔案，內容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[default]
+aws_access_key_id=your access key
+aws_secret_access_key=your secret access key
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們就可來進行實做，咱們使用&lt;code&gt;nodejs&lt;/code&gt;來將 log 丟到&lt;code&gt;AWS kinesis&lt;/code&gt;中。&lt;/p&gt;
+&lt;p&gt;下面的程式碼就是將 log 丟到 AWS kinesis 中，就是如此的簡單。這裡有兩個東西要注意一下，首先是&lt;code&gt;region&lt;/code&gt;記得要選擇你所建立 kineses 所在的區域 ; 另一個就是&lt;code&gt;streamName&lt;/code&gt;，這個記得要改成你所建立的 stream 名稱。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;aws-sdk&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;firehose&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;AWS&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Firehose&lt;/span&gt;({&lt;span style=&#34;color:#a6e22e&#34;&gt;region&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ap-northeast-1&amp;#39;&lt;/span&gt;});
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;dStreamName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;) {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;Record&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;Data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;JSON&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;stringify&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;)
+    },
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;DeliveryStreamName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dStreamName&lt;/span&gt;
+  };
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;firehose&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;recordParams&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;callback&lt;/span&gt;);
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mark-api-stream&amp;#39;&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date()).&lt;span style=&#34;color:#a6e22e&#34;&gt;toISOString&lt;/span&gt;();
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;HI Mark &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;
+};
+&lt;span style=&#34;color:#a6e22e&#34;&gt;putRecord&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;streamName&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;res&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;-elasticsearch--s3-&#34;&gt;最後送完後等一分鐘在去 Elasticsearch 與 S3 應該就會有資料了。&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;curl &#39;your aws elasticsearch ul&#39;/{index}/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/firehose/latest/dev/before-you-begin.html&#34;&gt;ONLY AWS 開發文件&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -70,12 +454,110 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
       <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180704/</guid>
-      <description>在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:
- 如何時用 AWS Athena 來尋找 S3 中的資料
- 另外本篇另一個外傳也要順到說一下，這外傳的主題為:
- 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !
- 接下來下面為本篇章節:
- AWS Athena 的簡單介紹 使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table 使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量) 坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !  AWS Athena 的簡單介紹 簡單的白話文說一下 AWS Athena 是啥:</description>
+      <description>&lt;p&gt;在筆者的&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7801415-establishment-of-a-log-system-based-on-aws-elasticsearch&#34;&gt;一個基於 AWS Elasticsearch 的用戶行為 log 系統建立&lt;/a&gt;中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如何時用 AWS Athena 來尋找 S3 中的資料&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;另外本篇另一個外傳也要順到說一下，這外傳的主題為:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下來下面為本篇章節:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;AWS Athena 的簡單介紹&lt;/li&gt;
+&lt;li&gt;使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table&lt;/li&gt;
+&lt;li&gt;使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量)&lt;/li&gt;
+&lt;li&gt;坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;aws-athena-&#34;&gt;AWS Athena 的簡單介紹&lt;/h2&gt;
+&lt;p&gt;簡單的白話文說一下 AWS Athena 是啥:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它可以讓我們使用 SQL 來去 S3 搜尋你要的資料&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它的收錢機制是，你下的 SQL 去掃描了多少資料，來決定你要付多少 $$ (所以 query 請下準確，不要讓它去掃多於的資料)&lt;/p&gt;
+&lt;p&gt;它似乎有索引的機制，但很貴 !&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下來我們將簡單的說明操作方式。&lt;/p&gt;
+&lt;h2 id=&#34;-aws-athena--s3--sql--db--table&#34;&gt;使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 DB 與 Table&lt;/h2&gt;
+&lt;h3 id=&#34;--db&#34;&gt;第一步: 建立 DB&lt;/h3&gt;
+&lt;p&gt;在 query 欄位裡面輸入以下的 sql。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CREATE DATABASE markDB
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;執行結果如下，然後你就會看到左邊有個 markDB 的選項。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180704-01-athena-basic.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;--table&#34;&gt;第二步: 建立 Table&lt;/h3&gt;
+&lt;p&gt;首先我們 S3 的測試檔案內容如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{&amp;quot;name&amp;quot;:&amp;quot;Mark&amp;quot;,&amp;quot;age&amp;quot;:20,&amp;quot;created_at&amp;quot;:&amp;quot;2018-07-03T15:08:43.626Z&amp;quot;,&amp;quot;fans&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;Ian&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;Jack&amp;quot;}]}
+{&amp;quot;name&amp;quot;:&amp;quot;Mark II&amp;quot;,&amp;quot;age&amp;quot;:30,&amp;quot;created_at&amp;quot;:&amp;quot;2018-07-03T15:09:13.416Z&amp;quot;,&amp;quot;fans&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;Mary&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;John&amp;quot;}]}
+{&amp;quot;name&amp;quot;:&amp;quot;Mark III&amp;quot;,&amp;quot;age&amp;quot;:40,&amp;quot;created_at&amp;quot;:&amp;quot;2018-07-03T15:09:56.975Z&amp;quot;,&amp;quot;fans&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;Mary&amp;quot;},{&amp;quot;name&amp;quot;:&amp;quot;Baba&amp;quot;}]}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;格式
+{
+  name: &amp;lt;string&amp;gt;,
+  age: &amp;lt;integer&amp;gt;,
+  created_at: &amp;lt;string&amp;gt; (iso 日期格式)
+  fans: [
+    name: &amp;lt;string&amp;gt;
+  ]
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們要先進入到 Athena 頁面裡，根據上述的檔案內容，建立一個 Table。其中比較需要注意的為&lt;code&gt;ROW FORMAT SERDE&lt;/code&gt;，這個就是我們的檔案解析器，假設你的檔案是存 csv 格式的，那這裡就需要更換。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;CREATE EXTERNAL TABLE IF NOT EXISTS markdb.user (
+  `name` string,
+  `age` int,
+  `created_at` string,
+  `fans` array&amp;lt;struct&amp;lt;name:string&amp;gt;&amp;gt; 
+)
+ROW FORMAT SERDE &#39;org.openx.data.jsonserde.JsonSerDe&#39;
+WITH SERDEPROPERTIES (
+  &#39;serialization.format&#39; = &#39;1&#39;
+) LOCATION &#39;s3://marklin-s3/api2018/&#39;
+TBLPROPERTIES (&#39;has_encrypted_data&#39;=&#39;false&#39;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後建立好後，你可以直接下達下面的 sql 來看看有沒有資料:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM user
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;結果如下圖:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180704-02-athena-basic.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-aws-athena--query-&#34;&gt;使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量)&lt;/h2&gt;
+&lt;p&gt;接下來，我們來根據常用的情況，來看看在 Athena 要如何搜尋到你要的資料，事實上就只是下下 SQL 而以。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/athena/latest/ug/functions-operators-reference-section.html&#34;&gt;更多的操作符號請參閱此篇文章&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-s3--20170703150901--user--&#34;&gt;馬克大想要從 S3 中尋找日期為 20170703-15:09:01 以後所建立的 user ，要如何下呢 ?&lt;/h3&gt;
+&lt;p&gt;如下，這裡我說明一下，為什麼我這裡用&lt;code&gt;from_iso8601_timestamp&lt;/code&gt;，主要的原因在於我的日期格式是存 iso 格式，也就是長這樣&lt;code&gt;&amp;quot;2018-07-03T15:09:56.975Z&amp;quot;&lt;/code&gt;，在 Athena 中，如果你要使用 iso 格式來當你的格式，那有以下兩個地方要注意:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;在 create table 時你的欄位要設成&lt;code&gt;string&lt;/code&gt;不能用&lt;code&gt;Date or Timestamp&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;在 query 時，你要用&lt;code&gt;from_iso8601_timestamp&lt;/code&gt;來將 string 轉成 timestamp 來進行搜尋。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM user 
+WHERE from_iso8601_timestamp(created_at) &amp;gt; from_iso8601_timestamp(&#39;2018-07-03T15:09:00Z&#39;)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-fans--ian--user--&#34;&gt;馬克大想要找 fans 中有 Ian 的 user 要如何下呢 ?&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM user 
+CROSS JOIN UNNEST(fans) AS t(fan)
+WHERE fan.name = &#39;Ian&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-user--age-2040-user--&#34;&gt;馬克大想要找 user 中 age 大於20與小於40歲的 user 資料，要如何下呢 ?&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM user 
+WHERE age BETWEEN 25 AND 35 
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;---aws-kinesis--json--s3--query--&#34;&gt;坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !&lt;/h2&gt;
+&lt;p&gt;事情是這樣，我這裡都是使用以下的方式來將資料丟到 S3。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;資料來源(json) -&amp;gt; AWS kinesis -&amp;gt; S3
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後呢我每一次在 AWS Athena 下 query (table 用上面的 script 建立)時，都會發現每一次下抓全部資料的 query 時都只有第一筆資 !&lt;/p&gt;
+&lt;p&gt;後來調查了一下，我發現 Kinesis 幫我送到 S3 時，產生的檔案如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{ name: &#39;Mark&#39;, age: 20 }{ name: &#39;Ian&#39;, age: 30 }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後這份&lt;a href=&#34;https://aws.amazon.com/tw/premiumsupport/knowledge-center/error-json-athena/&#34;&gt;文件&lt;/a&gt;中，下面這段話有說到，每一個 json 記錄都只能單一行 !&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Be sure your JSON record is on a single line
+
+Athena doesn&#39;t currently support multi-line JSON records.
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Fuc u ! 所以正確能解析的格式是應該要如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{ name: &#39;Mark&#39;, age: 20 }
+{ name: &#39;Ian&#39;, age: 30 }
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;我最想罵的就是是 AWS kinesis 自已幫我儲的，明知 Athena 有這規則，卻不來個換行。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以呢，最後為了要解決這個問題，我就只到在每一次丟的 json string 都加了一個&lt;code&gt;\n&lt;/code&gt;。不要笑 ~ 連我在 Amazon 工作的同事聽到都直接噴飯，都說是 bug 吧。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;JSON.stringify(data) + &#39;\n&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;喔對了，上面是在資料來源時加個換行，如果你覺得資料來源很多，懶的在這加，那就只能使用 AWS lambda 來進行處理，就有點像下面這流程:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;資料來源 -&amp;gt; AWS kinesis -&amp;gt; AWS lambda(加換行) -&amp;gt; S3
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;有時我在懷疑，是不是 AWS lambda 的收錢策略呢?&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.aws.amazon.com/zh_cn/athena/latest/ug/json.html&#34;&gt;AWS Athena 用戶指南&lt;/a&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -84,13 +566,131 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
       <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180702/</guid>
-      <description>上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:
- 要如何定期的清除 Elasticsearch 文件 ?
- 然後我們會分成以下幾個章節:
- 最直覺式的定期刪除方法與缺點。 為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ? 大量文件清除方法 - 時間索引策略。  最直覺式的定期刪除方法與缺點 假設有以下的資料:
-{ data: &#39;Hi Mark ~&#39;, created_at: &#39;20180101&#39; }, { data: &#39;HI Fuc u Mark&#39;, created_at: &#39;20180201&#39; } 那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:
- 搜尋所有 created_at 為 1 月的 doc。 再將所有搜尋出的 doc 給清除。   上面這方法在小量資料時，是沒問題的，問題是出在大量資料。
- 那為什麼大量資料刪除會有問題呢 ?</description>
+      <description>&lt;p&gt;上一篇文章&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7801415-establishment-of-a-log-system-based-on-aws-elasticsearch&#34;&gt;『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』&lt;/a&gt;中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;要如何定期的清除 Elasticsearch 文件 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後我們會分成以下幾個章節:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;最直覺式的定期刪除方法與缺點。&lt;/li&gt;
+&lt;li&gt;為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ?&lt;/li&gt;
+&lt;li&gt;大量文件清除方法 - 時間索引策略。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading&#34;&gt;最直覺式的定期刪除方法與缺點&lt;/h2&gt;
+&lt;p&gt;假設有以下的資料:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{
+  data: &#39;Hi Mark ~&#39;,
+  created_at: &#39;20180101&#39;
+},
+{
+  data: &#39;HI Fuc u Mark&#39;,
+  created_at: &#39;20180201&#39;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;搜尋所有 created_at 為 1 月的 doc。&lt;/li&gt;
+&lt;li&gt;再將所有搜尋出的 doc 給清除。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;blockquote&gt;
+&lt;p&gt;上面這方法在小量資料時，是沒問題的，問題是出在大量資料。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;那為什麼大量資料刪除會有問題呢 ?&lt;/p&gt;
+&lt;p&gt;Elasticsearch 在進行刪除時，它是將 doc 給一個此 doc 已刪除的 tag ，然後再接下來的搜尋時，會自動將有 tag 的 doc 給過濾掉，這也代表在清除的當下資源沒有被釋放出來。&lt;/p&gt;
+&lt;p&gt;接下來 Elasticsearch 會在某個條件下，會執行&lt;code&gt;segment merging&lt;/code&gt;的工作，這個時後它才會將實際上的文件清除，而且這個工作在大量資料下，會非常的消耗 cpu 與 i/o 的資源。&lt;/p&gt;
+&lt;h2 id=&#34;-elasticsearch--&#34;&gt;為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ?&lt;/h2&gt;
+&lt;p&gt;要理解這個問題，我們就要從&lt;code&gt;倒排索引&lt;/code&gt;開始說起，不熟可以去我這篇&lt;a href=&#34;http://marklin-blog.logdown.com/posts/7346272&#34;&gt;Elasticsearch 的 Document 建立原理&lt;/a&gt;看個兩三下。&lt;/p&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;倒排索引的建立&lt;/h3&gt;
+&lt;p&gt;首先，每當一個 doc 建立時，它會先被丟到一個叫 memory buffer 的地方，等到一段時間 or buffer 滿了，系統會將它建立成一個&lt;code&gt;segment&lt;/code&gt;，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-01-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;而這個 segment 就是我們的&lt;code&gt;倒排索引&lt;/code&gt;集合，它也是在我們在進行搜尋時，會實際去尋找的地方。這裡有一個很重要的事情要說:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;每一個 segment 內的倒排索引是不可以變的。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以說如果你新增了第二個 doc ，它會在去新增一個 segment，那你在『某段時間』內，會有 2 個 segment，然後搜尋時，就是去每個 segment 中搜尋，然後將結果進行合併，得出結果。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-02-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-segment--&#34;&gt;多個 segment 會有什麼問題呢 ?&lt;/h3&gt;
+&lt;p&gt;首先 segment 裡面是存放倒排索引的資訊，而這個東西，它是寫在&lt;code&gt;硬碟&lt;/code&gt;中。所以如果每一次進行搜尋時，有 100 segment 個代表你要開啟 100 個檔案，如果越來越多，你的 i/o 與 file descriptor 遲早會出問題。&lt;/p&gt;
+&lt;h3 id=&#34;-segment--segment-merging&#34;&gt;解決多個 segment 的方法 segment merging，但它很耗資源&lt;/h3&gt;
+&lt;p&gt;所以 Elasticsearch 提出了一個機制，那就是&lt;code&gt;segment merging&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;這個東東將是會定時的將小 segment 合成一個大的 segment，如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-03-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;這項工作是非常的消耗資源的，如果你有 100 個小的 segment，你就要將開啟 100 條的 i/o 並且需要進行大量的運算。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;而且如果你還大量刪除了 doc ，它還要去某個檔案中，抓取已刪除的檔案編號，然後在和原本的每一個 segment 進行比對，再組合成 1 個新的 segment。這想也知道會非常的耗 CPU 與 i/o 資源。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;--&#34;&gt;大量文件清除方法 - 時間索引策略&lt;/h2&gt;
+&lt;p&gt;所以為了解決這個問題，我們將會使用時間索引策略來進行 doc 的刪除。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;這策略概念就是每天(or 區間)產生一個 index，然後過時了再砍掉它&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;首先為了別讓人搞混，我先畫張圖，此索引非倒排索引。從下圖中我們可以知道一個 Elasticsearch  的 Index 是由不同節點的 shard 組合而成，然後每個 shard 裡面包含了 doc 與 segment。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-04-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;所以說，我們可以知道每個 segment 都是包含在一個 index 中，那我們想想看下面這個問題 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;假如我們直接刪除了 index 後，segment 會著麼樣呢 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;答案就是 doc 與 segment 都一起消失，不需要在做那些 segment merging 啥的。&lt;/p&gt;
+&lt;p&gt;所以我們這裡的策略就是:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;根據時間來建立 index (假設每天) ，然後每當要清除舊 log 時，我們就將指定的 index 給清除就好，這樣就不需要執行 segment merging 這種耗資源的工作了&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;-part1---index-template&#34;&gt;時間索引策略 part1 - 建立 index template&lt;/h3&gt;
+&lt;p&gt;首先我們要建立一個 index 的 template，如下，建立完成以後，我們接下來每次只要建立的索引名稱為&lt;code&gt;api-*&lt;/code&gt;這種類型 (ex. api-2018-01-01) ，系統就會依照下面的範本來進行建立。&lt;/p&gt;
+&lt;p&gt;然後&lt;code&gt;aliases&lt;/code&gt;就是別命，假設建立出來的索引為 api-2018-01-01，我們就可以使用 api 這個別命來操作它，所以這也代表我們每一次新增 doc 指令索引時，不用一直換啊換。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; await client.indices.putTemplate({
+      name: &#39;api-template&#39;,
+      template: &#39;api-*&#39;,
+      body: {
+        &#39;settings&#39;: {
+          &#39;number_of_shards&#39;: 5,
+          &#39;number_of_replicas&#39;: 1
+        },
+        &#39;aliases&#39;: {
+          &#39;api&#39;: {}
+        },
+        &#39;mappings&#39;: {
+          &#39;log&#39;: logMapping
+        }
+      }
+    });
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-part2--&#34;&gt;時間索引策略 part2 - 排程每天建立一個新的索引，並將操作指向它&lt;/h3&gt;
+&lt;p&gt;下面這個 api 就是會依據&lt;code&gt;max_age&lt;/code&gt;與&lt;code&gt;max_docs&lt;/code&gt;的條件，來決定是否建立索引，其中一個符合，那就會建立新的索引，並且將操作(新增 doc)指向這個新建立的索引。&lt;/p&gt;
+&lt;p&gt;下面這個範例，rollover 會自動依流水號來建立 index，當然也可以依據時間來建立，請參考&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-rollover-index.html&#34;&gt;官網這篇文章&lt;/a&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;POST api/_rollover
+{
+  &amp;quot;conditions&amp;quot;: {
+    &amp;quot;max_age&amp;quot;:   &amp;quot;1d&amp;quot;,
+    &amp;quot;max_docs&amp;quot;:  5
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;old_index&amp;quot;: &amp;quot;api-logs-1&amp;quot;,
+  &amp;quot;new_index&amp;quot;: &amp;quot;api-logs-2&amp;quot;,
+  &amp;quot;rolled_over&amp;quot;: true,
+  &amp;quot;dry_run&amp;quot;: false,
+  &amp;quot;conditions&amp;quot;: {
+    &amp;quot;[max_docs: 5]&amp;quot;: true,
+    &amp;quot;[max_age: 7d]&amp;quot;: false
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;P.S 如果是使用 AWS kinesis 的話，這一步可以不用做，在設定它時，有個叫 Index rotation 的參數可以設定，它可以設定 hour、day、week、month，功能就和上面的一樣&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;-part3--&#34;&gt;時間索引策略 part3 - 定時的清除索引&lt;/h3&gt;
+&lt;p&gt;如果你的索引名稱如&lt;code&gt;api-2018-01-01&lt;/code&gt;這種類型的話，你可以依據它來選擇清除，而如果你的命名不是這樣的話，那你可以使用下面這個 api 來知道每一個索引的建立時間。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl http://localhost:9200/_cat/indices\?h\=h,s,i,id,p,r,dc,dd,ss,creation.date.string
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;結果如下圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180702-05-delete-log.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-part4--&#34;&gt;時間索引策略 part4 - 搜尋的操作&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;rollover&lt;/code&gt; api 上面有提到，會將所以的操作自動的轉向到新的索引，所以你如果要進行搜尋操作時，你可以執行下面的指令，這樣你所有的索引都可以尋找到。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;curl http:127.0.0.1:9200/api-*/_search?pretty
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/guide/cn/elasticsearch/guide/current/inside-a-shard.html&#34;&gt;官網-分配內部原理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/guide/en/elasticsearch/reference/master/indices-rollover-index.html&#34;&gt;官網 rollover api&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.elastic.co/blog/managing-time-based-indices-efficiently&#34;&gt;managing-time-based-indices-efficiently&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -99,14 +699,267 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
       <pubDate>Sun, 01 Oct 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20171001/</guid>
-      <description>本篇文章中我們將會學習到以下幾個重點
- 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ?  什麼是 Prometheus 呢 ? 在我們平常開發完系統時，我們常常會有個需求，那就是要如何監控我們的系統呢 ? 以確保它 cpu 往上衝時，我們會知道呢。
-當然我們可以很簡單的寫個小程式，定期的去呼叫系統取他的 cpu，這是很淺的東東 ~ 那如果是還要一個 api 的請求次數呢 ? 或是平均的某個 api 的請求次數或圖表呢 ? 這時如果還要自幹一個，那就太麻煩囉，所以這時我們就可以使用Prometheus ~
-Prometheus 官網上面寫了下面這段話 :
- Power your metrics and alerting with a leading open-source monitoring solution.
- 這句話就是 Prometheus 存在的目的。
-Prometheus 的架構 太細節的不說囉 ~ 這裡大概列出這個架構的三個重點:
- Prometheus 是用 pull 去取得目標資訊，下面的 pull metrics 就是這個意思，而這裡你只先去記一點，如果你有個 http server ，然後你要用 Prometheus 去監控 server ，那 Prometheus 就會去 xxxx_host/metrics 取得資訊。 PromQL 是 Prometheus 所提供的查詢語言，利用它可以快速的找到我們想要的資訊 (大概)。 AlertManager 是一個警告系統，你只要配置好 Prometheus 在某個東東到了報警線時，就自動發送警告到 AlertManager 然後它會使用某些方法通知你，例如 email or slack。  安裝 Prometheus 請直接到官網直接下載下來。</description>
+      <description>&lt;p&gt;本篇文章中我們將會學習到以下幾個重點&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;什麼是 Prometheus 呢 ?&lt;/li&gt;
+&lt;li&gt;要如何監控 node http server 呢 ?&lt;/li&gt;
+&lt;li&gt;我想從 Prometheus 監控自訂的資訊，要如何做呢 ?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;-prometheus--&#34;&gt;什麼是 Prometheus 呢 ?&lt;/h2&gt;
+&lt;p&gt;在我們平常開發完系統時，我們常常會有個需求，那就是要如何監控我們的系統呢 ?
+以確保它 cpu 往上衝時，我們會知道呢。&lt;/p&gt;
+&lt;p&gt;當然我們可以很簡單的寫個小程式，定期的去呼叫系統取他的 cpu，這是很淺的東東 ~ 那如果是還要一個 api 的請求次數呢 ? 或是平均的某個 api 的請求次數或圖表呢 ? 這時如果還要自幹一個，那就太麻煩囉，所以這時我們就可以使用&lt;code&gt;Prometheus&lt;/code&gt; ~&lt;/p&gt;
+&lt;p&gt;Prometheus 官網上面寫了下面這段話 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Power your metrics and alerting with a leading open-source monitoring solution.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這句話就是 Prometheus 存在的目的。&lt;/p&gt;
+&lt;h3 id=&#34;prometheus-&#34;&gt;Prometheus 的架構&lt;/h3&gt;
+&lt;p&gt;太細節的不說囉 ~ 這裡大概列出這個架構的三個重點:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Prometheus 是用 pull 去取得目標資訊，下面的 pull metrics 就是這個意思，而這裡你只先去記一點，如果你有個 http server ，然後你要用 Prometheus 去監控 server ，那 Prometheus 就會去 xxxx_host/metrics 取得資訊。&lt;/li&gt;
+&lt;li&gt;PromQL 是 Prometheus 所提供的查詢語言，利用它可以快速的找到我們想要的資訊 (大概)。&lt;/li&gt;
+&lt;li&gt;AlertManager 是一個警告系統，你只要配置好 Prometheus 在某個東東到了報警線時，就自動發送警告到 AlertManager 然後它會使用某些方法通知你，例如 email or slack。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180314-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-prometheus&#34;&gt;安裝 Prometheus&lt;/h3&gt;
+&lt;p&gt;請直接到官網直接下載下來。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;https://prometheus.io/download/
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下來在解壓縮&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;tar xvfz prometheus-*.tar.gz
+cd prometheus-*
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後進到解壓縮後的資料夾後，執行以下指令，就可以開啟 Prometheus 。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;./prometheus
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;-node-http-server--&#34;&gt;要如何監控 node http server 呢 ?&lt;/h2&gt;
+&lt;p&gt;再開始前我們先去 prometheus server 的資料夾下修改一下 prometheus.yml 這檔案，基本上我們只要先調整 scrape_configs 裡的 scrape_configs，設定 prometheus server 要去監控的目標，如下我們去監控&lt;code&gt;localhost:3000&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# my global config
+global:
+  scrape_interval:     5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 5s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global &#39;evaluation_interval&#39;.
+rule_files:
+  # - &amp;quot;first_rules.yml&amp;quot;
+  # - &amp;quot;second_rules.yml&amp;quot;
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it&#39;s Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=&amp;lt;job_name&amp;gt;` to any timeseries scraped from this config.
+  - job_name: &#39;test&#39;
+
+    static_configs:
+      - targets: [&#39;localhost:3000&#39;]
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們就可以簡單的寫一個 nodejs 的 http server 。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http&amp;#39;&lt;/span&gt;)
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hello Node.js Server!&amp;#39;&lt;/span&gt;)
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createServer&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt;)
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;something bad happened&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;)
+    }
+
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;server is listening on &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;)
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;接下來，我們需要建立一個 api endpoint 的&lt;code&gt;/metrics&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/metrics&amp;#39;&lt;/span&gt;) {
+
+  }
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hello Node.js Server!&amp;#39;&lt;/span&gt;);
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createServer&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;something bad happened&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+  }
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;server is listening on &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後上面有說過 Prometheus 會去監控的目標抓取資訊，而他抓的地方就是&lt;code&gt;/metrics&lt;/code&gt;，然後這時我們裡面就要回傳資訊回去。&lt;/p&gt;
+&lt;p&gt;這裡我們會使用&lt;code&gt;prom-client&lt;/code&gt;套件，這個套件是一個 Prometheus client ，它會幫我們抓取他自訂的資料，並且將資料已 Prometheus 可以接受的格式回傳回去。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install prom-client
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後再將 endpoint 修改成如下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;prom-client&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;collectDefaultMetrics&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;collectDefaultMetrics&lt;/span&gt;;
+&lt;span style=&#34;color:#a6e22e&#34;&gt;collectDefaultMetrics&lt;/span&gt;();
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/metrics&amp;#39;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;register&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;());
+  }
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hello Node.js Server!&amp;#39;&lt;/span&gt;);
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createServer&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;something bad happened&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+  }
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;server is listening on &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那要如何驗證有沒有資料呢 ? 你只要去 chrome 然後打&lt;code&gt;http://localhost:3000/metrics&lt;/code&gt;然後你看到下面的資訊，就代表你有在產生資料囉，下面這些是&lt;code&gt;prom-client&lt;/code&gt;自已會去抓 process 的一些相關資訊，如果要自訂的資訊請看下一章結 ~&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total 0.015771 1520243222641
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total 0.000973 1520243222641
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 0.016744000000000002 1520243222641
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1520243212
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 26382336 1520243222641
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds 0.00048715 1520243222642
+
+# HELP nodejs_active_handles_total Number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total 3 1520243222641
+
+# HELP nodejs_active_requests_total Number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total 0 1520243222641
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最後我們先開啟 Prometheus ，然後連線到&lt;code&gt;http://localhost:9090/&lt;/code&gt;，最後到 status 裡面的 target 裡面，你如果看到你的 endpoint 的 state 是&lt;code&gt;up&lt;/code&gt;就代表 Prometheus 有成功的去那抓資料囉。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180314-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;-prometheus--1&#34;&gt;我想從 Prometheus 監控自訂的資訊，要如何做呢 ?&lt;/h2&gt;
+&lt;h3 id=&#34;-prometheus--metric&#34;&gt;定義好符合 Prometheus 的時序資料格式 metric&lt;/h3&gt;
+&lt;p&gt;假設我們想要自訂個內容，然後給 Prometheus server 抓取，第一步我們要先定義好『資料模式』，你把他想成 server 與 client 的協定就好囉，然後他長的如下:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;lt;metric name&amp;gt;{&amp;lt;label name&amp;gt;=&amp;lt;label value&amp;gt;, ...}
+&lt;/code&gt;&lt;/pre&gt;&lt;blockquote&gt;
+&lt;p&gt;注意 ! metric name 只能用 _ 來分割名詞 Ex. chat_room_count&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;假設我們要定義一個『ID 1 的聊天室用戶人數』那他的定義應該會長下面這樣:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;chatRoomCount{ chat_id=“1”} 100(人數)
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;heading&#34;&gt;決定時序資料的類型&lt;/h3&gt;
+&lt;p&gt;在 Prometheus 中有提供四種時序資料的類型&lt;/p&gt;
+&lt;h4 id=&#34;counter&#34;&gt;Counter&lt;/h4&gt;
+&lt;p&gt;這種類型用於『累積值』，例如 Prometheus 內建提供的 http 請求數或錯誤量，它的類型就是 Counter 。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http_response_total{method=&amp;quot;GET&amp;quot;,endpoint=&amp;quot;/api/peoples&amp;quot;} 10
+http_response_total{method=&amp;quot;GET&amp;quot;,endpoint=&amp;quot;/api/peoples&amp;quot;} 20
+http_response_total{method=&amp;quot;GET&amp;quot;,endpoint=&amp;quot;/api/peoples&amp;quot;} 30
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;gauge&#34;&gt;Gauge&lt;/h4&gt;
+&lt;p&gt;這種類型用於『常規值』，例如 cpu 使用率或記憶體使用率就是此類型。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;memory_usage_bytes{host=“server-01&amp;quot;} 50
+memory_usage_bytes{host=“server-01&amp;quot;} 100
+memory_usage_bytes{host=“server-01&amp;quot;} 80
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;histogram&#34;&gt;Histogram&lt;/h4&gt;
+&lt;p&gt;主要用於一段時間範圍內對資料的採集，並且可針對內容進行分組。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{小於100毫秒=5次，小於500毫秒=1次，小於100毫秒=2次}
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;summary&#34;&gt;Summary&lt;/h4&gt;
+&lt;p&gt;與 Histogram 相同且支持百分比與跟蹤的結果。&lt;/p&gt;
+&lt;p&gt;比較詳細的類型說明請參考下篇文章，寫的很詳細的。
+&lt;a href=&#34;http://yunlzheng.github.io/2017/07/07/prometheus-exporter-example-go/&#34;&gt;傳送門&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;實作『用戶使用』人數的自訂內容&lt;/h3&gt;
+&lt;p&gt;假設我們希望 Prometheus 可以去指定的&lt;code&gt;聊天室&lt;/code&gt; Server，抓取使用人數的資訊，那我們要如何實作呢 ?&lt;/p&gt;
+&lt;p&gt;根據上面的教學我們要先定義好資料格式與資料類型。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//資料格式 =&amp;gt; 代表聊天室`1`的使用人數當下有多少人.
+chatRoomCount{ chat_id=“1”} 100(人數)
+&lt;/code&gt;&lt;/pre&gt;&lt;pre&gt;&lt;code&gt;//資料類型 =&amp;gt; 會選擇 Gauge 而不選 Counter 是因為聊天室的人數是會上下變動，而不是只增加或減少。
+Gauge
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下來我們就來實作一下，首先做出自訂資料的格式定義與類型。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;// 定義自訂 metric 的格式與類型
+// 格式: chatRoomCount{ chat_id=“1”} 100(人數)
+// 類型: Guage
+const guage = new client.Gauge({
+  name: &#39;chatRoomCount&#39;,
+  help: &#39;The metric provide the count of chatroom`s people&#39;,
+  labelNames: [&#39;chat_id&#39;]
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後下面就是所有的程式碼，主要的重點就是定義格式，然後讓 Prometheus 從&lt;code&gt;/metrics&lt;/code&gt;這個 api 取得資料前，先將 count 資訊更新到 metric 裡面。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3000&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;prom-client&amp;#39;&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;guage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Gauge&lt;/span&gt;({
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;name&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;chatRoomCount&amp;#39;&lt;/span&gt;,
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;help&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;The metric provide the count of chatroom`s people&amp;#39;&lt;/span&gt;,
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;labelNames&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;chat_id&amp;#39;&lt;/span&gt;]
+});
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/metrics&amp;#39;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// 更新 metric
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;guage&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;set&lt;/span&gt;({
+      &lt;span style=&#34;color:#a6e22e&#34;&gt;chat_id&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1&amp;#39;&lt;/span&gt;
+    }, &lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;client&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;register&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;metrics&lt;/span&gt;());
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/add&amp;#39;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;++&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;now ~ count:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;);
+  }
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;request&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;===&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/leave&amp;#39;&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;;
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;now ~ count:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;count&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;);
+  }
+
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Hello Node.js Server!&amp;#39;&lt;/span&gt;);
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;http&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createServer&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;requestHandler&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;server&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;, (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+  &lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;something bad happened&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+  }
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;server is listening on &lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;${&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;}&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;`&lt;/span&gt;);
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那我們要如何確認有產生資料呢 ? 你先加幾個用戶幾去，然後再去打&lt;code&gt;/metrics&lt;/code&gt;就可以看到結果囉。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http://localhost:3000/add // 加一人
+http://localhost:3000/add // 加一人
+
+http://localhost:3000/metrics
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;結果如下。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;# HELP chatRoomCount The metric provide the count of chatroom`s people
+# TYPE chatRoomCount gauge
+chatRoomCount{chat_id=&amp;quot;1&amp;quot;} 2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;最後你在去&lt;code&gt;http://localhost:9090&lt;/code&gt;你就可以看到那個 tab 中會多增加了&lt;code&gt;chatRoomCount&lt;/code&gt;的標籤，然後點進去選 graph 你就可以看到你的圖表了。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180314-3.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20180314-4.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.frognew.com/2017/05/prometheus-intro.html&#34;&gt;开源监控系统Prometheus的基本概念 - 青蛙小白&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/siimon/prom-client&#34;&gt;官網&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://yami.io/golang-prometheus/&#34;&gt;用 Golang 實作 Prometheus：服務效能測量監控系統 - 電腦玩瞎咪&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.jianshu.com/p/0a4acb61ce35&#34;&gt;簡書 Prometheus - YichenWong&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://songjiayang.gitbooks.io/prometheus/content/introduction/&#34;&gt;songjiayang gitbook&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>javascript on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Thu, 01 Oct 2015 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,14 +18,53 @@
       <pubDate>Thu, 01 Oct 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20151001/</guid>
-      <description>什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
-Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
-建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
-var worker = new Worker(&amp;#39;work.js&amp;#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
-(fucntion(){ setTimeout(function(){ postMessage(&amp;#39;This work I spend 2s&amp;#39;); },2000); })(); 兩秒後執行結果就為。
-	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &amp;quot;fileName.js&amp;quot; ) ，下列程式碼為使用範例。
-importScripts( &amp;#34;work2.js&amp;#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&amp;#39;This work , I spend 2 s &amp;#39;); },2000); })() work2.js，如下程式碼。
-var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。</description>
+      <description>&lt;p&gt;什麼是&lt;code&gt;Web Worker&lt;/code&gt;？，它就是個運行在後台的&lt;code&gt;Javascript&lt;/code&gt;，獨立於其它&lt;code&gt;Script&lt;/code&gt;，並且不會影響效能，但它不能影響&lt;code&gt;Dom&lt;/code&gt;、並不能訪問&lt;code&gt;windows、Document、parent&lt;/code&gt;等物件。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Worker&lt;/code&gt; 主要的用處在避免重度 &lt;code&gt;CPU&lt;/code&gt; 運算的任務阻礙到 &lt;code&gt;UI&lt;/code&gt; 執行緒運行。&lt;/p&gt;
+&lt;h2 id=&#34;worker&#34;&gt;建立Worker&lt;/h2&gt;
+&lt;p&gt;首先我們來建立&lt;code&gt;worker&lt;/code&gt;，並且該獨立的&lt;code&gt;script&lt;/code&gt;為&lt;code&gt;work.js&lt;/code&gt;，並且在&lt;code&gt;worker&lt;/code&gt;建立&lt;code&gt;onmessage&lt;/code&gt;監聽器，當&lt;code&gt;work.js&lt;/code&gt;有執行&lt;code&gt;postMessage()&lt;/code&gt;，則會觸發。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;worker&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Worker&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;work.js&amp;#39;&lt;/span&gt;);
+ 	&lt;span style=&#34;color:#a6e22e&#34;&gt;worker&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;onmessage&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;){
+  		 &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;e&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下面這段程式碼為&lt;code&gt;work.js&lt;/code&gt;，以下只是段簡單的兩秒後觸發&lt;code&gt;postMessage()&lt;/code&gt;並回傳一段文字回去。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	(&lt;span style=&#34;color:#a6e22e&#34;&gt;fucntion&lt;/span&gt;(){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;postMessage&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;This work I spend 2s&amp;#39;&lt;/span&gt;);
+		},&lt;span style=&#34;color:#ae81ff&#34;&gt;2000&lt;/span&gt;);
+	})();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;兩秒後執行結果就為。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	This work I spend 2s
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;-web-worker--javascript&#34;&gt;在 Web Worker 中載入 Javascript&lt;/h2&gt;
+&lt;p&gt;在&lt;code&gt;Worker&lt;/code&gt;裡面如果要載入&lt;code&gt;Javascript&lt;/code&gt;，則需要使用&lt;code&gt;importScripts( &amp;quot;fileName.js&amp;quot; ) &lt;/code&gt;，下列程式碼為使用範例。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;importScripts&lt;/span&gt;( &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;work2.js&amp;#34;&lt;/span&gt; ) 
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;work2Obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;work2Obj&lt;/span&gt;; 
+
+	(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;work2Obj&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;taskName&lt;/span&gt;);
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+    	&lt;span style=&#34;color:#a6e22e&#34;&gt;self&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;postMessage&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;This work , I spend 2 s &amp;#39;&lt;/span&gt;);
+		},&lt;span style=&#34;color:#ae81ff&#34;&gt;2000&lt;/span&gt;);
+	})()
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;code&gt;work2.js&lt;/code&gt;，如下程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;work2Obj&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;taskName&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;work2&amp;#34;&lt;/span&gt;
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;web-worker&#34;&gt;Web Worker的限制&lt;/h2&gt;
+&lt;p&gt;有幾點要web worker的限制需要注意一下。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不能跨域加載Js。&lt;/li&gt;
+&lt;li&gt;Worker不能訪問windows、Document、parent等物件。&lt;/li&gt;
+&lt;li&gt;各瀏覽器對Worker的實現不太一樣。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/zh-TW/docs/Web/Guide/Performance/Using_web_workers&#34;&gt;https://developer.mozilla.org/zh-TW/docs/Web/Guide/Performance/Using_web_workers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ithelp.ithome.com.tw/question/10118851&#34;&gt;http://ithelp.ithome.com.tw/question/10118851&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.mozilla.com.tw/posts/7647/web-workers-fast&#34;&gt;https://blog.mozilla.com.tw/posts/7647/web-workers-fast&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.jobbole.com/30445/&#34;&gt;http://blog.jobbole.com/30445/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ibm.com/developerworks/cn/web/1112_sunch_webworker/&#34;&gt;http://www.ibm.com/developerworks/cn/web/1112_sunch_webworker/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -35,17 +73,66 @@ var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾�
       <pubDate>Wed, 09 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150909/</guid>
-      <description>在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
-deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
-When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
-下列程式碼為when的基本使用方法。
-var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
-var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
-從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
-deferred.then()方法的回傳可以做以下兩件事。
- 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
-$.get(&amp;#39;/getData&amp;#39;) .done(function(response) { if(response.error) { console.log(&amp;#39;Error&amp;#39;); }else { console.log(&amp;#39;Success&amp;#39;); } }) .fail(function(response) { console.log(&amp;#39;Error&amp;#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
-var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.</description>
+      <description>&lt;p&gt;在這篇文章中，我們將來說明一下&lt;code&gt;when&lt;/code&gt;與&lt;code&gt;then(pipe)&lt;/code&gt;的用法，這兩個方法都算是&lt;code&gt;promise&lt;/code&gt;衍伸技術。&lt;/p&gt;
+&lt;h2 id=&#34;deferredwhen&#34;&gt;deferred.when&lt;/h2&gt;
+&lt;p&gt;在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用&lt;code&gt;when&lt;/code&gt;來完成這種類型的工作。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;When&lt;/code&gt;相當與執行&lt;code&gt;Promise&lt;/code&gt;情況的&lt;code&gt;AND&lt;/code&gt;。也就是說一旦給定的所有&lt;code&gt;Promise&lt;/code&gt;均已執行後，就立即執行&lt;code&gt;when&lt;/code&gt;方法產生的&lt;code&gt;Promise&lt;/code&gt;對象。而一旦任一個&lt;code&gt;Promise&lt;/code&gt;被拒絕，則立即拒絕&lt;code&gt;when&lt;/code&gt;產生的&lt;code&gt;Promise&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;下列程式碼為&lt;code&gt;when&lt;/code&gt;的基本使用方法。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/test1&amp;#39;&lt;/span&gt;);
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/test2&amp;#39;&lt;/span&gt;);
+	
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;when&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;promise1&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;promise2&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+		&lt;span style=&#34;color:#75715e&#34;&gt;//promise1與promise2都完成時會執行的事情。
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;如果要取得&lt;code&gt;promise1&lt;/code&gt;與&lt;code&gt;promise2&lt;/code&gt;的回傳參數則如下程式碼，其中&lt;code&gt;arg1&lt;/code&gt;為&lt;code&gt;promise1&lt;/code&gt;的回傳參數，而&lt;code&gt;arg2&lt;/code&gt;為&lt;code&gt;promise2&lt;/code&gt;的回傳參數。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise1&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/test1&amp;#39;&lt;/span&gt;);
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise2&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/test2&amp;#39;&lt;/span&gt;);
+	
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;when&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;promise1&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;promise2&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;arg1&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;arg2&lt;/span&gt;){
+		&lt;span style=&#34;color:#75715e&#34;&gt;//promise1與promise2都完成時會執行的事情。
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;##d eferred.then(.pipe)&lt;/p&gt;
+&lt;p&gt;從&lt;code&gt;Jquery1.8&lt;/code&gt;開始，官網建議將&lt;code&gt;deferred.pipe()&lt;/code&gt;由&lt;code&gt;deferred.then()&lt;/code&gt;替代。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;deferred.then()&lt;/code&gt;方法的回傳可以做以下兩件事。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果&lt;code&gt;then&lt;/code&gt;回傳為&lt;code&gt;promise&lt;/code&gt;物件，則&lt;code&gt;then&lt;/code&gt;生成的&lt;code&gt;promise&lt;/code&gt;物件會模仿這個&lt;code&gt;promise&lt;/code&gt;物件。&lt;/li&gt;
+&lt;li&gt;如果&lt;code&gt;then&lt;/code&gt;回傳為&lt;code&gt;非promise&lt;/code&gt;物件，則&lt;code&gt;then&lt;/code&gt;生成的&lt;code&gt;promise&lt;/code&gt;物件會立即因該回傳值而執行、拒絕或通知，取決於&lt;code&gt;then&lt;/code&gt;那個初使&lt;code&gt;promise&lt;/code&gt;發生什麼事了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;來看看使用情況，假設某&lt;code&gt;api&lt;/code&gt;回傳發生錯誤時，不是回傳&lt;code&gt;http status XXX&lt;/code&gt;，而是回傳個&lt;code&gt;Json&lt;/code&gt;如&lt;code&gt;{error:true}&lt;/code&gt;之類的，由於&lt;code&gt;promise&lt;/code&gt;是在&lt;code&gt;http&lt;/code&gt;請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在&lt;code&gt;done&lt;/code&gt;裡。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/getData&amp;#39;&lt;/span&gt;)
+  	.&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) {
+   	   	&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;) {
+       	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Error&amp;#39;&lt;/span&gt;);
+    	}&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt; {
+        	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Success&amp;#39;&lt;/span&gt;);
+      	}
+	})
+	.&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;) {
+   		 &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Error&amp;#39;&lt;/span&gt;);
+	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;上述程式碼，不是個好的解決方法，非得要在&lt;code&gt;done&lt;/code&gt;做兩次判斷，因此我們這時就可以使用&lt;code&gt;.then&lt;/code&gt;，來過濾&lt;code&gt;Promise&lt;/code&gt;，如下程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/getData&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;){
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;error&lt;/span&gt;)
+			&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Deferred&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;);
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;else&lt;/span&gt;
+		   &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;;
+	},&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;){
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Deferred&lt;/span&gt;().&lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;);
+	});	
+
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;response&lt;/span&gt;){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Success&amp;#34;&lt;/span&gt;);
+	}).&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Fail&amp;#34;&lt;/span&gt;);
+	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這樣在&lt;code&gt;done&lt;/code&gt;就不需要在進行兩次判斷，其中&lt;code&gt;then&lt;/code&gt;的回傳值為&lt;code&gt;promise&lt;/code&gt;，因此該&lt;code&gt;promise&lt;/code&gt;會模仿&lt;code&gt;$.get(&#39;/getData&#39;)&lt;/code&gt;的&lt;code&gt;promise&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/&#34;&gt;https://blog.othree.net/log/2012/08/21/jquery-deferred-pipe/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.css88.com/jqapi-1.9/deferred.pipe/&#34;&gt;http://www.css88.com/jqapi-1.9/deferred.pipe/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.dotblogs.com.tw/a802216/archive/2013/10/02/122225.aspx&#34;&gt;http://www.dotblogs.com.tw/a802216/archive/2013/10/02/122225.aspx&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -54,14 +141,190 @@ var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(resp
       <pubDate>Tue, 08 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150908/</guid>
-      <description>在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
-Promise/A+ 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
-規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
- pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
-promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
-hpromises-spec
-Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
-versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&amp;#39;/getData&amp;#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。</description>
+      <description>&lt;p&gt;在上一篇介紹 PubSub 的方法後，發現該方法不適合處理&lt;code&gt;一次性事件&lt;/code&gt;，而&lt;code&gt;Promise&lt;/code&gt;就是用來解決該問題的手法。那什麼是&lt;code&gt;Promise&lt;/code&gt;呢?，&lt;code&gt;他是一種非同步操作的最終結果&lt;/code&gt;，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是&lt;code&gt;成功&lt;/code&gt;又或是&lt;code&gt;失敗&lt;/code&gt;，當未來發生&lt;code&gt;成功&lt;/code&gt;時他就執行&lt;code&gt;成功的 callBack fucntion，但它&lt;/code&gt;失敗`時就執行失敗的callback function。&lt;/p&gt;
+&lt;h2 id=&#34;promisea-&#34;&gt;Promise/A+ 規範&lt;/h2&gt;
+&lt;p&gt;上述說的&lt;code&gt;promise&lt;/code&gt;只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的&lt;code&gt;promise&lt;/code&gt;都不太一樣，因此&lt;code&gt;Kris Zyp&lt;/code&gt;提出了 CommonJs 的 promises/A 規範，符合條件如下。&lt;/p&gt;
+&lt;h3 id=&#34;-1--promise&#34;&gt;規範 1 : Promise狀態&lt;/h3&gt;
+&lt;p&gt;一個&lt;code&gt;Promise&lt;/code&gt;必須要處於以下三種狀態。&lt;code&gt;pending, fulfilled, or rejected&lt;/code&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。&lt;/li&gt;
+&lt;li&gt;fulfilled : 通常是代表成功。&lt;/li&gt;
+&lt;li&gt;rejected : 通常代表失敗。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;-2--promise-then&#34;&gt;規範 2 : Promise必須要 Then&lt;/h3&gt;
+&lt;p&gt;一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數&lt;code&gt;onFulfilled&lt;/code&gt;為&lt;code&gt;fulfilled&lt;/code&gt;執行後調用，而&lt;code&gt;onRejected&lt;/code&gt;為&lt;code&gt;rejected&lt;/code&gt;後調用。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;onFulfilled&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;onRejected&lt;/span&gt;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;其它詳細的規範其參考下面的連結。。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/promises-aplus/promises-spec&#34;&gt;hpromises-spec&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;jquery--promise-&#34;&gt;Jquery 的 Promise 實現&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Jquery&lt;/code&gt;在&lt;code&gt;1.5&lt;/code&gt;之後，我們常用的&lt;code&gt;$.ajax&lt;/code&gt;、&lt;code&gt;$.get&lt;/code&gt;、&lt;code&gt;$.getJson&lt;/code&gt;等這些&lt;code&gt;ajax&lt;/code&gt;函數全部都會返回&lt;code&gt;promise&lt;/code&gt;，下面給個例子來看看差別。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;versin&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.4&lt;/span&gt;
+
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/getData&amp;#39;&lt;/span&gt;, { 
+	   &lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;onSuccess&lt;/span&gt;, 
+	   &lt;span style=&#34;color:#a6e22e&#34;&gt;failure&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;onFailure&lt;/span&gt;
+	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;version&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1.5&lt;/span&gt;
+
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;get&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;/getData&amp;#39;&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;onSuccess&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;onFailure&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這種改變的好處在於&lt;code&gt;封裝&lt;/code&gt;，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用&lt;code&gt;promise&lt;/code&gt;來解決。&lt;/p&gt;
+&lt;h3 id=&#34;jquery-promise--deferred&#34;&gt;Jquery的 Promise 與 Deferred&lt;/h3&gt;
+&lt;p&gt;我們要如何把一個函數變成&lt;code&gt;Promise&lt;/code&gt;對象？首先我們需要產生&lt;code&gt;Deferred&lt;/code&gt;，什麼是&lt;code&gt;Deferred&lt;/code&gt;？&lt;code&gt;Deferred&lt;/code&gt;嚴格來說為&lt;code&gt;Promise&lt;/code&gt;的超集合，它比&lt;code&gt;Promise&lt;/code&gt;多了一項關鍵特性，那就是他可以直接的觸發，單純的&lt;code&gt;Promise&lt;/code&gt;實例只能允許增加&lt;code&gt;callBack　function&lt;/code&gt;，必須由其它東西來觸發這些&lt;code&gt;callback function&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如下程式碼，如果我們要將&lt;code&gt;deferredTest&lt;/code&gt;變成&lt;code&gt;Promise&lt;/code&gt;，我們需要一個&lt;code&gt;deferred&lt;/code&gt;，然後在執行成功時，執行&lt;code&gt;deferred.resolve()&lt;/code&gt;，並且失敗時執行&lt;code&gt;deferred.reject()&lt;/code&gt;，然後它們就會觸發相對應的&lt;code&gt;callback function&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferredTest&lt;/span&gt;(){
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Deferred&lt;/span&gt;();
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ajax&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;.getData&amp;#39;&lt;/span&gt;,{
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+				&lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;();
+			},
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+				&lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;();
+			}	
+		});
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;;
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;根據範例&lt;code&gt;deferred.resolve()&lt;/code&gt;就會觸發&lt;code&gt;onSuccess&lt;/code&gt;，而&lt;code&gt;deferred.reject()&lt;/code&gt;則會觸發&lt;code&gt;onFailure&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferredTest&lt;/span&gt;();
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;onSuccess&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;onFailure&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;-callback-function-&#34;&gt;向 callback function 傳遞參數&lt;/h3&gt;
+&lt;p&gt;通常在實務上，&lt;code&gt;ajax&lt;/code&gt;很常去後端取得資料，因此通常都有回傳資料，這時可以提供資料給&lt;code&gt;callback function&lt;/code&gt;，如下程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;(){
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;Deferred&lt;/span&gt;();
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;ajax&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;.getData&amp;#39;&lt;/span&gt;,{
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;success&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){
+				&lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+			},
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;fail&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;errorMessage&lt;/span&gt;){
+				&lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;errorMessage&lt;/span&gt;);
+			}	
+		});
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;deferred&lt;/span&gt;;
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下面程式碼的&lt;code&gt;data&lt;/code&gt;就是&lt;code&gt;ajax&lt;/code&gt;回傳的資料。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;();
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;promise&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;done&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;onSuccess&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;es6--promise&#34;&gt;ES6 的 Promise&lt;/h2&gt;
+&lt;p&gt;在 es6 時它有提供內建的 promise ，它有提供以下幾種方法 :&lt;/p&gt;
+&lt;h3 id=&#34;promiseall&#34;&gt;Promise.all&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;回傳一個 promise&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;這種用方法，可以指定一系列的 promise 任務，不依照順序來執行，當其中一個任務失敗時，它就會 rejects ，而當所以任務都完成後，它就會 resolve。&lt;/p&gt;
+&lt;p&gt;下面程式碼中，為我們使用&lt;code&gt;promise.all&lt;/code&gt;的結果，我們傳入的任務順序是&lt;code&gt;3 (3秒) -&amp;gt; 2 (2秒) -&amp;gt; 1(1秒)&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Promise((&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(() =&amp;gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+        } , &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;)
+    });
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;forEach&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;));
+    });
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;all&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt;);
+}
+
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+&lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(() =&amp;gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;All success&amp;#34;&lt;/span&gt;)
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後我們執行的結果如預期，不會依順序來執行，輸入的結果是依時間花時的順序。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1
+2
+3
+All success.
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;promiserace&#34;&gt;Promise.race&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;回傳一個 promise&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;它是傳入一系列的 promise 任務，只要其中一個任務失敗或成都，就會直接 resolve 或 reject。但其它的任務還是會繼續執行。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Promise((&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(() =&amp;gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+        } , &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;)
+    });
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;){
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;forEach&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;));
+    });
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;race&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;tasks&lt;/span&gt;);
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(() =&amp;gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;All success&amp;#34;&lt;/span&gt;)
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;執行結果。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1 
+All success
+2
+3
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;promiseresolve--promisereject&#34;&gt;Promise.resolve 與 Promise.reject&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;回傳一個 promise&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;這兩個方法都會回傳一個 promise ，差別在於，一個已經&lt;code&gt;resolve&lt;/code&gt;，另一個已&lt;code&gt;reject&lt;/code&gt;，簡單的使用範例如下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) =&amp;gt; {
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+})
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// console.log 結果為 2
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而 reject 的用法如下 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;error message&amp;#34;&lt;/span&gt;).&lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;) =&amp;gt; {
+   &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;err&lt;/span&gt;);
+})
+
+&lt;span style=&#34;color:#75715e&#34;&gt;// console.log 結果為 &amp;#34;error message&amp;#34;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;-&#34;&gt;我們如果要依序執行要如何做 ?&lt;/h3&gt;
+&lt;p&gt;我們這邊直接寫個最簡單的方法，這邊我們需要一個 promise.resolve 來產生一個已經 resolve 後的 promise ，然後在每一次的 result.then 裡面回傳 handler 回傳結的 promise ，這樣就能產生像 promise chain 的東西。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Promise((&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;reject&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(() =&amp;gt; {
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+            &lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;url&lt;/span&gt;);
+        } , &lt;span style=&#34;color:#a6e22e&#34;&gt;time&lt;/span&gt;)
+    });
+};
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;) {
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;let&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; Promise.&lt;span style=&#34;color:#a6e22e&#34;&gt;resolve&lt;/span&gt;();
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;objs&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;forEach&lt;/span&gt;((&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;) =&amp;gt; {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;result&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;result&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(() =&amp;gt;{
+        &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;,&lt;span style=&#34;color:#a6e22e&#34;&gt;obj&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+        });
+    })
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;result&lt;/span&gt;;
+}
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;];
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;process&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;test&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;then&lt;/span&gt;(() =&amp;gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;All success&amp;#34;&lt;/span&gt;)
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;執行結果&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;3
+2
+1
+All success
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;不過這種寫法有個缺點，那就是如果有很多任務時，他會需要先全部註冊然後再來執行，建議使用像是&lt;a href=&#34;http://bluebirdjs.com/docs/api-reference.html&#34;&gt;buldbird&lt;/a&gt; 這種 promise libary 來處理會比較優質點兒 ~&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.html-js.com/article/Learn-JavaScript-every-day-to-understand-what-JavaScript-Promises&#34;&gt;http://www.html-js.com/article/Learn-JavaScript-every-day-to-understand-what-JavaScript-Promises&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://segmentfault.com/a/1190000002452115&#34;&gt;http://segmentfault.com/a/1190000002452115&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/promises-aplus/promises-spec&#34;&gt;https://github.com/promises-aplus/promises-spec&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://liubin.github.io/promises-book/#what-is-promise&#34;&gt;http://liubin.github.io/promises-book/#what-is-promise&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -70,13 +333,60 @@ versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFa
       <pubDate>Mon, 07 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150907/</guid>
-      <description>發布與訂閱模式Pub/Sub它主要的概念為 :
- 定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者
- 在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 Jquery裡的on，下面的程式就可以想成，$(&#39;.SomeThing&#39;)為訂閱者，訂閱了click，如果click事件發生了，發布者就會執行doSomething。
-$(&amp;#39;.SomeThing&amp;#39;).on(&amp;#39;click&amp;#39;fucntion doSomething(){ //doSomething 	}); 該模式的優點在於解耦合，發行者與訂閱者不需要知道對方的存在。
-而使用的時機為當一個對象改變時，需要同時改變其它對象，但確不知道實際有多少個對象時，這種情況下，就可以考慮使用Pub/Sub模式。
-Pub / Sub 簡單版範例 var EventHub = { topics: {}, subscribe: function(topic, handler) { if(!this.topics[topic]){ this.topics[topic] = []; } this.topics[topic].push(handler); }, publish: function(topic, data) { if(!this.topics[topic] || this.topics[topic].length &amp;lt; 1) return; this.topics[topic].forEach(function(listener) { listener(data || {}); }); } }; 然後就可以使用了，首先訂閱一個Task，並且當Task被觸發時，會自動執行task函數。
-EventHub.subscribe(&amp;#39;Task&amp;#39;,function task(data){ console.log(data + &amp;#39;by Task1&amp;#39;); }); EventHub.subscribe(&amp;#39;Task&amp;#39;,function task(data){ console.log(data + &amp;#39;by Task2&amp;#39;); }); 然後在來觸發Task。</description>
+      <description>&lt;p&gt;&lt;code&gt;發布與訂閱模式Pub/Sub&lt;/code&gt;它主要的概念為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 Jquery裡的&lt;code&gt;on&lt;/code&gt;，下面的程式就可以想成，&lt;code&gt;$(&#39;.SomeThing&#39;)&lt;/code&gt;為訂閱者，訂閱了&lt;code&gt;click&lt;/code&gt;，如果&lt;code&gt;click&lt;/code&gt;事件發生了，發布者就會執行&lt;code&gt;doSomething&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;$&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;.SomeThing&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;click&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;fucntion&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;doSomething&lt;/span&gt;(){
+		&lt;span style=&#34;color:#75715e&#34;&gt;//doSomething
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;該模式的優點在於&lt;code&gt;解耦合&lt;/code&gt;，發行者與訂閱者不需要知道對方的存在。&lt;/p&gt;
+&lt;p&gt;而使用的時機為當一個對象改變時，需要同時改變其它對象，但確不知道實際有多少個對象時，這種情況下，就可以考慮使用Pub/Sub模式。&lt;/p&gt;
+&lt;h2 id=&#34;pub--sub-&#34;&gt;Pub / Sub 簡單版範例&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;EventHub&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; {
+  		&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {},
+
+  		&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribe&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;) {   	
+    		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;]){
+    			&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; [];
+    		} 
+    	
+    		&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;push&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;handler&lt;/span&gt;);
+  		},
+
+  		&lt;span style=&#34;color:#a6e22e&#34;&gt;publish&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) {
+    	
+    		&lt;span style=&#34;color:#66d9ef&#34;&gt;if&lt;/span&gt;(&lt;span style=&#34;color:#f92672&#34;&gt;!&lt;/span&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;] &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;length&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;) 
+    			&lt;span style=&#34;color:#66d9ef&#34;&gt;return&lt;/span&gt;;
+
+    		&lt;span style=&#34;color:#66d9ef&#34;&gt;this&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;topics&lt;/span&gt;[&lt;span style=&#34;color:#a6e22e&#34;&gt;topic&lt;/span&gt;].&lt;span style=&#34;color:#a6e22e&#34;&gt;forEach&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;listener&lt;/span&gt;) {
+      			&lt;span style=&#34;color:#a6e22e&#34;&gt;listener&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;||&lt;/span&gt; {});
+    		});
+  		}
+	};
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後就可以使用了，首先訂閱一個&lt;code&gt;Task&lt;/code&gt;，並且當&lt;code&gt;Task&lt;/code&gt;被觸發時，會自動執行&lt;code&gt;task函數&lt;/code&gt;。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;EventHub&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribe&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Task&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;by Task1&amp;#39;&lt;/span&gt;);
+	});
+	
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;EventHub&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;subscribe&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Task&amp;#39;&lt;/span&gt;,&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;task&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;+&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;by Task2&amp;#39;&lt;/span&gt;);
+	});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後在來觸發&lt;code&gt;Task&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	EventHub.publish(&#39;Task&#39;,&#39;Hello pub and sub~&#39;);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;執行結果為。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	Hello pub and sub ~ by Task1
+	Hello pub and sub ~ by Task2
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;pub--sub-1&#34;&gt;Pub / Sub 不適合處理的類型&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;PubSub&lt;/code&gt;不適合應用於一次性事件。所謂一次性事件就是指執行一次任務但可能產生多種結果(例如成果事件與失敗事件)，做不同的處理，&lt;code&gt;Ajax&lt;/code&gt;請求就是很常見的一次性事件。而專門用來解決這類型的方法被稱稱為&lt;code&gt;Promise&lt;/code&gt;，下篇會詳細介紹它。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://wiki.jikexueyuan.com/project/javascript-depth-understanding/model-design-eight.html&#34;&gt;http://wiki.jikexueyuan.com/project/javascript-depth-understanding/model-design-eight.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://dev.housetrip.com/2014/09/15/decoupling-javascript-apps-using-pub-sub-pattern/&#34;&gt;http://dev.housetrip.com/2014/09/15/decoupling-javascript-apps-using-pub-sub-pattern/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.itxueyuan.org/view/6931.html&#34;&gt;http://www.itxueyuan.org/view/6931.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -85,13 +395,66 @@ EventHub.subscribe(&amp;#39;Task&amp;#39;,function task(data){ console.log(data 
       <pubDate>Sun, 06 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150906/</guid>
-      <description>在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
-setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
-下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&amp;ldquo;Hello&amp;rdquo;)。
-setTimeout(function(){ console.log(&amp;#34;Hello&amp;#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
-var start = new Date; setTimeout(function(){ var end = new Date; console.log(&amp;#39;Time elapsed:&amp;#39;, end - start, &amp;#39;ms&amp;#39;); }, 1000); while (new Date - start &amp;lt; 2000) {}; &amp;lt;!-- tas --&amp;gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
-setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(&amp;quot;Mark&amp;quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
-如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven</description>
+      <description>&lt;p&gt;在&lt;code&gt;Javascript單線程&lt;/code&gt;與&lt;code&gt;Javascript之Event Driven&lt;/code&gt;這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。&lt;/p&gt;
+&lt;h2 id=&#34;settimeout&#34;&gt;setTimeout基本用法&lt;/h2&gt;
+&lt;p&gt;SetTimeout為Javascript的原生函數，主要的用法為&lt;code&gt;在一個指定的延遲時間後執行某個函數&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&amp;ldquo;Hello&amp;rdquo;)。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt;)
+	},&lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被&lt;code&gt;While&lt;/code&gt;阻塞，&lt;code&gt;setTimeout&lt;/code&gt;就不會在1秒後執行，而是等while執行完在執行。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date; 
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+		&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date;
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Time elapsed:&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;end&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt;, &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;ms&amp;#39;&lt;/span&gt;); 
+	}, &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+	&lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; Date &lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;start&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2000&lt;/span&gt;) {};
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;tas&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;輸出結果&lt;/span&gt;&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;：&lt;/span&gt;
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;Time&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;elapsed&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2002&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;ms&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;--&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;-&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;settimeout--0--&#34;&gt;setTimeout ( 0 ) 的意思&lt;/h2&gt;
+&lt;p&gt;SetTimeout為&lt;code&gt;在一個指定的延遲時間後執行某個函數&lt;/code&gt;，所以如果帶入&lt;code&gt;(0)&lt;/code&gt;，則是否意味馬上執行的意思?來看下面程式碼。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;setTimeout(function(){
+   console.log(&amp;quot;Hello&amp;quot;);
+},0)
+console.log(&amp;quot;Mark&amp;quot;);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;pre&gt;&lt;code&gt;執行結果為：
+Mark
+Hello
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;嚴來來說不是立即執行，而是&lt;code&gt;立即排進Task Quenu&lt;/code&gt;等待執行，等&lt;code&gt;Call Stack&lt;/code&gt;空時它會至&lt;code&gt;Task Quenu&lt;/code&gt;尋找工作，因此執行結果才為&lt;code&gt;Mark Hello&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;如果不知道&lt;code&gt;Task Quenu&lt;/code&gt;或&lt;code&gt;Call Stack&lt;/code&gt;可至該篇看&lt;code&gt;Event Driven&lt;/code&gt;的觀念。
+&lt;a href=&#34;http://marklin-blog.logdown.com/posts/294474-javascript-event-driven&#34;&gt;Javascript Event Driven&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;## setTimeout非同步的範例&lt;/p&gt;
+&lt;p&gt;首先看看下面的程式碼，&lt;code&gt;doSomething&lt;/code&gt;函數需要等到取得到&lt;code&gt;data&lt;/code&gt;才執行，但&lt;code&gt;getData&lt;/code&gt;會執行很久，但下面的&lt;code&gt;doSomething1&lt;/code&gt;與&lt;code&gt;2&lt;/code&gt;不需要&lt;code&gt;data&lt;/code&gt;就可以執行，所以這時這種寫法就會很浪費時間。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;();
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;doSomething&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+	
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;doSomething1&lt;/span&gt;();
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;doSomething2&lt;/span&gt;();
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;所以我們將&lt;code&gt;getData&lt;/code&gt;fucntion修改為如下。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;getData&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;callBack&lt;/span&gt;){			
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt;(){
+			&lt;span style=&#34;color:#75715e&#34;&gt;//getData要執行的程式碼
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;			
+			&lt;span style=&#34;color:#a6e22e&#34;&gt;callBack&lt;/span&gt;();
+		},&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;);
+	}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後我們整段程式碼就可以改成。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	getData(doSomething);
+	doSomething1();
+	doSomething2();
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;上面這種寫法，我們把同步操作轉變成非同步操作，getData不會阻塞住整個線程，以上就是其種一種的非同步的寫法，但這種寫法有個缺點就是很容易變成CallBack地獄。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&#34;&gt;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00CYM0Z8Y&#34;&gt;http://www.amazon.cn/%E5%9B%BE%E4%B9%A6/dp/B00CYM0Z8Y&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -100,18 +463,41 @@ setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(
       <pubDate>Sat, 05 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150905/</guid>
-      <description>在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，它一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
-事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ） 先來說說事件驅動(Event Driven)，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了ENTER之類的事件來決定，而不像一些如批次程式設計（batch programming）是由程式開發者來決定。
-我們來看看下面這張Philip Roberts在JSConf EU 2014講述Javascript event-loop時所出現的這圖。
-首先左上角為V8 Javascript runtime，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。
- one thread == one call stack == on thing at time
- 其中Stack裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至callback queue裡尋找看看有沒有callback要執行。
-Javascript程式碼單線程運行流程範例 我們將以下列這段簡單的程式碼來看Javascript的執行流程。
-console.log(&amp;#34;hi&amp;#34;) setTimeout(function cb(){ console.log(&amp;#34;there&amp;#34;); },5000); console.log(&amp;#34;Mark Lin&amp;#34;); 首先為第一張圖，在還沒執行程式程式碼時，所有的Stack與Task Quenu都是空的。 然後我們開始執行，首先載入這段JS，Stack會產生main()這個區塊，再執行到 console.log(&#39;hi&#39;)時，也會在Stack產生console.log(&#39;hi&#39;)的區塊，並在Console印出hi，最後console.log(&#39;hi&#39;)工作完成，會從Stack中釋放出。
-執行到setTimeoout，Stack會產生setTimeout的區塊，並且會向api發送工作，然後繼續往下執行。
-執行console.log(&amp;quot;Mark Lin&amp;quot;)，最後工作剛成後，Stack全部清空。
-Stack全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將CallBack cb放置Task Quenu，並且由於Stack已清空，它會自動去Task Quenu尋找Task，這時發現了Cb然後就執行consoel.log(&amp;quot;there&amp;quot;)。
-參考資料  https://www.youtube.com/watch?v=8aGhZQkoFbQ https://vimeo.com/96425312 http://www.ruanyifeng.com/blog/2014/10/event-loop.html  </description>
+      <description>&lt;p&gt;在&lt;code&gt;Javascript單線程&lt;/code&gt;該篇文章中有提到，大部份這種&lt;code&gt;單線程但可以處理非同步&lt;/code&gt;的語言都有共同的特性那就是&lt;code&gt;事件驅動(Event Driven)&lt;/code&gt;，它一般是由通過&lt;code&gt;事件循環(Event Loop)&lt;/code&gt;與&lt;code&gt;事件隊列（Event Queue）&lt;/code&gt;來實現。&lt;/p&gt;
+&lt;h2 id=&#34;--event-driven---event-queue-&#34;&gt;事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ）&lt;/h2&gt;
+&lt;p&gt;先來說說&lt;code&gt;事件驅動(Event Driven)&lt;/code&gt;，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了&lt;code&gt;ENTER&lt;/code&gt;之類的事件來決定，而不像一些如&lt;code&gt;批次程式設計（batch programming）&lt;/code&gt;是由程式開發者來決定。&lt;/p&gt;
+&lt;p&gt;我們來看看下面這張&lt;code&gt;Philip Roberts&lt;/code&gt;在JSConf EU 2014講述Javascript event-loop時所出現的這圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/QRavWVfJS9aG4f18ccUe_eventloop.png&#34; alt=&#34;eventloop.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;首先左上角為&lt;code&gt;V8 Javascript runtime&lt;/code&gt;，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;one thread == one call stack == on thing at time&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其中&lt;code&gt;Stack&lt;/code&gt;裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至&lt;code&gt;callback queue&lt;/code&gt;裡尋找看看有沒有&lt;code&gt;callback&lt;/code&gt;要執行。&lt;/p&gt;
+&lt;h2 id=&#34;javascript&#34;&gt;Javascript程式碼單線程運行流程範例&lt;/h2&gt;
+&lt;p&gt;我們將以下列這段簡單的程式碼來看Javascript的執行流程。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;hi&amp;#34;&lt;/span&gt;)
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;cb&lt;/span&gt;(){
+		&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;there&amp;#34;&lt;/span&gt;);
+	},&lt;span style=&#34;color:#ae81ff&#34;&gt;5000&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mark Lin&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;首先為第一張圖，在還沒執行程式程式碼時，所有的&lt;code&gt;Stack&lt;/code&gt;與&lt;code&gt;Task Quenu&lt;/code&gt;都是空的。
+&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/ImVy3COXT7SiCmPhKVmS_ScreenClip.png&#34; alt=&#34;ScreenClip.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;然後我們開始執行，首先載入這段JS，&lt;code&gt;Stack&lt;/code&gt;會產生&lt;code&gt;main()&lt;/code&gt;這個區塊，再執行到
+&lt;code&gt;console.log(&#39;hi&#39;)&lt;/code&gt;時，也會在&lt;code&gt;Stack&lt;/code&gt;產生&lt;code&gt;console.log(&#39;hi&#39;)&lt;/code&gt;的區塊，並在Console印出&lt;code&gt;hi&lt;/code&gt;，最後&lt;code&gt;console.log(&#39;hi&#39;)&lt;/code&gt;工作完成，會從Stack中釋放出。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/QVm1NVIQScGig9Mo8YW3_ScreenClip.png&#34; alt=&#34;ScreenClip.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;執行到&lt;code&gt;setTimeoout&lt;/code&gt;，&lt;code&gt;Stack&lt;/code&gt;會產生&lt;code&gt;setTimeout&lt;/code&gt;的區塊，並且會向api發送工作，然後繼續往下執行。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/MupUEwZ1TkaKLBmjUCnJ_ScreenClip.png&#34; alt=&#34;ScreenClip.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;執行&lt;code&gt;console.log(&amp;quot;Mark Lin&amp;quot;)&lt;/code&gt;，最後工作剛成後，&lt;code&gt;Stack&lt;/code&gt;全部清空。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/gQgkweeTiUCEwU64ImLg_ScreenClip.png&#34; alt=&#34;ScreenClip.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;Stack&lt;/code&gt;全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將&lt;code&gt;CallBack cb&lt;/code&gt;放置&lt;code&gt;Task Quenu&lt;/code&gt;，並且由於&lt;code&gt;Stack&lt;/code&gt;已清空，它會自動去&lt;code&gt;Task Quenu&lt;/code&gt;尋找&lt;code&gt;Task&lt;/code&gt;，這時發現了Cb然後就執行&lt;code&gt;consoel.log(&amp;quot;there&amp;quot;)&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://user-image.logdown.io/user/13878/blog/13097/post/294474/jzoItCQHQSYZMUvYY0je_ScreenClip.png&#34; alt=&#34;ScreenClip.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.youtube.com/watch?v=8aGhZQkoFbQ&#34;&gt;https://www.youtube.com/watch?v=8aGhZQkoFbQ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://vimeo.com/96425312&#34;&gt;https://vimeo.com/96425312&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&#34;&gt;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -120,17 +506,54 @@ Stack全部空間釋放完後，同時也發現剛剛對api的請求已完成，
       <pubDate>Fri, 04 Sep 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150904/</guid>
-      <description>首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑出So sad，但因為被while一直佔住線程，因此永遠不會執行setTimeout事件，與console.log(&amp;ldquo;So sad&amp;rdquo;) 。
-setTimeout(function () { isEnd = false; }, 1000); while (isEnd); console.log(&amp;#34;So sad&amp;#34;); Javascript的單線程是指一個瀏覽器行程（process）只有一個JS的執行線程（但不代表瀏覽器是單線程），同一個時段內只會有一段代碼在執行，代表一次只能完成一件事，如果有多件事，就代表你要排隊，一件一件的處理，如果有一件事卡死或要做很久，就代表下面的事永遠不會執行，優點是簡單，環境單純，但缺點是如果其中一個事件很耗時間，會拖慢整個程式執行。
-Javascript將事件分為兩種同步（Synchronous）與非同步（Asynchronous）來解決單線程的缺點。
-同步（ Synchronous ） 就是一個完成換下一個，下一個完再換下下一個處理，程式執行順序與任務的排列順序是相同的，如下程式碼。
-console.log(1); console.log(2); console.log(3); 輸出結果。
-	１ ２ ３ 非同步（ Asynchronous ） 非同步為每一個任務都有一個CallBack，代表每個任務執行完後會執行該CallBack而不是執行下一個任務，因此程式執行順序與任務的排列順序是不相同的，下列以ajax為範例。
-	console.log(1); ＄.ajax({ url:&amp;quot;tests/1&amp;quot; success:function(data){ console.log(2); }	}) console.log(3); 輸出結果。
-	１ ３ ２ 也就是說，假設該ajax很耗時，你可以不用等到ajax執行完，才跑console.log(3)，而是先給它個callback等ajax執完後自動插入回線程中執行console.log(2)。
-為什麼 Javascript 是單線程 ? Javascript最初做為瀏覽器腳本語言，主要用途在於和使用者戶動與操作DOM，也因此如果該語言為多線程語言就會發生不少混亂，例如Javascript有兩個線程，一個線程針對某個DOM節點新增某些內容，而另一線程為刪除該節點，那瀏覽器要以那個為主?所以為了避免這些亂，因此Javascript被設計為單線程語言。
-HTML5提出了Web Worker的標準，web worker是運行在瀏覽器的後台，並且子線程完全由主線程控制，並且不得操作 DOM，所以該標準並沒有影響javascript為單線程的本質。  Javascript 為單線程，又怎著非同步的執行呢 ? 通常這種語言為單線程，但又可以處理非同步的語言都有個一種共同點，那就是事件驅動event driven）機制，一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
-參考資料  http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html http://sporto.</description>
+      <description>&lt;p&gt;首先看看下面的程式碼，會發現永遠跑不出&lt;code&gt;So sad&lt;/code&gt;，因為&lt;code&gt;Javascript為單線程&lt;/code&gt;，雖然設定１秒過後isEnd為false，然後應該就直接跑出&lt;code&gt;So sad&lt;/code&gt;，但因為被while一直佔住線程，因此永遠不會執行setTimeout事件，與console.log(&amp;ldquo;So sad&amp;rdquo;) 。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;	&lt;span style=&#34;color:#a6e22e&#34;&gt;setTimeout&lt;/span&gt;(&lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; () {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;isEnd&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;false&lt;/span&gt;;
+    }, &lt;span style=&#34;color:#ae81ff&#34;&gt;1000&lt;/span&gt;);
+     &lt;span style=&#34;color:#66d9ef&#34;&gt;while&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;isEnd&lt;/span&gt;);
+     &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;So sad&amp;#34;&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Javascript的單線程是指一個瀏覽器行程（process）只有一個JS的執行線程（但不代表瀏覽器是單線程），同一個時段內只會有一段代碼在執行，代表一次只能完成一件事，如果有多件事，就代表你要排隊，一件一件的處理，如果有一件事卡死或要做很久，就代表下面的事永遠不會執行，優點是簡單，環境單純，但缺點是如果其中一個事件很耗時間，會拖慢整個程式執行。&lt;/p&gt;
+&lt;p&gt;Javascript將事件分為兩種&lt;code&gt;同步（Synchronous）&lt;/code&gt;與&lt;code&gt;非同步（Asynchronous）&lt;/code&gt;來解決單線程的缺點。&lt;/p&gt;
+&lt;h2 id=&#34;-synchronous-&#34;&gt;同步（ Synchronous ）&lt;/h2&gt;
+&lt;p&gt;就是一個完成換下一個，下一個完再換下下一個處理，程式執行順序與任務的排列順序是相同的，如下程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-JS&#34; data-lang=&#34;JS&#34;&gt;	&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;);
+	&lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;輸出結果。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	１
+	２
+	３
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;-asynchronous-&#34;&gt;非同步（ Asynchronous ）&lt;/h2&gt;
+&lt;p&gt;非同步為每一個任務都有一個&lt;code&gt;CallBack&lt;/code&gt;，代表每個任務執行完後會執行該&lt;code&gt;CallBack&lt;/code&gt;而不是執行下一個任務，因此程式執行順序與任務的排列順序是不相同的，下列以ajax為範例。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	console.log(1);
+	＄.ajax({
+		url:&amp;quot;tests/1&amp;quot;
+		success:function(data){
+			console.log(2);
+		}	
+	})
+	console.log(3);
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;輸出結果。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;	１
+	３
+	２
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;也就是說，假設該ajax很耗時，你可以不用等到ajax執行完，才跑&lt;code&gt;console.log(3)&lt;/code&gt;，而是先給它個callback等ajax執完後自動插入回線程中執行&lt;code&gt;console.log(2)&lt;/code&gt;。&lt;/p&gt;
+&lt;h2 id=&#34;-javascript--&#34;&gt;為什麼 Javascript 是單線程 ?&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Javascript&lt;/code&gt;最初做為瀏覽器腳本語言，主要用途在於和使用者戶動與操作DOM，也因此如果該語言為多線程語言就會發生不少混亂，例如&lt;code&gt;Javascript&lt;/code&gt;有兩個線程，一個線程針對某個DOM節點新增某些內容，而另一線程為刪除該節點，那瀏覽器要以那個為主?所以為了避免這些亂，因此&lt;code&gt;Javascript&lt;/code&gt;被設計為單線程語言。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;HTML5提出了Web Worker的標準，web worker是運行在瀏覽器的後台，並且子線程完全由主線程控制，並且不得操作
+DOM，所以該標準並沒有影響javascript為單線程的本質。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;javascript--&#34;&gt;Javascript 為單線程，又怎著非同步的執行呢 ?&lt;/h2&gt;
+&lt;p&gt;通常這種語言為單線程，但又可以處理非同步的語言都有個一種共同點，那就是&lt;code&gt;事件驅動event driven）機制&lt;/code&gt;，一般是由通過&lt;code&gt;事件循環(Event Loop)&lt;/code&gt;與&lt;code&gt;事件隊列（Event Queue）&lt;/code&gt;來實現。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html&#34;&gt;http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://sporto.github.io/blog/2012/12/09/callbacks-listeners-promises/&#34;&gt;http://sporto.github.io/blog/2012/12/09/callbacks-listeners-promises/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&#34;&gt;http://www.ruanyifeng.com/blog/2014/10/event-loop.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.cnblogs.com/Mainz/p/3552717.html&#34;&gt;http://www.cnblogs.com/Mainz/p/3552717.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://vimeo.com/96425312&#34;&gt;https://vimeo.com/96425312&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>

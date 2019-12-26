@@ -6,6 +6,10 @@
       <span class="logo-small">拿鐵才是王道</span>
   </div>
 
+  {{ range .AlternativeOutputFormats -}}
+    {{ printf `<link rel="%s" type="%s" href="%s" title="%s" />` .Rel .MediaType.Type .Permalink $.Site.Title | safeHTML }}
+{{ end -}}
+
 
   {{ $currentPage := . }}
   {{ with .Site.Menus.main }}

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>It 鐵人賽 2019 on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,14 +18,136 @@
       <pubDate>Mon, 30 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190930/</guid>
-      <description>這漫長辛苦的 30 天總於結束囉 ~ 接下來依慣例第 30 天都是總結篇。
-這 30 天的過程咱們都在追求『 一個好的系統 』中的其中一個重點 :
- 性能
- 性能越高的系統，可以帶給『 公司 』與『 用戶 』雙方都達到愉悅的情況。
-咱們先看看第一階段最基本系統的樣子。
-單機的優化方向 應用層方面性能優化重點知識 這下面 7 篇文章，應該涵蓋住了應用層性能方面所需要注意的重點，雖然有分 cpu 與 i/o 優化，但是我是覺得也不用分到那麼清楚，只要記得，你是要儘可能的以最少資源來做事情就對囉。
- 運算與 i/o 是重點，但總結來說就是『 儘可能的以最少資源來做最多的事情 』
-  30-03 之應用層的運算加速 - 演算法 30-04 之應用層的運算加速 - 並行運算 30-05 之應用層的 I / O 加速 - 零拷貝 ( Zero Copy ) 30-06 之應用層的 I / O 優化 - Stream ( 與一些 IPC 知識 ) 30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor 30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine 30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池  資料庫層優化重點知識 接下來到一個系統的命脈『 資料庫層 』的性能優化知識。這裡的最大重點在於 :</description>
+      <description>&lt;p&gt;這漫長辛苦的 30 天總於結束囉 ~ 接下來依慣例第 30 天都是總結篇。&lt;/p&gt;
+&lt;p&gt;這 30 天的過程咱們都在追求『 一個好的系統 』中的其中一個重點 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;性能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;性能越高的系統，可以帶給『 公司 』與『 用戶 』雙方都達到愉悅的情況。&lt;/p&gt;
+&lt;p&gt;咱們先看看第一階段最基本系統的樣子。&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;單機的優化方向&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191015/20089358Eg6WOiXPRS.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;heading1&#34;&gt;應用層方面性能優化重點知識&lt;/h4&gt;
+&lt;p&gt;這下面 7 篇文章，應該涵蓋住了應用層性能方面所需要注意的重點，雖然有分 cpu 與 i/o 優化，但是我是覺得也不用分到那麼清楚，只要記得，你是要儘可能的以最少資源來做事情就對囉。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;運算與 i/o 是重點，但總結來說就是『 儘可能的以最少資源來做最多的事情 』&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190903/&#34;&gt;30-03 之應用層的運算加速 - 演算法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190904/&#34;&gt;30-04 之應用層的運算加速 - 並行運算&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190905/&#34;&gt;30-05 之應用層的 I / O 加速 - 零拷貝 ( Zero Copy )&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190906/&#34;&gt;30-06 之應用層的 I / O 優化 - Stream ( 與一些 IPC 知識 )&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190907/&#34;&gt;30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190908/&#34;&gt;30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190909/&#34;&gt;30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;heading2&#34;&gt;資料庫層優化重點知識&lt;/h4&gt;
+&lt;p&gt;接下來到一個系統的命脈『 資料庫層 』的性能優化知識。這裡的最大重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;索引&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190910/&#34;&gt;30-10 之資料庫層架構與優化方向&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190911/&#34;&gt;30-11 之資料庫層的核心 - 索引結構演化論 B+樹&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190912/&#34;&gt;30-12 之資料庫層的核心 - MySQL 的索引實現&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190913/&#34;&gt;30-13 之資料庫層的優化 - 索引設計與雷區&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190914/&#34;&gt;30-14 之資料庫層的優化 - 表的設計&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但在追求性能的路上一定會碰到的大敵『 一致性難題 』，要追求高性能，就要理解它的敵人，才能在兩者間抓取『 平衡 』。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;性能大敵，一致性問題&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190915/&#34;&gt;30-15 之資料庫層的難題 - 單機『 故障 』一致性難題&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190916/&#34;&gt;30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190917/&#34;&gt;30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;資料庫層的應用一定會碰到貧頸因此接下來，第一個建議不是開多個資料庫，而是建立緩存服務。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;資料庫的好夥伴，緩存服務&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190918/&#34;&gt;30-18 之資料緩存層的服務 - Redis 概念與一致性難題&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190919/&#34;&gt;30-19 之資料庫層的優化 - 資料緩存策略&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190920/&#34;&gt;30-20 之資料緩存失效問題&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;heading3&#34;&gt;網路傳輸優化知識點&lt;/h4&gt;
+&lt;p&gt;咱們每台機器裡面的東西能優化完的都優化完以後，我覺得可以往『 網路傳輸 』方面儘可能的優化。其中咱們這裡以『 http 』為主，因為這個傳輸協議基本上是這世界上最多人使用的應用層協議，就算不是寫網頁的系統，也都是會使用 http 來打 api 之類的，所以理解它是非常重要的。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190921/&#34;&gt;30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190922/&#34;&gt;30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;分散式優化方向&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191015/20089358OUo7uOI3re.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;p&gt;這裡要記好，單機沒搞好前，不要有事沒事為了『 性能 』而建立分散式系統，會有非常多的坑等這你。&lt;/p&gt;
+&lt;p&gt;這裡簡單說一下，事實上這 30 天，我的分散式篇說的不多，因為我認為高性能的基礎在於單機，單機處理的好，我覺得才有資格往分散式前進。&lt;/p&gt;
+&lt;h3 id=&#34;heading5&#34;&gt;應用層分散式擴展&lt;/h3&gt;
+&lt;p&gt;應用層擴展基本上沒什麼毛病，只要記得每個應用都是無狀態的就好，如果是有狀態就難處理囉。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190923/&#34;&gt;30-23 之應用層的擴展 - 負載均衡服務&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190924/&#34;&gt;30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;heading6&#34;&gt;資料庫層分散式擴展&lt;/h3&gt;
+&lt;p&gt;最大的坑是在這，這裡又會出現性能大敵 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一致性難題&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;首先資料庫層的擴展第一個建議的架構為『 讀寫分離 』，這個坑會比較小一點。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190925/&#34;&gt;30-25之資料庫層的擴展 - 讀寫分離架構&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;接下來的模式，除非上述架構真的已經到了貧頸，否則不建議實作，坑很多。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190926/&#34;&gt;30-26之資料庫層的擴展 - 分庫分表架構&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190927/&#34;&gt;30-27之資料庫層的擴展 - 分區表&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然後就是咱們的大敵。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190928/&#34;&gt;30-28 之資料庫層擴展難題 - MySQL 分散式事務處理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最後這裡簡單的介紹一下資料庫的中間件。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190929/&#34;&gt;30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading7&#34;&gt;最後心得與結論&lt;/h2&gt;
+&lt;p&gt;總於要結束囉，這裡總結一下心得，這 30 天寫完，我覺得要建立一個好的系統的有重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;平衡&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在這 30 天雖然副主題是高性能，但是在這條路上，常常會需要損失一些性能來增加『 維護性 』與『 可用性 』，為啥 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;因為咱們是追求『 好的系統 』&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如果要完全的追求高性能的系統，那就會損失不少東西，可能會導致用戶不愉悅或老闆不愉悅。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;但要如何儘可能的做到平衡呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;儘可能做好每個地方&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這應該不用多說，每一個地方都做好，基本上我就覺得這個系統有達到『 一個好的系統重點 』。但是要做到這件事情，就需要每個地方都深入的理解，這樣才能達到『 平衡 』，不然你想想你專精於高性能，但是對一致性難題一知半解，你覺得做出來的東西如何呢 ? 我會怕啊……&lt;/p&gt;
+&lt;p&gt;最後也因為上述理由，這也是為什麼這三十天的主題為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;30天之從 0 至 1 盡可能的建立一個好的系統 ( 性能基礎篇 )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;別忘了咱們追求的是『 好的系統 』，『 性能 』只是其中一部份，好系統才是根本。&lt;/p&gt;
+&lt;h4 id=&#34;----&#34;&gt;最後希望這個攻略本，可以讓各位友人可以在探索一個好的系統中，找到性能方面一些根本方向 ~ 有了根你就能理解散發出去的不同系統囉  ~&lt;/h4&gt;
+&lt;p&gt;希望明年可以寫性能進階篇，應該是有可能，寫完這 30 篇我的小腦袋又冒出好多條進階支線可寫。&lt;/p&gt;
+&lt;h4 id=&#34;-&#34;&gt;完賽囉 ~&lt;/h4&gt;
+&lt;h2 id=&#34;heading8&#34;&gt;參考書籍與網站&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121356032?list_name=lv&#34;&gt;軟件架構設計：大型網站技術架構與業務架構融合之道&lt;/a&gt; ( 首推 )&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121212000&#34;&gt;大型網站技術架構－核心原理與案例分析 大型网站技术架构:核心原理与案例分析&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121350023&#34;&gt;大型網站性能優化實戰：從前端、網絡、CDN到後端、大促的全鏈路性能優化詳解&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121347917?list_name=p-b-zh_cn&#34;&gt;從零開始學架構：照著做，你也能成為架構師 从零开始学架构：照着做，你也能成为架构师&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787111539964&#34;&gt;分佈式實時處理系統:原理、架構與實現 分布式实时处理系统:原理、架构与实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787111625063?list_name=srh&#34;&gt;並發模式與應用實踐 (Concurrent Patterns and Best Practices: Build scalable apps with patterns in multithreading, synchronization, and functional programming)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787111422068?list_name=srh&#34;&gt;MySQL 技術內幕－InnoDB 存儲引擎, 2/e 数据库技术丛书·MySQL技术内幕:InnoDB存储引擎(第2版)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121266881?list_name=srh&#34;&gt;高可用MySQL（第2版） 高可用MySQL(第2版)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121198854&#34;&gt;高性能 MySQL (第3版) (High Performance MySQL: Optimization, Backups, and Replication, 3/e) 高性能MySQL(第3版)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121323621&#34;&gt;高性能SQL調優精要與案例解析 高性能SQL调优精要与案例解析&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121315091&#34;&gt;高性能服務系統構建與實戰 高性能服务系统构建与实战&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.tenlong.com.tw/products/9787121350030&#34;&gt;實戰 Java 高並發程序設計, 2/e 实战Java高并发程序设计(第2版)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -35,19 +156,294 @@
       <pubDate>Sun, 29 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190929/</guid>
-      <description>正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :
- MyCAT
- 本篇文章分為以下幾個章節 :
- MyCAT 基本概念 MyCAT 的各種架構實現配置 使用 Docker 來實現 MyCAT 讀寫分離  MyCAT 基本概念 在資料庫中間件中，事實上分為兩種類型 :
- proxy smart-client  它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。
-而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。
-圖 1 : proxy vs smart-client
-而其中 mycat 就是屬於 proxy 的其中一種應用。
-~ 小知識 ~
-現在幾個比較可以說的出名字的中間件有 :
-proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。
-有興趣的友人可以自已查查來比較看看。
-這裡問一下，那一種比較好呢 ? 首先咱們先說說 smart-client 的優點 :</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191014/20089358vvYv5IdCqA.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;MyCAT&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本篇文章分為以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;MyCAT 基本概念&lt;/li&gt;
+&lt;li&gt;MyCAT 的各種架構實現配置&lt;/li&gt;
+&lt;li&gt;使用 Docker 來實現 MyCAT 讀寫分離&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;mycat-&#34;&gt;MyCAT 基本概念&lt;/h2&gt;
+&lt;p&gt;在資料庫中間件中，事實上分為兩種類型 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;proxy&lt;/li&gt;
+&lt;li&gt;smart-client&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。&lt;/p&gt;
+&lt;p&gt;而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191014/20089358Ud8qBybBEg.png&#34; alt=&#34;&#34;&gt;
+圖 1 : proxy vs smart-client&lt;/p&gt;
+&lt;p&gt;而其中 mycat 就是屬於 proxy 的其中一種應用。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;現在幾個比較可以說的出名字的中間件有 :&lt;/p&gt;
+&lt;p&gt;proxy : cobar、mycat、mysql-router、atlas、vitess
+smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。&lt;/p&gt;
+&lt;p&gt;有興趣的友人可以自已查查來比較看看。&lt;/p&gt;
+&lt;h4 id=&#34;-&#34;&gt;這裡問一下，那一種比較好呢 ?&lt;/h4&gt;
+&lt;p&gt;首先咱們先說說 smart-client 的優點 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;實現簡單 : 大部份的語言都有相對應簡單的實現套件，例如大部份 orm 套都只要設定好 master 與 slave 然後開啟讀寫分離，就會自動的處理 ( ex. django orm、laravel eloquent model )。&lt;/li&gt;
+&lt;li&gt;沒有服務壞掉風險 : proxy 是一個服務，所以你需要考慮到它是否有高可用，而 smart-client 則否，它只是個 sdk。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Smart-client 缺點 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;比較深入的功能需自已實現 : 例如分散式事務、負載平衡這些，大部份的套件都沒有，真想要只能自已在這些套件上，在封裝一個層級來自已實現。&lt;/li&gt;
+&lt;li&gt;版本問題 : 有可能不同服務上，有不同的版本，這也代表如果一個版本有 bug，那就所有的應用都要升級，當服務多時，你要如何確保所有服務都有升級呢 ?&lt;/li&gt;
+&lt;li&gt;語言問題 : 只有與中間件 sdk 同語言的才能使用。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;總結來說，如果你的資料庫層級只到了『 讀寫分離 』的情境，那建議是只要使用 smart-client 模式，而是是直接使用各語言有提供的套件就好，而如果到了『 分庫分表 』而且公司內有很多人會使用，那就真的要考慮 proxy 了。&lt;/p&gt;
+&lt;h3 id=&#34;mycat-1&#34;&gt;MyCat 特性&lt;/h3&gt;
+&lt;p&gt;mycat 是一個由阿里開發的 cobar 演變來的資料庫的中間件服務，它是屬於『 proxy 類型 』，它基本上有以下的特點 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;支持讀寫分離、分庫分表。&lt;/li&gt;
+&lt;li&gt;NIO 的實現。&lt;/li&gt;
+&lt;li&gt;支持分散式事務 ( XA 協議的協調者 )&lt;/li&gt;
+&lt;li&gt;支持跨庫 join，但是限兩表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;首先第一點 mycat 支持讀寫分離、分庫分表，寫讓咱們應用端一樣照常的寫一樣 sql，然後內部會自動幫處理這些事情。&lt;/p&gt;
+&lt;p&gt;第二點 mycat 他本身是 nio 也就所謂的 non-blocking i/o 機制，就是咱們下面這篇文章中所提到的 reactor 模式，這也代表太可以處理大量的請求。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190907/&#34;&gt;30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第三點支持分散式事務，也就是咱們應用端一樣像往常一樣使用事務，而 mycat 就會自動幫咱們變成分散式事務。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190928/&#34;&gt;30-28 之資料庫層擴展難題 - MySQL 分散式事務處理&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;第四點跟庫 join，這可以讓咱們應用端寫 join 和平常一樣，但是注意，它只限兩表。&lt;/p&gt;
+&lt;h2 id=&#34;mycat-2&#34;&gt;MyCAT 的各種架構實現配置&lt;/h2&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;基本配置&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;這個部份定義了 mycat 的邏輯資料庫，像咱們下 sql 時有時後需要補一個 use xxxdb 的這種語句時，以下範例來看，咱們下的就是 use masterdb 這樣。&lt;/li&gt;
+&lt;li&gt;定義 mycat 的邏輯資料節點，它會使用連到對應對 dataHost 與 database。&lt;/li&gt;
+&lt;li&gt;定義 mycat 的邏輯 host，並且也定義好這個 host 的模式，例如是不是負載均衡等。&lt;/li&gt;
+&lt;li&gt;定義實際使用的資料庫位置。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中 dataHost 有些參數注意一下。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;maxCon : 代表最大連線量，某些方面這個可以說是一個連線池。&lt;/li&gt;
+&lt;li&gt;balance : 負載均衡的類型&lt;/li&gt;
+&lt;li&gt;0 : 不開啟讀寫分離，就都寫到 writeHost。&lt;/li&gt;
+&lt;li&gt;1 : 雙主重模式用，這個有點複雜。&lt;/li&gt;
+&lt;li&gt;2 : 所有讀操作，都隨機分配在 writeHost 與 readHost。&lt;/li&gt;
+&lt;li&gt;3 : 所有讀操作，都送到 read，writeHost 只處理寫操作。&lt;/li&gt;
+&lt;li&gt;writeType : 寫的負載均衡類型&lt;/li&gt;
+&lt;li&gt;0 : 所有寫操作都送到第一台 writeHost，當它掛了，會自動切換為第二台。&lt;/li&gt;
+&lt;li&gt;1 : 所有寫操作隨機送到某台 writeHost。&lt;/li&gt;
+&lt;li&gt;2 : 不執行寫的操作。&lt;/li&gt;
+&lt;li&gt;switchType : 主從切換模式，但是有點看不太懂它的類型&lt;/li&gt;
+&lt;li&gt;slaveThreshold : 主從延遲 hreshold，也就是說主從的延遲超過這個時間，這此從庫不會參於這次分配。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE mycat:schema SYSTEM &amp;#34;schema.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;mycat:schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xmlns:mycat=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://io.mycat/&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 1. 定義 mycat 邏輯資料庫 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;masterdb&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;checkSQLschema=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlMaxLimit=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataNode=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 2. 定義 mycat 邏輯資料操作節點 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+    &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 不過比較特別的是 database 它是指實際要連到的預設資料庫 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataNode&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataHost=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxx-db&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;database=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+
+	&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 3. 定義 mycat 邏輯 host   &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;xxx-db&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;maxCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1000&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;minCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;10&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;balance=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;
+			  &lt;span style=&#34;color:#a6e22e&#34;&gt;writeType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbDriver=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;native&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;switchType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;slaveThreshold=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;heartbeat&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;select user()&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/heartbeat&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 4. 定義實際使用資料庫位置 &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;writeHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;host=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;m1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.0.10:3306&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/writeHost&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dataHost&amp;gt;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/mycat:schema&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這裡簡單畫一下配置的關係圖，如下圖 2 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191014/20089358sPVF5WeBJR.png&#34; alt=&#34;&#34;&gt;
+圖 2 : mycat 配置圖關係&lt;/p&gt;
+&lt;h3 id=&#34;mycat-3&#34;&gt;MyCAT 讀寫分離實現&lt;/h3&gt;
+&lt;p&gt;下面為讀寫分離的配置，差別在於 dataHost 的的設定。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;balance 改為 3 : 代表所有讀的操作，會送到 wrtie 裡面的 read 機讀取。&lt;/li&gt;
+&lt;li&gt;增加 readHost 配置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;當要使用時，你可以下以下的 sql 來取得資料。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE mycat:schema SYSTEM &amp;#34;schema.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;mycat:schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xmlns:mycat=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://io.mycat/&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;checkSQLschema=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlMaxLimit=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataNode=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db-node&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataNode&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db-node&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataHost=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;database=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;test&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; 以下有變  &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;maxCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1000&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;minCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;10&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;balance=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;3&amp;#34;&lt;/span&gt;
+			  &lt;span style=&#34;color:#a6e22e&#34;&gt;writeType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbDriver=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;native&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;switchType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;-1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;slaveThreshold=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;heartbeat&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;select user()&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/heartbeat&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; !. 定義實際使用資料庫位置 (寫)  &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;writeHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;host=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;writer&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.0.10:3306&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+			&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!--&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt; !. 定義實際使用資料庫位置 (讀)  &lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;--&amp;gt;&lt;/span&gt;
+			&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;readHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;host=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;reader&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.0.20:3306&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;pass&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+		&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/writeHost&amp;gt;&lt;/span&gt;
+	&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dataHost&amp;gt;&lt;/span&gt;
+
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/mycat:schema&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;下圖 3 為 mycat 讀寫分離的配置概念圖。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191014/20089358ExN78AQM1s.png&#34; alt=&#34;&#34;&gt;
+圖 3 : mycat 讀寫分離的配置概念圖&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 注意事項 ~&lt;/strong&gt;
+有個東西要注意一下，mysql 的資料同步是要自已實現，mycat 不能會幫你處理喔。&lt;/p&gt;
+&lt;h3 id=&#34;mycat-4&#34;&gt;MyCAT 分庫實現&lt;/h3&gt;
+&lt;p&gt;分庫的配置就是什麼都建立兩組，然後用戶端要打時，自已決定去打那一個位置。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-xml&#34; data-lang=&#34;xml&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;?xml version=&amp;#34;1.0&amp;#34;?&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;&amp;lt;!DOCTYPE mycat:schema SYSTEM &amp;#34;schema.dtd&amp;#34;&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;mycat:schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;xmlns:mycat=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;http://io.mycat/&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+        
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Order&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;checkSQLschema=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlMaxLimit=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataNode=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;order-node&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;schema&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;User&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;checkSQLschema=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sqlMaxLimit=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataNode=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user-node&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataNode&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;order-node&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataHost=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;order-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;database=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataNode&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user-node&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dataHost=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;database=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;db2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;order-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;maxCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1000&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;minCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;10&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;balance=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
+                          &lt;span style=&#34;color:#a6e22e&#34;&gt;writeType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbDriver=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;native&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;switchType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;slaveThreshold=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;heartbeat&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;select user()&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/heartbeat&amp;gt;&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;writeHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;host=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;host1&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.1.199:3306&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;123456&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dataHost&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;dataHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;name=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;user-host&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;maxCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1000&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;minCon=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;10&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;balance=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;2&amp;#34;&lt;/span&gt;
+                          &lt;span style=&#34;color:#a6e22e&#34;&gt;writeType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;0&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;mysql&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;dbDriver=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;native&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;switchType=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;1&amp;#34;&lt;/span&gt;  &lt;span style=&#34;color:#a6e22e&#34;&gt;slaveThreshold=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;100&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;heartbeat&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;&amp;gt;&lt;/span&gt;select user()&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/heartbeat&amp;gt;&lt;/span&gt;
+                &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;writeHost&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;host=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;host2&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;url=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;192.168.1.166:3306&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;user=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;root&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;password=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;123456&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;/&amp;gt;&lt;/span&gt;
+        &lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/dataHost&amp;gt;&lt;/span&gt;
+&lt;span style=&#34;color:#f92672&#34;&gt;&amp;lt;/mycat:schema&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191014/20089358cu2pPkzWjr.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 分庫分表 mycat 配置概念圖&lt;/p&gt;
+&lt;h2 id=&#34;-docker--mycat-&#34;&gt;使用 Docker 來實現 MyCAT 讀寫分離&lt;/h2&gt;
+&lt;p&gt;請至筆者的 github 抓取這個專案，不過先說一下，這個 docker-compose 是抓了其它 mycat 的配置來修修改改，改改修修，雖然可以動，不過裡面還很亂，閒時會慢慢的用乾淨點。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/h091237557/docker-composer-tools&#34;&gt;馬克的 github-docker-tools&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;其中需要注意看的檔案如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;docker-compose : 所有服務的配置。&lt;/li&gt;
+&lt;li&gt;config/hosts : 將服務的 host 進行指定。&lt;/li&gt;
+&lt;li&gt;config/mycat/server.xml : mycat 實際服務的權限配置。&lt;/li&gt;
+&lt;li&gt;config/mycat/schema.xml : mycat 資料庫配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;heading2&#34;&gt;基本使用&lt;/h3&gt;
+&lt;p&gt;移至 mycat-master-slave 這個資料夾裡面，然後在執行以下指令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;docker-compose up
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;等待一段時間以後，你可以使用以下的指令進行連線，正常應該是可以成功的連進去，其中這個位置是連到 mycat 喔。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mysql -h127.0.0.1 -P8066 -uroot -ppass
+
+host: 127.0.0.1:8066
+username: root
+password: pass
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後你就可以在裡面下指令了，一開始應該是空的，那你可以使用以下指令建立一下測試資訊。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;use db;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;create&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt;(
+   id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; AUTO_INCREMENT,
+   name VARCHAR(&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;) &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+   age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+   &lt;span style=&#34;color:#66d9ef&#34;&gt;PRIMARY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;KEY&lt;/span&gt; ( id )
+) ENGINE&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;InnoDB AUTO_INCREMENT&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;DEFAULT&lt;/span&gt; CHARSET&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;utf8mb4;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;A-Mark&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;18&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;B-Jack&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;C-Ian&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;36&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;E-Jiro&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;D-Fucc&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;27&lt;/span&gt;);
+&lt;span style=&#34;color:#66d9ef&#34;&gt;INSERT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;INTO&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt; (name, age) &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; (&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;C-Mark&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#ae81ff&#34;&gt;46&lt;/span&gt;);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後你就可以正常的執行 sql 操作囉。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;user&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h3 id=&#34;dockercompose-&#34;&gt;Docker-Compose 檔說明&lt;/h3&gt;
+&lt;p&gt;這裡使用 docker-compose 來配置一個模擬的 mycat 讀寫分離情境，其中有三個服務 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;mysql_write : 用來專門寫入的 mysql&lt;/li&gt;
+&lt;li&gt;mysql_read : 用來專門讀取的 mysql&lt;/li&gt;
+&lt;li&gt;mycat : 就是資料庫中件間服務&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有幾個重點說一下。&lt;/p&gt;
+&lt;p&gt;首先讀與寫的 mysql 服務都是使用 bitnami/mysql:5.7 ，是因為它可以很簡單的讓我可以使用兩台資料庫資料同步的功能，不然用原生的很配置要寫很常。&lt;/p&gt;
+&lt;p&gt;然後這裡還有設置 db 的 docker network，不知道為什麼嘗試的時後直接使用 link 會失敗，詳細原因就待查，反正這只是淺淺的範例。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yml&#34; data-lang=&#34;yml&#34;&gt;version: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;3&amp;#39;&lt;/span&gt;
+
+services:
+  mysql_write:
+    image: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bitnami/mysql:5.7&amp;#39;&lt;/span&gt; 
+    ports:
+      - &lt;span style=&#34;color:#ae81ff&#34;&gt;33061&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;3306&lt;/span&gt;
+    networks:
+      db:
+        ipv4_address: &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.10&lt;/span&gt;
+    environment:
+      - MYSQL_REPLICATION_MODE=master
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=mark
+      - MYSQL_DATABASE=test
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=pass
+    volumes:
+      - ./mysql/write/:/etc/mysql/conf.d
+      - ./config/hosts:/etc/hosts:ro
+  mysql_read:
+    image: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;bitnami/mysql:5.7&amp;#39;&lt;/span&gt; 
+    ports:
+      - &lt;span style=&#34;color:#ae81ff&#34;&gt;33062&lt;/span&gt;:&lt;span style=&#34;color:#ae81ff&#34;&gt;3306&lt;/span&gt;
+    networks:
+      db:
+        ipv4_address: &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.20&lt;/span&gt;
+    environment:
+      - MYSQL_REPLICATION_MODE=slave
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=mark
+      - MYSQL_DATABASE=test
+      - MYSQL_MASTER_HOST=&lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.10&lt;/span&gt;
+      - MYSQL_MASTER_PORT_NUMBER=&lt;span style=&#34;color:#ae81ff&#34;&gt;3306&lt;/span&gt;
+      - MYSQL_MASTER_ROOT_PASSWORD=pass
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./mysql/read/:/etc/mysql/conf.d
+      - ./config/hosts:/etc/hosts:ro
+  mycat:
+    image: &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;qiyue/mycat:1.6.5&amp;#39;&lt;/span&gt;
+    volumes:
+      - ./config/mycat/:/usr/local/mycat/conf/
+      - ./log/mycat-logs/:/mycat/logs/:rw
+    ports:
+      - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;8066:8066&amp;#34;&lt;/span&gt;
+      - &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;9066:9066&amp;#34;&lt;/span&gt;
+    networks:
+      db:
+        ipv4_address: &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.5&lt;/span&gt;
+    ulimits:
+      nproc: &lt;span style=&#34;color:#ae81ff&#34;&gt;65535&lt;/span&gt;
+    hostname: mycat
+    restart: always
+networks:
+    db:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: &lt;span style=&#34;color:#ae81ff&#34;&gt;192.168&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;.0&lt;/span&gt;/&lt;span style=&#34;color:#ae81ff&#34;&gt;24&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後還有這三個服務都配置在 db 這個 network 內網中，然後這裡比較特別的是，會將這三台服務配置 config/hosts 也就是讓人在內網中打 writer 就會對應到 192.168.0.10 這個位置，概念就像是 localhost 指向。&lt;/p&gt;
+&lt;p&gt;原本想嘗試在 mycat 中直接配置 ip，但嘗試了一下不太行，原因還是待查，難怪看起他人的配置都是要配置 config/hosts。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;127.0.0.1	localhost
+192.168.0.10	writer
+192.168.0.20	reader
+192.168.0.5	mycat
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;這裡就淺淡到這囉。詳細的內容自已去 github 看 code 吧，因為嚴格來說算最後的一天，我疲勞了。&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章咱們介紹了其中一種資料庫中件間『 MyCAT 』。然後咱們非常淺的理解一下它的使用範例，與使用 docker 來實際上將它建立出來。&lt;/p&gt;
+&lt;p&gt;那為啥會選他來介紹，只因為它資料比較多…… 到了今天已經沒有多餘的體力可以更深入的調查與研究了，未來如果有機會在開篇來真的詳細談談這東西。&lt;/p&gt;
+&lt;p&gt;雖然才 29 天，但基本上就和最後一天沒差多少了，雖然參加過不少次，但是真的最後寫到很疲勞，終於要結束了……&lt;/p&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://segmentfault.com/a/1190000010208682&#34;&gt;MyCat简单使用与配置&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kknews.cc/zh-tw/tech/2kq6xjr.html&#34;&gt;資料庫中間件詳解 | 珍藏版&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kknews.cc/zh-tw/tech/m3zqqk6.html&#34;&gt;MySQL中間件盤點&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://codertw.com/%E7%A8%8B%E5%BC%8F%E8%AA%9E%E8%A8%80/186229/&#34;&gt;MySQL 5.7: 使用MySQL Router實現應用程式的高可用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/jeikerxiao/article/details/81107105&#34;&gt;Mycat单库分表&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.twblogs.net/a/5d5f4748bd9eee5327fdf731&#34;&gt;數據庫中間件 MyCat 的使用&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/liuwel/docker-mycat&#34;&gt;github-liuwel/docker-mycat&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -56,18 +452,289 @@ proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份�
       <pubDate>Sat, 28 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190928/</guid>
-      <description>正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。
-本篇分為以下幾個章節 :
- 分散式事務難題 分散式事務的處理方案 : 2 PC 二階段提交（ Two-phase Commit ） MySQL XA 事務實現與使用 MySQL XA 問題 - 性能  分散式事務難題 首先咱們都知道資料庫有所謂的『 事務 』機制，比較準備的說是事務這個『 單位 』，它當初建立出來是為了解決所謂的 :
- 確保『 同一組資料庫業務操作 』可以有正確的結果
- 它們不會因為某項業務的其中一項操作錯誤了，導致整個資料庫的資料不正確 ( A )。
-它們不會因為系統固障而導致原本成功修改的資料消失 ( D )。
-它們不會因為並行操作，導致資料產生產生無法預期的結果 ( I )。
-總而言之，事務在固障與並行的情況下，不會產生所謂的『 資料不一致性 』 ( C )
-如果事務可以確保上述事情，那就可以說 :
- 這個事務有 ACID 的特性
- 然後咱們在以下三篇文章中，咱們有談到，在 mysql 單機事務的情況下，它們用了以下的機制來確保這些機制 :
- 原子性 A : undo log 持久性 D : redo log 隔離性 I : 鎖 + mvcc  30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/2008935880kTCS16cb.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。&lt;/p&gt;
+&lt;p&gt;本篇分為以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分散式事務難題&lt;/li&gt;
+&lt;li&gt;分散式事務的處理方案 : 2 PC 二階段提交（ Two-phase Commit ）&lt;/li&gt;
+&lt;li&gt;MySQL XA 事務實現與使用&lt;/li&gt;
+&lt;li&gt;MySQL XA 問題 - 性能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;分散式事務難題&lt;/h2&gt;
+&lt;p&gt;首先咱們都知道資料庫有所謂的『 事務 』機制，比較準備的說是事務這個『 單位 』，它當初建立出來是為了解決所謂的 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;確保『 同一組資料庫業務操作 』可以有正確的結果&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它們不會因為某項業務的其中一項操作錯誤了，導致整個資料庫的資料不正確 ( A )。&lt;/p&gt;
+&lt;p&gt;它們不會因為系統固障而導致原本成功修改的資料消失 ( D )。&lt;/p&gt;
+&lt;p&gt;它們不會因為並行操作，導致資料產生產生無法預期的結果 ( I )。&lt;/p&gt;
+&lt;p&gt;總而言之，事務在固障與並行的情況下，不會產生所謂的『 資料不一致性 』 ( C )&lt;/p&gt;
+&lt;p&gt;如果事務可以確保上述事情，那就可以說 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;這個事務有 ACID 的特性&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後咱們在以下三篇文章中，咱們有談到，在 mysql 單機事務的情況下，它們用了以下的機制來確保這些機制 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;原子性 A : undo log&lt;/li&gt;
+&lt;li&gt;持久性 D : redo log&lt;/li&gt;
+&lt;li&gt;隔離性 I : 鎖 + mvcc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10222851&#34;&gt;30-15 之資料庫層的難題 - 單機『 故障 』一致性難題&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10223427&#34;&gt;30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10223842&#34;&gt;30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;但是注意 ! 上述都是單機 acid 的解法。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;那如果換到『 分散式 』的情況怎麼辦呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;這就是咱們接下來要說的東西『 mysql xa 協議 』。&lt;/p&gt;
+&lt;p&gt;不過先說一下，mysql xa 協議嚴格來說，它只能解決所謂的 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;原子性 A、隔離性 I&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;持久性這個我還不確定，而一致性這鬼，這東西在分散式的概念又與單機的概念不太相同了，詳細的原因請看看 cap 理論與 base 理論，這裡我不能給準確的答案。&lt;/p&gt;
+&lt;p&gt;但在開始 xa 協議之前，咱們要先來看看一個東西 2 pc。&lt;/p&gt;
+&lt;h2 id=&#34;---2-pc-twophase-commit-&#34;&gt;分散式事務的處理方案 : 二階段提交（ 2 PC Two-phase Commit ）&lt;/h2&gt;
+&lt;p&gt;記好 2 pc 它是儘可能讓咱們在分散式的環境下，可以實現『 事務原子性 』，而不是所有的 acid 特性。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2 PC 是為了實現分散式事務的原子性特性&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後比較白話文的說法為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2 PC 是為了讓『 分散式事務 』可以達成，要麻全完成，要麻全部未完成&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它的基本原理如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Phrase 1 : 準備階段&lt;/li&gt;
+&lt;li&gt;Phrase 2 : 提交階段&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;2-pc-&#34;&gt;2 PC 流程&lt;/h3&gt;
+&lt;h4 id=&#34;phrase-1--&#34;&gt;Phrase 1 : 準備階段&lt;/h4&gt;
+&lt;p&gt;接下來咱們第一階段的流程如下圖 1 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶發送個業務進來處理，&lt;/li&gt;
+&lt;li&gt;協調者會建立一個分散式事務，這個事務內含對資料庫 a 與 b 的操作，然後會往每資料庫的參與者進行相對應的操作。&lt;/li&gt;
+&lt;li&gt;參與者收到請求後，會執行各事務的開始與操作 ( 注意沒有執行 commit 喔 )&lt;/li&gt;
+&lt;li&gt;參與者回應給協調者說，我這已經可以『 準備 commit 』了喔&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358yFAjXu9QFJ.png&#34; alt=&#34;&#34;&gt;
+圖 1 : 成功的第一階段&lt;/p&gt;
+&lt;h4 id=&#34;phrase-2--&#34;&gt;Phrase 2 : 提交階段&lt;/h4&gt;
+&lt;p&gt;上面的第一階段，協調者已經從各參與者收到 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;我們都可以『 準備 commit 』了喔&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下來操作流程如下圖 2 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;協調者和參與者說，你們可以 commit 了&lt;/li&gt;
+&lt;li&gt;各參與者實際執行事務 commit。&lt;/li&gt;
+&lt;li&gt;各參與者回應成功給協調者。&lt;/li&gt;
+&lt;li&gt;當協調者收到『 所有 』參與者成功的回應，才代表這個分散式事務成功結束。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358Avanzn7QaY.png&#34; alt=&#34;&#34;&gt;
+圖 2 : 成功的第二階段&lt;/p&gt;
+&lt;h3 id=&#34;heading2&#34;&gt;失敗情況&lt;/h3&gt;
+&lt;h4 id=&#34;phrase-1--1&#34;&gt;Phrase 1 : 準備階段&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶發送個業務進來處理，&lt;/li&gt;
+&lt;li&gt;協調者會建立一個分散式事務，這個事務內含對資料庫 a 與 b 的操作，然後會往每資料庫的參與者進行相對應的操作。&lt;/li&gt;
+&lt;li&gt;參與者收到請求後，會執行各事務的開始與操作 ( 注意沒有執行 commit 喔 )&lt;/li&gt;
+&lt;li&gt;注意 ! 這時參與者 b 的回應一直沒收到。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358aXCFFSGyyM.png&#34; alt=&#34;&#34;&gt;
+圖 3 : 失敗的第一階段&lt;/p&gt;
+&lt;h4 id=&#34;phrase-2--1&#34;&gt;Phrase 2 : 回滾階段&lt;/h4&gt;
+&lt;ol&gt;
+&lt;li&gt;協調者和參與者說，你們全部給我 rollback !&lt;/li&gt;
+&lt;li&gt;各參與者實際執行事務 rollback。&lt;/li&gt;
+&lt;li&gt;各參與者回應成功給協調者。&lt;/li&gt;
+&lt;li&gt;當協調者收到『 所有 』參與者成功的回應，才代表這個事務結束。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358uJNehjN1m1.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 失敗的第二階段&lt;/p&gt;
+&lt;h2 id=&#34;mysql-xa-&#34;&gt;MySQL XA 事務實現與使用&lt;/h2&gt;
+&lt;p&gt;上述章節就是最基本的 2 pc 流程，而咱們也知道這個流程可以確保咱們的 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分散式事務 ACID 特性的原子性 A&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;接下來咱們要來說說 mysql 有支援的 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;XA 協議&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而如果是用 mysql 的 xa 協議可以確保 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分散式事務 ACID 特性的隔離性 I&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在這章章開始前先問一下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;xa 協議與 2 pc 是有什麼關係呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;上面的 2 pc 是一種概念與方法，然後 xa 協議是定義出來 2 pc 中『 協調者 』與『 參與者 』各自實際上要做的事情，就像是通訊協議一樣， http 協議定義好，接受方與放送方都要可以解析 http 封包。&lt;/p&gt;
+&lt;p&gt;首先 mysql 它有支援所謂的『 xa 協議 』，但是它有分為兩種 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;內 xa 協議 : 它主要是用來處理 binlog 與 redo log 的事務。&lt;/li&gt;
+&lt;li&gt;外 xa 協議 : 就是支援多個資料庫的協議，而這就是咱們在這章節說的分散式事務原子性的實現。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其中咱們的重點是『 外 xa 協議 』，mysql 在這裡的支援為『 xa 協議的參與者 』，所以當有個協調者以 xa 協議發送請求到 mysql 上，它就會進行 2 pc 的處理，就如果 5 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358VfyXxDoUzk.png&#34; alt=&#34;&#34;&gt;
+圖 5 : mysql 2 pc xa 協議圖&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;這裡為什麼協調者那要打個問號呢 ? mysql 沒支援嗎 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;嗯對沒有。&lt;/p&gt;
+&lt;p&gt;協調者要自已寫程式碼，又或是使用一些資料庫中間件，這些中間件有些會有支援 xa 協調者的功能，下一篇文章會簡單的說明一下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識補充 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;淺淡一下，為什麼要有『 內 xa 協議 』呢 ?&lt;/p&gt;
+&lt;p&gt;binlog 在 mysql 中是用來記錄 sql 操作log ，而 redo log 是 innodb 用來記錄修改過的頁 log，反正兩個都是記錄修改資料的 log。這兩個東東詳細的介紹可以看以下兩篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10222851&#34;&gt;30-15 之資料庫層的難題 - 單機『 故障 』一致性難題&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;上面有提到，它倆『 嚴格來說 』都是『 記錄修改資料的 log 』，只是以不同的觀點來記錄，一個是 sql 修改，一個是那個硬碟頁修改。&lt;/p&gt;
+&lt;p&gt;那這時要如何的保證一致性呢 ? 也就是不會發生一個有 log 而另一個沒 log 的問題。它的解法就是
+『 內 xa 協議 』也就是說它也是透過 2 pc 來達成這件事情。&lt;/p&gt;
+&lt;h3 id=&#34;mysql-xa-1&#34;&gt;MySQL XA 的使用方式&lt;/h3&gt;
+&lt;p&gt;下面為咱們實際使用 mysql xa 的概念碼，其中下述程式為上圖 5 中的協調者的程式碼。其中注意一下，雖然是用 js 寫的，都這裡全部假設都是同步的就好，反正只是概念碼。&lt;/p&gt;
+&lt;p&gt;基本上下述程式碼分為幾個階段 :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;兩個資料庫開啟分散式事務 xid1。&lt;/li&gt;
+&lt;li&gt;兩個資料庫進行 sql 業務操作。&lt;/li&gt;
+&lt;li&gt;db_a 的資料庫進行 xa 第一階段，也就是確認『 可否準備提交 』&lt;/li&gt;
+&lt;li&gt;db_b 的資料庫進行 xa 第一階段，也就是確認『 可否準備提交 』&lt;/li&gt;
+&lt;li&gt;當兩個資料庫都確認可提交後，執行 xa 第二階段，提交此分散式事務。&lt;/li&gt;
+&lt;li&gt;如果中間有發生失敗，則將此分散式事務進行 rollback。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;// 協調者所執行的概念碼
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mysql&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createConnection&lt;/span&gt;({
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;database&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;DB_A&amp;#39;&lt;/span&gt;
+});
+&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;mysql&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;createConnection&lt;/span&gt;({
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;database&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;DB_B&amp;#39;&lt;/span&gt;
+});
+
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;try&lt;/span&gt; {
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (1) 兩個資料庫指定同一個『 分散式事務編號 xid1 』
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA START xid1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA START xid1&amp;#39;&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (2) 兩個資料庫的操作
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Update user SET name = Mark WHERE id = 1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Update user SET name = Ian WHERE id = 2&amp;#39;&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (3) DB_A 的 2PC Phrase 1 準備階段確認
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA END xid1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA PREPARE xid1&amp;#39;&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (4) DB_B 的 2PC Phrase 1 準備階段確認
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA END xid1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA PREPARE xid1&amp;#39;&lt;/span&gt;);
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (5) 2PC Phrase 2 提交階段
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA COMMIT xid1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA COMMIT xid1&amp;#39;&lt;/span&gt;);
+} &lt;span style=&#34;color:#66d9ef&#34;&gt;catch&lt;/span&gt; {
+
+    &lt;span style=&#34;color:#75715e&#34;&gt;// (6) 2PC 錯誤時兩個資料庫都 rollback
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;connA&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA ROLLBACK xid1&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;connB&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;query&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;XA ROLLBACK xid1&amp;#39;&lt;/span&gt;);
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;奇怪這裡還沒提到 xa 協議如何實現 ACID 的隔離性啊 ? 別急等等有&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;mysql-xa-2&#34;&gt;MySQL XA 問題&lt;/h2&gt;
+&lt;p&gt;mysql 根據 2 pc 所實現 xa 協議有個很嚴重的問題那就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;性能很毛&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;使用 mysql xa 性能會非常的差，主要有以下兩個原因 :&lt;/p&gt;
+&lt;h3 id=&#34;-1--&#34;&gt;性能差原因 1 : 需要等待每個參與者&lt;/h3&gt;
+&lt;p&gt;如果下圖 6 所示，如果每個協調者是同步操作的情況下，那有幾個參與者就要等幾次，而如果是非同步的協調者，那還是要等一個最久的參與者回應，才能往下走，你想想，如果其中一個網路有問題或啥的，等了 5 秒，那就代表這整個分散式事務要 5 秒才能處理完。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358p9TqAwrZ02.png&#34; alt=&#34;&#34;&gt;
+圖 6 : xa 協議性能差原因 1&lt;/p&gt;
+&lt;h3 id=&#34;-2--mysql--serializable&#34;&gt;性能差原因 2 : MySQL 的事務隔離級別需調整成 SERIALIZABLE&lt;/h3&gt;
+&lt;p&gt;mysql 官網要求如果要使用分散式事務 xa 那就要將隔離級別改為 serializable&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;However, for a distributed transaction, you must use the SERIALIZABLE isolation level to achieve ACID properties. It is enough to use REPEATABLE READ for a nondistributed transaction, but not for a distributed transaction&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而這裡就是實現隔離性的原因 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;mysql xa 協議要求的 serializable 隔離級別，可以確保分散式事務的 ACID 特性中的隔離性&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;為什麼要改成 serializable 隔離級別呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;先簡單複習一下，咱們 mysql 資料庫預設的 RR 隔離級別的特性如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;讀不加鎖，使用 mvcc 版本讀，每次讀取時，只會讀事務開始前的最新版本。&lt;/li&gt;
+&lt;li&gt;寫加鎖。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然後問題就出在下述圖 7 的這種情況。這個情況是這樣的。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;預設欄位值 :
+X 資料庫 count = 0
+Y 資料庫 price = 10
+
+分散式事務 A 裡面包含兩個不同資料庫 X,Y 的更新操作
+
+X 資料庫操作 =&amp;gt; 將欄位 count 更新為 100
+Y 資料庫操作 =&amp;gt; 將欄位 price 更為為 20
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後咱們還有另一個分散式事務 B 進行以下的操作&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;分取式事務 B 裡面包含兩個不同資料庫 X,Y 的讀取操作
+
+X 資料庫操作 =&amp;gt; 讀取 count 欄位
+Y 資料庫操作 =&amp;gt; 讀取 price 欄位
+
+最後將結果相乘得出值 = count * price
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/20089358e7ABsXRvyY.png&#34; alt=&#34;&#34;&gt;
+圖 7 : xa 協議如果是 rr 級別的問題&lt;/p&gt;
+&lt;p&gt;這裡先說一下，為啥圖 7 的正確讀取的結果，會有兩種，這種道理可以想成串行執行，如果兩個事務執行是一個前，一個後，那結果就會有兩種，因為看誰先執行，而這兩種結果是可以接受的，因為它符合 acid 的『 隔離性 』，一個事務的操作，不會影響到另一個事務。&lt;/p&gt;
+&lt;p&gt;好那先拉回來，問題出在那呢 ?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;問題就出在圖 7 紅色框框那的讀取，它會讀到 x 資料庫單機事務已提交的值 count = 100。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;這有啥毛病呢 ? 事務不是提交了嗎 ? 嗯『 單機事務 』已經提交了沒錯，但是別忘了『 分散式事務 』還沒提交。&lt;/p&gt;
+&lt;p&gt;咱們在說一致性問題時，有提到一個難題那就是『 髒讀 』。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;髒讀代表某個事務會讀取到其它事務『 未提交 』的值&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而這也代表它沒有符合 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;acid 的隔離性，因為 a 分散式事務的操作影響到 b 分散式事務的讀取&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以分散式事務角度來看，它已經發生髒讀的情況，因為分散式事務 b 讀取到分散式事務 a 的『 未提交 』值。&lt;/p&gt;
+&lt;p&gt;就是因為這種情況，所以 mysql 要使用 xa 協議就一定要將它隔離級別 serializable。當級別改成它後，操作特性就變成如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;讀加鎖 ( 不管 mvcc 版本 )&lt;/li&gt;
+&lt;li&gt;寫加鎖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以如果是 serializable 的隔離級別，結果變的圖下圖 8 所示，這樣就會讀取到正確的結果。這就是為什麼使用 xa 一定要 serializable 級別的原因。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;xa 一定要使用 serializable 級別的原因在於，rr 級別在分取式事務情況，會發生髒讀的問題&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191013/200893580k5oFjKC0f.png&#34; alt=&#34;&#34;&gt;
+圖 8 : xa 協議如果是 serializable 級別的結果&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;而由於這個 serializable 級別要求，使得分散式事務變成串行處理，也相對確保了 ACID 的隔離性&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 ~&lt;/strong&gt;
+如果不熟悉資料庫隔離級別的友人，可以參考以下兩篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190916/&#34;&gt;30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )&lt;/a&gt;
+&lt;a href=&#34;https://mark-lin.com/posts/20190917/&#34;&gt;30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章中咱們提到了某些方面我覺得算是分散式系統中的大難題 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;如果讓分散式事務執行 acid 的特性&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而這裡咱們將了一個最基本的方式 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;2 PC + MySQL XA 協議&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;不過記好這個方案性能很毛。&lt;strong&gt;還有個重點，嚴格來說這個 2 pc 是只完成了 acid 中的 a 與 i 這個兩個特性&lt;/strong&gt;，而致於其它兩個特性在分散式環境要如何解呢 ? 不好意思可能要下一次鐵人賽才知道了……&lt;/p&gt;
+&lt;p&gt;最後這裡淺淡一下實務上的使用，首先，我在實務上到現在沒有看到太多真的有在使用 mysql xa 協議來處理分散式事務的這東西，最主要的原因在於性能這個問題。只要用了 mysql xa 所有資料庫都要調整成 serializable 級別，那資料庫的性能幾乎可以說是差了 10 倍左右，這影響非常的巨大。&lt;/p&gt;
+&lt;p&gt;那現在大部份公司如何的處理分散式事務這一塊呢 ? 我知道有幾個名詞例如消息隊列處理或 tcc 等這些方法，但在實務上台灣有沒有公司用我就不知道呢。&lt;/p&gt;
+&lt;p&gt;說實話，就算是在咱公司也都沒有處理這塊 ( 我所知道的部份 )，雖然咱們有分庫，但是那是為了『 業務或維護 』而分，不是為了性能，咱們在使用時大部份 95 % 的時間還是單庫操作，真有多庫操作也都是讀的情況。&lt;/p&gt;
+&lt;p&gt;不過這裡也只是我自已看到的東西，假設有看到有台灣公司有處理這塊的，真想跪請他們分享一下是如何處理這塊鬼問題的。&lt;/p&gt;
+&lt;p&gt;順到說一下這也讓我有點好奇，微服務這一塊，它這裡是如何處理的呢 ? 這或需是未來另一個可以深入探討的方向呢。&lt;/p&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.itread01.com/content/1547223243.html&#34;&gt;[DB] 資料庫分散式事務&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5bf201f7f265da610f63528a&#34;&gt;拜托，面试请不要再问我TCC分布式事务的实现原理！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/38248080&#34;&gt;漫谈事务与分布式事务（1）- 理解 ACID&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/275845393/answer/385101903&#34;&gt;请问分布式事务一致性与raft或paxos协议解决的一致性问题是同一回事吗？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5d9c358f6fb9a04e2f71c251?utm_source=gold_browser_extension&#34;&gt;分布式事务 两阶段提交 (2PC)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5d9eb3c8e51d4578305f3086?utm_source=gold_browser_extension&#34;&gt;阿里分布式事务解决方案 Fescar 解析&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/soonfly/article/details/70677138&#34;&gt;详解Mysql分布式事务XA（跨数据库事务）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5b5a0bf9f265da0f6523913b&#34;&gt;再有人问你分布式事务，把这篇扔给他&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dev.mysql.com/doc/refman/5.6/en/innodb-consistent-read.html&#34;&gt;mysql-14.7.2.3 Consistent Nonlocking Reads&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -76,15 +743,215 @@ proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份�
       <pubDate>Fri, 27 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190927/</guid>
-      <description>正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
- 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
- 分區表
- 本篇文章分以下幾個章節 :
- 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
- 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
- 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
- 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
-user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = &#39;mark&#39;; 而如果是『 分區表 』的話為 :</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191012/20089358IsTcYcPdWQ.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分庫&lt;/li&gt;
+&lt;li&gt;分表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分區表&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本篇文章分以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分區概念&lt;/li&gt;
+&lt;li&gt;MySQL 分區的切分類型&lt;/li&gt;
+&lt;li&gt;分區使用的注意事項&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;分區概念&lt;/h2&gt;
+&lt;p&gt;分區表的核心概念為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將一張大表，根據『 規則 』拆分為『 隱藏 』的小表&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。&lt;/li&gt;
+&lt;li&gt;分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;user 根據 type 拆分成三個表 :
+1. user_type_A 表
+2. user_type_B 表
+3. user_type_C 長
+
+SELECT * FROM user_type_A WHERE name = &#39;mark&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而如果是『 分區表 』的話為 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM user WHERE name = &#39;mark&#39;;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;這裡問個問題 ~ 那實務上要使用分表還是分區呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;首先這兩個沒有互相排斥，兩個可以一起使用，但如果是要先選一個來用的話，要選那個呢 ? 目前我是覺得『 分區 』比較簡單實現，但是它在使用上會比較需要『 使用者 』注意，一個用不好，性能反而會下降。&lt;/p&gt;
+&lt;p&gt;而『 分表 』某些方面來說彈性較大，可以做的業務較多，但相對的除非有一個很完美的中間件團隊，不然坑如果直接各別讓『 使用者 』直接用資料庫，會天下大亂的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;分區表這個東西在不少資料庫上都有提供像 mysql、ms-sql、postgresql 等都有支援。&lt;/p&gt;
+&lt;h3 id=&#34;heading2&#34;&gt;分表區的優點&lt;/h3&gt;
+&lt;p&gt;分區有以下幾個好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;減少修改時對索引樹的維護 : 因為越大的樹越難維護，所以切小後，每顆樹就好維護多了。&lt;/li&gt;
+&lt;li&gt;減少索引碎片處理 : 只要是有進行修改，就有可能會讓索引樹一個洞一個洞的，而通常會下達指令來整理這顆樹，但是這很耗效能，而且如果樹越大，資源吃越多。&lt;/li&gt;
+&lt;li&gt;增加查詢效率 : 越大的樹查詢效率一定越小，而不過切小後，『 只對 』那顆小樹查那就快多了。&lt;/li&gt;
+&lt;li&gt;增加表的維護性 : 假設咱們要針對大表中某一段時間砍資料，那這時如果每張表是以時間來分的話，那就只要直接砍掉小表，這樣也不會影響到其它小表的查詢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面看似美好。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;但分區表不是銀彈&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;後面章節會說明它的坑處。&lt;/p&gt;
+&lt;h2 id=&#34;mysql-&#34;&gt;MySQL 分區的切分類型&lt;/h2&gt;
+&lt;p&gt;mysql 中分區表提供了以下的類型，然後咱們指定分區的那個欄位都稱為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分區鍵&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;分區鍵的選擇要點提醒&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;那個欄位會變成每一次查詢時，都會要用的&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;-1--range-&#34;&gt;類型 1 : RANGE 分區&lt;/h4&gt;
+&lt;p&gt;假設咱們由一張儲員工的資料表，那咱們可以選擇以『 RANGE 』來分區，通常這種分區欄位比較常見的有日期或啥有順序的編號之類。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; users (
+    id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+)
+PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; RANGE (age) (
+    PARTITION p0 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;),
+    PARTITION p1 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;30&lt;/span&gt;),
+    PARTITION p2 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;),
+    PARTITION p3 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;50&lt;/span&gt;)
+);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;假設咱們有以下的員工 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;A : age = 18
+B : age = 25
+C : age = 35
+D : age = 45
+E : age = 15
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那這樣上述資料會分別放在不同的分區表中 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;p0 : A,E
+p1 : B
+p2 : C
+p 3 : D
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-2--list-&#34;&gt;類型 2 : LIST 分區&lt;/h4&gt;
+&lt;p&gt;list 這種分區通常是用在枚舉類型上，如下範例，咱們有一個 type 欄位，然後使用數字來代表類型，然後就使用這個類型來決定分區。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; users (
+    id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+)
+PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; list (&lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt;) (
+    PARTITION p0 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;),
+    PARTITION p1 &lt;span style=&#34;color:#66d9ef&#34;&gt;VALUES&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;LESS&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;THAN&lt;/span&gt; (&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;),
+);
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;假設咱們有以下的員工 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;A : age = 18, type : 0
+B : age = 25, type : 1
+C : age = 35, type : 2
+D : age = 45, type : 0
+E : age = 15, type : 1
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那這樣上述資料會分別放在不同的分區表中 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;p0 : A,B,D,E
+p1 : E
+&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;-3--hash-&#34;&gt;類型 3 : Hash 分區&lt;/h4&gt;
+&lt;p&gt;它就是會直接將 id 進行 hash 後分成四個區。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; users (
+    id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+)
+PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; HASH(id)
+PARTITIONS &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h4 id=&#34;-4--key-&#34;&gt;類型 4 : KEY 分區&lt;/h4&gt;
+&lt;p&gt;它就是會直接根據指定的 pk 來分區。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; users (
+    id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;PRIMARY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;KEY&lt;/span&gt;, ,
+    age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+)
+PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;KEY&lt;/span&gt;()
+PARTITIONS &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;heading3&#34;&gt;分區使用的注意事項&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;-1--&#34;&gt;注意 1 : 查詢時一定有用到分區鍵，不然還是會每個分區找&lt;/h3&gt;
+&lt;p&gt;假設咱們有以下的分區表。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;CREATE&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;TABLE&lt;/span&gt; users (
+    id INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;PRIMARY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;KEY&lt;/span&gt;, ,
+    age INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;,
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;type&lt;/span&gt; INT &lt;span style=&#34;color:#66d9ef&#34;&gt;NOT&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;NULL&lt;/span&gt;
+)
+PARTITION &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;KEY&lt;/span&gt;()
+PARTITIONS &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;然後咱們下達以下的指令進行 query :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;EXPLAIN SELECT * FROM users WHERE age = 10;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那你會看到以下的結果如下 explain 的結果，你會發現它去每一個分區都找過。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;partitions 
+p0,p1,p2,p2
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而如果改成 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;EXPLAIN SELECT * FROM users WHERE id = 1;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;結果如下，就有使用到分區表。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;partitions 
+p0
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;-2--&#34;&gt;注意 2 : 沒有使用到分區表查詢會慢&lt;/h3&gt;
+&lt;p&gt;分區別是為了解決單表太大，導致操作太慢所進行的一種解法，以 b+ 樹的概念來看，就是將一顆大樹分成幾個小樹。&lt;/p&gt;
+&lt;p&gt;但是這有一個問題，如果你的查詢沒有用到分區，那也就代表你需要去每個小樹找，那這樣整體而言 i/o 的次樹會大於一顆大樹。&lt;/p&gt;
+&lt;p&gt;mysql innodb 是使用 b+ 樹來建立資料，在資料庫中基本上樹的高度大約為 2 至 3，不論資料的多與少，這也代表你分區以後，那幾顆分區後出來的 b+ 樹高度也是會差不多的。&lt;/p&gt;
+&lt;p&gt;所以有可能大表查詢需要 3 次 i/o，但變到小表可能就只需要 2 次 i/o，但是如果沒有指定分區查詢的話，假設有 4 個小表，那就代表要 2 * 4 = 8 次 i/o 查詢，這樣反而變慢了。&lt;/p&gt;
+&lt;p&gt;所以這裡記好 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;查詢時一定要包含分區鍵來查詢，沒用到會很慢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;-3--null-&#34;&gt;注意 3 : NULL 的問題&lt;/h3&gt;
+&lt;p&gt;如果你的分區鍵中，所對應的表格是 null 的話，那他會如何處理呢 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它會都儲在第一個分區&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以有時後不知覺第一個分區查詢會非常慢就是這個原因。&lt;/p&gt;
+&lt;h3 id=&#34;-4--&#34;&gt;注意 4 : 索引的使用問題&lt;/h3&gt;
+&lt;p&gt;分區鍵與索引鍵不相同時&lt;/p&gt;
+&lt;p&gt;假設咱們有一張表，它們的分區與索引鍵如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;欄位 a 與 b
+
+分區鍵 : a
+索引鍵 : b
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那你想想，如果這個時後下以下的 sql 會如何呢 ? 它基本上會去每一個分區表中的每個顆 b+ 樹去找一次，就算有使用索引 b 仍然會非常的慢，尤其如果是沒有用到『 覆蓋索引 』。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM table WHERE b = 1;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以這裡建議，任何查詢一定要配分區鍵&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT * FROM table WHERE b = 1 AND a = x
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;~ 小備註 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;上面有提到覆蓋索引這東西，如果還不知道的友人們，可以參考看看筆者這篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10221572&#34;&gt;30-12 之資料庫層的核心 - MySQL 的索引實現&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;-5---range--insert-&#34;&gt;注意 5 : 在 Range 類型 INSERT 時的問題&lt;/h3&gt;
+&lt;p&gt;在範例類型的分區表的操作時，insert 實際上是進行以下事情 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分區層鎖住所有分區表，然後決定它是在那，再將它丟入那個分區&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;事實上這個操作非常的消耗性能，所以基本會建議 range 不要設太多分區。&lt;/p&gt;
+&lt;h3 id=&#34;-6---explain-&#34;&gt;注意 6 : 記得常用 Explain 來看看有沒有分區&lt;/h3&gt;
+&lt;p&gt;注意 explain 中的 partiation 欄位，如果是全部的分區都有掃到，那就要考慮改一下你的語法。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id: 1
+select_type: simple
+table: user
+partiation: p1
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;--&#34;&gt;最後的注意 : 分區鍵的選擇非常重要&lt;/h3&gt;
+&lt;p&gt;你只要記好，你只有一次機會選擇它，上線已後要改，會出人命的。&lt;/p&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章中，咱們介紹了淺談了資料庫分區表的概念，它的概念事實上和咱們上一章節介紹的分表非常的相似，但是還是有點不同。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。&lt;/li&gt;
+&lt;li&gt;分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然後這裡說一下，並不是所有表太大，都需要使用分表或分區這兩個擴展，很多情況下，事實上不需要所有的資料都需要存放在資料庫中，這些資料事實上可以考慮轉移至 s3 或啥的，唯有當資料一定要存在資料庫中，且都需要查詢的情況，才可考慮。&lt;/p&gt;
+&lt;p&gt;不然分表與分區後，應用端操作是個雷，資料庫端也是個雷。&lt;/p&gt;
+&lt;p&gt;最後在提醒一下分區與分表是用在 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;單表太大的情境&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而不是資料庫太大的情境，我真看過有人不管表大不大，一律都分區這樣玩。&lt;/p&gt;
+&lt;h2 id=&#34;heading5&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://mysql.taobao.org/monthly/2017/11/09/&#34;&gt;MySQL · 最佳实践 · 分区表基本类型&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dev.mysql.com/doc/refman/5.7/en/partitioning-range.html&#34;&gt;MySQL 官網分區&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.ituring.com.cn/article/472244&#34;&gt;【原创】MYSQL 的那些“坑”&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://dev.mysql.com/doc/refman/8.0/en/partitioning-overview.html&#34;&gt;Overview of Partitioning in MySQL-8.0&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -93,18 +960,249 @@ user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. u
       <pubDate>Thu, 26 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190926/</guid>
-      <description>正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用這種方案就已經可以處理很好了。
-但 !
-如果你已經將資料庫層與緩存層的架構都已經建立好，但還是發現有性能貧頸，那接下來才會建議使用幾個方案，因為這些方案沒用好，會衍生出非常多的問題。
-本篇文章分為以下幾個章節，這些就是接下來咱們要來學的擴展法。
- 分庫 分表 分庫與分表的問題  重要 : 使用前注意事項 要使用以下的擴展方法時，先確認你的資料庫是否以下的問題是否有發生。
- 問題 1 : 單庫太大，導致硬碟空間不夠囉。 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。 問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。  有以上事情發生才開始往接下來的擴展走。
- 沒事真的別用它們
- 分庫  它可以解決 問題 1 : 單庫太大，導致硬碟空間不夠囉 與 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊
- 首先第一個要介紹的就是分庫，它的基本定義如下 :
- 將一個大大的資料庫，依據『 規則 』拆分成小的資料庫
- 其中上述說的規則，在傳統上可以分為以下幾種 :
- 垂直切分 : 根據『 業務 』來拆分成多個小資料庫 ( 圖 1 所示 )。 水平切分 : 根據『 特性 』來拆分成多個小資料庫，例如地區 ( 圖 2 所示 )。  圖 1 : 垂直切分範例</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358wfhe9Vz08O.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用這種方案就已經可以處理很好了。&lt;/p&gt;
+&lt;p&gt;但 !&lt;/p&gt;
+&lt;p&gt;如果你已經將資料庫層與緩存層的架構都已經建立好，但還是發現有性能貧頸，那接下來才會建議使用幾個方案，因為這些方案沒用好，會衍生出非常多的問題。&lt;/p&gt;
+&lt;p&gt;本篇文章分為以下幾個章節，這些就是接下來咱們要來學的擴展法。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分庫&lt;/li&gt;
+&lt;li&gt;分表&lt;/li&gt;
+&lt;li&gt;分庫與分表的問題&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;--&#34;&gt;重要 : 使用前注意事項&lt;/h4&gt;
+&lt;p&gt;要使用以下的擴展方法時，先確認你的資料庫是否以下的問題是否有發生。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題 1 : 單庫太大，導致硬碟空間不夠囉。&lt;/li&gt;
+&lt;li&gt;問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。&lt;/li&gt;
+&lt;li&gt;問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;有以上事情發生才開始往接下來的擴展走。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;沒事真的別用它們&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;分庫&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它可以解決
+問題 1 : 單庫太大，導致硬碟空間不夠囉
+與
+問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;首先第一個要介紹的就是分庫，它的基本定義如下 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將一個大大的資料庫，依據『 規則 』拆分成小的資料庫&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;其中上述說的規則，在傳統上可以分為以下幾種 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;垂直切分 : 根據『 業務 』來拆分成多個小資料庫 ( 圖 1 所示 )。&lt;/li&gt;
+&lt;li&gt;水平切分 : 根據『 特性 』來拆分成多個小資料庫，例如地區 ( 圖 2 所示 )。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358NiVxczyhHQ.png&#34; alt=&#34;&#34;&gt;
+圖 1 : 垂直切分範例&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358jdmFWBMEIZ.png&#34; alt=&#34;&#34;&gt;
+圖 2 : 水平切分範例&lt;/p&gt;
+&lt;p&gt;這個方案基本上在業界應該算是非常常見的方案，尤其是以業務的垂直切分這個方案，整體而言還是有不少的優點，如下幾個 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;減少單庫的性能壓力&lt;/li&gt;
+&lt;li&gt;減少備份復原的時間&lt;/li&gt;
+&lt;li&gt;增加維護性，例如下修某個資料庫，不會影響到所有的功能。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;業界的確很常使用這個方案，它們會根據業務需求來分成多個庫，可是上面不是建議沒必要，不要這樣搞嗎 ? 嗯對沒錯，但是如果是下面這種情況下，那的確可以切分 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;假設在業務擴展初出，所有資料都寫到同一個資料庫中，但後其長大後，就將不同『 單位業務 』的資料分不同資料庫，它們彼此間很獨立，非常少會一起使用&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這種情況下，我覺得切分合理，而且這很常見。就算是咱們某個資料庫中還是有一堆奇奇怪怪不知道是幹啥的表，或是其它業務的表，這些都是一間公司從 0 至 1+ 時都會有的過程。&lt;/p&gt;
+&lt;p&gt;但如果是一堆需要共要在一起的業務，硬是要把他切分成不同資料庫，那我想打爆那個提出這樣切的人的頭。&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;分表&lt;/h2&gt;
+&lt;p&gt;這種方法可以解決以下的問題 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它可以解決問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;簡單它們的概念都 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將一張很大的表，根據『 key 』來分成小張的表&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它本質上是應用層自已手動實現，根據規則將一個表，分成多個表，這表可能在同一台機器上，或是不同機器上，應用層 sql 代碼需修改。&lt;/p&gt;
+&lt;h4 id=&#34;heading3&#34;&gt;開始前的小提醒&lt;/h4&gt;
+&lt;p&gt;分表這種擴展法是用在單表太大的情境。&lt;/p&gt;
+&lt;p&gt;假設你們的系統是聊天室這種類型的系統，然後你們會將用戶說的每一句話儲存在某一張表，那你們遲早會碰到表太大，影響查詢這種問題的。&lt;/p&gt;
+&lt;p&gt;不過先說一下，&lt;strong&gt;並不是一定要用這種方法來處理此情境&lt;/strong&gt;，像以咱們公司是這樣處理的。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;根據業務規則，來定義資料表中要儲多久的資料，例如 3 個月左右。&lt;/li&gt;
+&lt;li&gt;將 3 個月之前的資料全部打包壓縮丟到 aws s3 或啥的。&lt;/li&gt;
+&lt;li&gt;寫一個每天的排程，來定時的砍資料與移資料。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如果真的有需要去 s3 找資料，你也可以用 aws athena 去查詢資料的，雖然有點貴，但是久久才用一次，沒毛病。&lt;/p&gt;
+&lt;p&gt;上述是題外話，假設咱們真的都需要儲放在資料表中，那咱們就只能選擇『 分表與分區表 』這個方案囉。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;不過說句真心話，沒必要真的不要用它，因此之後會很多問題。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;拉回分表&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;分表的基本概念就是如下，咱們假設以 id 為 key，將這張表拆成如下圖 3 所示。分區表下篇文章會說明。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358R5Urg1zKv1.png&#34; alt=&#34;&#34;&gt;
+圖 3 : 分表範例&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;問個問題，分表有需要分到不同的機器嗎 ? 例如下圖 4 所示呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;除非，你的單表真的大到，就算進行分表後，單機仍然無法負荷它的資料量，那這樣才可以考慮，不然雷會很多，因為這就代表分庫 + 分表的問題你都需要一同考慮。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358yWS6t38SZ7.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 分表不同機器圖&lt;/p&gt;
+&lt;h3 id=&#34;-&#34;&gt;要使用什麼當切分鍵 ?&lt;/h3&gt;
+&lt;p&gt;分片（ Sharding ）就是咱們要用什麼規則來去分割資料的意思。以我們這裡來看就是咱們要用什麼欄位，來去分割資料。&lt;/p&gt;
+&lt;p&gt;先說一下，我們會很難到完美的分片，一個完美的分片可以讓我們做到以下的事情 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;可以平均將查詢操作，分配到每一張表。&lt;/li&gt;
+&lt;li&gt;可以平均的將新增、更新等操作，分配到每一張表上。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;咱們很難找到一個完美的選擇，但是可以先定一個最低的標準選項 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;高基數欄位，這是最低標準&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;為啥 ? 因為這樣才好分割，你想想如果選擇性別男與女來當分割，那這樣你不是只能分成兩份嗎 ? 如果又滿了，你要如何處理 ?&lt;/p&gt;
+&lt;p&gt;然後這裡列一下一些常見的分片欄位選項 :&lt;/p&gt;
+&lt;h4 id=&#34;-1--&#34;&gt;選擇 1 : 升序特性欄位&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;『 自動產生編號 』 或是 『 日期 』&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根據 id 或日期來分區的這種都算是升序特性欄位。以 id 為例，它們的分割方式為 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id_1_1000 : 儲放 id 編號 1 至 1000 的資料
+id_1001_2000 : 儲放 id 編號 1001 至 2000 的資料
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是這事實上不能說是好選項，主要的原因在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;操作會壓在一張表上&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因為通常新的資料者是會放在同一張表，所以大部份的操作都會壓往他身上。&lt;/p&gt;
+&lt;h4 id=&#34;-2--hash--id&#34;&gt;選擇 2 : Hash 編號 Id&lt;/h4&gt;
+&lt;p&gt;根據 id + hash 來進行切分，假設咱們有個 hash 函數如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;hashId = id % 10
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;這種做法比上述的直接編號來分割還優質點，因為它可以平均的分散到不同的表上。先說一下上述只是 hash 的簡單範例，實際上不一定是用上述方式分割。&lt;/p&gt;
+&lt;h4 id=&#34;-3--&#34;&gt;選擇 3 : 隨機特性的欄位&lt;/h4&gt;
+&lt;p&gt;像是一些沒有規則的欄位，例如信箱或是一些亂數編號這種，這種欄位分片可以平均的分散到每一張表，但是比較大的問題在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;查詢&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;由於分配是隨機的，所以查詢時不知道要去那張表找，所以只能一個一個慢慢找。&lt;/p&gt;
+&lt;h4 id=&#34;-4--&#34;&gt;選擇 4 : 組合型的欄位&lt;/h4&gt;
+&lt;p&gt;假設咱們有個資料表是專門存放聊天訊息的，有以下欄位 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;id, type , text, user_id, created_at
+
+type : 它有 5 種類型 ( 可能是表示不同的服務 )
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那這時如果我們只選擇 type，會發現它的基數太小，怎麼分就可能只有五張表，這樣還是會碰到貧頸的。&lt;/p&gt;
+&lt;p&gt;但這時咱們可以轉個想，如果一次用兩個欄位呢 ?&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{ type, created_at }
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;例如咱們可以根據 type 與 created_at 來當分片欄位組合，這樣的話資料表會分為如下圖 5 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/200893584euxx7QrV6.png&#34; alt=&#34;&#34;&gt;
+圖 5 : 組合型範例&lt;/p&gt;
+&lt;p&gt;這樣就有幾種好處 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;查詢方便，如果要查某種類型的，只要去那種類型的表查就好，如果要查時間，就去該段時間查詢。&lt;/li&gt;
+&lt;li&gt;有將壓力分散，雖然 type 基數小，但是我們可以同過細分時間段，來減少壓力。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上面這個只是組合型的範例，不代表一定要這樣使用，這裡只是要點醒一下 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;分片欄位不一定是要一個欄位組成&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;分表與分庫可能會碰到的問題&lt;/h2&gt;
+&lt;h4 id=&#34;-1---&#34;&gt;問題 1 : 事務如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;咱們之前的這兩篇文章中，有談到單機一致性的問題。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10222851&#34;&gt;30-15 之資料庫層的難題 - 單機『 故障 』一致性難題&lt;/a&gt;
+&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10223427&#34;&gt;30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )&lt;/a&gt;
+&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10223842&#34;&gt;30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;而它們都是依賴 mysql 所提供的 redo log 與 undo log 還有鎖之類的功能，來達成事務的 acid 特性。&lt;/p&gt;
+&lt;p&gt;那如果這個換成『 多台 』資料庫的話，你要如何處理呢 ?&lt;/p&gt;
+&lt;p&gt;這個問題咱們會在之後的文章『 分散式事務 』的主是中來慢慢的談談。&lt;/p&gt;
+&lt;h4 id=&#34;-2--join--&#34;&gt;問題 2 : Join 如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;在分庫以後，基本上有以下幾種方法解決 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不要用 : 自行在應用層抓一抓你要的資料，然後拼裝超來。&lt;/li&gt;
+&lt;li&gt;一點點的反正規化 : 也就是說在設計表時，會多加一些欄位，例如訂單與用戶這樣的組合，有可能會在訂單這個分庫的資訊上，多儲放一些用戶的資訊，這樣就不需要使用到 join。&lt;/li&gt;
+&lt;li&gt;統一透過中間件處理 : 有一些中間件軟體會提供多庫 join 的操作，以 mycat 來看它有提供，不過只提供兩層的 join，這個地方在之後 mycat 的文章中會提。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這裡是比較建議分庫後儘量不要用 join，因為坑會有點大，而且你儘然分庫了，你還很常需要 join，那是不是要想想，分庫的規則有問題了呢 ?&lt;/p&gt;
+&lt;h4 id=&#34;-3---&#34;&gt;問題 3 : 用戶端要如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;通常咱們在分表以後，都需要自已去指定要去那一張表來處理，但是這樣非常的麻煩，所以我們通常會使用 mysql 中間件來處理，變成如下圖 6 所示，這之後會開一篇文章來介紹中間件。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;正常分表後，SQL 指定修改
+
+SELECT * FROM table_2019_01 
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191011/20089358cHX1YGhxcW.png&#34; alt=&#34;&#34;&gt;
+圖 6 : 中間件。&lt;/p&gt;
+&lt;h4 id=&#34;-4---&#34;&gt;問題 4 : 唯一編號如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;在分表或水平分庫以後，你可能還要考慮每一張表的唯一編號要如何產生，正常只有一張表時，咱們可以使用自動產生編號來建立順序的編號，但多張時就不能這樣用，因為會衝突。&lt;/p&gt;
+&lt;p&gt;基本上有以下幾種方案 :&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方案 1 : UUID&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;簡單，但是缺點在於沒順序、空間大，這兩個都會影響性能。&lt;/p&gt;
+&lt;p&gt;在順序的編號，在查詢時可能增加不少效率。而 uuid 所佔空間比較大，會影響到所建立的 b+ 樹每個索引節點的大小，進而影響到操作性能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方案 2 : 自動編號 + 偏移&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;假設你有 4 張表，那他們的生成編號為 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;A 表 : 1,5,9,13
+B 表 : 2,6,10,14
+C 表 : 3,7,11,15
+D 表 : 4,8,12,16
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但缺點就在於不好擴展。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;方案 3 : redis 生成&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;redis 有提供一個方法 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;incr&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;可以使用它來產生全局的順序編號，但缺點就在於需要連 redis 處理，還要考慮它是否活這。&lt;/p&gt;
+&lt;h4 id=&#34;-5---&#34;&gt;問題 5 : 分表分頁如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;像咱們在單一表進行分頁時，通常是會下如下的指令，說要拿第 6 至 15 的資料 :&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SELECT&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;*&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;FROM&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;table&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;ORDER&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;BY&lt;/span&gt; time &lt;span style=&#34;color:#66d9ef&#34;&gt;LIMIT&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;,&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;但是現在一個大表變成如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;table = tableA + tableB + tableC
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;在分表的情境中，要如何處理呢 ?&lt;/p&gt;
+&lt;p&gt;首先假設如果咱們的分表是使用『 區間 』來拆分例如日期，那這種情況下，應該還是到指定的表去尋找就夠了，沒啥毛病。&lt;/p&gt;
+&lt;p&gt;但如果是用 hash id 這種來分的表呢 ?&lt;/p&gt;
+&lt;p&gt;有人會想說，那就每個表的資料都抓出來，在排序然後再抓取前 n 個值不就好呢 ? 服務會炸裂的，分表的原因就是單表太大，你還要進行排序 ( nlogn ) ?&lt;/p&gt;
+&lt;p&gt;說實話，我到還沒碰到分表然後又要分頁的情況，這時只能給點參考文件，目前我覺得寫的最完整的是這一篇文章，這個作者也是我之前有提過的『 架構師之路 』這一系列優質文的筆者，他的文章真的只能說優質上等來評價。&lt;/p&gt;
+&lt;p&gt;而至於分表分頁這問題，等未來我在這個問題有更深入的理解後，在開篇文章來談談。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mp.weixin.qq.com/s?__biz=MjM5ODYxMDA5OQ==&amp;amp;mid=2651959942&amp;amp;idx=1&amp;amp;sn=e9d3fe111b8a1d44335f798bbb6b9eea&amp;amp;chksm=bd2d075a8a5a8e4cad985b847778aa83056e22931767bb835132c04571b66d5434020fd4147f&amp;amp;scene=21#wechat_redirect&#34;&gt;58沈剑 架构师之路-业界难题-“跨库分页”的四种方案&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading5&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章中，咱們討論了另外兩種資料庫層的擴展 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;分庫&lt;/li&gt;
+&lt;li&gt;分表&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;基本上我覺得這兩種都是沒必要，不要用的東西，因為如果你在還沒到性能貧頸時就用這幾招，你會面臨到的問題是一個大大的坑，請注意。&lt;/p&gt;
+&lt;p&gt;分庫這種場境，可以解決以下幾個問題 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題 1 : 單庫太大，導致硬碟空間不夠囉。&lt;/li&gt;
+&lt;li&gt;問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而分表方面可以解決以下幾個問題 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;雖然可以解決，但是同時也會帶來以下這些鬼問題，請注意。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;事務如何處理 ?&lt;/li&gt;
+&lt;li&gt;Join 如何處理呢 ?&lt;/li&gt;
+&lt;li&gt;用戶端要如何處理呢 ?&lt;/li&gt;
+&lt;li&gt;唯一編號如何處理呢 ?&lt;/li&gt;
+&lt;li&gt;分表分頁如何處理呢 ?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這些問題 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;都是在分庫或分表『 前 』你就要思考好&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;分了後，才思考，你一定死。&lt;/p&gt;
+&lt;h2 id=&#34;heading6&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://database.51cto.com/art/201809/583857.htm&#34;&gt;MySQL分库分表，写得太好了！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/KingCat666/article/details/78324678&#34;&gt;MySql从一窍不通到入门（五）Sharding：分表、分库、分片和分区&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/entry/5b5eb7f2e51d4519700f7d3c&#34;&gt;MySQL 分库分表方案，总结的非常好！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/20227757&#34;&gt;MYSQL分表时需要考虑那些问题？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.scienjus.com/database-sharding-review/&#34;&gt;数据库水平分片心得&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/joylee/p/7513038.html&#34;&gt;学会数据库读写分离、分表分库——用Mycat，这一篇就够了！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://haitian299.github.io/2016/05/26/mysql-partitioning/&#34;&gt;［MySQL］MySQL分区与传统的分库分表&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/38418707&#34;&gt;mysql 分区的真正作用?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.infoq.cn/article/key-steps-and-likely-problems-of-split-table&#34;&gt;分库分表的几种常见形式以及可能遇到的难&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/62984253&#34;&gt;分库分表时唯一ID如何生成&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.cnblogs.com/duanxz/p/6518846.html&#34;&gt;mysql分区表之一：分区原理和优缺点【转】&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/guyue35/article/details/84875476&#34;&gt;业界难题-“跨库分页”的四种方案&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.csdn.net/weixin_34228662/article/details/91466678&#34;&gt;为了解决分库分表后，跨库查询和分页查询的难题，基于CQRS思想，采用es作为查询的存储中心。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5d98389a6fb9a04e1b57e126?utm_source=gold_browser_extension&#34;&gt;不要为了“分库分表”而“分库分表”&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -113,23 +1211,229 @@ user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. u
       <pubDate>Wed, 25 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190925/</guid>
-      <description>正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。
-在正式開始章節之前，我們先來想想看一件事情。
- 資料庫層可以向應用層一樣加機器，就可以做更多的事情嗎 ?
- 答案為是或不是，這個就取決於使用者的能力，因為假設你沒處理好，不但有可能性能下降，而且導致錯誤百出，它不像應用層那麼簡單的主要原因在於 :
- 它有狀態的，因為它有儲資料，所有會有一致性問題。
- 應用層在進行分散式時，基本上都是處於無狀態狀況，所以在進行多台機器時，事實上我們不太需要考慮什麼資料一致的問題，而資料庫則否，當多台時，就要面臨到所謂的資料一致性問題。
-接下來的文章與章節我們將要來細說，資料庫層如何的使用分散式架構來讓它做更多的事情，並且有更高的可用性，以及它接下來要面對的種種問題。
-本篇文章中，咱們將要先來談談，第一種資料庫層的分散式架構方案『 讀寫分離架構 』:
- 它適用於讀多寫少情況
- 本篇文章共分為以下幾個章節 :
- 讀寫分離架構概念 MySQL 的讀寫分離架構實現 可能面臨問題探討  這個分散技術基本上應該是資料庫層分散的第一個起手式，單完成這個架構就已經可以處理不少的事情囉。
-資料庫層的讀寫分離架構 基本架構 讀寫分離最簡單的就是所有寫入的都寫入到一台服務，讀取時讀取一台服務，然後你們之間會進行資料同步。
-然後在實務上，咱們通常都是會搭配主從架構 ( master-slave ) 來進行讀寫分離。主從架構本來存在的目的是為了可用，就也是如果 master 壞掉了，咱們還有 slave 有資料。
- master : 主要用寫的服務，會與 slave 進行資料同步。 slave : 主要用來讀的服務  圖 2 : master-slave 實現讀寫概念圖
-讀進化型架構 之前咱們有提過，現在大部份的系統基本上應該是讀大於寫入，所以如果這時只有一台讀，也是有可能會讓它壓力很大，所以這時會變成如圖 3 所示，加個幾台讀機，這種架構被稱為『 一主多從 』。
-然後這裡有幾個重點，那就是要如何實現圖 3 的『 分配器 』。
-圖 3 : 讀進化型架構圖</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358EV7pFhbCuy.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。&lt;/p&gt;
+&lt;p&gt;在正式開始章節之前，我們先來想想看一件事情。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;資料庫層可以向應用層一樣加機器，就可以做更多的事情嗎 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;答案為是或不是，這個就取決於使用者的能力，因為假設你沒處理好，不但有可能性能下降，而且導致錯誤百出，它不像應用層那麼簡單的主要原因在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它有狀態的，因為它有儲資料，所有會有一致性問題。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;應用層在進行分散式時，基本上都是處於無狀態狀況，所以在進行多台機器時，事實上我們不太需要考慮什麼資料一致的問題，而資料庫則否，當多台時，就要面臨到所謂的資料一致性問題。&lt;/p&gt;
+&lt;p&gt;接下來的文章與章節我們將要來細說，資料庫層如何的使用分散式架構來讓它做更多的事情，並且有更高的可用性，以及它接下來要面對的種種問題。&lt;/p&gt;
+&lt;p&gt;本篇文章中，咱們將要先來談談，第一種資料庫層的分散式架構方案『 讀寫分離架構 』:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它適用於讀多寫少情況&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;本篇文章共分為以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;讀寫分離架構概念&lt;/li&gt;
+&lt;li&gt;MySQL 的讀寫分離架構實現&lt;/li&gt;
+&lt;li&gt;可能面臨問題探討&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這個分散技術基本上應該是資料庫層分散的第一個起手式，單完成這個架構就已經可以處理不少的事情囉。&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;資料庫層的讀寫分離架構&lt;/h2&gt;
+&lt;h3 id=&#34;heading2&#34;&gt;基本架構&lt;/h3&gt;
+&lt;p&gt;讀寫分離最簡單的就是所有寫入的都寫入到一台服務，讀取時讀取一台服務，然後你們之間會進行資料同步。&lt;/p&gt;
+&lt;p&gt;然後在實務上，咱們通常都是會搭配主從架構 ( master-slave ) 來進行讀寫分離。主從架構本來存在的目的是為了可用，就也是如果 master 壞掉了，咱們還有 slave 有資料。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;master : 主要用寫的服務，會與 slave 進行資料同步。&lt;/li&gt;
+&lt;li&gt;slave : 主要用來讀的服務&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358ecnpJPA3zZ.png&#34; alt=&#34;&#34;&gt;
+圖 2 : master-slave 實現讀寫概念圖&lt;/p&gt;
+&lt;h3 id=&#34;heading3&#34;&gt;讀進化型架構&lt;/h3&gt;
+&lt;p&gt;之前咱們有提過，現在大部份的系統基本上應該是讀大於寫入，所以如果這時只有一台讀，也是有可能會讓它壓力很大，所以這時會變成如圖 3 所示，加個幾台讀機，這種架構被稱為『 一主多從 』。&lt;/p&gt;
+&lt;p&gt;然後這裡有幾個重點，那就是要如何實現圖 3 的『 分配器 』。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358ibZSr9E92V.png&#34; alt=&#34;&#34;&gt;
+圖 3 : 讀進化型架構圖&lt;/p&gt;
+&lt;p&gt;目前基本上會有以下幾種方案。&lt;/p&gt;
+&lt;h4 id=&#34;-1----ex-ha-proxy-&#34;&gt;分配器的選擇 1 - 負載均衡 ( ex. HA Proxy )&lt;/h4&gt;
+&lt;p&gt;首先第一個是 haproxy，這個東西可以幫我們實現 mysql 的負載均衡，並且如果其中一台 slave 有問題，haproxy 會幫我們停止分配固障那台。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/200893587KB5idDAJt.png&#34; alt=&#34;&#34;&gt;
+圖 4 : haproxy 架構&lt;/p&gt;
+&lt;h4 id=&#34;-2--dns---ex-consul-&#34;&gt;分配器的選擇 2 - DNS 均衡 ( ex. Consul )&lt;/h4&gt;
+&lt;p&gt;這個也是一個方案，透過 dns 來實現簡單版的負載均衡。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;mark-myql-read domain
+=&amp;gt; 127.0.0.1:3306
+=&amp;gt; 127.0.0.1:3307
+=&amp;gt; 128.0.0.1:3308
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;像使用 consul cluster 就是一個常見的方案，流程如下圖 5 所示。不過這裡簡單說一下 consul 不只可以 dns 發現服務，它事實上也有一些負載均衡的功用，有興趣的可以自已去查查。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358SUSBNMI2Qh.png&#34; alt=&#34;&#34;&gt;
+圖 5 : consul&lt;/p&gt;
+&lt;h4 id=&#34;---slave--master--&#34;&gt;那這裡問個問題 ~ 要如何指定讀 Slave 寫 Master 呢 ?&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;通常大部份所使用的操作套件都有資源&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;以 nodejs 來常使用 mysql orm 套件 sequelize，它可以給你進行如下官方範例的設定，當 read 時可以指定讀 slave 那台，當 write 的可以指定寫入那台。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;const&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;sequelize&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;new&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;Sequelize&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;database&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt;, {
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;dialect&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;mysql&amp;#39;&lt;/span&gt;,
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;port&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;3306&lt;/span&gt;
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;replication&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;read&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; [
+      { &lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;8.8.8.8&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;username&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;read-username&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;some-password&amp;#39;&lt;/span&gt; },
+      { &lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;9.9.9.9&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;username&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;another-username&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#66d9ef&#34;&gt;null&lt;/span&gt; }
+    ],
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;write&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; { &lt;span style=&#34;color:#a6e22e&#34;&gt;host&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;1.1.1.1&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;username&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;write-username&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#a6e22e&#34;&gt;password&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;any-password&amp;#39;&lt;/span&gt; }
+  },
+  &lt;span style=&#34;color:#a6e22e&#34;&gt;pool&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; { &lt;span style=&#34;color:#75715e&#34;&gt;// If you want to override the options used for the read/write pool you can do so here
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;    &lt;span style=&#34;color:#a6e22e&#34;&gt;max&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;20&lt;/span&gt;,
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;idle&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;30000&lt;/span&gt;
+  },
+})
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;而如果是使用 php laravel 的友人它也有提供相關的設定。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://laravel.com/docs/5.5/database#read-and-write-connections&#34;&gt;Laravel-Read &amp;amp; Write Connections&lt;/a&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&#39;mysql&#39; =&amp;gt; [
+    &#39;read&#39; =&amp;gt; [
+        &#39;host&#39; =&amp;gt; &#39;192.168.1.1&#39;,
+    ],
+    &#39;write&#39; =&amp;gt; [
+        &#39;host&#39; =&amp;gt; &#39;196.168.1.2&#39;
+    ],
+],
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;根據以上兩種語言套件，事實上咱們真的已經不太需要自已來實現讀寫分離的程式碼了。&lt;/p&gt;
+&lt;h2 id=&#34;mysql-&#34;&gt;MySQL 主從架構實現原理&lt;/h2&gt;
+&lt;p&gt;mysql 基本上實現主從架構資料交換的過程，如下圖 6 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;master 把資料更新寫到 binary log 中。&lt;/li&gt;
+&lt;li&gt;slave 將 master 的 binary log 複製到自已的 replay log。&lt;/li&gt;
+&lt;li&gt;讀取 replay log，將資料異動進行更新。&lt;/li&gt;
+&lt;li&gt;slave 的 sql thread 去 replay log 拉資料來執行 sql。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/200893584JiOTRK0HN.png&#34; alt=&#34;&#34;&gt;
+圖 6 : mysql 的主從複製&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;
+mysql 本身沒有支援所謂的 failover 機制，failover 就是當發現 master 掛掉時，會自動將 slave 升級為 master 來接客的自動化機制。&lt;/p&gt;
+&lt;p&gt;在 mysql 中需要一些 failover 實現的工具才能使用，例如 MHA ( Master High Availability )、Keepalived、PXC 等，這裡就不多談這些囉。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;這裡問個問題 binlog 是什麼呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;它記錄了所有 mysql 資料上的改變，也就是說你只要 insert 或 update 都會記錄在 binlog 中。&lt;/p&gt;
+&lt;p&gt;但是要注意 binlog 是屬於 mysql 服務層的東西，也就是說不管底層儲存引擎是 inoodb 或 mysiam 啥的，binlog 都是有儲的。&lt;/p&gt;
+&lt;p&gt;你可以在 mysql 中指令以下指令，來看到 binlog 的事件。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;SHOW&lt;/span&gt; binlog events;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;那 binlog 可以做什麼用呢 ?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主從複製&lt;/li&gt;
+&lt;li&gt;資料回復&lt;/li&gt;
+&lt;li&gt;增加備份&lt;/li&gt;
+&lt;li&gt;最終一致性 ( 這在之後會說明 )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;heading4&#34;&gt;三種複制模式&lt;/h3&gt;
+&lt;p&gt;在 mysql 中它有分三種資料從 master 複制到 slave 的模式，至於為什麼有這三個模式，等等下個章節讀寫分離問題那會說。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;先說一下這三種模式，會影響到用戶端收到 ack 的時間&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;-1--async-mode------&#34;&gt;複制模式 1 : Async Mode ( 性能優 ) ( 預設 )&lt;/h4&gt;
+&lt;p&gt;預設模式，流程如下圖 7 所示，重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;master 寫到 binlog 後就回 ack 給 client&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358VYOWxjdPLR.png&#34; alt=&#34;&#34;&gt;
+圖 7 : async Mode 模式&lt;/p&gt;
+&lt;h4 id=&#34;-2--semisync-mode---&#34;&gt;複制模式 2 : Semi-sync Mode ( 性能中 )&lt;/h4&gt;
+&lt;p&gt;其中一台 slave 寫到 replay log 後，就會回 ack，如下圖 8 所示。這個模式是使用 GTID 所實現，只有在 mysql 5.7+ 以上才支援，這種模式的重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;寫到其中一台 slave 的 replay log 後，master 才會回 ack 給 client。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358NhIqrsOu3l.png&#34; alt=&#34;&#34;&gt;
+圖 8 : semi-sync Mode 模式&lt;/p&gt;
+&lt;h4 id=&#34;-3-sync-mode---&#34;&gt;複制模式 3. Sync Mode ( 性能差 )&lt;/h4&gt;
+&lt;p&gt;如下圖 9 所示。這種模式性能最差，但是可以保證所有用戶都讀到相同的資料。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;所有 slave 都將資料寫到 replay log 後，master 才會回 ack 給 client，&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/200893588X3Tq8gQFv.png&#34; alt=&#34;&#34;&gt;
+圖 9 : sync Mode 模式&lt;/p&gt;
+&lt;h2 id=&#34;heading5&#34;&gt;讀寫分離可能面臨問題探討&lt;/h2&gt;
+&lt;p&gt;這種架構可能會碰到什麼問題呢 ?&lt;/p&gt;
+&lt;h3 id=&#34;-1--&#34;&gt;問題 1 . 主從資料不一致問題&lt;/h3&gt;
+&lt;p&gt;假設咱們有個業務操作如下 :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;更新 x 資料&lt;/li&gt;
+&lt;li&gt;讀取 x 資料&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;如下面這張圖 10 所示，當操作 1 執行更新 x 後，執行操作 2 讀取，如果這時還沒主資料庫資料還沒同步到從資料庫，那操作 2 就會讀到舊的資料。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358Fm7oZTdhc6.png&#34; alt=&#34;&#34;&gt;
+圖 10 : 讀取時可能碰到的問題&lt;/p&gt;
+&lt;p&gt;通常碰到這問題只有以下幾種解法。&lt;/p&gt;
+&lt;h4 id=&#34;-1---mysql-sync-model&#34;&gt;解法 1 : 開啟 mysql sync model&lt;/h4&gt;
+&lt;p&gt;也就是說所有的寫入或更新，都需要等到複製完，才能回用戶 ack。但這個性能耗損很嚴重呢。不過還有一種折衷方案就是改成用上述複制模式 2 semi-sync Mode 模式，雖然還是會發生資料不同步的機率，但機率低了不少。&lt;/p&gt;
+&lt;h4 id=&#34;-2--&#34;&gt;解法 2 : 用戶端寫入後等幾秒再讀&lt;/h4&gt;
+&lt;p&gt;這個方法應該是最常見的手法，我問十個人應該有九個都是用這招。&lt;/p&gt;
+&lt;h4 id=&#34;-3--&#34;&gt;解法 3 : 應用層中間件動手腳&lt;/h4&gt;
+&lt;p&gt;在一些比較大型的應用上，通常會將架構分成如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;用戶 -&amp;gt; 應用層服務 -&amp;gt; 應用層中間件 -&amp;gt; 資料庫服務
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中應用層中間件服務，這個不同公司有不同的定義與實作方法，像咱公司這裡裡面又分為兩塊。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;應用層 domain 服務 -&amp;gt; 應用層 model 服務
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;其中 domain 比較偏向商業定義，而 model 偏向資料庫定義，然後這時咱們會針定一些商業上定義需要完全一致性的操作，強制的讓它讀 master。&lt;/p&gt;
+&lt;p&gt;這樣的確是有人說，那這樣不就沒有讀寫分離的意義 ? 一半對一半錯，如果只有 10 % 商業服務是需要這種『 完全一致性 』的要求，那也只有 10 % 而以，其它 90 % 還是有讀寫分離。而如果反過 90% 需要的場景，你反而要想那這樣還要搞讀寫分離嗎 ?&lt;/p&gt;
+&lt;h3 id=&#34;-2--1&#34;&gt;問題 2 : 讀寫分離模式與緩存服務不一致問題&lt;/h3&gt;
+&lt;p&gt;根據咱們下述的緩存策略的文章中，咱們的讀策略為 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;先更新 DB 後淘汰緩存&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190919/&#34;&gt;30-19 之資料庫層的優化 - 資料緩存策略&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然後咱們接下來和讀寫分離架構合在一起看一下。然後會發現它有問題。&lt;/p&gt;
+&lt;p&gt;這個問題如下圖 11 過程所示，當操作 1 在淘汰完緩存資料後，且在同步從庫前，有一個讀取進來，那這時它會讀取到舊的資料，並且更新到緩存中。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;那這時緩存就會永遠是『 錯 』的資料 ( 除非人為手動回復 )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358xaxjurBmyA.png&#34; alt=&#34;&#34;&gt;
+圖 11 : 讀寫分離架構的緩存不一致性問題&lt;/p&gt;
+&lt;h4 id=&#34;-1--1&#34;&gt;解法 1 : 多一次讀取&lt;/h4&gt;
+&lt;p&gt;目前查了一下，比較常見的解法如下圖 12 所示，就是在淘汰緩存後，在執行一次讀取，然後強制這次的讀取是讀『 主庫 』，這樣可以有較高的機率回避上述問題。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358Ljc8M0AprH.png&#34; alt=&#34;&#34;&gt;
+圖 12 : 不一致性問題解法 1&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;為什麼不要將淘汰緩存，改為更新緩存呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;因為這樣在併發更新時，可能會產生『 緩存永遠是錯的 』可能性，詳細請參考 30-19 的文章。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果操作 2 的讀取從庫比操作 1 的讀取主庫還前，那不是也有問題嗎 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;嗯對的，會出問題沒錯，但只能說機率會比較小點兒。&lt;/p&gt;
+&lt;h3 id=&#34;-2--2&#34;&gt;解法 2 : 重複一次操作&lt;/h3&gt;
+&lt;p&gt;就是再重複的進行一下更新操作流程，如下圖 13 所示，就算操作 2 讀取時將舊資料更新的緩存後，這個錯誤的操作會被第二次更新時洗掉，除非你真運氣差到兩次都碰上，不然這個出問題的機率應該是非常非常的低。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191010/20089358z66xEdyQlB.png&#34; alt=&#34;&#34;&gt;
+圖 13 : 不一致問題解法 2&lt;/p&gt;
+&lt;h3 id=&#34;-3--binlog-&#34;&gt;可能解法 3 : binlog 訂閱&lt;/h3&gt;
+&lt;p&gt;先說一下，我不確定這個方法可不可以解決，這只是提出來參考兩下的。&lt;/p&gt;
+&lt;p&gt;目前網路上有提供一些工具，它可以監控 binlog 的變化，來更新緩存服務，例如阿里八八開發的這個工具。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://github.com/alibaba/canal&#34;&gt;canal&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;但是有沒有什麼雷我就不知道了，之後應該會來深入的研究兩下。&lt;/p&gt;
+&lt;h2 id=&#34;heading6&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章咱們探討了資料庫擴展的第一個起手式 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;讀寫分離架構&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;然後在 mysql 中基本上它是以主從架構來實現，然後它實現兩台資料庫資料同步的方法主要是依賴於 binlog 上，而其中它的整個複制的模式，也影響了用戶收到回應時間速度。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;複制模式 1 : Async Mode ( 性能優 ) ( 預設 )&lt;/li&gt;
+&lt;li&gt;複制模式 2 : Semi-sync Mode ( 性能中 )&lt;/li&gt;
+&lt;li&gt;複制模式 3. Sync Mode ( 性能差 )&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最後咱們討論了讀寫分離的以下兩個問題 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主從資料不一致問題&lt;/li&gt;
+&lt;li&gt;讀寫分離模式與緩存服務不一致問題&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;上述兩個問題說實話，都沒完美解，這或許就是追求性能的路上必然之路。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一致性難題&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這也是為啥會建議，沒必要，真的別搞分散式，你真的會被一致性難題搞的心力交瘁，如果沒問題，你先想想有沒有可能能事實上量很小到產生不了問題呢 ?&lt;/p&gt;
+&lt;h2 id=&#34;heading7&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/19719997&#34;&gt;MySQL 对于千万级的大表要怎么优化？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/entry/58f9fb295c497d0058ee2db7&#34;&gt;MySQL 读写分离技术&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/33504555&#34;&gt;腾讯工程师带你深入解析 MySQL binlog&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://mysql.taobao.org/monthly/2015/05/10/&#34;&gt;MySQL · 答疑解惑 · binlog 位点刷新策略&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://mysql.taobao.org/monthly/2015/05/&#34;&gt;数据库内核月报 － 2015 / 05&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/68226751&#34;&gt;MySQL binlog应用场景与原理深度剖析！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://arganzheng.life/mysql-ha-solution.html&#34;&gt;MySQL高可用性方案&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/50597960?edition=yidianzixun&amp;amp;utm_source=yidianzixun&amp;amp;yidian_docid=0KelGY6s&amp;amp;yidian_s=&amp;amp;yidian_appid=s3rd_op397&#34;&gt;深度探索MySQL主从复制原理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/google/mysql-tools/wiki/Semi-Sync-Replication-Design&#34;&gt;Semi Sync Replication Design&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://yq.aliyun.com/articles/550045&#34;&gt;使用canal进行mysql数据同步到Redis&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -138,15 +1442,197 @@ user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. u
       <pubDate>Tue, 24 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190924/</guid>
-      <description>正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。
-本篇文章共分以下幾個章節 :
- IM 服務的先行知識 IM 服務的擴展方案 1 - 負載均衡 IM 服務的擴展方案 2 : IM 服務分配器  在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。
-簡單的說就是像 line 一樣可以進行即時的溝通。
-傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :
-IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。
- IM 服務就是像聊天室例如 Line 這種類型的服務
- 而通常要實現這個功能目前應該只有兩種機制 :
- long polling websocket  咱們來簡單用下圖 1 來看一下這兩種運行的差別。</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358r8FbMMVAPl.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於
+即時通訊服務 ( IM Instant Messaging Service ) 的擴展。&lt;/p&gt;
+&lt;p&gt;本篇文章共分以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;IM 服務的先行知識&lt;/li&gt;
+&lt;li&gt;IM 服務的擴展方案 1 - 負載均衡&lt;/li&gt;
+&lt;li&gt;IM 服務的擴展方案 2 : IM 服務分配器&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。&lt;/p&gt;
+&lt;p&gt;簡單的說就是像 line 一樣可以進行即時的溝通。&lt;/p&gt;
+&lt;p&gt;傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :&lt;/p&gt;
+&lt;h2 id=&#34;im-&#34;&gt;IM 服務的先行知識&lt;/h2&gt;
+&lt;p&gt;首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;IM 服務就是像聊天室例如 Line 這種類型的服務&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而通常要實現這個功能目前應該只有兩種機制 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;long polling&lt;/li&gt;
+&lt;li&gt;websocket&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;咱們來簡單用下圖 1 來看一下這兩種運行的差別。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358Uy3O7PHhN5.png&#34; alt=&#34;&#34;&gt;
+圖 1 : long polling 與 websocket 差別。&lt;/p&gt;
+&lt;p&gt;long polling 就如同上圖 1 所示，它會不斷的打 http 來去問 server 有沒有我的訊息，當然想也知道這種很沒效率，可能你問 10 次只有 1 次會收到訊息。&lt;/p&gt;
+&lt;p&gt;而另一種 websocket 就是當 server 一收到 client A 傳來的訊息後，會直接的推到 client B。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 ~&lt;/strong&gt;
+想比較理解 socket 或 websocket 的差別，可以看看筆者這篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://marklin-blog.logdown.com/posts/2366799&#34;&gt;Socket 的哩哩扣扣&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;im---&#34;&gt;IM 服務的問題 - 長連線&lt;/h3&gt;
+&lt;p&gt;那 im 服務有什麼問題會導致擴展方式和一般 web 服務不同呢 ? 那就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;長連線的問題&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;在 http 那篇文章中，咱們有提到在 http 1.1 由於有 keepalive 機制，所以預設都是本來就是長連線，但是別忘了 web 這種一般的應用，通常不會一直打 http，所以就算你網頁開這，過了一段時間，這條連線會自動的關閉。&lt;/p&gt;
+&lt;p&gt;但是在 im 這種系統中，不論是 long polling 或 websocket 基本上都是建立一條很久的長連線，除非你下線，不然有幾個 client 就代表 server 要有幾條永久連線。&lt;/p&gt;
+&lt;h3 id=&#34;im--socketio&#34;&gt;IM 服務的基本起手式 Socket.io&lt;/h3&gt;
+&lt;p&gt;先來說一下，咱們通常在建立 IM 服務時，最簡單的起手式就是使用『 socket.io 』 這個套件來快速的建立服務，然後它有分為以下兩個部份 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;socket.io client&lt;/li&gt;
+&lt;li&gt;socket.io server&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;簡單的方例如下使用。首先來看 server 端的程式碼。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-js&#34; data-lang=&#34;js&#34;&gt;&lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;require&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;socket.io&amp;#39;&lt;/span&gt;).&lt;span style=&#34;color:#a6e22e&#34;&gt;listen&lt;/span&gt;(&lt;span style=&#34;color:#ae81ff&#34;&gt;8080&lt;/span&gt;);
+
+&lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;sockets&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;connection&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;) {
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;hello&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;world&amp;#39;&lt;/span&gt; });
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;my other event&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+    });
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;再來是 client 方的程式碼&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;src&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;/socket.io/socket.io.js&amp;#34;&lt;/span&gt;&amp;gt;&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&amp;lt;&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+    &lt;span style=&#34;color:#66d9ef&#34;&gt;var&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt; &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#a6e22e&#34;&gt;io&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;connect&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;http://localhost:8080&amp;#39;&lt;/span&gt;);
+    &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;on&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;news&amp;#39;&lt;/span&gt;, &lt;span style=&#34;color:#66d9ef&#34;&gt;function&lt;/span&gt; (&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;) {
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;console&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;log&lt;/span&gt;(&lt;span style=&#34;color:#a6e22e&#34;&gt;data&lt;/span&gt;);
+        &lt;span style=&#34;color:#a6e22e&#34;&gt;socket&lt;/span&gt;.&lt;span style=&#34;color:#a6e22e&#34;&gt;emit&lt;/span&gt;(&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;my other event&amp;#39;&lt;/span&gt;, { &lt;span style=&#34;color:#a6e22e&#34;&gt;my&lt;/span&gt;&lt;span style=&#34;color:#f92672&#34;&gt;:&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;data&amp;#39;&lt;/span&gt; });
+    });
+&amp;lt;/&lt;span style=&#34;color:#f92672&#34;&gt;script&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;這樣就可以完成一個即時通訊服務。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 ~&lt;/strong&gt;
+想理解 socket.io 相關知識的，可以參考筆者以下幾篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://marklin-blog.logdown.com/posts/2907665-socket-io-talking-island&#34;&gt;Socket.io 的說話島&lt;/a&gt;
+&lt;a href=&#34;http://marklin-blog.logdown.com/posts/2906519&#34;&gt;Socket.io 的架構&lt;/a&gt;
+&lt;a href=&#34;http://marklin-blog.logdown.com/posts/3123459-socket-io-how-do-you-run-when-you-want-to-build-online&#34;&gt;Socket.io 原始碼分析之建立連線&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;im--1--&#34;&gt;IM 服務的擴展方案 1 - 負載均衡&lt;/h2&gt;
+&lt;p&gt;首先咱們來看第一個方案，如下圖 2 所示。這應該不少人使用的方案，就是與傳統模式一樣，中間加一個負載均衡，記憶中在 nginx 1.3 的版本時，就有支援 websocket。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358brRkLsOITz.png&#34; alt=&#34;&#34;&gt;
+圖 2 : im 服務擴展方案 1&lt;/p&gt;
+&lt;p&gt;但是這個方案有幾個雷。&lt;/p&gt;
+&lt;h3 id=&#34;-1--&#34;&gt;雷 1 : 負載均衡會有壓力&lt;/h3&gt;
+&lt;p&gt;這個雷在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;連線貧頸會變成在負載均衡服務&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;因為 im 服務會一直有連線在，所以如果用傳統的負載均衡會變成如下圖 3 所示，那麼他會發生 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;建立與維護太多條連線，導致 nginx 掛掉&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;下圖 3 中，你看到的每一條紅線，就是 nginx 所建立的連線量，所以如果 client 有 10 萬個，那這樣實際上它會建立 20 萬條，因為它與 im 服務也需要建連線，而且用戶也要和他建立連線。&lt;/p&gt;
+&lt;p&gt;這會導致以下兩個問題。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;連線太多導致為了維護連線，而花費太多的運算資源。&lt;/li&gt;
+&lt;li&gt;file descriptor 的大小限制，每建立一條連線一定都會建立一個 file descriptor，它是有大小限制的。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358bYzTMXtkI9.png&#34; alt=&#34;&#34;&gt;
+圖 3 : 傳統負載均衡在 im 服務的慘況。&lt;/p&gt;
+&lt;h3 id=&#34;-2--socketio-polling--default-&#34;&gt;雷 2 : Socket.io Polling 與 Default 問題&lt;/h3&gt;
+&lt;p&gt;上面咱們有提到 socket.io 基本上可以是咱們最常見的 im 服務套件，然後它有提供三種 transport 方式 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;defaut&lt;/li&gt;
+&lt;li&gt;polling&lt;/li&gt;
+&lt;li&gt;websocket&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其中 polling 與 websocket，上面已經有說過，而 defaut 指的就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;先用 polling 然後再嘗試升級為 websocket&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;但這時如果使用『 defaut 與 polling 』這個方案會出事情。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;這兩個 transport 會無法建立連線&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;主要的原因在於 polling ，它就是打多次 http 來看看沒有訊息，但是你想想，如果第一次打 a 台，第二次打 b 台，會發生什麼事情呢 ?&lt;/p&gt;
+&lt;p&gt;現面來模擬一下這個流程 :&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶 mark 往 nginx 發起建立 socket.io 連線&lt;/li&gt;
+&lt;li&gt;nginx 分配到 server a 建立。&lt;/li&gt;
+&lt;li&gt;回應 socket.io 編號 abc 給 client。&lt;/li&gt;
+&lt;li&gt;用戶使用編號 abc 來進行 polling，nginx 分配到 server b。&lt;/li&gt;
+&lt;li&gt;由於 server b 不認識這條 abc 連線，因此 client 會誤斷連線斷掉，因此開始重連機制，但是過後不久又發生同樣的循環。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358NBI14OCwJF.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 方案 1 雷 2 圖&lt;/p&gt;
+&lt;p&gt;這個問題有沒有覺得有點眼熟，這個就和上一篇說的 session 問題有點相似，但這可沒辦法加個 redis 就可以處理。&lt;/p&gt;
+&lt;h4 id=&#34;heading1&#34;&gt;解法&lt;/h4&gt;
+&lt;p&gt;這裡基本上有以下兩種解法 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;nginx 開啟 ip hash 演算法，讓它一個用戶可以連到同一台機器。&lt;/li&gt;
+&lt;li&gt;直接強制使用 websocket 連線。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;嚴格來說第二種 websocket 方法會比較好，不過咱公司有發生過沒辦法穿透防火牆的問題，不過詳細我也不確定實際情況是如何，就當參考一下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小補充 1 ~&lt;/strong&gt;
+這裡補充一下，通常咱們會使用 pm2 來當 socket.io process 服務的管理器，然後它有一個 cluster 功能，也就是說它可以在一台機器中，開多個 socket.io process 來處理，這樣就可以用多 cpu 資源。&lt;/p&gt;
+&lt;p&gt;但是你一開始使用建立一定會失敗，主要的原因也如上述，就是打錯 process 囉，解法就是打同一 process。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小補充 2 ~&lt;/strong&gt;
+應該也有人使用 aws 的 ec2 + alb 方案來建立出 socket.io 服務，這裡應該也會碰到這個雷，而且
+alb 雖然有支援某個用戶在一定時間打同一台。&lt;/p&gt;
+&lt;p&gt;但 ! 它是用 cookie 來決定打同一台，所以瀏覽器的用戶不會出事，手機端的應該就會死一片，如果沒有處理 cookie 的話。&lt;/p&gt;
+&lt;h2 id=&#34;im--2--im-&#34;&gt;IM 服務的擴展方案 2 : IM 服務分配器&lt;/h2&gt;
+&lt;p&gt;簡單的說將 nginx 拿掉，然後建立一個 dispatcher 服務上去，它就是一個 http 服務，然後它會回應讓 client 去那一台 im 服務來建立長連線，如下圖 3 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358aJO6hon56h.png&#34; alt=&#34;&#34;&gt;
+圖 5 : 方案&lt;/p&gt;
+&lt;p&gt;這種方案的優點就在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;沒有負載均衡連線量太大的貧頸&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&#34;heading2&#34;&gt;這種方案的大雷&lt;/h3&gt;
+&lt;p&gt;這個方案事實上有個大地雷 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;沒處理好，會沒有 HA 機制&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;socket.io 這個套件它有幫我們建立一套維護連線的心跳機制，也就是說正常來想，如果有啥網路不穩還啥的，導致連線中斷了，它會自動幫我們重連。&lt;/p&gt;
+&lt;p&gt;坑點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它是和 IM 服務重連&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;嗯這很正常，有啥毛病了 ? 假設你那台 im 服務倒或是需要下掉維護，那如果你使用上述方案會產生什麼事情呢 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;它會一直不斷的重連那台死掉的 IM 服務，直到到達重連上限&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;如下圖 6 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191009/20089358A0LuShdZsV.png&#34; alt=&#34;&#34;&gt;
+圖 6 : 分配器模式的雷點&lt;/p&gt;
+&lt;p&gt;這也代表這 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;你的系統沒有可用性，一台機器倒了，在那台上的用戶全部無法使用，除非用戶主動進行重連。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以記好，如果是用上述方案來進行擴展的，請記得要處理以下的事情 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;用戶端重連時，請設定要至 dispatcher 拿新的 im 服務位置&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;你知道如果是已經上線一段的服務，發現這問題有多慘嗎 ? 首先用戶端一定不能保證強制更新到最新版 ( 你想想你的系統多久沒更新了 ? )，所以說不能指望用戶端全部改完就 ok，那這時你要如何更新機器呢 ? 你爆了要如何呢 ? 幾乎完全動不了啊…… 項多只能在全服務關機時才能更新啊……，但如果你的服務是要 7 x 24 小時的，有可能動嗎 ?&lt;/p&gt;
+&lt;p&gt;一開始走錯，這真的卡很死……啊&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章本來在考慮要不要寫的，但是考慮到自已的血淚史，還是寫出讓後人不要踩到這些雷坑。&lt;/p&gt;
+&lt;p&gt;最後這裡總結一下各方案的優缺與雷坑注意。&lt;/p&gt;
+&lt;h4 id=&#34;im--1--1&#34;&gt;IM 服務的擴展方案 1 - 負載均衡&lt;/h4&gt;
+&lt;p&gt;這種方案的優點如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;簡單，現在應該有不少服務有支援它了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但雷坑點在於 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;負載均衡服務記得開 ip hash 演算法，否則 polling 與 default 這兩種 socket.io 提供的 transport 配置會死。&lt;/li&gt;
+&lt;li&gt;負載均衡服務的壓力會很大，現在我不敢保證有解法。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;-2--im-&#34;&gt;方案 2 : IM 服務分配器&lt;/h4&gt;
+&lt;p&gt;這種方案的優點如下 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;沒有負載均衡服務壓力。&lt;/li&gt;
+&lt;li&gt;分配算法可以依業務需求來分配。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而這種方案的大雷坑在於 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用戶端的重連機制，記得是連到 im 服務分配器，不然會很慘&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;祈禱未來的走這條路的，謹記前人的血淚史。&lt;/strong&gt;&lt;/p&gt;
+</description>
     </item>
     
     <item>
@@ -155,17 +1641,155 @@ IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來�
       <pubDate>Mon, 23 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190923/</guid>
-      <description>正文開始 前面幾篇的文章中，我們知道如何儘可能的在單機上，可以以最少的資源做最多的事，但是單機一定有它的限制，因此接下來我們要開始正式進入所謂的『 分散式系統 』。
-分散式系統不是簡單的增加機器就可以增加效能那麼簡單，它不是簡單的 1 + 1 = 2 的這種概念，有時後 1 + 1 還會小於 2 或小於 1。
-最要的原因在於要達成一致性的難度更高，並且維護與管理更複雜，除非你單機真的已經到了極限，不然如果是為了『 性能 』而加機器，那也只是會浪費你更多的時間，不過在實務上有時是為了可用性而加機器那這到還可接受。
-本篇文章將分為以下幾個章節 :
- 應用層擴展基本架構 負載均衡架構優化 擴展後第一個問題 - Session  應用層擴展基本架構 應用層擴展基本上 90 % 都會是長的如下圖 1 架構。
-圖 1 : 基本擴展型
-基本上會將應用服務變成多台，然後前面加一個負載均衡 ( Load balancing )，每當用戶有請求進來時，會先通過負載均衡服務，然後它會選一台應用服務來將請求送過去。
-目前在 web 領域比較常用的負載均衡服務應該是『 nginx 』，它的基本架構就如同咱們前面章節所說的 reactor 架構，所以基本上它可以處理非常多的連線。
-30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor
-然後 nginx 它有提供以下幾種的分配演算法 :
- 輪詢 : 也就是所謂的輪流分配，每個能基本上都可以平均的收到。 加權 : 根據應用服務的能力來決定分配，例如機器性能較好的就給他權限較高，差的則給權限較低，這個地方在 nginx 還有很多變化。 ip_hash : 就是同 ip 的都會打到同一台，這個在 socketio 擴展時很重要，如果沒設置，建立 socketio 連線時會打錯台。 url_hash : 打同一個 url 會到同一台。 fair : 簡單的說就是智能的演算法，它會根據頁面大小、加載時間來智慧的選擇應用服務。  負載均衡優化方向 接下來這個章節，咱們要來看看負載均衡的一些優化方向</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358zr6o6r2B8Z.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;前面幾篇的文章中，我們知道如何儘可能的在單機上，可以以最少的資源做最多的事，但是單機一定有它的限制，因此接下來我們要開始正式進入所謂的『 分散式系統 』。&lt;/p&gt;
+&lt;p&gt;分散式系統不是簡單的增加機器就可以增加效能那麼簡單，它不是簡單的 1 + 1 = 2 的這種概念，有時後 1 + 1 還會小於 2 或小於 1。&lt;/p&gt;
+&lt;p&gt;最要的原因在於要達成一致性的難度更高，並且維護與管理更複雜，除非你單機真的已經到了極限，不然如果是為了『 性能 』而加機器，那也只是會浪費你更多的時間，不過在實務上有時是為了可用性而加機器那這到還可接受。&lt;/p&gt;
+&lt;p&gt;本篇文章將分為以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;應用層擴展基本架構&lt;/li&gt;
+&lt;li&gt;負載均衡架構優化&lt;/li&gt;
+&lt;li&gt;擴展後第一個問題 - Session&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;應用層擴展基本架構&lt;/h2&gt;
+&lt;p&gt;應用層擴展基本上 90 % 都會是長的如下圖 1 架構。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358IX7MNxfR2o.png&#34; alt=&#34;&#34;&gt;
+圖 1 : 基本擴展型&lt;/p&gt;
+&lt;p&gt;基本上會將應用服務變成多台，然後前面加一個負載均衡 ( Load balancing )，每當用戶有請求進來時，會先通過負載均衡服務，然後它會選一台應用服務來將請求送過去。&lt;/p&gt;
+&lt;p&gt;目前在 web 領域比較常用的負載均衡服務應該是『 nginx 』，它的基本架構就如同咱們前面章節所說的 reactor 架構，所以基本上它可以處理非常多的連線。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://ithelp.ithome.com.tw/articles/10219203&#34;&gt;30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然後 nginx 它有提供以下幾種的分配演算法 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;輪詢 : 也就是所謂的輪流分配，每個能基本上都可以平均的收到。&lt;/li&gt;
+&lt;li&gt;加權 : 根據應用服務的能力來決定分配，例如機器性能較好的就給他權限較高，差的則給權限較低，這個地方在 nginx 還有很多變化。&lt;/li&gt;
+&lt;li&gt;ip_hash : 就是同 ip 的都會打到同一台，這個在 socketio 擴展時很重要，如果沒設置，建立 socketio 連線時會打錯台。&lt;/li&gt;
+&lt;li&gt;url_hash : 打同一個 url 會到同一台。&lt;/li&gt;
+&lt;li&gt;fair : 簡單的說就是智能的演算法，它會根據頁面大小、加載時間來智慧的選擇應用服務。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;負載均衡優化方向&lt;/h2&gt;
+&lt;p&gt;接下來這個章節，咱們要來看看負載均衡的一些優化方向&lt;/p&gt;
+&lt;h3 id=&#34;1---&#34;&gt;1. 基本型 - 第七層負載均衡&lt;/h3&gt;
+&lt;p&gt;首先咱們先看最基本型的詳細運行流程，如下圖 2 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;至 dns 請求 &lt;a href=&#34;https://marklin.com&#34;&gt;https://marklin.com&lt;/a&gt; 的 ip。&lt;/li&gt;
+&lt;li&gt;dns 解析後回傳 120.1.1.10 位置回來給 client。&lt;/li&gt;
+&lt;li&gt;用戶往 120.1.1.10 發送請求至負載均衡服務。&lt;/li&gt;
+&lt;li&gt;負載均衡根據分配算法，將請求發送至第一台。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358QNZMr5X4Gl.png&#34; alt=&#34;&#34;&gt;
+圖 2 : 基本型的傳輸流程&lt;/p&gt;
+&lt;h3 id=&#34;2---&#34;&gt;2. 進化型 - 負載均衡高可用性&lt;/h3&gt;
+&lt;p&gt;上面的基本型有什麼問題呢 ?&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;負載均衡服務單機固障&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;嗯對很明顯，如果負載均衡服務固障了，那就整個系統就要說掰掰了，所以通常會準備多台的服務然後使用 keepalived 機制來確保某個正在服務的服務固障時，可以快速的轉換成備用的。&lt;/p&gt;
+&lt;p&gt;keepalived 是一個使用 vrrp 協議的高可用方案，有興趣的有友人可以自已去 google 研究一下。&lt;/p&gt;
+&lt;p&gt;接下來咱們來看一下加入以後整個流程是如何跑。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶先至 dns 尋問 &lt;a href=&#34;https://marklin.com&#34;&gt;https://marklin.com&lt;/a&gt; 這個位置的 ip。&lt;/li&gt;
+&lt;li&gt;dns 回傳對應 ip 120.1.1.10 給用戶。&lt;/li&gt;
+&lt;li&gt;用戶使用 120.1.1.10 發送 http 請求。&lt;/li&gt;
+&lt;li&gt;nat 會將外網 ip 120.1.1.10 轉換成內網的虛擬 ip 10.1.1.120。&lt;/li&gt;
+&lt;li&gt;master 的負載均衡服務會負責接客，並選用其中一台應用服務來做 http 處理。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;其中這裡要注意，keepalived 是會裝在兩台 nginx 機器中，然後對外都統一用 keepalived 這配置的虛擬 ip ( 10.1.1.120 )，當 master 有問題時 ( slave 偵測到 )，會自動的將 slave 升為 master。還有對外都是使用 keepalived 所配置的 ip，所以也不需要修改 nat 的轉換表。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358HOL3R3UdKj.png&#34; alt=&#34;&#34;&gt;
+圖 3 : nginx 加入高可用性&lt;/p&gt;
+&lt;p&gt;對了為啥要用虛擬 ip 呢 ? 首先第一個原因靈為快與省對外封包，你可以想成虛擬 ip 都是包含在同一個內網世界，每當某台內網服務要找另一台服務時，只要擴播到內網就夠了，而如果是在外網 ip 上，你就要去每個中端機器問一下這是你家的東西嗎 ? 然後找到這個 ip 是某家族的以後，在內裡面才會在擴播一次，這裡只是很簡單的說一下，詳細的內容自已去找找。&lt;/p&gt;
+&lt;p&gt;第二個原因，安全，通常躲在內網裡，正常的情況下，前面都要放一層防火牆，有些情況下 nat 本身也有防火牆的功能，這樣可以防止你內部的服務不被打。&lt;/p&gt;
+&lt;p&gt;第三個原因，外網 ip 很貴，你覺得有可能每一台備機都要有個外網 ip 嗎 ?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;
+這上面多了一個叫做 nat 的服務，它專門用來將公網 ip 轉換成內網 ip，詳細 nat 的知識可以參考之前寫的這一篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20180928/&#34;&gt;30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;3---&#34;&gt;3. 性能增加進化型 - 第四層負載均衡&lt;/h3&gt;
+&lt;p&gt;到了這裡要來介紹另一個負載均衡服務『 LVS ( Linux Virtual Server ) 』。&lt;/p&gt;
+&lt;p&gt;上面說提到的 nginx 負載均衡服務它被稱為『 第七層負載均衡 』，而這裡所提的第七層就是指網路協議的『 應用層 』，也就是說它是專門用來負載均衡一些 http 這種應用層協議的服務。&lt;/p&gt;
+&lt;p&gt;而 lvs 被稱為『 第四層負載均衡 』，它就是專門用來處理第四層『 傳輸層 』協議的，也就是說它是用來專門處理 tcp 或 udp 傳輸層的負載均衡。&lt;/p&gt;
+&lt;p&gt;事實上在台灣大部份的系統大約上面兩個階段就很足夠了，下面這種結構除非你真的衝過頭，不然基本上應該是用不太到的，不過這裡還是可以來理解一下。&lt;/p&gt;
+&lt;p&gt;這種架構如下圖 4 所示。運行流程如下。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶先至 dns 尋問 &lt;a href=&#34;https://marklin.com&#34;&gt;https://marklin.com&lt;/a&gt; 這個位置的 ip。&lt;/li&gt;
+&lt;li&gt;dns 回傳對應 ip 120.1.1.10 給用戶。&lt;/li&gt;
+&lt;li&gt;用戶使用 120.1.1.10 發送 http 請求。&lt;/li&gt;
+&lt;li&gt;nat 會將外網 ip 120.1.1.10 轉換成內網的虛擬 ip 10.1.1.12。&lt;/li&gt;
+&lt;li&gt;lvs 會在 tcp 傳輸層級將它轉發到後面的 nginx 應用層。&lt;/li&gt;
+&lt;li&gt;nginx 應用層負載均衡服務收到後，在將它丟到後面某個應用層服務來處理。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358wUi9ThMjJX.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 加入第二層負載均衡。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 ~&lt;/strong&gt;
+lvs 它事實上也有所所謂的 nat 功能，所以事實上可以將前面的 nat 拿掉。&lt;/p&gt;
+&lt;h2 id=&#34;--session&#34;&gt;擴展後第一個問題 - Session&lt;/h2&gt;
+&lt;p&gt;上面基本上就是咱們比較常見的應用層擴展架構，那接下來咱們要來談談，當應用層擴展以下，你通常會碰到的第一個問題 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;那就是 session 如何處理呢 ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這裡先簡單說一下 session 的概念。&lt;/p&gt;
+&lt;p&gt;session 簡單的說代表這『 狀態 』，咱們都知道 http 是屬於無狀態的協議，但通常咱們還是會需要有狀態的情況，例如登入以後，接下來的請求就代表這某個人，所以通常運行會是如下圖 6 所示。&lt;/p&gt;
+&lt;p&gt;注意一下通常咱們會將 sessionId 設定在 cookie 上，如圖 6 的第 2 個步驟，然後接下來的所有請求，都會自動代這個 sessionId 來進行請求，就如同第 3 個步驟，也就代表接下來的請求都是某個用戶所發的。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358Oy03jw6Z3f.png&#34; alt=&#34;&#34;&gt;
+圖 6 : session 狀態&lt;/p&gt;
+&lt;p&gt;接下來來在應用層擴後，問題就出在 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;session 是存在某一台 server 上&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;所以如果有多台 server 就會發生如下圖 7 這種事情。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;mark 登入&lt;/li&gt;
+&lt;li&gt;在 server a 建立一個 session 對應表，abc sessionId 將對應到 mark 這個人&lt;/li&gt;
+&lt;li&gt;回傳時 header 會炎上這個 sessionId 回去。&lt;/li&gt;
+&lt;li&gt;client 在帶上這個 sessionId abc 至 server b 請求。&lt;/li&gt;
+&lt;li&gt;server b 不認識這個 sessionId。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358JnV2gybU2G.png&#34; alt=&#34;&#34;&gt;
+圖 7 : server session 混亂圖&lt;/p&gt;
+&lt;p&gt;然後在現在咱們看看以下幾個常見的解法。&lt;/p&gt;
+&lt;h3 id=&#34;-1----ex-redis-&#34;&gt;解法 1 : 外部儲存服務 ( Ex. Redis )&lt;/h3&gt;
+&lt;p&gt;解法就是將 session Id 所對應到的用戶資訊儲放在外部儲放服務，例如 redis，它的運行流程如下圖 8 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶 mark 發送登入請求。&lt;/li&gt;
+&lt;li&gt;server 收到以後產生出個 session Id abc ，然後再將 session Id abc 與 mark 使用者資訊的對應關係儲放在 redis 中。&lt;/li&gt;
+&lt;li&gt;server 將 session Id 設置到 cookie 中。&lt;/li&gt;
+&lt;li&gt;用戶 mark 帶這 session Id abc 發送一個請求。&lt;/li&gt;
+&lt;li&gt;server 收到以後使用 session Id abc 去 redis 取得對應用用戶資料 mark。&lt;/li&gt;
+&lt;li&gt;回應 mark 訊息。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/20089358cK1jvTcXcL.png&#34; alt=&#34;&#34;&gt;
+圖 8 : 使用外部儲存服務解決 session 問題&lt;/p&gt;
+&lt;h3 id=&#34;-2---ip-hash&#34;&gt;解法 2 : 負載均衡 ip hash&lt;/h3&gt;
+&lt;p&gt;簡單的說就是同一個使用者只會打到同一台 server，這樣就不會發生找不到用戶 session 的問題。這個方法在某些情況下不錯用，例如需要多次請求建立連線的 socket.io，則下一篇會詳說。&lt;/p&gt;
+&lt;h3 id=&#34;-3--token&#34;&gt;解法 3 : Token&lt;/h3&gt;
+&lt;p&gt;然後接下來這個解法嚴格來說就是不要用 session 來代表 user，而改用 token 來代表 user，這個 token 的產生方法有不少，不過比較常看到的是所謂的『 JWT Token 』，這裡就不說它是如何產生，反正它就是個 token，只是它是不好破的東東。&lt;/p&gt;
+&lt;p&gt;然後這裡有個重點那就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;token 中包含使用者資訊&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;也就是說 server 解完這個 token 後，它就知道是誰了，也就不需要在去其它地方拿用戶資料。&lt;/p&gt;
+&lt;p&gt;接下來咱們看一下這個方法的流程，如下圖 9 所示，由於 server 又變回所謂的『 無狀態 』模式後，又沒有擴展所帶來的問題囉。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶 Mark 發送登入請求。&lt;/li&gt;
+&lt;li&gt;server 收到以後，使用 Mark 用戶資訊加密成一個 token xxxx ，然後回傳給用戶。&lt;/li&gt;
+&lt;li&gt;接下來用戶在表頭的 authorization 帶這個 token xxxx 發送一個請求。&lt;/li&gt;
+&lt;li&gt;server 收到以後解密 token xxxx 後得到 Mark 這個用戶資訊，然後回應請求。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191008/200893580d118CbZJZ.png&#34; alt=&#34;&#34;&gt;
+圖 9 : token 的解決流程&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章中，咱們簡單的學習了應用層的基本擴展，最基本的用法就是前面加一台負載均衡服務，然後後面在放幾台應用層服務。&lt;/p&gt;
+&lt;p&gt;但是這感覺沒啥毛病啊 ? 好像也沒有發生什麼一致性的問題啊 ?&lt;/p&gt;
+&lt;p&gt;嗯對在大部份的情況下，應用層如果用上述這種基本擴展，是沒啥毛病的，因為每一台基本上都是獨立無相關，唯一相關的項多就是咱們上面提到的 session 問題。&lt;/p&gt;
+&lt;p&gt;但如果是有相關的話，就不是很好處理了……&lt;/p&gt;
+&lt;h2 id=&#34;heading4&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ipshop.xyz/14752.html&#34;&gt;淺談幾種常用負載均衡架構&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.zhihu.com/question/61783920&#34;&gt;什么是负载均衡原理？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/60783609&#34;&gt;分布式架构系列: 负载均衡技术详解&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/61847281&#34;&gt;讲讲亿级PV的负载均衡架构&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://medium.com/@hulitw/session-and-cookie-15e47ed838bc&#34;&gt;白話 Session 與 Cookie：從經營雜貨店開始&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -174,18 +1798,288 @@ IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來�
       <pubDate>Sun, 22 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190922/</guid>
-      <description>正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一個系統中，最重要的應用層協議，咱們幾乎可能說是『 Http 』。
-本篇文章分為以下幾個章節，事實上也就是所謂的 http 進化史 :
- HTTP 行前基本知識 HTTP 1.X 的過去式 HTTP 2.0 的現在式 HTTP 3.0 的未來式  網路層的 http 優化事實上沒有啥重點，那就是 :
- 儘可能將 http 升級更高的版本
- 但是，為什麼要升級才是這一篇文章的重點。
-Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知識要來學習一下，不然下面會有很多東西看不太種。
-首先 http 基本上可以說是網路世界的基礎，它當初建立出來的目的是為讓瀏覽器這個應用層的應用使用，然後它在傳輸資料時所使用的協議為『 TCP 』，所以當咱們要建立連線時會進行所謂的『 TCP 三次握手 』如下圖 1 所示 :
-圖 1 : tcp 建立連線 ( 三次握手 )
-然後有了這個連線以後，咱們就可以開始進行資料傳輸。
-圖 2 : tcp 傳輸資料
-最後斷線時就有所謂的四次揮手。
-圖 3 : tcp 斷線 ( 四次揮手 )</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358apr4SjNmTn.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一個系統中，最重要的應用層協議，咱們幾乎可能說是『 Http 』。&lt;/p&gt;
+&lt;p&gt;本篇文章分為以下幾個章節，事實上也就是所謂的 http 進化史 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP 行前基本知識&lt;/li&gt;
+&lt;li&gt;HTTP 1.X 的過去式&lt;/li&gt;
+&lt;li&gt;HTTP 2.0 的現在式&lt;/li&gt;
+&lt;li&gt;HTTP 3.0 的未來式&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;網路層的 http 優化事實上沒有啥重點，那就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;儘可能將 http 升級更高的版本&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;strong&gt;但是，為什麼要升級才是這一篇文章的重點。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;http-&#34;&gt;Http 行前基本知識&lt;/h2&gt;
+&lt;p&gt;在這篇文章正式開始一前，咱們有些前知識要來學習一下，不然下面會有很多東西看不太種。&lt;/p&gt;
+&lt;p&gt;首先 http 基本上可以說是網路世界的基礎，它當初建立出來的目的是為讓瀏覽器這個應用層的應用使用，然後它在傳輸資料時所使用的協議為『 TCP 』，所以當咱們要建立連線時會進行所謂的『 TCP 三次握手 』如下圖 1 所示 :&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181026/2008935828kHLNtXuX.png&#34; alt=&#34;&#34;&gt;
+圖 1 : tcp 建立連線 ( 三次握手 )&lt;/p&gt;
+&lt;p&gt;然後有了這個連線以後，咱們就可以開始進行資料傳輸。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181026/20089358jMMPnt5Vc0.png&#34; alt=&#34;&#34;&gt;
+圖 2 : tcp 傳輸資料&lt;/p&gt;
+&lt;p&gt;最後斷線時就有所謂的四次揮手。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181026/20089358QdssDQJC9f.png&#34; alt=&#34;&#34;&gt;
+圖 3 : tcp 斷線 ( 四次揮手 )&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 1 ~&lt;/strong&gt;
+如果不太熟細 tcp 的知識的友人，可以至筆者之前寫的這篇文章看看。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20180911/&#34;&gt;即時影音通訊-30-11之 TCP 與 UDP 協議&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小備註 2 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果是連『網路協議』是什麼都不太能理解的友人，可以至筆者之前寫的這篇文章看看，希望可以幫到你。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20180910/&#34;&gt;即時影音通訊-30-10之通訊協議的基本常識&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;http-1x-&#34;&gt;HTTP 1.X 的過去式&lt;/h2&gt;
+&lt;p&gt;首先咱們簡單的從最原始的 1.0 談一下，它的基本特點就是如下圖 4 所示，一個請求會需要執行連立連線、傳輸資料、斷線這三個步驟。而假設有 10 個請求，就要重複執行這 10 次。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358HYjUT4j7ED.png&#34; alt=&#34;&#34;&gt;
+圖 4 : 沒有 keep-alive 的 http 請求流程&lt;/p&gt;
+&lt;p&gt;當然你想想，如果所有 http 請求都是這樣處理，那就代表每一張圖、每一個檔、每一個 html 都需要進行 tcp 三次握手建立連線與四次揮手關閉連線，這樣對發送方與接受方帶來的性能影響非常的巨大。&lt;/p&gt;
+&lt;p&gt;因為就誕生一個叫『 keep-alive 』的機制來復用 tcp 連線。&lt;/p&gt;
+&lt;p&gt;就是在 header 上加上這個標頭 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Connection: Keep-Alive
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Connection&#34;&gt;MDN-WEB-Connection&lt;/a&gt;
+&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Keep-Alive&#34;&gt;MDN-WEB-Keep-Alive&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;那這樣在傳完資料以後，就不會自動關閉連線，而之後的請求也就同樣使用這連線就好，如下圖 5 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358wLDIK3uHAF.png&#34; alt=&#34;&#34;&gt;
+圖 5 : 加上 keep-alive 後的 http 請求&lt;/p&gt;
+&lt;p&gt;keep-alive 這個參數在 http 1.1 預設就是會幫你帶，也就是說在 1.1 預設是長連線，但不代表這個連線會永久存在，通常會有一個 keep-alive timeout 參數會設置一段時間沒有用後，就自動關閉。&lt;/p&gt;
+&lt;p&gt;keep-alive timeout 這個參數通常會是會在 web server 設置，例如 nginx 可以設定成如下。其中 75 秒是 nginx 的預設。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;http {
+  keepalive_timeout 75s
+  keepalive_requests 100
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而上述這些就是 http 1.1 的現況。接下來咱們來看看 http 1.1 這個我們最常用的協議，它還有那些問題 ?&lt;/p&gt;
+&lt;h3 id=&#34;-1--http-11-&#34;&gt;問題 1 : HTTP 1.1 只能串行傳輸&lt;/h3&gt;
+&lt;p&gt;如下圖 6 ，也就是一個請求需要等待回應以後，下一個請求才能發出去。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358atLSwXoH8m.png&#34; alt=&#34;&#34;&gt;
+圖 6 : http 串行請求概念圖&lt;/p&gt;
+&lt;p&gt;然後咱們以回應時間的角度來看一下它的時間，如下 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Request A : 2 sec
+Request B : 1 sec
+Request C : 3 sec
+(這些秒數代表 server 所需花費處理時間)
+
+第 0 秒時 : 發送 request GET A
+第 2 秒時 : 收到 request A 回應，並且發出 request GET B
+第 3 秒時 : 收到 request B 回應，並且發出 request GET C
+第 6 秒時 : 收到 request C 回應
+
+共 6 秒
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;strong&gt;為什麼呢 ? 為什麼會只能串行傳輸呢 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;這點我真的不知道，我查了很多文章都只寫說 http 1.x 發送請求後，需要等到回應，才能在發下一個請求，就寫這樣，就算去看這個非常厚的文件，好像也沒看到寫為啥，目前也只能去慢慢的挖這份文件來找答案…… 目前覺得比較大的原因可能在於 tcp，但只是推測，目前沒看到任何文件有說 tcp 導致 http 只能串行傳。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.w3.org/Protocols/rfc2616/rfc2616.html&#34;&gt;rfc2616-Hypertext Transfer Protocol &amp;ndash; HTTP/1.1&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;可是為什麼我打開不少網站，然後開 chrome devtool networrk 看，有些請求是並行啊 ?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;有幾種情況 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;它已經升級 http 2。&lt;/li&gt;
+&lt;li&gt;它自已打開 http pipeline 來使用。&lt;/li&gt;
+&lt;li&gt;那些請求是 http 緩存 ( memory cache 或 disk cache )。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這些情況下，那就有可能看到並行。順到說一下，如果不太清楚 http 緩存的東東，可以參考筆者的這一篇文章。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20190921/&#34;&gt;30-21 之網路傳輸加速 - CDN 與 HTTP 緩存&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;http-11--pipeline---&#34;&gt;HTTP 1.1 的嘗試增加性能的方法 Pipeline ( 失敗 )&lt;/h4&gt;
+&lt;p&gt;http 嘗試建立一些方法來進行比串行傳輸更有效率的方法。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;而這方法所謂的 HTTP Pipeline&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;請求過程會變成如下圖 7 所示，就是將二個 http 請求打包成一組 tcp 資料發送，然後這時回應該就一次收二個 ( 依順序 )。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/200893589ckJocqL6k.png&#34; alt=&#34;&#34;&gt;
+圖 7 : http pipeline 請求&lt;/p&gt;
+&lt;p&gt;下面這簡單的回應時間範例可以來讓我們更能理解 pipeline 的運行。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Request A : 2 sec
+Request B : 1 sec
+Request C : 3 sec
+(這些秒數代表 server 所需花費時間)
+
+第 0 秒時 : 發送 request GET A,B,C
+第 1 秒時 : 等待
+第 2 秒時 : 回應 request A,B (由於 B 排在 A 後面，所以即使 B 已經完成，但仍然還是要照順序回應)
+第 3 秒時 : 回應 request C
+
+共 3 秒
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;這樣的確可以增加性能，但是它有幾個問題。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;head-of-line blocking ( HOL ) 問題，假設你使用 http pipeline 發了二個請求，那這時如果第一個請求要操作很久，那就會阻塞住這整個 http pipeline 的工作，就如同上述範例 A ( 2s ) 阻塞 B ( 1s )。&lt;/li&gt;
+&lt;li&gt;只要寡等請求如 GET 或 HEAD 才能使用。&lt;/li&gt;
+&lt;li&gt;有些代理伺服器沒有支援 pipeline 的實作，或是實作不完全。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;由於有以上幾個問題，因此目前大部份的瀏覽器 http pipeline 功能預設都關閉。&lt;/p&gt;
+&lt;p&gt;比較詳細的原因可以參考&lt;a href=&#34;https://stackoverflow.com/questions/30477476/why-is-pipelining-disabled-in-modern-browsers&#34;&gt;這篇 stackoverflow 的回答&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;
+tcp 也有所謂的 head-of-line blocking 喔。&lt;/p&gt;
+&lt;h3 id=&#34;-2---http-&#34;&gt;問題 2 : 瀏覽器有限制 HTTP 同一個時間請求數量&lt;/h3&gt;
+&lt;p&gt;由於上述所說 http 現階段只能串行傳輸，這也導致有些人會改使用另外開新 http 連線 ( 就是另開一個 tcp ) 來處理請求，但這時就有個問題會導致並行處理數上不去 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;瀏覽器對 domain 的 http 請求限制，以 chrome 的話它是 6 個限制。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href=&#34;https://docs.pushtechnology.com/cloud/latest/manual/html/designguide/solution/support/connection_limitations.html&#34;&gt;各瀏覽器的連線限制&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&#34;heading1&#34;&gt;各種奇技淫巧嘗試優化&lt;/h3&gt;
+&lt;p&gt;由於無法使用 pipeline 且 domain 有限制 http 請求數，因此在 http 1.1 的世界中，開發者基本上有一個共同的準則 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;儘可能的減少 http 請求&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;對，只要能減少 http 請求，即時只能串行傳輸，那性能影響也可以壓到很小。所以後人發展了以下幾個奇技淫巧來儘可能的減少 http 請求 :&lt;/p&gt;
+&lt;h4 id=&#34;1---spriting&#34;&gt;1 :  Spriting&lt;/h4&gt;
+&lt;p&gt;這是專門用來傳送圖片的，正常來說 http 只能傳送一張圖片，所以如果一個畫面有很多圖，那就要發送很多次請求，而這時就有人想出這個奇技淫巧 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將小圖組成一個大圖，然後在使用 js 或 css 來取得某個小圖&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;像這個友人說明的技術就是 Spriting。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://cythilya.github.io/2018/08/20/svg-sprites/&#34;&gt;SVG Sprites-Summer。桑莫。夏天&lt;/a&gt;&lt;/p&gt;
+&lt;h4 id=&#34;2--js-bound&#34;&gt;2 : JS Bound&lt;/h4&gt;
+&lt;p&gt;這個技術正常應該是都會用到，這個奇技淫巧就是 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將多個 js 檔打包成一個 js 檔。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;而通常咱們會順到將這個一包 js 檔在壓縮，讓它變的小小的。&lt;/p&gt;
+&lt;h4 id=&#34;3--domain-sharding&#34;&gt;3 : Domain Sharding&lt;/h4&gt;
+&lt;p&gt;這個是專門用來處理瀏覽器 domain 限制，它主要的手法就是將一些資源放在不同的 domain 上，如下圖所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358v5SaA6AhAb.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;http-2-&#34;&gt;HTTP 2 的現在式&lt;/h2&gt;
+&lt;p&gt;雖然上面用了不少奇技淫巧來處理上面這些問題，但是每一種都是應用層的處理方式，而不是個大家都遵守的『 協議 』，也就代表不是每個應用都是這樣處理的，因此後來 google 大神就開啟了 spdy 協議來嘗試解決，而這個就是 http2 的前身。&lt;/p&gt;
+&lt;p&gt;http 2 的重點就是兩個字  :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;性能&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;它針對性能方面進行了以下幾點的加強 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;它解決了 http pipeline 會阻塞的問題。&lt;/li&gt;
+&lt;li&gt;header 壓縮。&lt;/li&gt;
+&lt;li&gt;它提供了 Server Push 的功能。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;http-2--http-pipeline--&#34;&gt;HTTP 2 如何解決 HTTP Pipeline 會阻塞的問題呢 ?&lt;/h3&gt;
+&lt;p&gt;http2 解決了 http pipeline 會阻塞的問題，但這裡不是說它在 pipeline 機制上進行改善，而是直接改變整個 http 的傳輸機制，讓它可以不會阻塞。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小提醒 ~&lt;/strong&gt;
+http2 沒有解決 tcp head-of-line locking 的問題。&lt;/p&gt;
+&lt;h4 id=&#34;-http-2--frame--stream&#34;&gt;解決重點 HTTP 2 的 Frame 與 Stream&lt;/h4&gt;
+&lt;p&gt;它是如何解決的呢 ?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;首先 http 2 它修改了一下封包的包裝變成如下圖 8 所示，它做兩個改變。&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;從文本格式改為二進位格式，如圖 8 中的左邊橘色的 binary frame。&lt;/li&gt;
+&lt;li&gt;將封包結構從新定義成 frame 這個概念，如果 8 中的右邊橘色的 frame。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358SSaMvjzcOp.png&#34; alt=&#34;&#34;&gt;
+圖 8 : http 2 的封包格式 ( 圖片來源 : &lt;a href=&#34;https://developers.google.com/web/fundamentals/performance/http2/&#34;&gt;developers.google-Introduction to HTTP/2&lt;/a&gt; )&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;接下來又引入了另一個重要概念『 stream 』。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;stream 這東西你可以想成一條管子，然後裡面傳送的東西單位就是 frame，然後每一個 frame 都有一個 stream identifier 這欄位確認它是那個 stream。這裡要注意，它是一個邏輯的概念，而不是真的有這個 stream，它只是用 stream 來區別 request。&lt;/p&gt;
+&lt;p&gt;然後加入了『 frame 』與『 stream 』的元素以後，http2 的傳輸變成如下圖 9 所示，每一個請求都是一個 stream，而 stream 中有多個 frame，下圖每個小格子就是 frame。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358sHP7sI6Ehb.png&#34; alt=&#34;&#34;&gt;
+圖 9 : http2 傳輸概念 ( stream、frame )&lt;/p&gt;
+&lt;p&gt;然後與 http 1.1 相比較變成如圖 10 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/200893588ZjO4LvSOA.png&#34; alt=&#34;&#34;&gt;
+圖 10 : http2 VS http 1.1 傳輸概念。&lt;/p&gt;
+&lt;p&gt;由於每個 frame 都有說明是那一個 stream，而每一個 stream 你可以想成就是一個 http 請求，所以這時就算傳送的順序有問題，它仍然可以根據 frame 所屬的 stream 編號，重新組出某個請求的資料。&lt;/p&gt;
+&lt;p&gt;所以最後在 http2 就可以達成以下的傳輸方式，如下圖 11 所示，請求 b 不在需要等待 a 回來才能收到請求 。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358qjjdnXZvVC.png&#34; alt=&#34;&#34;&gt;
+圖 11 : http2 的並行傳輸流程&lt;/p&gt;
+&lt;p&gt;然後回應時間如下所示 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Request A : 2 sec
+Request B : 1 sec
+Request C : 3 sec
+(這些秒數代表 server 所需花費時間)
+
+第 0 秒時 : 發送 request GET A,B,C
+第 1 秒時 : 收到 B 的回應。
+第 2 秒時 : 收到 A 的回應。
+第 3 秒時 : 收到 C 的回應。
+
+共 3 秒
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;header-&#34;&gt;Header 壓縮&lt;/h3&gt;
+&lt;p&gt;在 http 2 中，它有針對 header 專門進行壓縮。&lt;/p&gt;
+&lt;p&gt;不過 http 1.1 不是本來就有 gzip 壓縮了碼 ? 嗯對沒錯，它是重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;http 1.1 只是壓縮 body，沒有壓縮 header&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;你看看 http 1.1 header 欄位就知道，它寫的很清楚是 content 內容。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;content-encoding: gzip
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;server-push-&#34;&gt;Server Push 的功能&lt;/h3&gt;
+&lt;p&gt;這個功能簡單的說它就是讓 server 端可以推送資源到瀏覽器，下圖 11 為 http 1.1 與 http 1.2 的讀網頁的差別，這圖應該就可以很清楚的知道 server push 做的事情。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358szMxmpCCz1.png&#34; alt=&#34;&#34;&gt;
+圖 12 : http 1.1 與 http 1.2 的讀網頁的差別。&lt;/p&gt;
+&lt;p&gt;這裡順到簡單的談一下 websocket 與 http2 server push 的關係，雖然它們都是可以讓 server 推東西，但是還是有點不太一樣，假設你是要推『 資料 』到前端的就用 websocket，而 server push 是用在這種 server 端主動推送『 資源、檔案 』這種情況，會更適合。&lt;/p&gt;
+&lt;h2 id=&#34;http-30-&#34;&gt;HTTP 3.0 的未來式&lt;/h2&gt;
+&lt;p&gt;上面在 http2 有提到，它解決的是 http pipeline 的 head-of-line locking，但是它沒有辦法解決 tcp 的 head-of-line locking，所以它事實上還是會產生下面這張圖。&lt;/p&gt;
+&lt;p&gt;如圖 13 所示，當在 http2 時，已經將兩個請求分成兩個 stream 且多個 frame 後，未依順序的請 tcp 傳輸，但是如果第一個傳輸的 a1 frame 遺失或消失了，那就會導致整個 tcp 被卡住，為了等待 a1 重傳。&lt;/p&gt;
+&lt;p&gt;但是假設是在下圖 13 中的 a3 frame 遺失，那請求 b 還是會正常的處理。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358iZOSQWDXjh.png&#34; alt=&#34;&#34;&gt;
+圖 13 : http2 的問題&lt;/p&gt;
+&lt;h3 id=&#34;--tcp--headofline-locking&#34;&gt;仍然會卡住原因 : TCP 的 Head-of-line locking&lt;/h3&gt;
+&lt;p&gt;這個問題主要是出在 tcp 的要求的可靠性，所建立出來的機制問題。它為了可靠性基本上做了兩件事情 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;『 順序 』與『 重傳 』&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;咱們來看一下 tcp 傳送資料的流程，如下。&lt;/p&gt;
+&lt;p&gt;假設咱們在一個 tcp 中有這些資料要傳輸，我們給它個編號為 1 至 10。&lt;/p&gt;
+&lt;p&gt;1 . 將準備要發送的資料編號 1 至 3，放至緩衝區。
+2 . 幫 1 至 3 資料設定時器。
+3-1 . 時間內有收到接受方的 ack ( 代表接受方有收到 1 至 3 資料 )，清除緩衝區。
+3-2 . 一直沒收到 ack，則重傳。
+4 . 再開始處理 4 至 7 直到全部傳完後，就送去給 http 應用層。&lt;/p&gt;
+&lt;p&gt;而這裡問題就出在這個機制，如果這時有個來插花的 http 也想用同一條 tcp 來傳輸，那這樣就會讓 tcp 產生混亂不知道如何解析這個順序，而且如果其中一個請求傳封包後，一直沒有 ack 也就會卡住所有的請求，因此 tcp 就只能這樣處理。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 補充知識 : tcp 滑動窗口 ~&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;熟悉 tcp 的友人應該知道，關於第一點只有 3 個資料 ( 1 至 3 ) 放至緩衝區這個地方，其中 3 這個數量就是滑動窗口的概念，這裡簡單的說明一下這個知識。&lt;/p&gt;
+&lt;p&gt;tcp 基本的重傳機制如下，假設 a 發送封包給 b，然後 b 會發送給 a 一個 ack ( 證明收到 )，然後這時 a 才會再發送下一個封包，但如果在一定時間內沒收到 b 的 ack ，那它就會重傳。&lt;/p&gt;
+&lt;p&gt;但這個機制非常的毛，原因在於要一直等，性能吃很大，因此 tcp 又加了這個機制下去 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;滑動窗口 ( Sliding window )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;假設咱們有個請求，它的資料包序號為 1 至 8，然後下圖 6 上面部份紅色區塊窗口裡的封包(1 ~ 3)代表為可以發送的封包。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191007/20089358oCSLGlBU1D.png&#34; alt=&#34;&#34;&gt;
+圖 14 : 滑動窗口概念&lt;/p&gt;
+&lt;p&gt;然後當發送完 1 至 3 封包後，如果接受到 1、2 封包後，窗口會往右移，變成上圖 6 下面部份，然後通常裡面會有個 point 要來判斷那些可以發送，那些還在等 ack。&lt;/p&gt;
+&lt;p&gt;由於有了這個機制的封包發送就不需要一直花時間等 ack，而可以並行的丟封包出去囉。&lt;/p&gt;
+&lt;p&gt;這裡只淺談一下滑動窗口的概念，如果真的要完整說明，那至少還要在開一篇……&lt;/p&gt;
+&lt;h3 id=&#34;http-3----tcp--quic&#34;&gt;HTTP 3 解法 : 換掉 TCP 改用 QUIC&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;HTTP3 = HTTP + QUIC ( Quick UDP Internet Connections )&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;由於 tcp 有上述的問題，所以就在考慮將傳輸層的 tcp 協議換掉，改成以 udp 為基礎的 quic。這裡簡單的說一下 quic、tcp、udp 都是傳輸層的東西，而 quic 是以 udp 這個不可靠的東西進行改善，讓它變成可靠性傳輸。&lt;/p&gt;
+&lt;p&gt;quic 的可靠性的重點在於 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;多傳一個包&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;假設一個請求有三個封包要傳輸，而這時 quic 則會傳一個特殊包，它保含其它三個的資料，也就是說就算前三個中有一個包丟失了，仍然可以用省下的三個來組合出丟失的那一個。&lt;/p&gt;
+&lt;p&gt;例如假設一個請求 quic 會準備成以下的包 :&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;資料包 : A,B,C,D
+特殊包 : Z
+它們的關係為 : A + B + C + D = Z
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以當 A 幫包丟失時，咱們可以用以下的方法反推出 A。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;A = Z - B - C - D
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而這個演算法就是在硬碟那很有名的 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Raid 5 演算法&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;這裡就先淺淡到這。http 3 事實上還有非常多的事情還沒提到，這裡就先從 http 1.x 時代就一直被人詬病的 tcp HOL 問題拿出來看看 http 3 這它是如何解決的，之後未來有時間在詳細的寫寫 http 3 的事情。&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章咱們基本上學習了 http 的整個歷史，並且也知道每一個時代的痛點與嘗試的解決方法。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;http 1.x : 只能串行傳輸，後來有嘗試用 http pipeline 改善，但因很多問題，所以大部份瀏覽器預設都是不用的。&lt;/li&gt;
+&lt;li&gt;http 2 : 嘗試的解決 http pipeline 的 HOL 問題，它解決的手法是提出 stream 與 frame 的機制來處理。&lt;/li&gt;
+&lt;li&gt;http 3 : 嘗試的解決 tcp 的 HOL 問題，它解決的手法就是不用 tcp 改用 quic。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;最後這裡總結一下這個章節的性能優化建議 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;嘗試的將服務至升級支援為 http 2&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;http 2 在 2019 年這個時代，根據 W3Techs 統計，已經有大約 40+% 的網站已經有進行支援，並且提能也提升不少，可以參考此網站的比較喔。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.http2demo.io/&#34;&gt;http 1.1 vs http 2&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;而由於 IETF 在 2018 年時，正式的將基於 quic 協議的 http 命名為 http3，目前世界上大部份的設備應該是都還沒有完全支援，所以就先別考慮了。&lt;/p&gt;
+&lt;h2 id=&#34;heading3&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://zh.wikipedia.org/wiki/HTTP%E6%8C%81%E4%B9%85%E8%BF%9E%E6%8E%A5&#34;&gt;wiki-HTTP持久連接&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.chionlab.moe/2016/11/07/tcp-keepalive-on-chrome/&#34;&gt;TCP keepalive的探究 (2) : 浏览器的Keepalive机制&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://stackoverflow.com/questions/9334401/http-keep-alive-and-tcp-keep-alive&#34;&gt;HTTP Keep Alive and TCP keep alive&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://lanjingling.github.io/2016/06/11/nginx-https-keepalived-youhua/&#34;&gt;nginx优化——包括https、keepalive等&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/28894266&#34;&gt;聊聊 TCP 中的 KeepAlive 机制&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.gslin.org/archives/2014/02/22/4283/domain-sharding-%E7%9A%84%E8%AA%BF%E6%95%B4/&#34;&gt;Domain Sharding 的調整&amp;hellip;-Gea-Suan Lin&#39;s BLOG&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://juejin.im/post/5ce37660f265da1bb13f05f0&#34;&gt;什么是队头阻塞以及如何解决&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://http3-explained.haxx.se/zh/why-tcphol.html&#34;&gt;TCP队头阻塞（head of line blocking）&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://xiaozhuanlan.com/topic/2083674195&#34;&gt;试图取代 TCP 的 QUIC 协议到底是什么?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developers.google.com/web/fundamentals/performance/http2/&#34;&gt;developers.google-Introduction to HTTP/2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ruanyifeng.com/blog/2018/03/http2_server_push.html&#34;&gt;HTTP/2 服务器推送（Server Push）教程&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
     <item>
@@ -194,393 +2088,166 @@ Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知�
       <pubDate>Sat, 21 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190921/</guid>
-      <description>正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :
- CDN ( Content Delivery Network ) HTTP 緩存  本篇文章分為以下幾個章節 :
- CDN 與運行流程 HTTP 緩存與運行流程 CDN 與 HTTP 緩存搞在一起用  這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。
-30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )
-CDN 與運行流程 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
-首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
-圖 1 : 一個台灣用戶連到台灣網站的時間
-然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。</description>
-    </item>
-    
-    <item>
-      <title>30-20 之資料緩存失效問題</title>
-      <link>https://mark-lin.com/posts/20190920/</link>
-      <pubDate>Fri, 20 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190920/</guid>
-      <description>正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :
- 如果緩存失效的情況，與可能會發生什麼事情呢 ?
- 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。
-圖 1 : 緩存失效圖
-而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :
- 緩存失效情況 - 緩存穿透 緩存失效情況 - 緩存雪崩 緩存失效情況 - 緩存服務炸了  緩存失效情況 - 緩存穿透 這個的主要情境如下 :
- 查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。
- 圖 2 : 緩存穿透
-通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。
-解法 1 : 硬處理 這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。
-這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。</description>
-    </item>
-    
-    <item>
-      <title>30-19 之資料庫層的優化  - 資料緩存策略</title>
-      <link>https://mark-lin.com/posts/20190919/</link>
-      <pubDate>Thu, 19 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190919/</guid>
-      <description>正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 :
- 緩存策略
- 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，然後用戶先優先去緩存取得，沒有則去資料庫拿去嗎 ?
-用腦袋想很簡單沒錯，但是難處就在於 :
- 你要如何確保資料一致性呢 ?
- 有沒有覺得這名詞很耳熟呢 ? 你只要記好，只要是多個服務，只要是共用資料的，那就一定會碰到它。
- 什麼樣類型資料適合緩存呢 ? 緩存讀流程 緩存寫策略與難題 緩存寫策略的難題總結  什麼樣類型資料適合緩存呢 ? 在建立緩存時，我們需要先來決定一件重要的事情。
- 什麼樣的資料需要存放到緩存中呢 ?
- 基本上適合緩存資料的特點有以下幾點 :
- 這個資料是常常被使用到的。 這個資料是不常被更新的。  且中如果符合上述兩個情況的那就可以算在『 適合建立緩存的資料 』選項中。
-緩存讀流程 讀的基本流程如下 :
- (1) 用戶往應用服務發送請求。 (2) 應用服務至緩存服務看看是否有緩存。 (3A) 有，則回傳。 (3B) 無，則前往資料庫服務取得資料。 (4) 並將資料回寫入緩存服務。  基本上這種讀的流程比較沒有太大問題與爭論。
-圖 1 : 緩存讀取流程
-緩存寫策略與難題   緩存策略最大坑在這
- 比較大的問題在於『 寫 』這裡，因為不同的寫入方式會產生不同的問題，而且這沒有 100% 的完美解，只能有較優但還是有缺點的解。接下來我們來一個一個慢慢看。</description>
-    </item>
-    
-    <item>
-      <title>30-18 之資料緩存層的服務 - Redis 概念與一致性難題</title>
-      <link>https://mark-lin.com/posts/20190918/</link>
-      <pubDate>Wed, 18 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190918/</guid>
-      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。
-資料庫單機性能優化到最後，仍然還是逃不過性能的貧頸，但這並不是說單機優化沒有意義，因為單機如果沒有將它優化好，而直接開機器來增加性能，那只能說是拿錢堆起來的性能，而且可能會出問題。
-那要如何在增加性能呢 ? 這時通常會使用以下的策略 :
- 緩存
- 也就是說架構會變的如上圖 1 所示，在 mysql 前面會多增加一個緩存服務，這個服務我們通常會選擇用 redis。當資料在緩存服務有時直接回傳，沒有則去資料庫服務取得。
-圖 1 : 加入緩存服務圖
-在開始緩存策略前，咱們要先來研究一下基本的緩存服務『 redis 』。
-本篇文章分為以下幾個章節 :
- Redis 的架構 Redis 的一致性難題處理 Redis 性能使用的要點  Redis 的架構 首先咱們簡單的介紹一下 redis 是啥 ?
-簡單的說它算是一種資料庫，redis 是將所有的資料存在『 記憶體 』中，而 mysql 則是將主要資料存在『 硬碟中 』。
- 它適合當緩存服務的重點就在於儲『 記憶體 』。
- 而它適合當緩存服務的重點就在於這裡，它將資料儲放在記憶體，因此操作速度非常的快，咱們來簡單複習一下儲硬碟和記憶體取資料的差異，如下圖 2 所示，mysql 讀取資料，基本上要運行 3 次的拷貝，而 redis 則只需要 1 次 ( 每條線就是一次拷貝 )。
-圖 2 : redis vs mysql 讀取資料比較</description>
-    </item>
-    
-    <item>
-      <title>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</title>
-      <link>https://mark-lin.com/posts/20190917/</link>
-      <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190917/</guid>
-      <description>正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。
-雖然 innodb 已經儘可能的解決上述這些問題，但是如果要完全解決，性能代價太大，因此後來有了一些折衷方案，這個東西就叫做 :
- 事務隔離級別
- 接下來本篇文章將要談談這東西，並且整理一下 innodb 預設的一些鎖的設定。
- MySQL 的折衷解法 - 事務隔離級別 預設 RR 級別 - 鎖的操作總結 死鎖的小分析  MySQL 的折衷解法 - 事務隔離級別 資料庫在並行運行時，通常會發生以下幾種問題，並且也探討過這幾種問題的解法 :
- 更新不一致 : 鎖 髒讀、不可重複讀 : mvcc 幻讀 : mvcc + next-key locking ( 有一些幻讀情境無解 )  而在 innodb 事實上可以『 完全簡單 』的處理上面幾種現象，解決方法如下圖 5 所示，也就是同一個時間，只能執行同一個事務，如下圖所示。也就是把發生問題的根本原因『 並行 』給移除。
-圖 1 : 一致性的根本解法
-但這會嚴重的影響到效能的問題，因此才有了『 隔離層級 』這東西。
- 隔離層級可以讓你決定需要處理到什麼層級的一致性問題
- 也就是說上面四個問題，它可以讓你根據性能的要求，來決定你要處理幾個問題，處理的越多代表性能越差，處理越少個則代表性能越好，但反之不一致性機率更高。
-事務隔離級別 mysql 總共提供以下四個層級，不過比較準確的說，這是所有資料庫共有的層級，性能從高至低排序，而反之資料一致性性由低至高。</description>
-    </item>
-    
-    <item>
-      <title>30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</title>
-      <link>https://mark-lin.com/posts/20190916/</link>
-      <pubDate>Mon, 16 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190916/</guid>
-      <description>正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 :
- 『 並行 』產生的不一致性難題
- 基本上並行所產生的不一致性難題，可以分為以下幾種類型 :
- 更新不一致 髒讀 不可重讀 幻讀  本篇將會分為以下幾個章節來談談這幾個難題 :
- 更新不一致難題與解法 - 鎖 髒讀與不可重讀難題與解法 - MVCC 幻讀難題與解法 - MVCC + Next-Lock 鎖  更新不一致難題與解法 - 鎖 這種情境如下圖 1 所示，a 與 b 兩個事務進行更新操作後，事務 a 再看看自已操作的結果，發現自已的更新消失了。這種情境被稱為『 更新不一致問題 』
-圖 1 : 更新不一致問題
-那這種情境 innodb 它是如何處理呢 ?
- 它使用鎖來處理
- 在 innodb 的預設，它會對要『 update、delete 』的『 行加鎖排他鎖 』，不過比較嚴格定義應該是說 :
- 它會對有用到『 索引 』的『 行 』加『 排他鎖 』，不然會退化成『 表 』鎖</description>
-    </item>
-    
-    <item>
-      <title>30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</title>
-      <link>https://mark-lin.com/posts/20190915/</link>
-      <pubDate>Sun, 15 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190915/</guid>
-      <description>正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性能後腿的東西。
-這個會性能後腿的東西就是 :
- 一致性難題
- 在追求高性能的路上，通常一定會面臨到資料一致性問題，而產生的原因通常可簡單的分為以下來個來源 :
- 故障 併發  接下來本篇文章，咱們來看看 mysql 它是如何處理『 故障 』所引發的一致性問題。
- 不一致資料產生原因。 MySQL 的解法。 ACID 的小關連。  不一致資料產生原因 原因 1 : 某項操作故障 假設咱們要將 a 帳戶的 1000 元轉到 b 帳戶去，但這時如果在處理 b 帳戶加錢時出錯了，那整個結果就錯誤了，如下圖 1 所示。
-圖 1 : 故障導致資料不一致性
-在圖 1 中正確的 b 帳戶應該是 1000 元，但是因為加錢失敗了，所以 b 帳戶變成 0 元，這就是產生了『 資料不一致性 』。
-原因 2 : 單機故障 第二個產生的原因要先來理解一下，所謂的『 通常 』寫入硬碟的原理。
-假設咱們有一個 insert 的指令，要將資料寫入到資料庫中，然後資料庫要將它寫到硬碟中，那它的運行過程如下。</description>
-    </item>
-    
-    <item>
-      <title>30-14 之資料庫層的優化 - 表的設計</title>
-      <link>https://mark-lin.com/posts/20190914/</link>
-      <pubDate>Sat, 14 Sep 2019 20:16:57 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190914/</guid>
-      <description>正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。
- 表設計的幾個小建議 正規與非正規的小戰爭  表設計的幾個小建議 這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。
-建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + ) 基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :
- char varchar text blob  char vs varchar char 的特點 :
- 最大 255 byte 不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。 用 char 需要處理空白。  varchar 特色 :
- 存幾個字就是需花費 n+1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 + 1 = 2 byte。 65535 為最大，實際為 65532。 當 varchar 大於一定字數時，會自動轉成 text。  varchar (255+) 轉成 tinytext varchar (500+) 轉成 text varchar (20000+) 轉成 mediumtext 下表為 char 與 varchar 的實際存儲空間比較。</description>
-    </item>
-    
-    <item>
-      <title>30-13 之資料庫層的優化 - 索引設計與雷區</title>
-      <link>https://mark-lin.com/posts/20190913/</link>
-      <pubDate>Fri, 13 Sep 2019 20:12:39 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190913/</guid>
-      <description>正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。
- 30-11 之資料庫層的核心 - 索引結構演化論 B+樹 30-12 之資料庫層的核心 - MySQL 的索引實現  本篇文章分為以下幾個章節 :
- 索引的重要小觀念 索引的設計流程 索引的使用注意事項 SQL 地雷區  索引的重要小觀念 觀念 1 : 不是索引越多越好 索引不是聖杯，它是雙刃刀，用的好上天堂，用不好下地獄。基本上資料庫的索引幾乎可以影響一個系統的 50% 以上的性能。
-索引可以加快查詢速度，但注意它是以空間換取時間。
-基本上它使用的資源如下 :
- 每個索引都會建立一顆 b+ 樹。 每次新增、更新資料時都會改變 b+ 樹。  所以當你索引越多時，你所需要的記憶體與維護索引的 cpu 運算就需要越多。
-觀念 2. 懂的使用 Explain 來分析你的 SQL 索引性能解析 explain 這個指令可以讓你知道你下的 sql 語句是否有命中索引。
-EXPLAIN SELECT * FROM user_no WHERE name = &#39;mark&#39;; ===================================================== id: 1 select_type: SIMPLE table: user partitions: NULL type: const possible_keys: PRIMARY key: PRIMARY key_len: 8 ref: const rows: 1 filtered: 100.</description>
-    </item>
-    
-    <item>
-      <title>30-12 之資料庫層的核心 - MySQL 的索引實現</title>
-      <link>https://mark-lin.com/posts/20190912/</link>
-      <pubDate>Thu, 12 Sep 2019 20:11:06 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190912/</guid>
-      <description>正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b+ 樹來建立索引機制 ?
-本篇文章分為以下幾個章節 :
- 一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index ) InnoDB 所提供的索引類型  一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?
-   Id ( PK ) Name age     1 Mark 18   2 Jack 10   3 Ian 36   4 Jiro 30   5 Fucc 27   &amp;hellip; &amp;hellip; &amp;hellip;   10 Fukk 46   表 1 : 範例      首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。</description>
-    </item>
-    
-    <item>
-      <title>30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</title>
-      <link>https://mark-lin.com/posts/20190911/</link>
-      <pubDate>Wed, 11 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190911/</guid>
-      <description>正文開始 接下來咱們要來理解資料庫系統中最核心的問題 :
- 要如何儲放資料，才能更快速的找到資料呢 ?
- 而這個東西的技術就是所謂的 :
- 索引
- 而在 mysql 中決定如何儲放的是資料庫儲存引擎來決定，而這裡咱們將要從 mysql 預設引擎 innodb 來深入的理解一下。
-在 InnoDB 中預設是使用『 B+樹 』來當資料儲放格式，而為什麼要選擇它呢 ?
-這就是我們這篇文章的重點。
- InnoDB 為什麼選擇 B+ 樹 ?
- 本篇文章分為以下幾個章節，這也就是 B+ 樹的誕生原由。
- 二分搜尋 Binary Search 二元搜尋樹 Binary Search Tree 平衡二元搜尋樹 Balanced Binary Search Tree B 樹 B+樹 ( InnoDB 的選擇 )  二分搜尋 Binary Search 首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。
-那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。</description>
-    </item>
-    
-    <item>
-      <title>30-10 之資料庫層架構與優化方向</title>
-      <link>https://mark-lin.com/posts/20190910/</link>
-      <pubDate>Tue, 10 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190910/</guid>
-      <description>正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。
-在這裡先說一下一個重點 :
- 資料庫絕對是一個系統的性能核心，請把優質的 DBA 們當寶來餵食
- 接下來幾篇資料庫層文章將會以『 MySQL 』來進行說明，雖然不同的資料庫可能實作上會有些不同，但是大致上原理不會差距太大。
-開始第一篇文章，咱們將要先理解一些 MySQL 的基本架構，接下來才能理解那些地方可能可以進行性能優化，又是那一些地方可能是會拖後腿，但是又是必要存在的地方，這篇也算是資料庫篇的小目錄。
-本篇文章分成以下幾個章節 :
- MySQL 基本架構。 資料庫層的優化方向。 資料庫層會拖性能後腿，但是又必須處理的地方。  MySQL 基本架構與運行 圖 1 : mysql 的基本架構
-基本上分為以下幾個部份 :
- 應用層 ( 紅色 ) 服務層 ( 綠色 ) 存儲引擎層 ( 藍色 )  應用層 應用層主要處理兩個工作 :
- 連接處理任務 權限管理  其中連接處理任務就是每當一個 client 端發送一個請求到 mysql 時，它會在從 thread poll 中分配一個 thread 來處理此請求，然後之後從此 client 來的任務，都會由此 thread 來處理。
-mysql 並沒有使用之前說的非阻塞 I/O 模型 ( reactor ) 來處理請求的，原因可能在於，mysql 的任務是屬於 cpu 運算密集與磁碟 I/O 密集任務，因此比較不適合使用 reactor 這種使用 epoll 的模型。</description>
-    </item>
-    
-    <item>
-      <title>30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池</title>
-      <link>https://mark-lin.com/posts/20190909/</link>
-      <pubDate>Mon, 09 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190909/</guid>
-      <description>正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。
-本篇文章分為以下幾個章節 :
- 什麼是進程池 ? 為什麼需要它呢 ? 進程池的數量設置。 什麼是連線池 ? 為什麼需要它呢 ? 連線池的數量設定。  什麼是進程池 ? 為什麼需要它呢 ? 先說以一下，這裡不一定是指進程 process ，也有可能是指線程 thread，反正都是代表一個池子裡裝了這兩種東西。
-接下來咱們以 process 進程為主。
-進程 process 咱們已經在前幾章很常看到它，它的基本概念就是 :
- 作業系統的操作單位且是最小資源分配單位
- 也就是在某個時間，會以 process 為單位開啟資源，並將 cpu 分配給它來工作。
-而所謂的進程池的就是，一個裝了一堆進程的隊列，當你有需要進程時，去裡面拿，而不用在重新建立一個新的。
-為什麼需要它呢 ? 先說一下，咱們什麼時後要開多個 process 或 thread 呢 ?
- 並行運算，也就是多開個 process 或 thread 來幫忙計算。 i/o 處理，在某些情況下，咱們需要開一個 process 或 thread 來處理 i/o。  那為什麼需要進程池呢 ?
- 可以節省建立與結束 process 所耗費資源 ( cpu 、 mem )。 可以有效的控制 process 的數量，如果一個不注意開太多，就算開時沒爆，你也有可能在上下文切換時爆了。 有了進程池事實上也代表有管理器，那這樣也代表有可能玩定時執行進程或線程 ( Java 就降玩 )。  這裡後我們簡單的複習一下，看看建立進程與結束是要做那些事情。基本上就如下面這張圖一樣，就是不斷的拷貝記憶體或移除記憶體。請別小看這一段工作，事實上要做不少事情的。</description>
-    </item>
-    
-    <item>
-      <title>30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine</title>
-      <link>https://mark-lin.com/posts/20190908/</link>
-      <pubDate>Sun, 08 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190908/</guid>
-      <description>正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :
- 異步非阻塞的 I/O 操作。
- 而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?
-簡單的說它可以讓我們實現以下的事情 :
- 可以在應用層實現同步非阻塞的 I/O 操作
- 接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。
- coroutine 協程想要解決的問題。 coroutine 協程實現原理。 Golang 的 goroutine。  coroutine 協程想要解決的問題 首先咱們先來看看它想要解決什麼問題呢 ?
- 協程它想要將異步非阻塞的 I/O 操作變成同步的。
- 異步非阻塞寫法 首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :
- 異步 : callback 機制，也就是下面程式碼裡面的 function。 非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。  &amp;lt;?php $client = new swoole_redis; $client-&amp;gt;connect(&amp;#39;127.</description>
-    </item>
-    
-    <item>
-      <title>30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor</title>
-      <link>https://mark-lin.com/posts/20190907/</link>
-      <pubDate>Sat, 07 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190907/</guid>
-      <description>正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。
-這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http 請求 web server 是如何處理的，從 0 至 1，那這樣的話當你完全通了，就知道這為什麼會有這些模式。
-本篇文章共分以下幾個章節 :
- 傳統的 Web Server 請求 I/O 處理與問題 非阻塞 I/O 模式核心 Reactor 模型。 一些常見的問題。  ~ 重要備註 ~ 相信有不少人聽過阻塞、非阻塞、同步、非同步，也相信有些熟悉 linux 的友人，聽過它所提供的一些上述名詞的方法，但這裡要先說明，接下來的說有上述詞語，都是指『 應用層 』的表達，而不是『 業系統層 』的所提供的方法，除非有特別說明才是作業系統的。
-傳統的 I/O 處理與問題  一個 I/O 請求進來要如何處理呢 ?
- 傳統的 I/O 請求處理 咱們這裡以 http server 處理請求時來當範例，如下圖所示，咱們以常見的 PHP + Apache 來看。如下圖 1 所示，每一個 http 請求都需要開啟一個或是使用一個進程來進行處理，這裡不是只有 http 請求會被阻塞，而是所有的 I/O ( ex. 網路請求、檔案讀取 ) 操作正常來說都是會被阻塞的。</description>
-    </item>
-    
-    <item>
-      <title>30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 )</title>
-      <link>https://mark-lin.com/posts/20190906/</link>
-      <pubDate>Fri, 06 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190906/</guid>
-      <description>正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。
-本篇文章將分為以下幾個章節
- Stream 是什麼 ? 可以解決什麼事情 ? Stream 在 IPC 通信的原理。 簡單的小範例。  Stream 是什麼 ? 可以解決什麼事情 ? 傳統資料傳輸流程問題 stream 它是一種技術，基本上專門用來傳輸資料用。
-咱們先來看看傳統上，咱們如果要從硬碟拿個檔案是如何處理。
-基本上流程如下圖 1 所示。
- 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料(也就是所謂的內核記憶體)。 有，則將內核緩衝區的資料，拷貝到用戶緩衝區(用戶進程記憶體)。 無，則前往硬碟取得。 將硬碟資料拷貝至內核緩衝區。 將內核緩存區資料，拷貝到用戶緩衝區。(內核切成用戶) 然後就可以使用資料了。  圖 1 : 傳統的資料傳輸流程
-而重點在於這裡 :
- 硬碟資料 copy 到內核緩衝區，接下來再從內核緩衝區 copy 到用戶緩衝區。
- 然後問題出在於 :
- 如果資料很大會發生什麼事呢 ?
- 基本上結果就如下圖 2 所示，有可能在內核緩衝或用戶緩衝，就爆掉了，因為記憶體是整份 copy 過去，如果你硬碟資料有 10 gb，那就代表，要將這 10 gb 的資料 copy 到內核緩存，再 copy 到用戶緩存，這時後用戶進程才能拿到它。</description>
-    </item>
-    
-    <item>
-      <title>30-05 之應用層的 I/O 加速 - 零拷貝 ( Zero Copy )</title>
-      <link>https://mark-lin.com/posts/20190905/</link>
-      <pubDate>Thu, 05 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190905/</guid>
-      <description>正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。
-I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O 』，這兩種 I/O 操作原理大同小議，但是優化方式卻有些不同，接下來這一篇文章，算是混合。
-本篇文章分為以下幾個章節 :
- I/O 原理。 零拷貝 I/O 的概念與優化原理。 零拷貝的實現。 零拷貝的語言支援與問題探討。  I/O 原理 先從最基本的來看，何謂 I/O ?
-I/O ( Input/Output) 通常是指資料在『系統』與『外部裝置』的輸入與輸入，最簡單的例子，抓取硬碟或 USB 資料就是所謂的 I/O 操作。
-接下來我們簡單的來看一下，在 linux 操作系統上，所謂的『 從硬碟讀取資料，並結果輸出到網路 』到底是在做什麼。
-記憶體層面來看 I/O 流程 記憶體就是作業系統最基本的資料儲放地，接下來我們從記憶體的層面來看，所謂的『從硬碟讀取資料，並將結果輸出到網路』它是如何變化的。
-基本『 讀與寫 』流程如下 :
-在看流程前先說明一下，等等到看到的所謂『 緩衝區 』 就是指在某個記憶體中，切割一些空間出來，來當緩衝區。像等等看到的內核緩衝區就是在內核的記憶體中，拿一些空間來儲放等等要進來的資料。
-接下來就開始看流程。
- 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料。 有則將內核緩衝區的資料，拷貝到用戶緩衝區。 無則前網硬碟取得。 將硬碟資料拷貝至內核緩存區。 將內核緩衝區資料，拷貝到用戶緩衝區。(內核切成用戶) 在從用戶緩衝區發送 system call write 將用戶記憶體資料拷貝到 socket 緩衝區，這緩衝區也是在內核中。(用戶切內核) 用戶端收到 ack (內核切用戶) 資料飛向世界。  順到說一下，這樣的操作總共會進行 4 次的上下文切換。</description>
-    </item>
-    
-    <item>
-      <title>30-04 之應用層的運算加速 - 並行運算</title>
-      <link>https://mark-lin.com/posts/20190904/</link>
-      <pubDate>Wed, 04 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190904/</guid>
-      <description>正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ?
-假設你所在的機器是多核心 CPU，那這時的確是有解，那就是本篇文章的主題 :
- 開啟 Process 或 Thread 來幫忙進行運算。
- 本篇文章就分為以下三個章節:
- CPU 運算與 process、thread 的關係。 CPU 密集任務處理。 多線程並行處理的淺在問題。  CPU 運算與 Process、Thread 的關係 在實際上理解如何開啟 process 或 thread 前，咱們先從最基本的東西說起。
-何謂 process ? 何謂 thread 呢 ?
-進程、行程 ( Process ) 首先咱們先來看看 process，基本上在你的電腦中每一個應用 ( ex. line、chrome ) 都是至少是一個 process，然後比較重要的一點在於 :
- 對作業系統來說，它是資源分配的最小單位，並且同時是個『操作單位』
- 在 linux 系統上，一個 process 的建立過程如下圖 1 所示 :
- 母進程執行 fork() 建立一個子進程。 同時間建立子進程的記憶體空間。  圖 1 : 作業系統建立進程的概念圖</description>
-    </item>
-    
-    <item>
-      <title>30-03 之應用層的運算加速 - 演算法</title>
-      <link>https://mark-lin.com/posts/20190903/</link>
-      <pubDate>Tue, 03 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190903/</guid>
-      <description>正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?
-這首先第一部份，我們要探討以下主題 :
- 在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?
- 而這一題的主要的答案就是不少人面試很排斥的『演算法』。
-本篇文章會分為以下幾段 :
- 一個好與不好的演算法性能差距多大呢 ? 演算法運算時間的分類 演算法優化建議  接下來正文開始。
-一個好與不好的演算法性能差距多大呢 ? 一個演算法的效能基本上有兩個東東 :
- 時間複雜度: 你可以把它想成演算法的運行時間。 空間複雜度: 這個可以想成你這個演算法需要花多少的空間來處理。  上面只是簡單說明它的代表概念，比較實際的運算方法直接去 wiki 看就夠囉。
-那麼拉回拉，一個好與不好的演算法性能差距有多大呢 ?
-呵 !
-我們以一個最簡單的演算法『費波那契數列』來看看。
-首先這是好的程式碼。
-// good  console.time(&amp;#39;time&amp;#39;); function fib (n) { if ( n === 0 || n === 1) { return n; } let a = 0; let res = 1; let temp = 0; for (let i=2; i &amp;lt;= n; i++) { temp = res; res = a + res; a = temp; } return res; } fib(45); console.</description>
-    </item>
-    
-    <item>
-      <title>30-02 之單機架構的性能優化方向與目標</title>
-      <link>https://mark-lin.com/posts/20190902/</link>
-      <pubDate>Mon, 02 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190902/</guid>
-      <description>接下來咱們會從最基本的開始 :
- 儘可能的優化單機性能
- 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信他開發出來的分散式架構是高性能的。
- 單機處理的好，才是高性能的前提。
- 本篇會分為以下幾個章節，來探討單機領域的優化方向，這個方向也就是之後文章的目錄。
- 單機系統的優化路線 Step 1 (應用服務、資料庫服務)。 單機系統的優化路線 Step 2 (快取服務、CDN 服務)。 一個系統效能的評估指標。  單機系統的優化路線 Step 1 (應用服務、資料庫服務) 單機系統的最基本最基本架構應該長的如下圖 1，就是最簡單的應用服務與資料庫服務，咱們這裡先以最大眾的 web 服務為主 :
- 應用層服務 資料庫層服務  圖 1 : 最簡單的應用架構。
-單機應用層的性能優化方向 基本上單機應用層的優化目標如下 :
- 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
- 而要完成這件事情，基本上有幾個方向可以研究。
- 以最少的資源進行運算，這裡比較白話文的來說就，用最少的 CPU 與 Memeory 來完成工作。 I/O 處理，大部份的 Web 應用都是讀取資料庫或啥的，這裡如果沒處理好，你的系統絕對只能做很少的事情。 I/O 的一些加速技術例如 stream、零拷貝、線程、連線池。  不過簡單來說就分兩種『運算』與『I/O』。
-圖 2 : 應用服務性能重點。
-資料庫層的性能優化方向 資料庫層是的優化目標基本上如上應用層一樣:
- 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
- 基本上在性能方向會有幾個方向可以研究 :</description>
-    </item>
-    
-    <item>
-      <title>30-01 之何謂一個好的系統呢  ?</title>
-      <link>https://mark-lin.com/posts/20190901/</link>
-      <pubDate>Sun, 01 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190901/</guid>
-      <description>何謂一個好的系統呢 ?
- 為什麼會問這個問題呢 ?
-因為事實上這個是我原本想要撰寫的主題。咱們工程師在開發系統，所學習的大部份的技術，基本上都是為了追求『建立一個好的系統』，然後我本來想將建立一個好的系統的知識點，建立成一個 30 天的知識集，但就算進行精簡化，也很難進行有深度的探討。
-因此後來才有了這 30 天這個主題 :
- 30天之從 0 至 1 盡可能的建立一個好的系統 (性能基礎篇)
- 接下來我們來說說，上述的主題『性能』，在一個好的系統中，是那一個部份。
-何謂一個好的系統呢 ? 這個主題事實上非常的抽象與盤大，問十個人可能有十種答案，在這裡筆者將來說明心中理想的系統。
-一個好的系統我覺得最重要的一點為 :
- 要有人用
- 這個是我覺得是最重要的一點，如果沒有人用，除非你裡面的技術是可以改變世界的，不然基本上是沒啥價值性的，不論是科學或是商業價值。
-『要有人用』這個基本上咱們搞技術的除非你和老闆是好麻吉，不然事實上很難干涉行銷策略這個層級的事情，所以這一塊咱們先不管。
-不過也不代表我們不用學這個領域的知識。
- 你的知識越廣，就越不會被固定領域知識僵固，並且更能幫助你突然領域的深度。
- 忘了是誰說的，不過我很喜歡這句話。
-不過這句話我覺的有個前提假設 :
- 不過你要先有一把刀，你才能去開拓世界。
- 也就是說如果你沒有先在你的領域打個底，那麼你也沒有本事將從其它領域學到的東西，融入你的領域。
-某些方面，我覺得學程式語言就如同上面這一句話一樣。
-在有人用的情況下，何謂一個好的系統呢 ? 我覺得一個好的系統只有一個重點 :
- 讓雙方愉悅
- 這裡雙方是指『用戶』與『公司』。
- 能夠讓使用者覺得好用，用起來就是愉悅兩字 (用戶愉悅)。 能夠以最少的資源(機器)做最多的事情 (公司愉悅)。 能夠讓開發人員未來花越少的時間在維護 (公司愉悅)。 安全 (用戶與公司都愉悅)。  能夠讓使用者覺得好用，用起來就是愉悅兩字 (用戶愉悅)  畫面讓人覺得愉悅。(設計) 畫面操作讓人覺得愉悅。(UI/UX、性能) 不會一下可以用，一下不能用。(可用性)  總結一句話 :</description>
+      <description>&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358zmfCBeJfDV.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;正文開始&lt;/h2&gt;
+&lt;p&gt;前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CDN ( Content Delivery Network )&lt;/li&gt;
+&lt;li&gt;HTTP 緩存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本篇文章分為以下幾個章節 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CDN 與運行流程&lt;/li&gt;
+&lt;li&gt;HTTP 緩存與運行流程&lt;/li&gt;
+&lt;li&gt;CDN 與 HTTP 緩存搞在一起用&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20180923/&#34;&gt;30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cdn-&#34;&gt;CDN 與運行流程&lt;/h2&gt;
+&lt;p&gt;在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。&lt;/p&gt;
+&lt;p&gt;首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳
+html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181107/20089358L394w8r0oh.png&#34; alt=&#34;&#34;&gt;
+圖 1 : 一個台灣用戶連到台灣網站的時間&lt;/p&gt;
+&lt;p&gt;然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181107/20089358WIYfHP7ksn.png&#34; alt=&#34;&#34;&gt;
+圖2 : 一個台灣用戶連到美國網站的時間&lt;/p&gt;
+&lt;p&gt;這就是 CDN 最一開始要解決的問題 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;將資源放到離用戶更近一點的地方&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;CDN ( Content Delivery Network )，它存在的目的就是讓你接近取得網路資料的方法，咱們如果將上圖加入 cdn 後就會長的如下圖 3 所示，所以 client 要取得的一些資源 (ex. html、css、js, imgage, video) 都會去 cdn 那取得。這樣就算你的網站架在美國，但只要 cdn 是在台灣，那回應速度應該也不會有太大的差距。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181107/20089358NZ2rYxVuzs.png&#34; alt=&#34;&#34;&gt;
+圖 3 : cdn 回應加速圖&lt;/p&gt;
+&lt;p&gt;雖然當初 cdn 是為了上述原因才誕生的，但它事實上有很多的優點 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抓資源更快。&lt;/li&gt;
+&lt;li&gt;保護來源端。&lt;/li&gt;
+&lt;li&gt;節省網路傳輸量。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而且如果是影音傳輸的情境下 cdn 可以說是核心的命脈，好的 cdn 讓你看片不卡卡，壞的 cdn 讓你砸電腦。&lt;/p&gt;
+&lt;h3 id=&#34;cdn-1&#34;&gt;CDN 的請求運作原理&lt;/h3&gt;
+&lt;p&gt;首先 cdn 基本上會分為三個部份。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;智能 DNS (Intelligent DNS)：事實上是 dns 的某個功能，它的主要功用就是可以幫用戶找到最近的 edge cdn，這樣用戶就可以去最近的 cdn 拿資料了。&lt;/li&gt;
+&lt;li&gt;邊緣 CDN ( Edge CDN )：就是散布在不同地方的 cdn 節點。&lt;/li&gt;
+&lt;li&gt;來源 Server ( Origin Server )：就是原始資料存放地。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;然後基本一個圖片的請求，會變的如下圖 4 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;client 發送一個 http 請求來取得圖片。&lt;/li&gt;
+&lt;li&gt;dns 收到後，會去請求智能 dns。&lt;/li&gt;
+&lt;li&gt;智能 dns 會回傳給 dns 最近 cdn 的 ip 位置。&lt;/li&gt;
+&lt;li&gt;client 收到 ip 以後，在發送請求去那個 cdn。&lt;/li&gt;
+&lt;li&gt;cdn 收到請求後，會先判斷有沒有緩存此圖片，如果有就直接回傳，沒有則在去來源 server 取得圖片，然後緩存此圖片，最後在送去給 client。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20181107/200893580n0UPwlTOG.png&#34; alt=&#34;&#34;&gt;
+圖 4 : cdn 請求流程&lt;/p&gt;
+&lt;h4 id=&#34;---server--&#34;&gt;這裡問個問題 ~ 如果 Server 檔案有更新了，通常會如何處理呢 ?&lt;/h4&gt;
+&lt;p&gt;基本上就是兩個 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;等緩存到期&lt;/li&gt;
+&lt;li&gt;強制將 cdn 緩存清空&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;通常第一個解法是用在一些不那麼需要即時的圖片或啥的檔案來使用，就是時間一到就自然會更新。&lt;/p&gt;
+&lt;p&gt;而第二種，通常是用在例如 html 或 js 這種有重要更新一定要吃到它時，就會去 cdn 那強制的刷新緩存，這種所有的請求都會暫時的去來源來抓最新檔案。通常大部份的 cdn 都要設置這個功能。&lt;/p&gt;
+&lt;h2 id=&#34;http-&#34;&gt;HTTP 緩存與運行流程&lt;/h2&gt;
+&lt;p&gt;http 這個咱們網路世界最常用的協議，它也有支援所謂的緩存機制，它所在的位置嚴格來說如下圖 5 所示，也就是會在瀏覽器將資源存在那台電腦上。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358bfg610iilV.png&#34; alt=&#34;&#34;&gt;
+圖 5&lt;/p&gt;
+&lt;p&gt;嚴格來說，我覺得這個緩存稱為『 瀏覽器緩存 』會比較準確一點，雖然它是 http 提供的機制，但是有沒有實作它要看應用層，例如瀏覽器，而如果你是在一個例如 web server 的應用程式裡，另外打 http 給其它 api，你覺得會有緩存嗎 ?&lt;/p&gt;
+&lt;p&gt;不一定，真的要看應用層有沒有實現，還真有看到不少套件有真的處理，像 android volly 就有處理 http 緩存。&lt;/p&gt;
+&lt;h4 id=&#34;http-1&#34;&gt;HTTP 緩存流程&lt;/h4&gt;
+&lt;p&gt;那接下來咱們來看看，如果這時用戶端要一張圖片，那整個緩存流程會是如何，如下圖 6 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶端發請一個 http 請求要一張馬克圖&lt;/li&gt;
+&lt;li&gt;server 回應圖片，且會在表頭塞一個『 Cache-Control:max-age=60 』欄位，標示這張圖片要緩存 60 秒，過期後再去 server 重拿。&lt;/li&gt;
+&lt;li&gt;瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。&lt;/li&gt;
+&lt;li&gt;用戶端第二次發送請一個 http 請求要一張馬克圖。&lt;/li&gt;
+&lt;li&gt;但發現本地端已經有緩了，就直接從本地端拿回傳。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358oPvIedY0V6.png&#34; alt=&#34;&#34;&gt;
+圖 6 : http 緩存實現流程&lt;/p&gt;
+&lt;h4 id=&#34;http-2&#34;&gt;Http 緩存過期流程&lt;/h4&gt;
+&lt;p&gt;接下來咱們來看看過期的流程。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶端發請一個 http 請求要一張馬克圖&lt;/li&gt;
+&lt;li&gt;server 回應圖片，且會在表頭塞二個『 Cache-Control:max-age=60 』與 『 Etag: abcde 』 欄位，標示這張圖片要緩存 &lt;strong&gt;60 秒&lt;/strong&gt;，過期後再去 server 重拿 ( etag 過期流程會說 )。&lt;/li&gt;
+&lt;li&gt;瀏覽器看到回應有 cache-Control 欄位，就將此圖片存在用戶端內。&lt;/li&gt;
+&lt;li&gt;時間過了 &lt;strong&gt;100 秒&lt;/strong&gt;。&lt;/li&gt;
+&lt;li&gt;100 秒後用戶要再一次請求圖片，發現緩存已到期，再請新發送請求，並且帶這從之前 etag 拿到的圖片指紋，發送給 server。&lt;/li&gt;
+&lt;li&gt;server 收到後，使用 if-none-match 裡的 etag 指紋來比對一下這張圖片有沒有更新過。&lt;/li&gt;
+&lt;li&gt;『 沒 』更新過，則回傳 304，叫瀏覽器自已再從本地端拿圖片來用就行了。&lt;/li&gt;
+&lt;li&gt;『 有 』更新過，則回傳新圖片，之後如同第二個步驟。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;注意一下 etag 主要是為了讓 server 端判斷這張圖片有沒有更新過，如果沒有則叫用戶在抓一次本地端的圖，這樣可以節省網路傳輸。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358EaStSvyKxh.png&#34; alt=&#34;&#34;&gt;
+圖 7 : http 緩存過期實現流程&lt;/p&gt;
+&lt;p&gt;關於 http 緩存的詳細內容，建議看這篇文章，寫得非常好理解。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://blog.techbridge.cc/2017/06/17/cache-introduction/&#34;&gt;循序漸進理解 HTTP Cache 機制&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;~ 小知識 ~&lt;/strong&gt;
+在 http 1.0 有一個 expires 表頭欄位，但是在 http 1.1 之後就幾乎被 cache-control 替代囉，因為 expires 是看用戶端時間，也就是說你調整時間緩存就失效了。&lt;/p&gt;
+&lt;p&gt;如果在使用時有帶 expires，http 現在都還是會看 cache-control 的配置。&lt;/p&gt;
+&lt;h2 id=&#34;cdn--http-&#34;&gt;CDN 緩存與 HTTP 緩存&lt;/h2&gt;
+&lt;p&gt;咱們已經分別的看完 cdn 緩存與 http 緩存的知識以後，咱們接下來把它混在一起看它們的運行流程。&lt;/p&gt;
+&lt;p&gt;這裡就只看以下兩種基本的情況，另外兩個過期圖事實上也沒有太大的差別。&lt;/p&gt;
+&lt;h4 id=&#34;-1--cdn--http-&#34;&gt;情況 1 : CDN 與 HTTP 緩存都還沒過期&lt;/h4&gt;
+&lt;p&gt;如下圖 8 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶端發請一個 http 請求要一張馬克圖。&lt;/li&gt;
+&lt;li&gt;cdn 的馬克圖還沒過期，直接回傳。&lt;/li&gt;
+&lt;li&gt;server 回應圖片，且會在表頭塞二個緩存用欄位。&lt;/li&gt;
+&lt;li&gt;瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。&lt;/li&gt;
+&lt;li&gt;用戶端第二次發送請一個 http 請求要一張馬克圖。&lt;/li&gt;
+&lt;li&gt;但發現本地端已經有緩存了，就直接從本地端拿圖片。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358VelbNWz9YM.png&#34; alt=&#34;&#34;&gt;
+圖 8 : CDN 與 Http 緩存都還沒過期&lt;/p&gt;
+&lt;h4 id=&#34;-2--cdn--http-&#34;&gt;情況 2 : CDN 過期而 HTTP 緩存還沒過期&lt;/h4&gt;
+&lt;p&gt;如下圖 9 所示。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;用戶端發請一個 http 請求要一張馬克圖。&lt;/li&gt;
+&lt;li&gt;cdn 的馬克圖還過期，至 server 拿取新圖。&lt;/li&gt;
+&lt;li&gt;server 回傳新馬克圖。&lt;/li&gt;
+&lt;li&gt;server 回應圖片，且會在表頭塞二個緩存用欄位。&lt;/li&gt;
+&lt;li&gt;瀏覽器看到回應有 Cache-Control 欄位，就將此圖片存在用戶端內。&lt;/li&gt;
+&lt;li&gt;用戶端第二次發送請一個 http 請求要一張馬克圖。&lt;/li&gt;
+&lt;li&gt;但發現本地端已經有緩存了，就直接從本地端拿圖。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358ZxoNCNxxb6.png&#34; alt=&#34;&#34;&gt;
+圖 9 :  CDN 過期而 Http 緩存還沒過期圖&lt;/p&gt;
+&lt;h3 id=&#34;--&#34;&gt;問題 - 雙方不同步&lt;/h3&gt;
+&lt;p&gt;這兩個混在一起時，有個地方有注意，不然會是雷 :&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;cdn 緩存過期時間與 http 緩存過期時間要一起考慮&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;問題會出在如下圖 10 所示，通常 server 端會決定這個圖片緩存時間要多久，而 cdn 這裡也有配置可以決定緩存時間要多久，而這時如果兩者時間不同步，那就會發生以下的情境。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;用戶 : 奇怪我明明已經更新大頭圖了，為啥等了 10 幾分鐘都還沒更新呢 ?
+server : 奇怪我明明設定緩存時間為 60 秒過期，客戶應該 60 秒後就會抓到新的啊……
+
+調查以後發現…
+
+cdn : 對不起 ~ 因為我這配置為 1000 秒後才更新緩存……
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;https://ithelp.ithome.com.tw/upload/images/20191006/20089358vfdtgRGJG5.png&#34; alt=&#34;&#34;&gt;
+圖 10 :  雙方配置問題點&lt;/p&gt;
+&lt;p&gt;這裡順到說一下，每一家 cdn 廠商緩存更新配置可以都會有點不同，請參閱更家文件，在來決定配置。&lt;/p&gt;
+&lt;h2 id=&#34;heading1&#34;&gt;結論與心得&lt;/h2&gt;
+&lt;p&gt;本篇文章中，咱們簡單的談談了兩個網路傳輸優化技術 :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CDN&lt;/li&gt;
+&lt;li&gt;HTTP 緩存&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;並且要注意在使用上，兩個有可能會互相的打架，這個小雷要注意。&lt;/p&gt;
+&lt;p&gt;最後如果想要看看 aws cloudFront cdn 服務的使用，可以參考我之前寫的文章，請參閱。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://mark-lin.com/posts/20180923/&#34;&gt;30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading2&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://kknews.cc/zh-tw/tech/gqkzny.html&#34;&gt;http緩存與cdn相關技術&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://blog.techbridge.cc/2017/06/17/cache-introduction/&#34;&gt;循序漸進理解 HTTP Cache 機制&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://zhuanlan.zhihu.com/p/55623075&#34;&gt;图解Http缓存控制之max-age=0、no-cache、no-store区别&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://caibaojian.com/mobile-cache.html&#34;&gt;移动web缓存介绍&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>

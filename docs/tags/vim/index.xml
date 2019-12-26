@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vim on 拿鐵派的馬克 Blog</title>
@@ -10,7 +9,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Wed, 01 Feb 2017 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/vim/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/vim/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,16 +18,130 @@
       <pubDate>Wed, 01 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170201/</guid>
-      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開發時，可以更快速的進行修正。
-配置完成果會如下圖，你可以看到他會自動顯示什麼地方需要修改，以及修改的原因。
-Step1. 安裝syntastic 首先我們第一步，要先安裝syntastic ，它是一個vim的套件，它的功用就是可以針對程式碼進行檢查，你可以針對不同的程式碼配置不同的檢查器，像我們要檢查javascipt時，就是配置了eslint這個檢查器。
-由於我是使用vundle，所以只要在.vimrc加入下面這行。然後再執行PluginInstall就會自動幫你裝好這套件了。
- Plugin &#39;scrooloose/syntastic&#39; 接下來我們會在.vimrc檔案內加入以下的配置。
- set statusline+=%#warningmsg# set statusline+=%{SyntasticStatuslineFlag()} set statusline+=%* let g:syntastic_always_populate_loc_list = 1 let g:syntastic_auto_loc_list = 1 let g:syntastic_check_on_open = 1 let g:syntastic_check_on_wq = 0 let g:syntastic_javascript_checkers = [&#39;standard&#39;] let g:syntastic_javascript_standard_generic = 1 let g:syntastic_javascript_checkers = [&#39;eslint&#39;] let g:syntastic_javascript_eslint_exec = &#39;eslint&#39; Step2. 安裝eslint checker. 上面的步驟我們已經完成了vim的配置，並且已經設置好javascript的檢查器為eslint，但我們實際上還沒安裝好eslint，所以我們這裡將要說明如何安裝eslint。
-首先要安裝全域的eslint。
-npm install -g eslint 然後在有packjson下的專案，執行下列指令，該指令可以進行eslint的規則配置，它會問你是否用es6或react之類的問題，然後根據你的回答產生出配置檔。
-eslint --init 產生出配置檔如下。eslint會根據該配置檔，來檢查javascript檔案。正常來說，這樣就該可以使用，但有時還是會有問題。
-module.exports = { &amp;quot;env&amp;quot;: { &amp;quot;browser&amp;quot;: true, &amp;quot;commonjs&amp;quot;: true, &amp;quot;es6&amp;quot;: true }, &amp;quot;extends&amp;quot;: &amp;quot;eslint:recommended&amp;quot;, &amp;quot;parserOptions&amp;quot;: { &amp;quot;ecmaFeatures&amp;quot;: { &amp;quot;experimentalObjectRestSpread&amp;quot;: true, &amp;quot;jsx&amp;quot;: true }, &amp;quot;sourceType&amp;quot;: &amp;quot;module&amp;quot; }, &amp;quot;plugins&amp;quot;: [ &amp;quot;react&amp;quot; ], &amp;quot;rules&amp;quot;: { &amp;quot;indent&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;tab&amp;quot; ], &amp;quot;linebreak-style&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;unix&amp;quot; ], &amp;quot;quotes&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;double&amp;quot; ], &amp;quot;semi&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;always&amp;quot; ] } }; BUG&amp;mdash;沒有出現錯誤訊息 正常來說，上面的流程有配置好，應該就可以使用，但是呢，我就在這邊debug了很久，它的錯誤提示一直沒有跑出來。我來說明一下我的debug流程。</description>
+      <description>&lt;p&gt;本篇文章中，我們將要和讀者說明，在使用&lt;code&gt;vim&lt;/code&gt;開發&lt;code&gt;javascript&lt;/code&gt;應用時，如何可以在每一次儲存時，自動的檢查我們&lt;code&gt;js&lt;/code&gt;是否有問題，讓我們在開發時，可以更快速的進行修正。&lt;/p&gt;
+&lt;p&gt;配置完成果會如下圖，你可以看到他會自動顯示什麼地方需要修改，以及修改的原因。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20170221-1.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;step1-syntastic&#34;&gt;Step1. 安裝syntastic&lt;/h2&gt;
+&lt;p&gt;首先我們第一步，要先安裝&lt;code&gt;syntastic &lt;/code&gt;，它是一個&lt;code&gt;vim&lt;/code&gt;的套件，它的功用就是可以針對程式碼進行檢查，你可以針對不同的程式碼配置不同的檢查器，像我們要檢查&lt;code&gt;javascipt&lt;/code&gt;時，就是配置了&lt;code&gt;eslint&lt;/code&gt;這個檢查器。&lt;/p&gt;
+&lt;p&gt;由於我是使用&lt;code&gt;vundle&lt;/code&gt;，所以只要在&lt;code&gt;.vimrc&lt;/code&gt;加入下面這行。然後再執行&lt;code&gt;PluginInstall&lt;/code&gt;就會自動幫你裝好這套件了。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; Plugin &#39;scrooloose/syntastic&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下來我們會在&lt;code&gt;.vimrc&lt;/code&gt;檔案內加入以下的配置。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt; set statusline+=%#warningmsg#
+ set statusline+=%{SyntasticStatuslineFlag()}
+ set statusline+=%*
+ let g:syntastic_always_populate_loc_list = 1
+ let g:syntastic_auto_loc_list = 1
+ let g:syntastic_check_on_open = 1
+ let g:syntastic_check_on_wq = 0
+ let g:syntastic_javascript_checkers = [&#39;standard&#39;]
+ let g:syntastic_javascript_standard_generic = 1
+ let g:syntastic_javascript_checkers = [&#39;eslint&#39;]
+ let g:syntastic_javascript_eslint_exec = &#39;eslint&#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;step2-eslint-checker&#34;&gt;Step2. 安裝eslint checker.&lt;/h2&gt;
+&lt;p&gt;上面的步驟我們已經完成了&lt;code&gt;vim&lt;/code&gt;的配置，並且已經設置好&lt;code&gt;javascript&lt;/code&gt;的檢查器為&lt;code&gt;eslint&lt;/code&gt;，但我們實際上還沒安裝好&lt;code&gt;eslint&lt;/code&gt;，所以我們這裡將要說明如何安裝&lt;code&gt;eslint&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;首先要安裝全域的&lt;code&gt;eslint&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g eslint
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後在有&lt;code&gt;packjson&lt;/code&gt;下的專案，執行下列指令，該指令可以進行&lt;code&gt;eslint&lt;/code&gt;的規則配置，它會問你是否用&lt;code&gt;es6&lt;/code&gt;或&lt;code&gt;react&lt;/code&gt;之類的問題，然後根據你的回答產生出配置檔。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;eslint --init
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;產生出配置檔如下。&lt;code&gt;eslint&lt;/code&gt;會根據該配置檔，來檢查&lt;code&gt;javascript&lt;/code&gt;檔案。正常來說，這樣就該可以使用，但有時還是會有問題。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;module.exports = {
+  &amp;quot;env&amp;quot;: {
+    &amp;quot;browser&amp;quot;: true,
+    &amp;quot;commonjs&amp;quot;: true,
+    &amp;quot;es6&amp;quot;: true
+  },
+  &amp;quot;extends&amp;quot;: &amp;quot;eslint:recommended&amp;quot;,
+  &amp;quot;parserOptions&amp;quot;: {
+    &amp;quot;ecmaFeatures&amp;quot;: {
+      &amp;quot;experimentalObjectRestSpread&amp;quot;: true,
+      &amp;quot;jsx&amp;quot;: true
+    },
+    &amp;quot;sourceType&amp;quot;: &amp;quot;module&amp;quot;
+  },
+  &amp;quot;plugins&amp;quot;: [
+    &amp;quot;react&amp;quot;
+  ],
+  &amp;quot;rules&amp;quot;: {
+    &amp;quot;indent&amp;quot;: [
+      &amp;quot;error&amp;quot;,
+      &amp;quot;tab&amp;quot;
+    ],
+    &amp;quot;linebreak-style&amp;quot;: [
+      &amp;quot;error&amp;quot;,
+      &amp;quot;unix&amp;quot;
+    ],
+    &amp;quot;quotes&amp;quot;: [
+      &amp;quot;error&amp;quot;,
+      &amp;quot;double&amp;quot;
+    ],
+    &amp;quot;semi&amp;quot;: [
+      &amp;quot;error&amp;quot;,
+      &amp;quot;always&amp;quot;
+    ]
+  }
+};
+
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;bug&#34;&gt;BUG&amp;mdash;沒有出現錯誤訊息&lt;/h2&gt;
+&lt;p&gt;正常來說，上面的流程有配置好，應該就可以使用，但是呢，我就在這邊&lt;code&gt;debug&lt;/code&gt;了很久，它的錯誤提示一直沒有跑出來。我來說明一下我的&lt;code&gt;debug&lt;/code&gt;流程。&lt;/p&gt;
+&lt;p&gt;首先，我在&lt;code&gt;vim&lt;/code&gt;中使用&lt;code&gt;:SyntasticInfo&lt;/code&gt;來確定，我的&lt;code&gt;eslint checker&lt;/code&gt;是否有設定好。根據輸出的資料，&lt;code&gt;Available checker&lt;/code&gt;與&lt;code&gt;Currently enabled checker&lt;/code&gt;都有設定好。那問題又出在那呢?&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Syntastic version: 3.8.0-24 (Vim 704, Darwin, GUI)
+Info for filetype: javascript
+Global mode: active
+Filetype javascript is active
+The current file will be checked automatically
+Available checker: eslint
+Currently enabled checker: eslint
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;接下來我上網查到，可以看到&lt;code&gt;syntastic&lt;/code&gt;的&lt;code&gt;complie log&lt;/code&gt;。首先你需要至&lt;code&gt;.vimrc&lt;/code&gt;新增一行指令。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;let g:syntastic_debug=3
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後再回到要檢查的檔案，並開起，你就會自動看到它跑出的&lt;code&gt;complie log&lt;/code&gt;，如果沒自動跑出來你可以執行&lt;code&gt;:mes&lt;/code&gt;一樣會跑出來。&lt;/p&gt;
+&lt;p&gt;開起後你就會看到一坨輸出。其中我看到這段輸出怪怪的，它說無法讀取到&lt;code&gt;eslint-plugin-react&lt;/code&gt;。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;syntastic: 2.113305: checker output: [&#39;&#39;, &#39;Oops! Something went wrong! :(&#39;, &#39;&#39;, &#39;ESLint couldn&#39;&#39;t find the plugin &amp;quot;eslint-plugin-react&amp;quot;. This can happen for a
+ couple different reasons:&#39;, &#39;&#39;, &#39;1. If ESLint is installed globally, then make sure eslint-plugin-react is also installed globally. A globally-installed ESLi
+nt cannot find a locally-installed plugin.&#39;, &#39;&#39;, &#39;2. If ESLint is installed locally, then it&#39;&#39;s likely that the plugin isn&#39;&#39;t installed correctly. Try reinsta
+lling by running the following:&#39;, &#39;&#39;, &#39;    npm i eslint-plugin-react@latest --save-dev&#39;, &#39;&#39;, &#39;If you still can&#39;&#39;t figure out the problem, please stop by https
+://gitter.im/eslint/eslint to chat with the team.&#39;, &#39;&#39;, &#39;&#39;]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;所以最後我就根據它的說明，直接安裝全域的&lt;code&gt;eslint-plugin-react&lt;/code&gt;就解決囉。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;npm install -g eslint-plugin-react
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;reacteslint&#34;&gt;React的eslint規則設定&lt;/h2&gt;
+&lt;p&gt;以下為用來測試的&lt;code&gt;react&lt;/code&gt;檔如下。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import React from &amp;quot;react&amp;quot;; 
+import ReactDOM from &amp;quot;react-dom&amp;quot;;
+var a ;
+function App ()  {
+	return (
+    &amp;lt;div className=&amp;quot;container&amp;quot;&amp;gt;Hello&amp;lt;/div&amp;gt;);
+}
+
+const app = document.createElement(&amp;quot;div&amp;quot;);
+document.body.appendChild(app);
+ReactDOM.render(&amp;lt;App/&amp;gt;, app);
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;然後我們實際執行&lt;code&gt;eslint&lt;/code&gt;時會出現這三個錯誤。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;  1 app/app.jsx|1 col 8 error| &#39;React&#39; is defined but never used. (no-unused-vars)                                            |~
+  2 app/app.jsx|4 col 5 error| &#39;a&#39; is defined but never used. (no-unused-vars)                                                |~
+  3 app/app.jsx|5 col 10 error| &#39;App&#39; is defined but never used. (no-unused-vars)
+
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;但是我們發現，這幾個檢查在我們使用&lt;code&gt;react&lt;/code&gt;時，都是一定會產生的，那要如何讓&lt;code&gt;eslint&lt;/code&gt;不要略過這幾項呢?&lt;/p&gt;
+&lt;p&gt;首先，我們先看第三個錯誤&lt;code&gt;&#39;App&#39; is defined but never used&lt;/code&gt;，我們&lt;code&gt;App&lt;/code&gt;實際上是有使用在&lt;code&gt;ReactDOM.render(&amp;lt;App/&amp;gt;, app)&lt;/code&gt;這上面，但&lt;code&gt;eslint&lt;/code&gt;卻沒判斷到，這時我們只要在&lt;code&gt;.eslintrc&lt;/code&gt;裡加入下面這行，就可以解決。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;&amp;quot;react/jsx-uses-vars&amp;quot;: [2]
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;那第一個錯誤呢&lt;code&gt;&#39;React&#39; is defined but never used&lt;/code&gt;，雖然我們的確沒用到它，但在&lt;code&gt;jsx&lt;/code&gt;檔中一定需要它，這時我們可以用這招，在該行加入這行文字&lt;code&gt;// eslint-disable-line no-unused-vars&lt;/code&gt;就解決囉~&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import React from &amp;quot;react&amp;quot;; // eslint-disable-line no-unused-vars
+&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;syntastic&#34;&gt;syntastic的顏色設定&lt;/h2&gt;
+&lt;p&gt;一開始預設的的錯誤訊息以及提示的顏色不是很好看，如果你想修改，可以在&lt;code&gt;.vimrc&lt;/code&gt;下加入這幾行。&lt;/p&gt;
+&lt;p&gt;其中&lt;code&gt;SyntasticError &lt;/code&gt;指的是程式碼內的錯誤提示，而&lt;code&gt;SyntasticErrorSign &lt;/code&gt;則是提示那一行有錯誤的那個箭頭。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;highlight link SyntasticError ErrorMsg
+highlight link SyntasticErrorSign WarningMsg
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;而&lt;code&gt;ErrorMsg &lt;/code&gt;與&lt;code&gt;WarningMsg &lt;/code&gt;為顏色與樣式，你可以在&lt;code&gt;vim&lt;/code&gt;中輸入&lt;code&gt;:highlight&lt;/code&gt;就可以看到很多的顏色與樣式可給你選擇了。&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;:highlight
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;img src=&#34;http://yixiang8780.com/outImg/20170221-2.png&#34; alt=&#34;&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;heading&#34;&gt;參考資料&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/eslint/eslint/issues/3782&#34;&gt;&lt;a href=&#34;https://github.com/eslint/eslint/issues/3782&#34;&gt;https://github.com/eslint/eslint/issues/3782&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vim-syntastic/syntastic&#34;&gt;&lt;a href=&#34;https://github.com/vim-syntastic/syntastic&#34;&gt;https://github.com/vim-syntastic/syntastic&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/vim-syntastic/syntastic#faqinfo&#34;&gt;&lt;a href=&#34;https://github.com/vim-syntastic/syntastic#faqinfo&#34;&gt;https://github.com/vim-syntastic/syntastic#faqinfo&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/&#34;&gt;&lt;a href=&#34;https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/&#34;&gt;https://noootown.wordpress.com/2015/11/17/vim-syntastic-eslint/&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
     </item>
     
   </channel>
