@@ -25,10 +25,17 @@ a:hover {
 }
 
 #header {
+  max-width: 1012px;
   background-color: #333 !important;
   font-size: 40px;
-  margin-bottom: 30px;
   margin-top: 20px;
+
+  margin-right: auto;
+  margin-left: auto;
+  grid-area: header;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: none;
 }
 
 .UnderlineNav-actions {
@@ -238,9 +245,12 @@ body {
     "footer side";
 }
 #header {
-  grid-area: header;
-  margin-bottom: 45px;
 }
+
+#header nav {
+  flex: 1
+}
+
 #main {
   grid-area: main;
   max-width: 782px;
@@ -309,7 +319,11 @@ aside {
   #holy {
     display: block;
   }
-  #header {
+  #header nav{
+    flex: none;
+  }
+  #header .header-ad {
+    display: none;
   }
   #main {
     max-width: 1012px;
