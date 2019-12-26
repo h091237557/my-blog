@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>nodejs on 拿鐵派的馬克 Blog</title>
@@ -9,7 +10,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Fri, 08 Mar 2019 19:51:35 +0800</lastBuildDate>
     
-        <atom:link href="https://mark-lin.com/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mark-lin.com/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,6 +19,11 @@
       <pubDate>Fri, 08 Mar 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190308/</guid>
+      <description>Nodejs 出來時它的官網寫這以下的描述 :
+ Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world.
+ 簡而言之 Nodejs 是運行在 V8 javascript 引擎，並且使用 Event driven 與 non-blocking I/O 模式所建立出來的東東。
+而這裡我們就要深入的來理解 Nodejs 的運行機制。
+ Nodejs 核心設計 - 非阻塞 I/O 模式 Nodejs 架構與運行 Nodejs 為什麼需要使用 thread ?</description>
     </item>
     
     <item>
@@ -26,6 +32,11 @@
       <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170611/</guid>
+      <description>本文中我們將會知道兩件事件
+為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
+ 加 減 乘 除  然後實際上執行大概會長這樣 :
+add(5) =&amp;gt; current = 5 sub(3) =&amp;gt; current = 2 mul(3) =&amp;gt; current = 6 div(3) =&amp;gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
+class Calculator { constructor(){ this.current = 0; } add(value){ this.current += value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.</description>
     </item>
     
     <item>
@@ -34,6 +45,15 @@
       <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170610/</guid>
+      <description>本篇文章中，我們想要知道以下兩件事情 :
+  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
+var user = { login: function (type) { if (type == &amp;#34;google&amp;#34;) { doGoogleLoginSomething(); console.log(&amp;#34;google login process&amp;#34;); } else if (type == &amp;#34;facebook&amp;#34;) { doFbLoginSomething(); console.log(&amp;#34;facebook login process&amp;#34;); } else { doSomething(); console.log(&amp;#34;custom login process&amp;#34;); } } } user.login(&amp;#34;google&amp;#34;); 那上面這段程式碼中，有那些缺點呢 ?
+首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
+第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
+ 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
+好處 : 較好維護、較好測試、可重複使用
+ 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
+策略模式簡單的來說，就是為了處理以下的情況 :</description>
     </item>
     
     <item>
@@ -42,6 +62,28 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170607/</guid>
+      <description>在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
+訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
+ 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
+ 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
+至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
+使用訊息佇列的十個理由&amp;mdash;簡中
+然後我們先簡單的說明一下訊息系統的基礎。
+訊息系統架構 基本上分為以下兩種 :
+對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
+ 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
+ zeroMQ 他可以幫助我們建立對等式架構。
+ 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
+以下為中介者架構的圖示 :
+ RabbitMQ 就是專門用來建立這個架構的東東。
+ 接下來的文章中，我們將要先來實作一些rabbitmq。
+Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
+如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
+那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
+根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
+它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
+佇列它還有以下三種特性 :
+ 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?</description>
     </item>
     
     <item>
@@ -50,6 +92,16 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170608/</guid>
+      <description>上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。
+所以後來就有人提出使用對等式架構來解決這個問題，這個架構就是會將broker給移除掉，每一個用戶端同時也是伺服器端，像比特幣這種應用就是用該結構來處理。
+但相對的，它也有缺點，那就是要建置起來較為複雜，用在大規模的網路上，管理較難、安全性較低。
+使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作 zeromq它是一套網路通訊函式庫，記得他不是一個伺服器，而是一個lib，它在socket api之上做了一層封裝，將網路、通訊、進程等抽象化為統一的 API 接口，它和 socket 的區別是 :
+ socket : 點對對的關係(一對一) zeromq : 多點對多點的關係(多對多)  那 zeromq 有什麼特點呢 ? 它有以下四個特點 :
+ 去中心化 (無 broker) 強調訊息收發模式 以統一的接口支持多種底層通信方式 異步 速度飛快 (請參考這篇比較)  不過有一點要注意一下，zeromq 它不是一個獨立的伺服器進程 (rabbitmq 是)，所以嚴格來說它不是 mq ，它沒有 mq 這種在中間解耦合的能力，事實上他的名命也說了 zero mq 。
+zeromq 主要提供三種類型的通訊模式分別如下 :
+REQ (request) / REP (reply) 模式 這模式就是傳統的一個 reuest 配一個 response 的模式，非常的簡單。
+下面這段程式碼是發送請求(request)的程式碼。
+var zmq = require(&amp;#39;zeromq&amp;#39;); var requester = zmq.</description>
     </item>
     
     <item>
@@ -58,6 +110,16 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170609/</guid>
+      <description>本篇文章中，我們想要知道以下的重點 :
+  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
+ passort.js 活著的目的就是為了驗證 request
+ 要使用 passport 來進行驗證，需要設定三個東西 :
+ 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
+ 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
+ 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
+而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
+而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
+var users = { zack: { username: &amp;#39;zack&amp;#39;, password: &amp;#39;1234&amp;#39;, id: 1, }, node: { username: &amp;#39;node&amp;#39;, password: &amp;#39;5678&amp;#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &amp;#39;username&amp;#39;, passwordField: &amp;#39;password&amp;#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &amp;#39;Invalid user&amp;#39; }); }; if (user.</description>
     </item>
     
     <item>
@@ -66,6 +128,22 @@
       <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170606/</guid>
+      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。
+而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 :
+ 反向代理器
+ 這種擴展的方法為，在不同的 port 或不同的機器上，我們會啟動多個應用程式，然後使用反向代理器來存取這些機器，用來分散流量。
+他不會像 cluster 上有一個master process然後將工作分配給多個worker，而是有更多個獨立的程式執行在同一個機器不同 port上或是分散在相同的網路中的不同機器上，然後會以反向代理器為入口，由他處理請求並與後端的伺服器做處理，然後在由他回傳給客戶端。
+下圖為該結構的圖示 :
+那他這樣做有什麼優點呢 ? 事實上他就是 proxy 的用法，也就是說 :
+ 他可以保護伺服器
+ 反向代理器可以和我們上一章所說的cluster一起使用，例如單一機器使用 cluster 進行垂直擴展，再使用反向代理器來做水平性擴展。
+本篇文章中我們將使用最常用來做反向代理器的Nginx 。
+Nginx 做反向代理器，並配置負載平衡 nginx是一個網頁伺服器，它的設計架構和 nodejs 非常的相似，都是單一執行緒架構，並且還有豐富的模組庫和第三方工具可以使用，非常的方便啊。
+這邊我們將要使用nginx來作為反向代理器，並且進行負載平衡的功能，它要做的工作就是 :
+ 我們有多台伺服器，然後請求進來要將請求分給其它台伺服器。
+ 首先我們先安裝 nginx
+// ubuntu apt-get install nginx // mac brew install nginx 然後我們簡單的建立一個 server，它每一次收到請求時，都會回傳這個工作是那個port來進行處理。
+// app.js  const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.log(&amp;#34;master:&amp;#34; + process.pid); res.writeHead(200); res.write(&amp;#34;port:&amp;#34; + this.</description>
     </item>
     
     <item>
@@ -74,6 +152,16 @@
       <pubDate>Mon, 05 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170605/</guid>
+      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一定會有界限，因此我們必須將應用程式擴展運用。
+根據The Art of Scalabiltiy的內容來知道，在擴展時，可以用下列三個維度來描述可擴展性。這也是被稱為擴展立方(scale cube)的東東。
+ X 軸 : 複制 Y 軸 : 以服務/功能分解 Z 軸 : 以資料來分解  基本上Y軸擴展的方法是屬於微服務(Microservices)的範圍所以本篇也不詳細說明，而Z 軸則屬於資料庫方法所以也不加以說明。
+我們本篇將要說明X軸 : 複制，它的白話文概念如下 :
+ 將應用程式加以複制 N 個，這也代表每個實體只須處理 N 分之一的工作量。
+ 傳統的系統可以利用多執行緒，來完整使用整台機器的效能，但 node 則否，因為它是單一執行緒，並且在 64 位元下有1.7GB的限制，接下來我們將介紹 node 擴展的基本機制 cluster。
+cluster cluster是在 node 中的內建模組，他讓我們可以建立一個 cluster，可通過父進程來管理一堆子進程，在 cluster 中父進程被稱為master process，而子進程則被稱為worker process。
+每個傳送的連線都會先到master process然後會在將工作分配到worker process中。
+我們根據上一篇的程式碼來進行修改。下面程式碼中，首先請先看if(cluster.isMaster)裡面，當執行時，會使用cluster fork根據 cpu 的數量來新增 process，然後每次fork時都會執行else裡面的程式。
+const http = require(&amp;#39;http&amp;#39;); const child_process = require(&amp;#39;child_process&amp;#39;); const cluster = require(&amp;#39;cluster&amp;#39;); const numCPUs = require(&amp;#39;os&amp;#39;).</description>
     </item>
     
     <item>
@@ -82,6 +170,29 @@
       <pubDate>Sun, 04 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170604/</guid>
+      <description>這篇文章中，我們希望學習到 :
+ 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ?
+ 首先我們先來複習一下nodejs的機制一下。
+我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當有一個請求進來時，它們都會產生一個執行緒，但nodejs則否，他是用一個執行緒就來處理所有的請求，而他的背後就是有個事件機制設計才能做到這種方法。請參考這篇。
+ 但為什麼要設計成用單一執行序架構呢?
+ 這邊我們要先來說說I/O操作。
+I/O 問題 I/O就是電腦中資料與記憶體、硬碟或網路的輸入和輸出，他基本上是電腦作業裡最慢的事物，I/O操作基本上對 cpu 而言通常負擔很小，但是問題就在於它很耗時。
+傳統的阻塞I/O設計方式如下 :
+data = getData(); print(data); 我們假設getData是要去讀取一個檔案，而這時會等到getData執行完後，就資料傳送給data時我們才可以使用。
+那假設我們這個getData要讀很久，那這樣的話其它的請求著麼辦 ?
+傳統的作法就會像下面這張圖一樣，系統會分別的開啟不同的執行緒來進行處理，如此一來，當有某個執行緒因I/O操作而阻塞時，就不會影響到其它的請求。
+這種作法的缺點就在於 :
+ 開啟執行緒的成本不低，它會消耗記憶體而且引發環境切換
+ 那node他著麼處理呢 ?
+他使用單一執行緒機制，而他的執行緒中有一個機制被稱為事件機制，簡單的說事件機制可以將所有的請求收集起來，並且將需要長時間處理的工作丟出去工作給其它人做(I/O)，然後繼續接收新的請求，就如同下圖一樣，這樣的優點就在於，他可以接受更多的請求，，而不會因為一個長時間的I/O，其它東西就都卡住不能動。
+但他也是有缺點的 :
+ 它無法充分利用多核 cpu 資源
+ 當 Event loop 遇到 CPU 密集型任務會發生什麼事 ? 上面有提到單一執行緒機制有一個缺點，那就是無法統分利用cpu資源，這是什麼意思呢 ?
+傳統的方式，每個請求分配一個執行緒，他都可以得到一個不同於自已的 cpu，在這種情況下多執行緒可以大大的提高資源使用效率。
+而這也代表的單執行緒他就只能占用一個 cpu ，並且如果某個任務是很吃 cpu 的工作時，這執行緒就會被那個任務占用，導致其它的任務、請求都無法執行。
+我們下面簡單的寫一段程式碼來看看會發生什麼事情。
+下面這段程式碼裡，我們將簡單的建立一個server，它一收到請求，就會開始計算費波南西數列，這種運算基本上就是一個很耗 CPU 的工作。
+const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.</description>
     </item>
     
     <item>
@@ -90,6 +201,51 @@
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170603/</guid>
+      <description>本篇文章中我們將要解決以下的問答。
+  什麼是代理器模式 ? 我們為什麼要使用它 ?   其中本篇文章還會介紹ES6所提供的Proxy使用方法。
+什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器模式的概念，無論如何，client和Real Object之間一定會由Proxy來進行溝通。
+我們還可以用下面這句非常白話文的文字來表達代理器模式的精華。
+ 我的時間很忙的，除非真的要用到我，不然請直接找我的代理人。
+ 我們簡單來寫個範例來說明一下，代理器的實際上使用，首先我們先寫一個登入的程式。
+Class UserService{ construct () { } GetUser(name,password){ ...... return user; } } 然後通常我們要使用的時後會執行下面程式碼。
+const userService = new UserService(); const user = userService.GetUser(&amp;#34;mark&amp;#34;,&amp;#34;123456789&amp;#34;); 這樣看起來是沒什麼問題，東西是都還可以執行，然後我們來改寫成代理器的模式，我們會先建立一個UserServiceProxy，我們外面要使用UserService時，都只能透過這個Proxy進行溝通 (想找明星，只能想找他的代理人)。
+ 注意 : 這只是其中一種寫法，代理器還有很多的方法可實現。
+ Class UserServiceProxy { construct(real){ this.Real = real; } GetUser(name,passowrd){ const real = new Real(); real.getUser(name,password); } } const userServiceProxy = new UserServiceProxy(UserService); const user = userServiceProxy.</description>
+    </item>
+    
+    <item>
+      <title>Node.js 的串流之旅之雙工串流與管道</title>
+      <link>https://mark-lin.com/posts/20170602/</link>
+      <pubDate>Fri, 02 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170602/</guid>
+      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。
+ Tranform Stream Duplex Stream  那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨立的readable與writable的組成。
+而tranform就是寫出與讀入彼此間的資料存在有轉換關係，我們接下來會直接實作程式碼，更能夠看出它們兩個的差異。
+最後我們還會說到pipe，它的功用就是用來接串流組合起來。
+Tranform Stream 我們這邊會簡單做個替換指定字串的Transform串流，其中這個類別，我們需要實作兩個方法_transform與_flust。
+_transform基本上與readable的_read很像，是將資料寫入水缸中，而不是直接將它寫到資源內，而我們在這個方法中實作了將指定字串連行替換。
+_flush是在串流要結束時，如果還有事實沒有處理，這時就可以在_flush進行處理，像我們這個範例中，想要在最後加個!!!!!時，就是寫在這裡。
+基本上只要前一篇文章中的readable與writable基本概念都了解，那這些雙工串流你會學的很輕鬆的。
+const stream = require(&amp;#39;stream&amp;#39;); class TransofrmStream extends stream.Transform{ constructor(search_string, replace_string){ super({decodeStrings:false}); this.search_string=search_string; this.replace_string = replace_string; } _transform(chunk, encoding, cb){ const result = chunk.toString().replace(this.search_string,this.replace_string); this.push(result); cb(); } _flush(cb){ this.push(&amp;#39;!!!!&amp;#39;) cb(); } } const transofm_stream = new TransofrmStream(&amp;#39;World&amp;#39;, &amp;#39;Mark&amp;#39;); transofm_stream.on(&amp;#39;data&amp;#39;, (chunk) =&amp;gt; { console.log(chunk.toString()); }) transofm_stream.write(&amp;#39;Hello World&amp;#39;); transofm_stream.write(&amp;#39;Mark ! you are my all World&amp;#39;); transofm_stream.</description>
+    </item>
+    
+    <item>
+      <title>Node.js 的串流之旅之基本概念</title>
+      <link>https://mark-lin.com/posts/20170601/</link>
+      <pubDate>Thu, 01 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170601/</guid>
+      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資料，一直傳送給網頁，所以我們可以直接進行觀看，並且在觀看時它還會繼續傳送後面的片段過來。
+串流的優點 在node js中，傳送內容基本上有分兩種形式，一種是緩衝而另一種就是串流，我們先來看看緩衝在處理資料傳送時，它是如何處理。
+緩衝它的基本概念就是將所有的資料先收集到緩衝區裡，當資料已經完整的讀取完，在傳送給接受者，如下圖所示，它會將HELLO MARK這所有的資料先讀取完，然後才能傳送給接受者。
+然後我們來看看串流，它每個時間點一接受到資料就會直接發送給接受者，所以如下圖所示，在時間點t1時，它會接受到HELLO這串資料，然後在t2時會接受到剩下的MARK資料。
+那這樣有什麼好處呢 ? 簡單的說有兩個優點，一個是空間效率，因為如果使用緩衝的方法來進行個10gb以上的資料傳輸，就代表這你需要10gb的緩衝空間，那這樣記憶體一定爆掉。而第二個優點就是時間效率，就如同最上面的影片例子來說明，使用串流，你可以直接看影片，然後再看影片時，它還會繼續傳送剩下的影片片段，節省了等待時間。
+緩衝與串流的程式碼實做比較 我們簡單寫一個檔案下載的伺服器，然後分別以緩衝與串流的程式碼，來進行實作，在nodejs中，有個 module 名為fs，它是專門用來處理檔案傳輸的工具，它也同時繼承了node 中的串流模組stream。
+緩衝讀取檔案實作 這是一個下載aaa.avi檔案的伺服器，但假設該檔案大小如果大於1024mb(舊版本node)的話，它會直接死掉，因為它緩衝爆掉了。
+基本上這種類形的api被稱為Bulk I/O。
+const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.createServer((req, res) =&amp;gt; { fs.readFile(&amp;#39;aaa.avi&amp;#39;, (err, data) =&amp;gt; { if(err) { console.log(err); res.writeHead(500); res.end(err.message); } else{ res.writeHead(200, { &amp;#39;Content-Type&amp;#39;: &amp;#39;video/avi&amp;#39; }); res.end(data); } }); }); server.listen(3000, () =&amp;gt; { console.log(&amp;#39;server up !&amp;#39;); }); 串流讀取檔案實作 下列程式碼就是使用串流來實作的讀取檔案伺服器，這樣如果檔案大小在大，它都可以進行處理，因為它是將大檔案分割成小塊小塊，然後一直傳輸。
+const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.</description>
     </item>
     
   </channel>

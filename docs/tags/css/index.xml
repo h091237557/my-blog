@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>css on 拿鐵派的馬克 Blog</title>
@@ -9,7 +10,7 @@
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Mon, 01 Feb 2016 19:51:35 +0800</lastBuildDate>
     
-        <atom:link href="https://mark-lin.com/tags/css/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://mark-lin.com/tags/css/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -18,6 +19,15 @@
       <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160201/</guid>
+      <description>Css Box Model 規定了Element處理元素Content、Padding、border、margin的方式 。
+Box Model基本概念 這張圖就是在說明一個Element元素的Box Model，紅色框範圍內表代為Element內的各屬性距離，而橘色框的代表Element與Element之間的距離。
+來看看下列的Html與Css
+&amp;lt;!--html --&amp;gt; &amp;lt;div class=&amp;#34;box1&amp;#34;&amp;gt;Box 1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;box2&amp;#34;&amp;gt;Box 2&amp;lt;/div&amp;gt; -------------------------------- &amp;lt;!--Css --&amp;gt; .box1{ padding:10px; border: 5px solid red; margin:10px } 顯示如下，其中Box 1文字到框線的距離為padding 10px，然後框線的寬度為5px， 最後Box1和Box2的距離為margin 10px。
+Chrome Tools 的 Elements Style 的結果如下。
+Box Model的寬度 如果在一個Element設置width，那麼該Element的寬度是指Box Model的那個範圍呢??根據W3C的標準定義Content Width，如下面Css我們在增加width:500px屬性。
+.box1{ width:500px; padding:10px; border: 5px solid red; margin:10px } 結果如下，width:500px所指的為content width，也就是Element的內容寬度。
+Box-Sizing屬性 在上一段文章中有提到，在Element上增加width屬性實際上是指content width， 所以有時後有人會很疑惑，明明寬度設了500px或XXXpx卻還是超過，這往往是Box Model不熟悉的問題。
+而Box-Sizing屬性的border-box值，就是指將width屬性從content width改成content + padding + border 的 with，如下Css，我們新增加了box-sizing : border-box。</description>
     </item>
     
     <item>
@@ -26,6 +36,15 @@
       <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160202/</guid>
+      <description>在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Element的Position屬性設置四種類型的值分別為static、relative、absolute、fixed。
+Static static為position的預設值，它會在頁面上佔據位置，但不能使用top right bottom left移動Element。請看看下面範例。
+HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2&amp;lt;/div&amp;gt; CSS	.test1 { position:static; background-color:red; top:100px; right:100px; } .test2 { background-color:green; } 從結果可看出Test1完全沒有移動，且有佔據位置，所以Test2會在Test1下面。
+Relative relative為相對定位，元素在頁面上佔據位置，可使用top right bottom left移動Element。
+其中所謂的相對定位概念可以想成，一個元素設置成相對定位，然後可以設置它垂直或水平的位置，讓這個元素相對於原本位置進行移動，並且會保留原本位置的空間。如下圖框2的原本位置空間會保留。
+HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2&amp;lt;/div&amp;gt; CSS .test1 { position:relative; background-color:red; top:10px; left:10px; } .test2 { background-color:green; } 從下圖可知Test1，向下位移了10px，並向右移10px，但注意Test1原本的空間位置還在喔。
+Absolute Absolute為絕對定位，相對於最近一級且不是static的父元素來進行定位。元素在頁面不占據位置，你可以想成他從頁面上浮起來，然後它移動的起使位置為父元素，可以使用top right bottom left移動元素位置，如下圖不會像相對定位一樣保留原本框2的空間與位置。
+HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2 &amp;lt;div class=&amp;#34;test3&amp;#34;&amp;gt;Test3&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; CSS
+.test1 { height:30px; background-color:red; } .test2 { height:50px; position:relative; background-color:green; } .</description>
     </item>
     
   </channel>
