@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -49,7 +52,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -97,7 +100,7 @@
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190325/">
@@ -122,15 +125,24 @@
   </div>
   <div>
     
-    socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的
-    <a class="muted-link" href="/posts/20190325/">…</a>
+    <div class="summary">
+    socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
+而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
+ 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
+ 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
+本篇文章架構如下 :
+ 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
+這裡我們就要先從 socket.io 建立連線的流程開始說啟。
+Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
+var socket = require(&#39;socket.io-client&#39;)(&#39;http://localhost&#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170915/">
@@ -159,15 +171,22 @@
   </div>
   <div>
     
-    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client
-    <a class="muted-link" href="/posts/20170915/">…</a>
+    <div class="summary">
+    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
+var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
+Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
+前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io('xxxx')時，他就會去後端建立連線。
+&lt;script src=&#34;/socket.io/socket.io.js&#34;&gt;&lt;/script&gt; &lt;script&gt; var socket = io(&#39;http://localhost&#39;); socket.on(&#39;connect&#39;, function(){}); &lt;/script&gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
+lookup 原始碼
+function lookup (uri, opts) { .... if (newConnection) { debug(&#39;ignoring socket cache for %s&#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&#39;new io instance for %s&#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170914/">
@@ -196,15 +215,24 @@
   </div>
   <div>
     
-    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳
-    <a class="muted-link" href="/posts/20170914/">…</a>
+    <div class="summary">
+    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
+你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
+但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
+websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
+那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
+Socket.io 的組成 請參考筆者的這篇文章。
+Socketio 的架構
+簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &quot;world&quot;}訊息。
+var io = require(&#39;socket.io&#39;).listen(8080); io.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170913/">
@@ -233,8 +261,15 @@
   </div>
   <div>
     
-    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成
-    <a class="muted-link" href="/posts/20170913/">…</a>
+    <div class="summary">
+    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
+socket.io 主要由以下幾個東東構成的 :
+ engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
+engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
+目前 engine.io 所提供的溝通方式有以下幾種 :
+ polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
+var engine = require(&#39;engine.io&#39;); var server = engine.listen(80); server.on(&#39;connection&#39;, function(socket){ socket.send(&#39;utf 8 string&#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.
+    </div>
   </div>
 </div>
 

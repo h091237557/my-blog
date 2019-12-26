@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞|Describe what your web page is about">
+    <meta name="description" property="og:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞，尤其應該有不少人有看過這篇『我是如何向老婆解释MapReduce的？』，不過它原文版好像消失了，扣惜。
+~MapReduce~ MapReduce是google所提出的軟體架構，主要用來處理大量的數據，而mongodb根據它的架構建構出可以在mongodb中使用的聚合工作，MapReduce它可以將一個複雜的問題拆分為多個小問題(map)，然後發送到不同的機器上，完成時再合併為一個解決方案(reduce)，簡單的畫張圖來看看。
+但這個方法和aggregate framework有什麼差別 ?
+ aggregate framework 提供較優透的性能。
+MapReduce性能較差，但可提供更複雜的聚合功能。
+ ~ Mongodb 的 MapReduce 使用~ mongodb中的MapReduce使用的方法如下。
+db.collection.mapReduce( map, reduce, { &amp;lt;out&amp;gt;, &amp;lt;query&amp;gt;, &amp;lt;sort&amp;gt;, &amp;lt;limit&amp;gt;, &amp;lt;finalize&amp;gt;, &amp;lt;scope&amp;gt; } ) 其中參數的說明如下。
+   參數 說明     map map函數，主要功能為產生key給reduce。   reduce reduce函數。   out 輸出結果集合的名稱。   query 在map前，可用query先進行篩選。   sort 在map前，可用sort進行排序。   limit 在map前，可限制數量。   finalize 可以將reduce的結果，丟給某個key。   scope 可以在js中使用變數。    實際應用1 ~ 根據 class 分組計算每組訂單收入 是的，這個例子我們在aggregate framework時有用過，事實上這種簡單的例子用MapReduce來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-16之MongoDB聚合(3)---潮潮的MapReduce | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞|Describe what your web page is about">
+    <meta name="twitter:description" content="前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞，尤其應該有不少人有看過這篇『我是如何向老婆解释MapReduce的？』，不過它原文版好像消失了，扣惜。
+~MapReduce~ MapReduce是google所提出的軟體架構，主要用來處理大量的數據，而mongodb根據它的架構建構出可以在mongodb中使用的聚合工作，MapReduce它可以將一個複雜的問題拆分為多個小問題(map)，然後發送到不同的機器上，完成時再合併為一個解決方案(reduce)，簡單的畫張圖來看看。
+但這個方法和aggregate framework有什麼差別 ?
+ aggregate framework 提供較優透的性能。
+MapReduce性能較差，但可提供更複雜的聚合功能。
+ ~ Mongodb 的 MapReduce 使用~ mongodb中的MapReduce使用的方法如下。
+db.collection.mapReduce( map, reduce, { &lt;out&gt;, &lt;query&gt;, &lt;sort&gt;, &lt;limit&gt;, &lt;finalize&gt;, &lt;scope&gt; } ) 其中參數的說明如下。
+   參數 說明     map map函數，主要功能為產生key給reduce。   reduce reduce函數。   out 輸出結果集合的名稱。   query 在map前，可用query先進行篩選。   sort 在map前，可用sort進行排序。   limit 在map前，可限制數量。   finalize 可以將reduce的結果，丟給某個key。   scope 可以在js中使用變數。    實際應用1 ~ 根據 class 分組計算每組訂單收入 是的，這個例子我們在aggregate framework時有用過，事實上這種簡單的例子用MapReduce來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -139,18 +156,18 @@
 </blockquote>
 <h2 id="-mongodb--mapreduce-">~ Mongodb 的 MapReduce 使用~</h2>
 <p><code>mongodb</code>中的<code>MapReduce</code>使用的方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
-    <span class="nx">map</span><span class="p">,</span>    
-    <span class="nx">reduce</span><span class="p">,</span> 
-    <span class="p">{</span>
-        <span class="o">&lt;</span><span class="nx">out</span><span class="o">&gt;</span><span class="p">,</span>    
-        <span class="o">&lt;</span><span class="nx">query</span><span class="o">&gt;</span><span class="p">,</span> 
-        <span class="o">&lt;</span><span class="nx">sort</span><span class="o">&gt;</span><span class="p">,</span>   
-        <span class="o">&lt;</span><span class="nx">limit</span><span class="o">&gt;</span><span class="p">,</span>  
-        <span class="o">&lt;</span><span class="nx">finalize</span><span class="o">&gt;</span><span class="p">,</span> 
-        <span class="o">&lt;</span><span class="nx">scope</span><span class="o">&gt;</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">mapReduce</span>(
+    <span style="color:#a6e22e">map</span>,    
+    <span style="color:#a6e22e">reduce</span>, 
+    {
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">out</span><span style="color:#f92672">&gt;</span>,    
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">query</span><span style="color:#f92672">&gt;</span>, 
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">&gt;</span>,   
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">limit</span><span style="color:#f92672">&gt;</span>,  
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">finalize</span><span style="color:#f92672">&gt;</span>, 
+        <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">scope</span><span style="color:#f92672">&gt;</span>
+    }
+)
 </code></pre></div><p>其中參數的說明如下。</p>
 <table>
 <thead>
@@ -197,11 +214,11 @@
 <h3 id="1---class-">實際應用1 ~ 根據 class 分組計算每組訂單收入</h3>
 <p>是的，這個例子我們在<code>aggregate framework</code>時有用過，事實上這種簡單的例子用<code>MapReduce</code>來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。</p>
 <p>先看看我們有的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span><span class="p">,</span> <span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">180</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;1&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">350</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">90</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">320</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;class&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span> <span class="p">,</span><span class="s2">&#34;price&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span><span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">150</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;class&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;1&#34;</span>, <span style="color:#e6db74">&#34;price&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>,<span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">180</span>},
+{ <span style="color:#e6db74">&#34;class&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;1&#34;</span> ,<span style="color:#e6db74">&#34;price&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>,<span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">350</span>},
+{ <span style="color:#e6db74">&#34;class&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;2&#34;</span> ,<span style="color:#e6db74">&#34;price&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>,<span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">90</span>},
+{ <span style="color:#e6db74">&#34;class&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;2&#34;</span> ,<span style="color:#e6db74">&#34;price&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>,<span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">320</span>},
+{ <span style="color:#e6db74">&#34;class&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;2&#34;</span> ,<span style="color:#e6db74">&#34;price&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>,<span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">150</span>}
 </code></pre></div><p>然後因為我們要根據<code>class</code>進行分組，所以我們<code>map</code>的拆分基礎就是<code>class</code>，
 而<code>reduce</code>要做的工作就是將<code>map</code>出的結果進行運算，詳細的<code>MapReduce</code>過程請看下圖。</p>
 <p>首先是<code>map</code>的工作，它將<code>colleciton</code>中的<code>document</code>根據<code>map</code>函數進行歸納成<code>Key , Values</code>的結構。
@@ -209,20 +226,20 @@
 <p>然後在使用<code>Reduces</code>函數，進行運算。
 <img src="http://yixiang8780.com/outImg/20161216-3.png" alt=""></p>
 <p>以下為合在一起的程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
-    <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span> 
-    	<span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">price</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span>
-    	<span class="nx">emit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="kr">class</span><span class="p">,</span><span class="nx">total</span><span class="p">)</span> 
-    <span class="p">}</span><span class="p">,</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="nx">values</span><span class="p">)</span><span class="p">{</span> 
-      <span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
-      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
-      <span class="p">}</span>
-       <span class="k">return</span> <span class="nx">total</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span> <span class="nx">out</span> <span class="o">:</span> <span class="s2">&#34;test&#34;</span> <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">orders</span>.<span style="color:#a6e22e">mapReduce</span>(
+    <span style="color:#66d9ef">function</span>(){ 
+    	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">price</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">count</span>
+    	<span style="color:#a6e22e">emit</span>(<span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">class</span>,<span style="color:#a6e22e">total</span>) 
+    },
+    <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">key</span>,<span style="color:#a6e22e">values</span>){ 
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> ;
+      <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">values</span>.<span style="color:#a6e22e">length</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+        <span style="color:#a6e22e">total</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">values</span>[<span style="color:#a6e22e">i</span>];
+      }
+       <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">total</span>;
+    },
+    { <span style="color:#a6e22e">out</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test&#34;</span> }
+)
 
 </code></pre></div><p>然後如果這時想看執行結果可以輸入下列指令，其中<code>result</code>為一個<code>collection</code>，是由<code>Reduces</code>所產生出的最後結果。</p>
 <pre><code>result.find()
@@ -241,29 +258,29 @@
 { &quot;class&quot; : &quot;3&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 200},
 { &quot;class&quot; : &quot;3&quot; ,&quot;price&quot; : 10,&quot;count&quot; : 300}
 </code></pre><p>程式碼如下，事實上這個範例我們只是要看<code>query</code>和<code>finalize</code>的用法，這些事實上也可以寫在<code>map</code>或<code>reduces</code>裡……。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">orders</span><span class="p">.</span><span class="nx">mapReduce</span><span class="p">(</span>
-    <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span> 
-    	<span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">price</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span>
-    	<span class="nx">emit</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="kr">class</span><span class="p">,</span><span class="nx">total</span><span class="p">)</span> 
-    <span class="p">}</span><span class="p">,</span>
-    <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span><span class="nx">values</span><span class="p">)</span><span class="p">{</span> 
-      <span class="kd">var</span> <span class="nx">total</span> <span class="o">=</span> <span class="mi">0</span> <span class="p">;</span>
-      <span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">values</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">total</span> <span class="o">+=</span> <span class="nx">values</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
-      <span class="p">}</span>
-       <span class="k">return</span> <span class="nx">total</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span> <span class="nx">out</span> <span class="o">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span>
-      <span class="nx">query</span> <span class="o">:</span> <span class="p">{</span> <span class="kr">class</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$in&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;2&#34;</span><span class="p">,</span><span class="s2">&#34;3&#34;</span><span class="p">]</span><span class="p">}</span> <span class="p">}</span><span class="p">,</span>
-      <span class="nx">finalize</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">,</span> <span class="nx">reducedVal</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">reducedVal</span> <span class="o">=</span> <span class="nx">reducedVal</span> <span class="o">+</span> <span class="s2">&#34; dollar &#34;</span><span class="p">;</span>
-		 <span class="k">return</span> <span class="nx">reducedVal</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">orders</span>.<span style="color:#a6e22e">mapReduce</span>(
+    <span style="color:#66d9ef">function</span>(){ 
+    	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">price</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">count</span>
+    	<span style="color:#a6e22e">emit</span>(<span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">class</span>,<span style="color:#a6e22e">total</span>) 
+    },
+    <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">key</span>,<span style="color:#a6e22e">values</span>){ 
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">total</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> ;
+      <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">values</span>.<span style="color:#a6e22e">length</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+        <span style="color:#a6e22e">total</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">values</span>[<span style="color:#a6e22e">i</span>];
+      }
+       <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">total</span>;
+    },
+    { <span style="color:#a6e22e">out</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test&#34;</span>,
+      <span style="color:#a6e22e">query</span> <span style="color:#f92672">:</span> { <span style="color:#66d9ef">class</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;$in&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;2&#34;</span>,<span style="color:#e6db74">&#34;3&#34;</span>]} },
+      <span style="color:#a6e22e">finalize</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">reducedVal</span>){
+        <span style="color:#a6e22e">reducedVal</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">reducedVal</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; dollar &#34;</span>;
+		 <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">reducedVal</span>;
+      }
+    }
+)
 </code></pre></div><p>結果如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;2&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span> <span class="s2">&#34;5600 dollar &#34;</span> <span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;3&#34;</span><span class="p">,</span> <span class="s2">&#34;value&#34;</span> <span class="o">:</span> <span class="s2">&#34;6000 dollar &#34;</span> <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;5600 dollar &#34;</span> }
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;value&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;6000 dollar &#34;</span> }
 </code></pre></div><h2 id="heading">~結語~</h2>
 <p>本篇文章簡單的說明<code>mongodb</code>中的<code>MapReduce</code>的用法，但還沒有說明到資料量大時要如何使用，這方面就在後面講完分片的概念後，將會一起說明。</p>
 <h2 id="heading1">~參考資料~</h2>

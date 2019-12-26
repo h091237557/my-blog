@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,29 @@
     <meta content="nodejs" name="keywords">
     
     
-    <meta name="description" property="og:description" content="這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們|Describe what your web page is about">
+    <meta name="description" property="og:description" content="這篇文章中，我們希望學習到 :
+ 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ?
+ 首先我們先來複習一下nodejs的機制一下。
+我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當有一個請求進來時，它們都會產生一個執行緒，但nodejs則否，他是用一個執行緒就來處理所有的請求，而他的背後就是有個事件機制設計才能做到這種方法。請參考這篇。
+ 但為什麼要設計成用單一執行序架構呢?
+ 這邊我們要先來說說I/O操作。
+I/O 問題 I/O就是電腦中資料與記憶體、硬碟或網路的輸入和輸出，他基本上是電腦作業裡最慢的事物，I/O操作基本上對 cpu 而言通常負擔很小，但是問題就在於它很耗時。
+傳統的阻塞I/O設計方式如下 :
+data = getData(); print(data); 我們假設getData是要去讀取一個檔案，而這時會等到getData執行完後，就資料傳送給data時我們才可以使用。
+那假設我們這個getData要讀很久，那這樣的話其它的請求著麼辦 ?
+傳統的作法就會像下面這張圖一樣，系統會分別的開啟不同的執行緒來進行處理，如此一來，當有某個執行緒因I/O操作而阻塞時，就不會影響到其它的請求。
+這種作法的缺點就在於 :
+ 開啟執行緒的成本不低，它會消耗記憶體而且引發環境切換
+ 那node他著麼處理呢 ?
+他使用單一執行緒機制，而他的執行緒中有一個機制被稱為事件機制，簡單的說事件機制可以將所有的請求收集起來，並且將需要長時間處理的工作丟出去工作給其它人做(I/O)，然後繼續接收新的請求，就如同下圖一樣，這樣的優點就在於，他可以接受更多的請求，，而不會因為一個長時間的I/O，其它東西就都卡住不能動。
+但他也是有缺點的 :
+ 它無法充分利用多核 cpu 資源
+ 當 Event loop 遇到 CPU 密集型任務會發生什麼事 ? 上面有提到單一執行緒機制有一個缺點，那就是無法統分利用cpu資源，這是什麼意思呢 ?
+傳統的方式，每個請求分配一個執行緒，他都可以得到一個不同於自已的 cpu，在這種情況下多執行緒可以大大的提高資源使用效率。
+而這也代表的單執行緒他就只能占用一個 cpu ，並且如果某個任務是很吃 cpu 的工作時，這執行緒就會被那個任務占用，導致其它的任務、請求都無法執行。
+我們下面簡單的寫一段程式碼來看看會發生什麼事情。
+下面這段程式碼裡，我們將簡單的建立一個server，它一收到請求，就會開始計算費波南西數列，這種運算基本上就是一個很耗 CPU 的工作。
+const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +64,29 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之CPU吃重的任務要如何處理 ?  | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們|Describe what your web page is about">
+    <meta name="twitter:description" content="這篇文章中，我們希望學習到 :
+ 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ?
+ 首先我們先來複習一下nodejs的機制一下。
+我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當有一個請求進來時，它們都會產生一個執行緒，但nodejs則否，他是用一個執行緒就來處理所有的請求，而他的背後就是有個事件機制設計才能做到這種方法。請參考這篇。
+ 但為什麼要設計成用單一執行序架構呢?
+ 這邊我們要先來說說I/O操作。
+I/O 問題 I/O就是電腦中資料與記憶體、硬碟或網路的輸入和輸出，他基本上是電腦作業裡最慢的事物，I/O操作基本上對 cpu 而言通常負擔很小，但是問題就在於它很耗時。
+傳統的阻塞I/O設計方式如下 :
+data = getData(); print(data); 我們假設getData是要去讀取一個檔案，而這時會等到getData執行完後，就資料傳送給data時我們才可以使用。
+那假設我們這個getData要讀很久，那這樣的話其它的請求著麼辦 ?
+傳統的作法就會像下面這張圖一樣，系統會分別的開啟不同的執行緒來進行處理，如此一來，當有某個執行緒因I/O操作而阻塞時，就不會影響到其它的請求。
+這種作法的缺點就在於 :
+ 開啟執行緒的成本不低，它會消耗記憶體而且引發環境切換
+ 那node他著麼處理呢 ?
+他使用單一執行緒機制，而他的執行緒中有一個機制被稱為事件機制，簡單的說事件機制可以將所有的請求收集起來，並且將需要長時間處理的工作丟出去工作給其它人做(I/O)，然後繼續接收新的請求，就如同下圖一樣，這樣的優點就在於，他可以接受更多的請求，，而不會因為一個長時間的I/O，其它東西就都卡住不能動。
+但他也是有缺點的 :
+ 它無法充分利用多核 cpu 資源
+ 當 Event loop 遇到 CPU 密集型任務會發生什麼事 ? 上面有提到單一執行緒機制有一個缺點，那就是無法統分利用cpu資源，這是什麼意思呢 ?
+傳統的方式，每個請求分配一個執行緒，他都可以得到一個不同於自已的 cpu，在這種情況下多執行緒可以大大的提高資源使用效率。
+而這也代表的單執行緒他就只能占用一個 cpu ，並且如果某個任務是很吃 cpu 的工作時，這執行緒就會被那個任務占用，導致其它的任務、請求都無法執行。
+我們下面簡單的寫一段程式碼來看看會發生什麼事情。
+下面這段程式碼裡，我們將簡單的建立一個server，它一收到請求，就會開始計算費波南西數列，這種運算基本上就是一個很耗 CPU 的工作。
+const http = require(&#39;http&#39;); http.createServer(function (req, res) { console.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +98,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -161,22 +208,22 @@ print(data);
 <p>而這也代表的<code>單執行緒</code>他就只能占用一個 cpu ，並且如果某個任務是很吃 cpu 的工作時，這執行緒就會被那個任務占用，導致其它的任務、請求都無法執行。</p>
 <p>我們下面簡單的寫一段程式碼來看看會發生什麼事情。</p>
 <p>下面這段程式碼裡，我們將簡單的建立一個<code>server</code>，它一收到請求，就會開始計算<code>費波南西數列</code>，這種運算基本上就是一個很耗 CPU 的工作。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">http</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;http&#39;</span>);
 
-<span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;master:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">createServer</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;master:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">pid</span>);
 
-    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">fib</span><span class="p">(</span><span class="mi">46</span><span class="p">)</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">writeHead</span>(<span style="color:#ae81ff">200</span>);
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#a6e22e">fib</span>(<span style="color:#ae81ff">46</span>).<span style="color:#a6e22e">toString</span>());
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">end</span>();
 
-<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;started&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+}).<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">8000</span>, <span style="color:#66d9ef">function</span> () {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;started&#39;</span>);
+});
 
-<span class="kd">function</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">n</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="o">?</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">1</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">fib</span>(<span style="color:#a6e22e">n</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">fib</span>(<span style="color:#a6e22e">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">fib</span>(<span style="color:#a6e22e">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>;
+}
 </code></pre></div><p>然後當我們啟動這個 server 後，你會注意到，第一個請求發送以後，你會在 console 看到下面的輸出 :</p>
 <pre><code>master:68375
 </code></pre><p>也就是打印出這個<code>process</code>的 pid ，但它會還沒回傳值給第一個請求，然後這時如果你在發送一個請求，你會注意到<code>它沒有打印出 master:68375</code>這段資訊。</p>
@@ -196,31 +243,31 @@ print(data);
 <p>接下來我們就是要將費波南西數列的運算，丟到另一個子進程中來處理，這樣我們的請求也就可以同時的處理了。</p>
 <p>下面為我們修改後的程式碼，我們會使用<code>child_process.fork('./subset.js')</code>來建立子進程，並且我們會使用<code>send</code>方法將資料丟到子進程中，然後在用<code>on('message')</code>來監聽回傳結果。</p>
 <p>這種寫法實際執行測試後，你會發生每當你發一個請求時，都會打印出<code>master:68375</code>，這也代表我們的執行緒不會在塞住了，而且你在實際丟兩個請求來測試有用子進程的執行速度，你會發現快了兩倍。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">child_process</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;child_process&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">child_process</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;child_process&#39;</span>);
 
-<span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;master:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
-    <span class="kr">const</span> <span class="nx">child</span> <span class="o">=</span> <span class="nx">child_process</span><span class="p">.</span><span class="nx">fork</span><span class="p">(</span><span class="s1">&#39;./subprocess.js&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">child</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">45</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">createServer</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;master:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">pid</span>);
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">child</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">child_process</span>.<span style="color:#a6e22e">fork</span>(<span style="color:#e6db74">&#39;./subprocess.js&#39;</span>);
+    <span style="color:#a6e22e">child</span>.<span style="color:#a6e22e">send</span>({ <span style="color:#a6e22e">value</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">45</span> });
 
-    <span class="nx">child</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">m</span><span class="p">.</span><span class="nx">result</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8000</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;started&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// subprocess.js
-</span><span class="c1"></span>
-<span class="kd">function</span> <span class="nx">fibo</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="p">{</span>
-    <span class="k">return</span> <span class="nx">n</span><span class="o">&gt;</span><span class="mi">1</span> <span class="o">?</span> <span class="nx">fibo</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">fibo</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="mi">2</span><span class="p">;</span>
-<span class="p">}</span>
+    <span style="color:#a6e22e">child</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;message&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">m</span>) {
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">writeHead</span>(<span style="color:#ae81ff">200</span>);
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">toString</span>());
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">end</span>();
+    })
+}).<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">8000</span>, <span style="color:#66d9ef">function</span> () {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;started&#39;</span>);
+});
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// subprocess.js
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">fibo</span>(<span style="color:#a6e22e">n</span>){
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span><span style="color:#f92672">&gt;</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">fibo</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">fibo</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>) <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>;
+}
 
-<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">message</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;child:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span>
-    <span class="nx">process</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="p">{</span><span class="nx">result</span><span class="o">:</span> <span class="nx">fibo</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">value</span><span class="p">)</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span>
+<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;message&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">message</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;child:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">pid</span>)
+    <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">send</span>({<span style="color:#a6e22e">result</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">fibo</span>(<span style="color:#a6e22e">message</span>.<span style="color:#a6e22e">value</span>)});
+})
 </code></pre></div><p>但是呢 ? 上面這種寫法還是有個缺點，那就是代表每一個請求都會多開一個子進程，這樣也代表這請求一多就會開了一堆子進程，這樣是很浪費資源的，所以接下來我們會修改一下<code>增加一個 pool 來管理這些子進程</code>，好處在於可以節省資源，而另一個好處可以<code>阻斷服務攻擊 Dos</code>。</p>
 <p>這個我們就留到下一篇<code>cluster</code>時在來說明囉。</p>
 <h2 id="heading">參考資料</h2>

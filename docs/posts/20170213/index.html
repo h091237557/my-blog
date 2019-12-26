@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,21 @@
     <meta content="data structure, linked list" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是|Describe what your web page is about">
+    <meta name="description" property="og:description" content="前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。
+ array : 最常用使用到的資料結構，它是一種相同形態(!)的資料集合，並且會分配『連續』的記憶體空間給予陣列存放資料。 stack : 後進先出法原理的資料結構，後進去的資料會先取出，就像是你有個箱子，你最先放進去的東西，要先將上面的東西取出後，才能取得。 queue : 先進先出法原理的資料結構，先進去的東西先取出，就像是排隊一樣，先排先贏，理論上(和平)。   剛剛在陣列那有說到相同形態，但事實上javascript的陣列，可以存放任何形態的資料，但其它的語言就需要先宣告形態了，某些方面來說它的陣列比較算是list。
+ 複習完了上一篇文章後，咱們可以來學習新的資料結構連結串列(linked list)j。
+ 串列(Linked list)原理 串列與陣列的比較 javascript程式實作  串列 ( Linked List ) 原理 在上一篇中，我們有學習到陣列，它在儲放資料時非常的彈性，但在進行新增或刪除時卻沒著麼方便，主要原因為它的記憶體是連續的。
+本篇文章將要說明的連結串列(list)，在新增或刪除時就非常的方便，因為它記憶體不是連續的，而是每個結點分配一段記憶體，然後在結點中記錄下個結點的位置。
+連結串列有分很多種，我們在這篇文章中將說明比較常用到的『單向連結串列』與『雙向連結串列』。
+單向連結串列 單向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與一個『連結欄』組成。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+接下來假如我們要新增節點D至A與B之間，過程會和下圖一樣，會將A節點的Link連至D節點，然後它再連到B結點上。而刪除結果過程也差不多，就只是重新指向節點位置。
+雙向連結串列 (Double Linked List) 雙向連結串列是另一種常用的串列結構，在單向串列中，它只能順著一個方向尋找資料，而且中間不小心有個節點斷掉，那後面串列的資料就會消失且救不回來，而雙向連結就是可以改善『單向』與『節點斷掉』這兩個缺點。
+雙向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與二個『連結欄』組成，一個連結前一個節點，而另一個則連結後一個節點。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+然後我們看下圖，來理解如果要插入與刪除節點時，雙向連結串列會如何處理。事際上原理和單向連結串列差不多，都是重新指向位置，只是它要多指向一個。
+串列和陣列的比較 由於串列和陣列這兩個使用起來很相似，但原理上，很多地方是不一樣的。以下比較表格來源為此，傳送門。
+    連結串列 (List) 陣列 (Array)     記憶體 不需要連續的空間 需要連續的空間   節點型態 各node形態不相同 各node形態相同   操作複雜度 插入、刪除都為O(n) (備註) 插入刪除都為O(1)|   空間配置 不需預留空間 須事先宣告連續空間   資料分割、連結 容易 不容易   存取方式 只能循序存取 可支援隨機與循序存又   存取速度 速度慢 速度快   可靠性 差 佳   額外指標空間 需要額外的指標空間 不需要    備註 這裡所為的插入與刪除是指針對某一個 index 的節點進行插入或刪除，在這種情況下，list 需要走到此 index 在進行對應的操作，因此是 O(n)。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +56,21 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---串列 Linked List | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是|Describe what your web page is about">
+    <meta name="twitter:description" content="前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。
+ array : 最常用使用到的資料結構，它是一種相同形態(!)的資料集合，並且會分配『連續』的記憶體空間給予陣列存放資料。 stack : 後進先出法原理的資料結構，後進去的資料會先取出，就像是你有個箱子，你最先放進去的東西，要先將上面的東西取出後，才能取得。 queue : 先進先出法原理的資料結構，先進去的東西先取出，就像是排隊一樣，先排先贏，理論上(和平)。   剛剛在陣列那有說到相同形態，但事實上javascript的陣列，可以存放任何形態的資料，但其它的語言就需要先宣告形態了，某些方面來說它的陣列比較算是list。
+ 複習完了上一篇文章後，咱們可以來學習新的資料結構連結串列(linked list)j。
+ 串列(Linked list)原理 串列與陣列的比較 javascript程式實作  串列 ( Linked List ) 原理 在上一篇中，我們有學習到陣列，它在儲放資料時非常的彈性，但在進行新增或刪除時卻沒著麼方便，主要原因為它的記憶體是連續的。
+本篇文章將要說明的連結串列(list)，在新增或刪除時就非常的方便，因為它記憶體不是連續的，而是每個結點分配一段記憶體，然後在結點中記錄下個結點的位置。
+連結串列有分很多種，我們在這篇文章中將說明比較常用到的『單向連結串列』與『雙向連結串列』。
+單向連結串列 單向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與一個『連結欄』組成。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+接下來假如我們要新增節點D至A與B之間，過程會和下圖一樣，會將A節點的Link連至D節點，然後它再連到B結點上。而刪除結果過程也差不多，就只是重新指向節點位置。
+雙向連結串列 (Double Linked List) 雙向連結串列是另一種常用的串列結構，在單向串列中，它只能順著一個方向尋找資料，而且中間不小心有個節點斷掉，那後面串列的資料就會消失且救不回來，而雙向連結就是可以改善『單向』與『節點斷掉』這兩個缺點。
+雙向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與二個『連結欄』組成，一個連結前一個節點，而另一個則連結後一個節點。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+然後我們看下圖，來理解如果要插入與刪除節點時，雙向連結串列會如何處理。事際上原理和單向連結串列差不多，都是重新指向位置，只是它要多指向一個。
+串列和陣列的比較 由於串列和陣列這兩個使用起來很相似，但原理上，很多地方是不一樣的。以下比較表格來源為此，傳送門。
+    連結串列 (List) 陣列 (Array)     記憶體 不需要連續的空間 需要連續的空間   節點型態 各node形態不相同 各node形態相同   操作複雜度 插入、刪除都為O(n) (備註) 插入刪除都為O(1)|   空間配置 不需預留空間 須事先宣告連續空間   資料分割、連結 容易 不容易   存取方式 只能循序存取 可支援隨機與循序存又   存取速度 速度慢 速度快   可靠性 差 佳   額外指標空間 需要額外的指標空間 不需要    備註 這裡所為的插入與刪除是指針對某一個 index 的節點進行插入或刪除，在這種情況下，list 需要走到此 index 在進行對應的操作，因此是 O(n)。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +82,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -238,90 +269,90 @@
 <p>首先我們要先建立<code>list</code>的結構，我們需要兩個物件，一個代表節點，另一個則代表<code>list</code>。
 <code>Node</code>中我們主要有兩個屬性<code>data</code>為該節點的資料，<code>next</code>為存放它的下個節點。</p>
 <p>而在<code>SingleList</code>中，也有兩個屬性<code>head</code>，用來存放第一個節點，其它的節點則存放在它的<code>next</code>中，而另一個<code>_length</code>為代表<code>list</code>的節點數。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Node
-</span><span class="cm"> * Node class 
-</span><span class="cm"> * @param data
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Node
+</span><span style="color:#75715e"> * Node class 
+</span><span style="color:#75715e"> * @param data
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Node</span>(<span style="color:#a6e22e">data</span>) {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+}
 
-<span class="cm">/**
-</span><span class="cm"> * SingleList
-</span><span class="cm"> * SingleList class 
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">SingleList</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * SingleList
+</span><span style="color:#75715e"> * SingleList class 
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">SingleList</span>() {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+}
 
 </code></pre></div><p>然後我們接下來建立方法<code>add</code>，它可以新增節點至<code>list</code>中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"> <span class="o">*</span> <span class="nx">add</span>
- <span class="o">*</span> <span class="nx">add</span> <span class="nx">data</span> <span class="nx">to</span> <span class="nx">last</span> <span class="p">.</span>
- <span class="o">*</span> <span class="err">@</span><span class="nx">param</span> <span class="nx">data</span>
- <span class="o">*</span> <span class="err">@</span><span class="nx">returns</span> <span class="p">{</span><span class="kc">undefined</span><span class="p">}</span>
- <span class="o">*</span><span class="err">/</span>
-<span class="nx">SingleList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">currentNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">;</span>	
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"> <span style="color:#f92672">*</span> <span style="color:#a6e22e">add</span>
+ <span style="color:#f92672">*</span> <span style="color:#a6e22e">add</span> <span style="color:#a6e22e">data</span> <span style="color:#a6e22e">to</span> <span style="color:#a6e22e">last</span> .
+ <span style="color:#f92672">*</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">param</span> <span style="color:#a6e22e">data</span>
+ <span style="color:#f92672">*</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">returns</span> {<span style="color:#66d9ef">undefined</span>}
+ <span style="color:#f92672">*</span><span style="color:#960050;background-color:#1e0010">/</span>
+<span style="color:#a6e22e">SingleList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">add</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">node</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#a6e22e">data</span>);
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>;	
 
-	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">currentNode</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>	
-		<span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="o">++</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
-	<span class="p">}</span>
+	<span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">currentNode</span>){
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;	
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span><span style="color:#f92672">++</span>;
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">node</span>;
+	}
 
-	<span class="k">while</span> <span class="p">(</span><span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>	
-	<span class="p">}</span>
+	<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>){
+		<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;	
+	}
 
-	<span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="o">++</span><span class="p">;</span>
-	<span class="k">return</span> <span class="nx">node</span><span class="p">;</span>	
-<span class="p">}</span>
+	<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span><span style="color:#f92672">++</span>;
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">node</span>;	
+}
 </code></pre></div><p>上面的程式碼中，有一段程式碼如下，這段是什麼意思呢 ? 它是指將<code>currentNode</code>，移動至最後一個節點，再將最後一個節點的<code>next</code>，存放我們要新增的節點。這樣我們新增節點的方法就算完成了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="k">while</span> <span class="p">(</span><span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>	
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>){
+		<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;	
+	}
 
-	<span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+	<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
 </code></pre></div><p>接下來我們再來完成<code>remove</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * remove
-</span><span class="cm"> * it method can remove data from list , depend on postition.
-</span><span class="cm"> * @param position
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">SingleList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span>  <span class="nx">message</span> <span class="o">=</span> <span class="p">{</span><span class="nx">failure</span><span class="o">:</span> <span class="s1">&#39;Failure: non-existent node in this list.&#39;</span><span class="p">}</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">currentNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">,</span>
-			<span class="nx">deleteNode</span><span class="p">,</span>
-			<span class="nx">previous</span><span class="p">,</span>
-			<span class="nx">i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * remove
+</span><span style="color:#75715e"> * it method can remove data from list , depend on postition.
+</span><span style="color:#75715e"> * @param position
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">SingleList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">remove</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">position</span>){
+	<span style="color:#66d9ef">var</span>  <span style="color:#a6e22e">message</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">failure</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Failure: non-existent node in this list.&#39;</span>};
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>,
+			<span style="color:#a6e22e">deleteNode</span>,
+			<span style="color:#a6e22e">previous</span>,
+			<span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>;
 
-	<span class="k">if</span><span class="p">(</span><span class="nx">position</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="nx">position</span> <span class="o">&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="p">)</span>
-	<span class="p">}</span>
+	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">position</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">position</span> <span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span>){
+		<span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error()
+	}
 
-	<span class="k">if</span><span class="p">(</span><span class="nx">position</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span> 	
-		<span class="nx">deleteNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">;</span> 
-		<span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="o">--</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nx">deleteNode</span><span class="p">;</span>
-	<span class="p">}</span>
+	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">position</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">1</span>){
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>; 	
+		<span style="color:#a6e22e">deleteNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>; 
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span><span style="color:#f92672">--</span>;
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deleteNode</span>;
+	}
 
-	<span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">++</span> <span class="o">&lt;</span> <span class="nx">position</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">previous</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">;</span>	
-		<span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="nx">previous</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+	<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">position</span>){
+		<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>;	
+		<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+	}
+	<span style="color:#a6e22e">previous</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
 	
-	<span class="k">return</span> <span class="nx">currentNode</span><span class="p">;</span>
-<span class="p">}</span>
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">currentNode</span>;
+}
 
 </code></pre></div><p>這邊我們說明一下<code>remove</code>中的這段程式碼，因為這段比較容易讓人混亂。假設我們<code>list</code>有三筆資料<code>A、B、C</code>，然後我們要刪除<code>B</code>，這時我們來跑<code>while</code>看看。</p>
 <ul>
@@ -329,35 +360,35 @@
 <li>第二次 : 由於 i=2 沒有符合小於position 2 ，所以跳出 while 。</li>
 </ul>
 <p>跳出後，我們再將<code>previous</code>也就是<code>A</code>節點，並將它下一個節點設為<code>B</code>的下一個節點也就是<code>C</code>，所以這時<code>B</code>節點就消失囉。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">++</span> <span class="o">&lt;</span> <span class="nx">position</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
-        <span class="nx">previous</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">;</span> 
-        <span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">previous</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">position</span>){
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">i</span>)
+        <span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>; 
+        <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+    }
+    <span style="color:#a6e22e">previous</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
 </code></pre></div><p>最後我們來做個可以觀看<code>list</code>資料的方法，<code>view</code>，這個方法就比較簡單了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * view
-</span><span class="cm"> * It can console log list 
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">SingleList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">view</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">currentNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">;</span>
-	<span class="k">while</span> <span class="p">(</span><span class="nx">currentNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">currentNode</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">currentNode</span> <span class="o">=</span>  <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>	
-	<span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * view
+</span><span style="color:#75715e"> * It can console log list 
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">SingleList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">view</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>;
+	<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">data</span>);
+		<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span>  <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;	
+	}
+}
 </code></pre></div><p>最後我們來試用看看。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">singleList</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SingleList</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">singleList</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">SingleList</span>();
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;A&#34;</span>);
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;C&#34;</span>);
 
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">view</span>();
 
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">singleList</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">remove</span>(<span style="color:#ae81ff">2</span>);
+<span style="color:#a6e22e">singleList</span>.<span style="color:#a6e22e">view</span>();
 </code></pre></div><p>輸出的結果如下。</p>
 <pre><code>// 原來的
 A B C
@@ -375,166 +406,166 @@ A C
 <p>首先我們要先建立<code>list</code>的主題，我們需要二個物件，一個代表節點，另一個則代表<code>list</code>。
 <code>Node</code>中我們主要有三個屬性<code>data</code>為該節點的資料，<code>next</code>為存放它的下個節點而<code>previous</code>為存放前一個節點。</p>
 <p>而在<code>DoubleLinkList </code>中，有三個屬性<code>head</code>，用來存放第一個節點，<code>final</code>用來存放<code>list</code>中最後的節點，最後的屬性<code>_length</code>為代表<code>list</code>的節點數，</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Node
-</span><span class="cm"> * Node class
-</span><span class="cm"> * @param data
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Node
+</span><span style="color:#75715e"> * Node class
+</span><span style="color:#75715e"> * @param data
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Node</span>(<span style="color:#a6e22e">data</span>) {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+}
 
-<span class="cm">/**
-</span><span class="cm"> * DoubleLinkList
-</span><span class="cm"> * List class
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">DoubleLinkList</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DoubleLinkList
+</span><span style="color:#75715e"> * List class
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">DoubleLinkList</span>() {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+}
 </code></pre></div><p>然後我們一樣也先來建立<code>add</code>方法，該方法可以讓我們新增資料到<code>list</code>中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * add
-</span><span class="cm"> * add data to list
-</span><span class="cm"> * @param data
-</span><span class="cm"> * @returns {Node}
-</span><span class="cm"> */</span>
-<span class="nx">DoubleLinkList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-    <span class="nx">node</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">;</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="o">++</span><span class="p">;</span>
-  <span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * add
+</span><span style="color:#75715e"> * add data to list
+</span><span style="color:#75715e"> * @param data
+</span><span style="color:#75715e"> * @returns {Node}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">DoubleLinkList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">add</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">node</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#a6e22e">data</span>);
+  <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+  } <span style="color:#66d9ef">else</span> {
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+    <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+  }
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span><span style="color:#f92672">++</span>;
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">node</span>;
+}
 </code></pre></div><p>其中下面這段程式碼，在單向連結時，我們需要先用<code>while</code>來移動到最後的節點，但因為我們雙向連結這邊，多加了一個屬性，<code>final</code>用來記錄最後的節點，因此我們在新增時，只要修改這最後的節點就好囉，不用在使用<code>while</code>進行移動。</p>
 <p><code>這是雙向連結串列</code>的程式碼部份。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">   <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-   <span class="nx">node</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">;</span>
-   <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">   <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+   <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>;
+   <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
 </code></pre></div><p><code>這是單向連結串列</code>的程式碼部份。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">while</span> <span class="p">(</span><span class="nx">i</span><span class="o">++</span> <span class="o">&lt;</span> <span class="nx">position</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">previous</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">;</span>	
-	<span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-<span class="p">}</span>
-	<span class="nx">previous</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">position</span>){
+	<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>;	
+	<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+}
+	<span style="color:#a6e22e">previous</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
 </code></pre></div><p>完成後，我們再繼續完成<code>remove</code>方法，這個方法真的變比較複雜點兒，我們來慢慢說明。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * remove
-</span><span class="cm"> * remove data by position from list
-</span><span class="cm"> * @param position
-</span><span class="cm"> */</span>
-<span class="nx">DoubleLinkList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">currentNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">message</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="nx">failure</span><span class="o">:</span> <span class="s1">&#39;Failure: non-existent node in this list.&#39;</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_length</span> <span class="o">===</span> <span class="mi">0</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">position</span> <span class="o">&gt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="nx">message</span><span class="p">.</span><span class="nx">failure</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * remove
+</span><span style="color:#75715e"> * remove data by position from list
+</span><span style="color:#75715e"> * @param position
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">DoubleLinkList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">remove</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">position</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>;
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">message</span> <span style="color:#f92672">=</span> {
+      <span style="color:#a6e22e">failure</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Failure: non-existent node in this list.&#39;</span>
+    },
+    <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">position</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">||</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">position</span> <span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span>) {
+    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#a6e22e">message</span>.<span style="color:#a6e22e">failure</span>);
+  }
 
-  <span class="c1">// 1.刪除的節點為第一個的流程
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="nx">position</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+  <span style="color:#75715e">// 1.刪除的節點為第一個的流程
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">position</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">1</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
 
-    <span class="c1">// 如果不是只有一個節點的list則
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#75715e">// 如果不是只有一個節點的list則
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>) {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    }
 		
-	<span class="c1">// 2.刪除的節點為最後一個的流程
-</span><span class="c1"></span>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">position</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">previous</span><span class="p">;</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="k">return</span><span class="p">;</span>
+	<span style="color:#75715e">// 2.刪除的節點為最後一個的流程
+</span><span style="color:#75715e"></span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">position</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">previous</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    <span style="color:#66d9ef">return</span>;
     
-    <span class="c1">// 3.其餘的刪除的節點流程
-</span><span class="c1"></span>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span style="color:#75715e">// 3.其餘的刪除的節點流程
+</span><span style="color:#75715e"></span>  } <span style="color:#66d9ef">else</span> {
 
-    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-			<span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-    <span class="p">}</span>
-		<span class="kd">var</span> <span class="nx">previousNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">previous</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">nextNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-		<span class="nx">previousNode</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">nextNode</span><span class="p">;</span> 
-		<span class="nx">nextNode</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="nx">previousNode</span><span class="p">;</span>
-  <span class="p">}</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="o">--</span><span class="p">;</span>
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">position</span>) {
+      <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>;
+    }
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">previousNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">previous</span>;
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">nextNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+		<span style="color:#a6e22e">previousNode</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">nextNode</span>; 
+		<span style="color:#a6e22e">nextNode</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">previousNode</span>;
+  }
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span><span style="color:#f92672">--</span>;
 
-<span class="p">}</span>
+}
 </code></pre></div><p>首先我們要先知道，在上面的<code>remove</code>程式碼中，大至上可以分成三個部份，來處理不同位置的刪除。</p>
 <p><code>1.刪除的節點為第一個的流程</code> : 這個流程中，我們還需要判斷『這個<code>list</code>是否只有一個節點』，然後在分開來處理。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="c1">// 1.刪除的節點為第一個的流程
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="nx">position</span> <span class="o">===</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="nx">head</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">  <span style="color:#75715e">// 1.刪除的節點為第一個的流程
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">position</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">1</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
 
-    <span class="c1">// 如果不是只有一個節點的list則
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#75715e">// 如果不是只有一個節點的list則
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>) {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    }
 		
-	<span class="c1">// 2.刪除的節點為最後一個的流程
-</span><span class="c1"></span>  <span class="p">}</span>
+	<span style="color:#75715e">// 2.刪除的節點為最後一個的流程
+</span><span style="color:#75715e"></span>  }
 </code></pre></div><p><code>2.刪除的節點為最後一個的流程</code> : 這個流程只要將要刪除的節點，它的前一個節點的<code>next</code>設置為<code>null</code>，並修改<code>final</code>為它。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 2.刪除的節點為最後一個的流程
-</span><span class="c1"></span>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">position</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">_length</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">previous</span><span class="p">;</span>
-    <span class="k">this</span><span class="p">.</span><span class="kr">final</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="k">return</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 2.刪除的節點為最後一個的流程
+</span><span style="color:#75715e"></span>  } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">position</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_length</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">previous</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#66d9ef">final</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+    <span style="color:#66d9ef">return</span>;
     
-    <span class="c1">// 3.其餘的刪除的節點流程
-</span><span class="c1"></span>  <span class="p">}</span>
+    <span style="color:#75715e">// 3.其餘的刪除的節點流程
+</span><span style="color:#75715e"></span>  }
 </code></pre></div><ol start="3">
 <li><code>其餘的刪除的節點流程</code> : 這個流程就是先移動到要刪除的節點上，然後再將它的前一個與後一個的節點，連結在一起，這樣它就消失囉。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 3.其餘的刪除的節點流程
-</span><span class="c1"></span>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 3.其餘的刪除的節點流程
+</span><span style="color:#75715e"></span>  } <span style="color:#66d9ef">else</span> {
 
-    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-			<span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-    <span class="p">}</span>
-		<span class="kd">var</span> <span class="nx">previousNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">previous</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">nextNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-		<span class="nx">previousNode</span><span class="p">.</span><span class="nx">next</span> <span class="o">=</span> <span class="nx">nextNode</span><span class="p">;</span> 
-		<span class="nx">nextNode</span><span class="p">.</span><span class="nx">previous</span> <span class="o">=</span> <span class="nx">previousNode</span><span class="p">;</span>
-  <span class="p">}</span>
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">position</span>) {
+      <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+			<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>;
+    }
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">previousNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">previous</span>;
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">nextNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+		<span style="color:#a6e22e">previousNode</span>.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">nextNode</span>; 
+		<span style="color:#a6e22e">nextNode</span>.<span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">previousNode</span>;
+  }
 </code></pre></div><p>最後一個<code>view</code>方法，因為與單向連結列表一樣，所以就不多說囉。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * view
-</span><span class="cm"> * View List
-</span><span class="cm"> */</span>
-<span class="nx">DoubleLinkList</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">view</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">currentNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">head</span><span class="p">;</span>
-  <span class="k">while</span> <span class="p">(</span><span class="nx">currentNode</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">currentNode</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">currentNode</span> <span class="o">=</span> <span class="nx">currentNode</span><span class="p">.</span><span class="nx">next</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * view
+</span><span style="color:#75715e"> * View List
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">DoubleLinkList</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">view</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">head</span>;
+  <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">data</span>);
+    <span style="color:#a6e22e">currentNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentNode</span>.<span style="color:#a6e22e">next</span>;
+  }
+}
 
 </code></pre></div><p>然後我們一樣來測試一下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">list</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DoubleLinkList</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">list</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">list</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">list</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">list</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">DoubleLinkList</span>();
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;A&#34;</span>);
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">add</span>(<span style="color:#e6db74">&#34;C&#34;</span>);
 
-<span class="nx">list</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">list</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">list</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">view</span>();
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">remove</span>(<span style="color:#ae81ff">2</span>);
+<span style="color:#a6e22e">list</span>.<span style="color:#a6e22e">view</span>();
 
 </code></pre></div><p>結果如下。</p>
 <pre><code>// 原來的

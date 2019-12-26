@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,20 @@
     <meta content="instant messaging, 鐵人賽, ffmpeg" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習
+ 收到了聲音已後，要如何的播出呢 ?
+ 咱們收到聲音以後(檔案或串流) 那接下來要如何播出了 ?
+答案就是使用播放器，而接下來我們就要來介紹大部份播放器的內核ffmpeg。
+基本上本篇分成以下的章節來理解 ffmpeg 這好用的東東：
+ ffmpeg 是啥 ? ffmpeg 的基本架構。 ffmpeg 的簡單使用範例。  FFMpeg 是啥 ?  它就是可以幫咱們進行一些影音的奇技淫巧 (ex. 解碼、編碼、轉碼、抽取、串流)
+ FFmpeg (Fast Forward MPEG) 它是一個開源的影音多媒體的火藥庫，有了它我們可以很簡單的將前面幾個章節中提到的採集、編碼、封裝內容給串連起來。
+它最核心的應用是當播放器的核心。
+前面的章節有提到，我們將一段聲音從麥克風採集下來後，先經過編碼將它縮小，然後在封裝成一個容器，最後在透過網路傳輸協議，將它丟到對方的電腦後，接下要如何處理呢 ?
+對方電腦的處理過程如下圖，它會先解析容器，然後進行解碼，最後在輸出聲音到對方的耳機或啥的。
+其中處理解析容器與協定，然後再進行解碼的就是咱們電腦中所使用的播放器，像是 KMPlayer、千千靜聽、QuickTime Player，而有不少的播放器裡面都是以 ffmpeg 為內核，像是 KMPlayer 與 QQ 影音。
+當然 ffmpeg 還有很多的使用功能，下面簡單的列幾個例子：
+ 它可以將一個影音檔，轉換成多張的圖片與分割出聲音。 它將某個影音檔的編碼轉換成其它的編碼。 它可以將影音檔使用 RTMP 推送到 Server ( 就是可以模擬直播主推聲音到 Server ) 它可以使用 HLS、RTMP 這些傳輸協議將聲音拉下來。  總而言之，它就是個影音軍火庫。
+FFMpeg 的基本架構  它事實上是一系列的工具，基本上是由以下幾個組合而成。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +55,20 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-19 之收到聲音後要如何的播出呢 ?  ( FFMpeg ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習
+ 收到了聲音已後，要如何的播出呢 ?
+ 咱們收到聲音以後(檔案或串流) 那接下來要如何播出了 ?
+答案就是使用播放器，而接下來我們就要來介紹大部份播放器的內核ffmpeg。
+基本上本篇分成以下的章節來理解 ffmpeg 這好用的東東：
+ ffmpeg 是啥 ? ffmpeg 的基本架構。 ffmpeg 的簡單使用範例。  FFMpeg 是啥 ?  它就是可以幫咱們進行一些影音的奇技淫巧 (ex. 解碼、編碼、轉碼、抽取、串流)
+ FFmpeg (Fast Forward MPEG) 它是一個開源的影音多媒體的火藥庫，有了它我們可以很簡單的將前面幾個章節中提到的採集、編碼、封裝內容給串連起來。
+它最核心的應用是當播放器的核心。
+前面的章節有提到，我們將一段聲音從麥克風採集下來後，先經過編碼將它縮小，然後在封裝成一個容器，最後在透過網路傳輸協議，將它丟到對方的電腦後，接下要如何處理呢 ?
+對方電腦的處理過程如下圖，它會先解析容器，然後進行解碼，最後在輸出聲音到對方的耳機或啥的。
+其中處理解析容器與協定，然後再進行解碼的就是咱們電腦中所使用的播放器，像是 KMPlayer、千千靜聽、QuickTime Player，而有不少的播放器裡面都是以 ffmpeg 為內核，像是 KMPlayer 與 QQ 影音。
+當然 ffmpeg 還有很多的使用功能，下面簡單的列幾個例子：
+ 它可以將一個影音檔，轉換成多張的圖片與分割出聲音。 它將某個影音檔的編碼轉換成其它的編碼。 它可以將影音檔使用 RTMP 推送到 Server ( 就是可以模擬直播主推聲音到 Server ) 它可以使用 HLS、RTMP 這些傳輸協議將聲音拉下來。  總而言之，它就是個影音軍火庫。
+FFMpeg 的基本架構  它事實上是一系列的工具，基本上是由以下幾個組合而成。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +80,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

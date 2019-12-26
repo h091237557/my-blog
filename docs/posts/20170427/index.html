@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,21 @@
     <meta content="algorithm, merge sort" name="keywords">
     
     
-    <meta name="description" property="og:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸|Describe what your web page is about">
+    <meta name="description" property="og:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作  比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Bucket Sort就是屬於該歸類。
+我們這邊簡單的說一下比較排序法與非比較排序法的差別，首先比較排序法是透過資料兩兩比較進行排序，而且它在效能上有根本的限制，在最差的情況下，任何一種比較排序法至少需要O(nlogn)比較操作。
+網上有個簡單的證明，就設我們有3個資料要進行排序，1,4,5，那們它有幾種排序組合 ?
+答案是 3! = 3 * 2 * 1 = 6，六種排序法，也就是說它六較次數至少為 Log(N!) = O ( N log N )。
+而非比較排序法就沒有效能上的限制，通過非比較操作能在``O(n)`完成，但它缺少了靈活性，比較排序法能對各種數據型態進行排序，而非比較排序則不能，這種靈活性也導致了比較排序被更多的應用在大多數實際工作中。
+像在Mozilla的javascript的sort預設是Merge Sort，而WebKit則是Selection Sort，都是選用比較排序法。
+桶子排序法原理 桶子排序法，它的原理是將陣列，分散到有限數量的桶子中，然後每個桶子再個別進行排序，其中每個桶子的個別排序可以運用其它的演算法來進行排序。
+桶子排序法有三個特點
+ 桶子排序法是穩定的。 它是常見的排序法中最快的一種，大多數的情況下。 它非常快，但缺點是非常的耗空間。   上面有說到穩定，但穩定是什麼意思呢?例子，假設我們有個數列為3,5,19,3*,10，其中3*只是為了識別它和前面的3是不一樣的。
+穩定排序結果 =&amp;gt; 1,3,3*,5,10,19
+不穩定排序結果 =&amp;gt; 1,3*,3,5,10,19
+從上面結果可知穩定的它的順序會與原資料一樣3在3*前面，而不穩定則會有不同結果。
+ 桶子排序法基本的流程如下。
+ 建立桶子群。 將資料丟到對應的桶子裡。 個別桶子進行排序。 然後在依順序取出結果。  我們來看看下面的圖片說明，假設我們要排序的資料如下。
+[ 7 , 5 , 9 , 2 , 10 , 1 , 8 ]|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +56,21 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="排序之桶子排序法(Bucket Sort) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸|Describe what your web page is about">
+    <meta name="twitter:description" content="比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作  比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Bucket Sort就是屬於該歸類。
+我們這邊簡單的說一下比較排序法與非比較排序法的差別，首先比較排序法是透過資料兩兩比較進行排序，而且它在效能上有根本的限制，在最差的情況下，任何一種比較排序法至少需要O(nlogn)比較操作。
+網上有個簡單的證明，就設我們有3個資料要進行排序，1,4,5，那們它有幾種排序組合 ?
+答案是 3! = 3 * 2 * 1 = 6，六種排序法，也就是說它六較次數至少為 Log(N!) = O ( N log N )。
+而非比較排序法就沒有效能上的限制，通過非比較操作能在``O(n)`完成，但它缺少了靈活性，比較排序法能對各種數據型態進行排序，而非比較排序則不能，這種靈活性也導致了比較排序被更多的應用在大多數實際工作中。
+像在Mozilla的javascript的sort預設是Merge Sort，而WebKit則是Selection Sort，都是選用比較排序法。
+桶子排序法原理 桶子排序法，它的原理是將陣列，分散到有限數量的桶子中，然後每個桶子再個別進行排序，其中每個桶子的個別排序可以運用其它的演算法來進行排序。
+桶子排序法有三個特點
+ 桶子排序法是穩定的。 它是常見的排序法中最快的一種，大多數的情況下。 它非常快，但缺點是非常的耗空間。   上面有說到穩定，但穩定是什麼意思呢?例子，假設我們有個數列為3,5,19,3*,10，其中3*只是為了識別它和前面的3是不一樣的。
+穩定排序結果 =&gt; 1,3,3*,5,10,19
+不穩定排序結果 =&gt; 1,3*,3,5,10,19
+從上面結果可知穩定的它的順序會與原資料一樣3在3*前面，而不穩定則會有不同結果。
+ 桶子排序法基本的流程如下。
+ 建立桶子群。 將資料丟到對應的桶子裡。 個別桶子進行排序。 然後在依順序取出結果。  我們來看看下面的圖片說明，假設我們要排序的資料如下。
+[ 7 , 5 , 9 , 2 , 10 , 1 , 8 ]|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +82,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -191,75 +222,75 @@
 <p>桶子數嚴格來說要根據你的<code>Hash function</code>來進行決定。</p>
 </blockquote>
 <p>我們簡單的說明一下程式碼。首先我們先看<code>Hash function</code>，假設我們的<code>x</code>為<code>10</code>，則<code>hash</code>值為<code>3</code>，而假設為<code>2</code>，則出來的結果為<code>0</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="err"></span><span class="kd">function</span> <span class="nx">hashFun</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="p">{</span>
-	<span class="c1">// 取最小整數
-</span><span class="c1"></span>	<span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">x</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">hashFun</span>(<span style="color:#a6e22e">x</span>){
+	<span style="color:#75715e">// 取最小整數
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">floor</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">/</span><span style="color:#ae81ff">3</span>);
+}
 </code></pre></div><p>然後我們建立桶子，並且每個桶子為陣列型式。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="c1">// create buckets 
-</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">bucketsCount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-  <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">  <span style="color:#75715e">// create buckets 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">bucketsCount</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> [];
+  }
 </code></pre></div><p>接下來我們會根據<code>hash function</code>計算出的<code>hash</code>值，來決定各資料要丟到那個桶子內。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// According to hashFun, we can distruibute data to buckets
-</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">hashFun</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// According to hashFun, we can distruibute data to buckets
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">k</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">k</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">k</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">hashFun</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span>])].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span>]);
+  }
 </code></pre></div><p>再來我們將各別桶子內的值進行排序，我們直接使用<code>javascript</code>的預設排序，由於它的排序是依字母排序所以我們自訂排序規則<code>(a,b)=&gt;{return a-b}</code>。</p>
 <p>最後我們將每個排序好的桶子內資料，一個一個取出，然後就產生出已排序資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">buckets</span><span class="p">)</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
- <span class="c1">// By default the sort in js is elements alphabetically. so we must add sort function.
-</span><span class="c1"></span>    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">  Object.<span style="color:#a6e22e">keys</span>(<span style="color:#a6e22e">buckets</span>).<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">key</span>) =&gt; {
+ <span style="color:#75715e">// By default the sort in js is elements alphabetically. so we must add sort function.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>].<span style="color:#a6e22e">sort</span>((<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>) =&gt; {
+      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">b</span>
+    });
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>]);
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>].<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">value</span>) =&gt; {
+      <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">value</span>)
+    });
+  })
 </code></pre></div><h2 id="heading7">全部程式碼</h2>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * bucketSort
-</span><span class="cm"> * bucketSort and hash function is x/3;
-</span><span class="cm"> * @param datas
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">bucketSort</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">bucketsCount</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-			<span class="nx">buckets</span> <span class="o">=</span> <span class="p">{</span><span class="p">}</span><span class="p">,</span>
-		 	<span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-		 	<span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * bucketSort
+</span><span style="color:#75715e"> * bucketSort and hash function is x/3;
+</span><span style="color:#75715e"> * @param datas
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bucketSort</span>(<span style="color:#a6e22e">datas</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bucketsCount</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span>,
+			<span style="color:#a6e22e">buckets</span> <span style="color:#f92672">=</span> {},
+		 	<span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span>,
+		 	<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> [];
 
-  <span class="c1">// create hash function
-</span><span class="c1"></span>  <span class="kd">function</span> <span class="nx">hashFun</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">x</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span style="color:#75715e">// create hash function
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">hashFun</span>(<span style="color:#a6e22e">x</span>) {
+    <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">floor</span>(<span style="color:#a6e22e">x</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">3</span>);
+  }
 
-  <span class="c1">// create buckets 
-</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">bucketsCount</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span style="color:#75715e">// create buckets 
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">bucketsCount</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> [];
+  }
 
-	<span class="c1">// According to hashFun, we can distruibute data to buckets
-</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">k</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">k</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">hashFun</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+	<span style="color:#75715e">// According to hashFun, we can distruibute data to buckets
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">k</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">k</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">k</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">hashFun</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span>])].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span>]);
+  }
 
-  <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">buckets</span><span class="p">)</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
- <span class="c1">// By default the sort in js is elements alphabetically. so we must add sort function.
-</span><span class="c1"></span>    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">a</span> <span class="o">-</span> <span class="nx">b</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">buckets</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="nx">result</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span>
+  Object.<span style="color:#a6e22e">keys</span>(<span style="color:#a6e22e">buckets</span>).<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">key</span>) =&gt; {
+ <span style="color:#75715e">// By default the sort in js is elements alphabetically. so we must add sort function.
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>].<span style="color:#a6e22e">sort</span>((<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>) =&gt; {
+      <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">b</span>
+    });
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>]);
+    <span style="color:#a6e22e">buckets</span>[<span style="color:#a6e22e">key</span>].<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">value</span>) =&gt; {
+      <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">value</span>)
+    });
+  })
 
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">result</span>);
+}
 
-<span class="nx">bucketSort</span><span class="p">(</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">bucketSort</span>([<span style="color:#ae81ff">7</span>, <span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">9</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">8</span>]);
 
 </code></pre></div><h2 id="heading8">參考資料</h2>
 <ul>

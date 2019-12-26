@@ -1,4 +1,15 @@
 /* custom css here */
+.summary {
+  overflow:hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+white-space: normal;
+}
+
+
 .markdown-body h2 {
     border-bottom: 5px solid #87ceeb;
 }

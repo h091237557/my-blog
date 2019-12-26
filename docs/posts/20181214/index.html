@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,11 @@
     <meta content="php, laravel" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。
+&amp;lt;?php $containter = require(&amp;#39;Container&amp;#39;); // 建立抽象與實體類別的對應 $containter-&amp;gt;bind(ILogService, AWSLogServcie::class); $log = $container-&amp;gt;make(Log::class); $log-&amp;gt;send(&amp;#39;log....&amp;#39;); 其中上面的bind就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。
+那 Service Provider 是什麼 ?  它就個註冊與管理 Container 內服務的地方。
+ 下面的程式碼為 Laravel 專案的 Service Provider，其中有兩個重要的方法boot與register。
+ register : 它就是用來寫 bind 的地方。 boot : 它就是當 register 結束以後會執行的方法。  &amp;lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +46,11 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP Laravel 的 Service Provider 理解 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。
+&lt;?php $containter = require(&#39;Container&#39;); // 建立抽象與實體類別的對應 $containter-&gt;bind(ILogService, AWSLogServcie::class); $log = $container-&gt;make(Log::class); $log-&gt;send(&#39;log....&#39;); 其中上面的bind就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。
+那 Service Provider 是什麼 ?  它就個註冊與管理 Container 內服務的地方。
+ 下面的程式碼為 Laravel 專案的 Service Provider，其中有兩個重要的方法boot與register。
+ register : 它就是用來寫 bind 的地方。 boot : 它就是當 register 結束以後會執行的方法。  &lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +62,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -127,15 +138,15 @@
     <p><img src="http://yixiang8780.com/outImg/20181214-1.png" alt=""></p>
 <h2 id="-laravel-service-provider-">什麼是 Laravel Service Provider ?</h2>
 <p>上一篇文章『<a href="https://mark-lin.com/posts/20181214/">PHP Laravel 的 Container 理解</a>』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="nv">$containter</span> <span class="o">=</span> <span class="k">require</span><span class="p">(</span><span class="s1">&#39;Container&#39;</span><span class="p">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+$containter <span style="color:#f92672">=</span> <span style="color:#66d9ef">require</span>(<span style="color:#e6db74">&#39;Container&#39;</span>);
 
-<span class="c1">// 建立抽象與實體類別的對應
-</span><span class="c1"></span><span class="nv">$containter</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">ILogService</span><span class="p">,</span> <span class="nx">AWSLogServcie</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+<span style="color:#75715e">// 建立抽象與實體類別的對應
+</span><span style="color:#75715e"></span>$containter<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">ILogService</span>, <span style="color:#a6e22e">AWSLogServcie</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
 
-<span class="nv">$log</span> <span class="o">=</span> <span class="nv">$container</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nx">Log</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+$log <span style="color:#f92672">=</span> $container<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#a6e22e">Log</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
 
-<span class="nv">$log</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">&#39;log....&#39;</span><span class="p">);</span>
+$log<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;log....&#39;</span>);
 </code></pre></div><p>其中上面的<code>bind</code>就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作
 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。</p>
 <h4 id="-service-provider--">那 Service Provider 是什麼 ?</h4>
@@ -147,37 +158,37 @@ ILogService 的類別，那他就會實體化 AWSLogServcie 出來。</p>
 <li>register : 它就是用來寫 bind 的地方。</li>
 <li>boot : 它就是當 register 結束以後會執行的方法。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">namespace</span> <span class="nx">App\Providers</span><span class="p">;</span>
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Providers</span>;
 
-<span class="k">use</span> <span class="nx">Illuminate\Support\ServiceProvider</span><span class="p">;</span>
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Illuminate\Support\ServiceProvider</span>;
 
-<span class="k">class</span> <span class="nc">AppServiceProvider</span> <span class="k">extends</span> <span class="nx">ServiceProvider</span>
-<span class="p">{</span>
-    <span class="sd">/**
-</span><span class="sd">     * Bootstrap any application services.
-</span><span class="sd">     *
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">//
-</span><span class="c1"></span>    <span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AppServiceProvider</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ServiceProvider</span>
+{
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Bootstrap any application services.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">boot</span>()
+    {
+        <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>    }
 
-    <span class="sd">/**
-</span><span class="sd">     * Register any application services.
-</span><span class="sd">     *
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span>
-            <span class="nx">PostRepositoryInterface</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-            <span class="nx">PostRepository</span><span class="o">::</span><span class="na">class</span>
-        <span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Register any application services.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">register</span>()
+    {
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(
+            <span style="color:#a6e22e">PostRepositoryInterface</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+            <span style="color:#a6e22e">PostRepository</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>
+        );
+    }
+}
 </code></pre></div><h4 id="-boot-">那什麼時後會需要使用 boot ?</h4>
 <p>boot 這個方法的執行時機為 register 執行完以後，那它什麼時後要用到他呢 ? 我覺得比較好的定義如下 :</p>
 <blockquote>
@@ -185,141 +196,141 @@ ILogService 的類別，那他就會實體化 AWSLogServcie 出來。</p>
 </blockquote>
 <p>例如下面的 Laravel 官網授權章節所寫的範例，在要使用 AuthService 前它需要先將一些 policy 先註冊，這時就很適合寫在 boot 這個方法裡面。</p>
 <p><a href="https://laravel.tw/docs/5.2/authorization">Laravel-授權</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
 
-<span class="k">namespace</span> <span class="nx">App\Providers</span><span class="p">;</span>
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">App\Providers</span>;
 
-<span class="k">use</span> <span class="nx">Illuminate\Contracts\Auth\Access\Gate</span> <span class="k">as</span> <span class="nx">GateContract</span><span class="p">;</span>
-<span class="k">use</span> <span class="nx">Illuminate\Foundation\Support\Providers\AuthServiceProvider</span> <span class="k">as</span> <span class="nx">ServiceProvider</span><span class="p">;</span>
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Illuminate\Contracts\Auth\Access\Gate</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">GateContract</span>;
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Illuminate\Foundation\Support\Providers\AuthServiceProvider</span> <span style="color:#66d9ef">as</span> <span style="color:#a6e22e">ServiceProvider</span>;
 
-<span class="k">class</span> <span class="nc">AuthServiceProvider</span> <span class="k">extends</span> <span class="nx">ServiceProvider</span>
-<span class="p">{</span>
-    <span class="sd">/**
-</span><span class="sd">     * 註冊任何應用程式的認證或授權服務。
-</span><span class="sd">     *
-</span><span class="sd">     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">(</span><span class="nx">GateContract</span> <span class="nv">$gate</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerPolicies</span><span class="p">(</span><span class="nv">$gate</span><span class="p">);</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AuthServiceProvider</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ServiceProvider</span>
+{
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * 註冊任何應用程式的認證或授權服務。
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @param  \Illuminate\Contracts\Auth\Access\Gate  $gate
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">boot</span>(<span style="color:#a6e22e">GateContract</span> $gate)
+    {
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerPolicies</span>($gate);
 
-        <span class="nv">$gate</span><span class="o">-&gt;</span><span class="na">define</span><span class="p">(</span><span class="s1">&#39;update-post&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$user</span><span class="p">,</span> <span class="nv">$post</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nv">$user</span><span class="o">-&gt;</span><span class="na">id</span> <span class="o">===</span> <span class="nv">$post</span><span class="o">-&gt;</span><span class="na">user_id</span><span class="p">;</span>
-        <span class="p">});</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+        $gate<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;update-post&#39;</span>, <span style="color:#66d9ef">function</span> ($user, $post) {
+            <span style="color:#66d9ef">return</span> $user<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">id</span> <span style="color:#f92672">===</span> $post<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">user_id</span>;
+        });
+    }
+}
 </code></pre></div><p>或是</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
-<span class="k">class</span> <span class="nc">DatabaseServiceProvider</span> <span class="k">extends</span> <span class="nx">ServiceProvider</span>
-<span class="p">{</span>
-    <span class="sd">/**
-</span><span class="sd">     * Bootstrap the application events.
-</span><span class="sd">     *
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">boot</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nx">Model</span><span class="o">::</span><span class="na">setConnectionResolver</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DatabaseServiceProvider</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">ServiceProvider</span>
+{
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Bootstrap the application events.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">boot</span>()
+    {
+        <span style="color:#a6e22e">Model</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setConnectionResolver</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span>[<span style="color:#e6db74">&#39;db&#39;</span>]);
 
-        <span class="nx">Model</span><span class="o">::</span><span class="na">setEventDispatcher</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">]);</span>
-    <span class="p">}</span>
+        <span style="color:#a6e22e">Model</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setEventDispatcher</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span>[<span style="color:#e6db74">&#39;events&#39;</span>]);
+    }
     
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">register</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nx">Model</span><span class="o">::</span><span class="na">clearBootedModels</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerConnectionServices</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerEloquentFactory</span><span class="p">();</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerQueueableEntityResolver</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">register</span>()
+    {
+        <span style="color:#a6e22e">Model</span><span style="color:#f92672">::</span><span style="color:#a6e22e">clearBootedModels</span>();
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerConnectionServices</span>();
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerEloquentFactory</span>();
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerQueueableEntityResolver</span>();
+    }
+}
 </code></pre></div><h2 id="-service-provider--1">為什麼要使用 Service Provider 呢 ?</h2>
 <p>上面我們大概理解了 Service Provider 以後，那接下來我們就來思考一件事情。</p>
 <p>為什麼要使用 Service Provider 呢 ?</p>
 <p>我們先假設沒有 Service Provider，然後來看看程式碼會變成什麼樣子。</p>
 <p>假設我們已經產生了 container，就如下程式碼的 $app 。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="k">public</span><span class="o">/</span><span class="nx">index</span><span class="o">.</span><span class="nx">php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">public</span><span style="color:#f92672">/</span><span style="color:#a6e22e">index</span><span style="color:#f92672">.</span><span style="color:#a6e22e">php</span>
 
-<span class="nv">$app</span> <span class="o">=</span> <span class="k">require_once</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../bootstrap/app.php&#39;</span><span class="p">;</span>
+$app <span style="color:#f92672">=</span> <span style="color:#66d9ef">require_once</span> <span style="color:#66d9ef">__DIR__</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;/../bootstrap/app.php&#39;</span>;
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IUserService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">UserESrvice</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IMessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">MessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IUserService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">UserESrvice</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IMessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">MessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
 </code></pre></div><p>事實上現在這樣是還沒什麼問題，那如果是這樣呢 ?</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
-<span class="k">public</span><span class="o">/</span><span class="nx">index</span><span class="o">.</span><span class="nx">php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">public</span><span style="color:#f92672">/</span><span style="color:#a6e22e">index</span><span style="color:#f92672">.</span><span style="color:#a6e22e">php</span>
 
-<span class="nv">$app</span> <span class="o">=</span> <span class="k">require_once</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../bootstrap/app.php&#39;</span><span class="p">;</span>
+$app <span style="color:#f92672">=</span> <span style="color:#66d9ef">require_once</span> <span style="color:#66d9ef">__DIR__</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;/../bootstrap/app.php&#39;</span>;
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IUserService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">UserService</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IMessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">MessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IUserService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">UserService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IMessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">MessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="nv">$config</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;database.redis&#39;</span><span class="p">,</span> <span class="p">[]);</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">RedisManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">,</span> <span class="nx">Arr</span><span class="o">::</span><span class="na">pull</span><span class="p">(</span><span class="nv">$config</span><span class="p">,</span> <span class="s1">&#39;client&#39;</span><span class="p">,</span> <span class="s1">&#39;predis&#39;</span><span class="p">),</span> <span class="nv">$config</span><span class="p">);</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;redis&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     $config <span style="color:#f92672">=</span> $app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#e6db74">&#39;config&#39;</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;database.redis&#39;</span>, []);
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RedisManager</span>($app, <span style="color:#a6e22e">Arr</span><span style="color:#f92672">::</span><span style="color:#a6e22e">pull</span>($config, <span style="color:#e6db74">&#39;client&#39;</span>, <span style="color:#e6db74">&#39;predis&#39;</span>), $config);
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;redis.connection&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;redis&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">connection</span><span class="p">();</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#e6db74">&#39;redis.connection&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> $app[<span style="color:#e6db74">&#39;redis&#39;</span>]<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">connection</span>();
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;cache&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">CacheManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">);</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;cache&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">CacheManager</span>($app);
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;cache.store&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">driver</span><span class="p">();</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;cache.store&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> $app[<span style="color:#e6db74">&#39;cache&#39;</span>]<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">driver</span>();
+});
 
  
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;db&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">DatabaseManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db.factory&#39;</span><span class="p">]);</span>
-<span class="p">});</span>
+$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;db&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">DatabaseManager</span>($app, $app[<span style="color:#e6db74">&#39;db.factory&#39;</span>]);
+});
         
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;db.factory&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">ConnectionFactory</span><span class="p">(</span><span class="nv">$app</span><span class="p">);</span>
-<span class="p">});</span>
+$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;db.factory&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ConnectionFactory</span>($app);
+});
 </code></pre></div><p>你可以發現這個檔案已經開發有點腫大，而且這樣在多人開發時，你會發現一直的 merge conflict 。</p>
 <p>然後接下來，你可能在使用 db 前還需要設定一下東西，然後這個檔案變的如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
-<span class="k">public</span><span class="o">/</span><span class="nx">index</span><span class="o">.</span><span class="nx">php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">public</span><span style="color:#f92672">/</span><span style="color:#a6e22e">index</span><span style="color:#f92672">.</span><span style="color:#a6e22e">php</span>
 
-<span class="nv">$app</span> <span class="o">=</span> <span class="k">require_once</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/../bootstrap/app.php&#39;</span><span class="p">;</span>
+$app <span style="color:#f92672">=</span> <span style="color:#66d9ef">require_once</span> <span style="color:#66d9ef">__DIR__</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;/../bootstrap/app.php&#39;</span>;
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IUserService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">UserService</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="nx">IMessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">,</span> <span class="nx">MessageService</span><span class="o">:</span><span class="nx">class</span><span class="p">);</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IUserService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">UserService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#a6e22e">IMessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>, <span style="color:#a6e22e">MessageService</span><span style="color:#f92672">:</span><span style="color:#a6e22e">class</span>);
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;redis&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="nv">$config</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="s1">&#39;config&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;database.redis&#39;</span><span class="p">,</span> <span class="p">[]);</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">RedisManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">,</span> <span class="nx">Arr</span><span class="o">::</span><span class="na">pull</span><span class="p">(</span><span class="nv">$config</span><span class="p">,</span> <span class="s1">&#39;client&#39;</span><span class="p">,</span> <span class="s1">&#39;predis&#39;</span><span class="p">),</span> <span class="nv">$config</span><span class="p">);</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;redis&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     $config <span style="color:#f92672">=</span> $app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#e6db74">&#39;config&#39;</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;database.redis&#39;</span>, []);
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">RedisManager</span>($app, <span style="color:#a6e22e">Arr</span><span style="color:#f92672">::</span><span style="color:#a6e22e">pull</span>($config, <span style="color:#e6db74">&#39;client&#39;</span>, <span style="color:#e6db74">&#39;predis&#39;</span>), $config);
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">bind</span><span class="p">(</span><span class="s1">&#39;redis.connection&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;redis&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">connection</span><span class="p">();</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bind</span>(<span style="color:#e6db74">&#39;redis.connection&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> $app[<span style="color:#e6db74">&#39;redis&#39;</span>]<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">connection</span>();
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;cache&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">CacheManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">);</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;cache&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">CacheManager</span>($app);
+});
 
-<span class="nv">$app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;cache.store&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;cache&#39;</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">driver</span><span class="p">();</span>
-<span class="p">});</span>
+$app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;cache.store&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> $app[<span style="color:#e6db74">&#39;cache&#39;</span>]<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">driver</span>();
+});
 
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;db&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">DatabaseManager</span><span class="p">(</span><span class="nv">$app</span><span class="p">,</span> <span class="nv">$app</span><span class="p">[</span><span class="s1">&#39;db.factory&#39;</span><span class="p">]);</span>
-<span class="p">});</span>
+$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;db&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">DatabaseManager</span>($app, $app[<span style="color:#e6db74">&#39;db.factory&#39;</span>]);
+});
         
-<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">singleton</span><span class="p">(</span><span class="s1">&#39;db.factory&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$app</span><span class="p">)</span> <span class="p">{</span>
-     <span class="k">return</span> <span class="k">new</span> <span class="nx">ConnectionFactory</span><span class="p">(</span><span class="nv">$app</span><span class="p">);</span>
-<span class="p">});</span>
+$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">singleton</span>(<span style="color:#e6db74">&#39;db.factory&#39;</span>, <span style="color:#66d9ef">function</span> ($app) {
+     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ConnectionFactory</span>($app);
+});
 
-<span class="nx">Model</span><span class="o">::</span><span class="na">setConnectionResolver</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="p">[</span><span class="s1">&#39;db&#39;</span><span class="p">]);</span>
-<span class="nx">Model</span><span class="o">::</span><span class="na">setEventDispatcher</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="p">[</span><span class="s1">&#39;events&#39;</span><span class="p">]);</span>
+<span style="color:#a6e22e">Model</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setConnectionResolver</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span>[<span style="color:#e6db74">&#39;db&#39;</span>]);
+<span style="color:#a6e22e">Model</span><span style="color:#f92672">::</span><span style="color:#a6e22e">setEventDispatcher</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span>[<span style="color:#e6db74">&#39;events&#39;</span>]);
 </code></pre></div><p>這時你就會很明顯的注意到有幾項缺點 :</p>
 <ul>
 <li>這個檔案太腫大了，每個人都需要修改到他。</li>
@@ -336,142 +347,142 @@ ILogService 的類別，那他就會實體化 AWSLogServcie 出來。</p>
 <p>在 Laravel 中所有一切的源頭就是創建 Container，所以就從這裡開始看。</p>
 <pre><code>php artisan serve
 </code></pre><p>首先產生完 containter ($app) 以後，接下來 Laravel 會在實體化 $kernel，它可以說是所有操作的核心模式，然後接下來 handler 它會執行所有 input 進來的東西，而這裡面就有用來處理 service provider 的地方。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">#!/usr/bin/env php
-<span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">#!/usr/bin/env php
+<span style="color:#75715e">&lt;?php</span>
 
-<span class="nx">define</span><span class="p">(</span><span class="s1">&#39;LARAVEL_START&#39;</span><span class="p">,</span> <span class="nx">microtime</span><span class="p">(</span><span class="k">true</span><span class="p">));</span>
+<span style="color:#a6e22e">define</span>(<span style="color:#e6db74">&#39;LARAVEL_START&#39;</span>, <span style="color:#a6e22e">microtime</span>(<span style="color:#66d9ef">true</span>));
 
-<span class="k">require</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">require</span> <span style="color:#66d9ef">__DIR__</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;/vendor/autoload.php&#39;</span>;
 
-<span class="nv">$app</span> <span class="o">=</span> <span class="k">require_once</span> <span class="no">__DIR__</span><span class="o">.</span><span class="s1">&#39;/bootstrap/app.php&#39;</span><span class="p">;</span>
+$app <span style="color:#f92672">=</span> <span style="color:#66d9ef">require_once</span> <span style="color:#66d9ef">__DIR__</span><span style="color:#f92672">.</span><span style="color:#e6db74">&#39;/bootstrap/app.php&#39;</span>;
 
-<span class="nv">$kernel</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nx">Illuminate\Contracts\Console\Kernel</span><span class="o">::</span><span class="na">class</span><span class="p">);</span>
+$kernel <span style="color:#f92672">=</span> $app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#a6e22e">Illuminate\Contracts\Console\Kernel</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>);
 
-<span class="nv">$status</span> <span class="o">=</span> <span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">handle</span><span class="p">(</span>
-    <span class="nv">$input</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Symfony\Component\Console\Input\ArgvInput</span><span class="p">,</span>
-    <span class="k">new</span> <span class="nx">Symfony\Component\Console\Output\ConsoleOutput</span>
-<span class="p">);</span>
+$status <span style="color:#f92672">=</span> $kernel<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">handle</span>(
+    $input <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Symfony\Component\Console\Input\ArgvInput</span>,
+    <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Symfony\Component\Console\Output\ConsoleOutput</span>
+);
 
-<span class="nv">$kernel</span><span class="o">-&gt;</span><span class="na">terminate</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nv">$status</span><span class="p">);</span>
+$kernel<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">terminate</span>($input, $status);
 
-<span class="k">exit</span><span class="p">(</span><span class="nv">$status</span><span class="p">);</span>
+<span style="color:#66d9ef">exit</span>($status);
 </code></pre></div><h3 id="kernel-">Kernel 原始碼</h3>
 <p>這裡在執行 handler 裡面有個我們要注意的東西就是 bootstraps，這東東你可以想成它就是要完成一件事情所需要做的事情，其中我們要看的為 RegisterProviders 這個 bootstrap。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
-<span class="k">namespace</span> <span class="nx">Illuminate\Foundation\Console</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">Illuminate\Foundation\Console</span>;
 
-<span class="k">class</span> <span class="nc">Kernel</span> <span class="k">implements</span> <span class="nx">KernelContract</span>
-<span class="p">{</span>
-   <span class="sd">/**
-</span><span class="sd">     * The bootstrap classes for the application.
-</span><span class="sd">     *
-</span><span class="sd">     * @var array
-</span><span class="sd">     */</span>
-    <span class="k">protected</span> <span class="nv">$bootstrappers</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\LoadConfiguration</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\HandleExceptions</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\RegisterFacades</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\SetRequestForConsole</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\RegisterProviders</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-        <span class="nx">\Illuminate\Foundation\Bootstrap\BootProviders</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-    <span class="p">];</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Kernel</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">KernelContract</span>
+{
+   <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * The bootstrap classes for the application.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @var array
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">protected</span> $bootstrappers <span style="color:#f92672">=</span> [
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\LoadConfiguration</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\HandleExceptions</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\RegisterFacades</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\SetRequestForConsole</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\RegisterProviders</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+        <span style="color:#a6e22e">\Illuminate\Foundation\Bootstrap\BootProviders</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>,
+    ];
 
-   <span class="sd">/**
-</span><span class="sd">     * Run the console application.
-</span><span class="sd">     *
-</span><span class="sd">     * @param  \Symfony\Component\Console\Input\InputInterface  $input
-</span><span class="sd">     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-</span><span class="sd">     * @return int
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">handle</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nv">$output</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">try</span> <span class="p">{</span>
-            <span class="c1">// 執行每個 boostrap
-</span><span class="c1"></span>            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bootstrap</span><span class="p">();</span>
+   <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Run the console application.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+</span><span style="color:#e6db74">     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+</span><span style="color:#e6db74">     * @return int
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">handle</span>($input, $output <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>)
+    {
+        <span style="color:#66d9ef">try</span> {
+            <span style="color:#75715e">// 執行每個 boostrap
+</span><span style="color:#75715e"></span>            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bootstrap</span>();
 
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getArtisan</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">(</span><span class="nv">$input</span><span class="p">,</span> <span class="nv">$output</span><span class="p">);</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">reportException</span><span class="p">(</span><span class="nv">$e</span><span class="p">);</span>
+            <span style="color:#66d9ef">return</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getArtisan</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">run</span>($input, $output);
+        } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">Exception</span> $e) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reportException</span>($e);
 
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">renderException</span><span class="p">(</span><span class="nv">$output</span><span class="p">,</span> <span class="nv">$e</span><span class="p">);</span>
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">renderException</span>($output, $e);
 
-            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Throwable</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$e</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">FatalThrowableError</span><span class="p">(</span><span class="nv">$e</span><span class="p">);</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+        } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">Throwable</span> $e) {
+            $e <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">FatalThrowableError</span>($e);
 
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">reportException</span><span class="p">(</span><span class="nv">$e</span><span class="p">);</span>
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">reportException</span>($e);
 
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">renderException</span><span class="p">(</span><span class="nv">$output</span><span class="p">,</span> <span class="nv">$e</span><span class="p">);</span>
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">renderException</span>($output, $e);
 
-            <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+        }
+    }
     
-       <span class="sd">/**
-</span><span class="sd">     * Bootstrap the application for artisan commands.
-</span><span class="sd">     *
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootstrap</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">hasBeenBootstrapped</span><span class="p">())</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">bootstrapWith</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">bootstrappers</span><span class="p">());</span>
-        <span class="p">}</span>
+       <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Bootstrap the application for artisan commands.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bootstrap</span>()
+    {
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">hasBeenBootstrapped</span>()) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bootstrapWith</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">bootstrappers</span>());
+        }
 
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">loadDeferredProviders</span><span class="p">();</span>
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">loadDeferredProviders</span>();
 
-        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">commandsLoaded</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">commands</span><span class="p">();</span>
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">commandsLoaded</span>) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">commands</span>();
 
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">commandsLoaded</span> <span class="o">=</span> <span class="k">true</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">commandsLoaded</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+        }
+    }
+}
 </code></pre></div><h3 id="registerproviders-">RegisterProviders 原始碼</h3>
 <p>RegisterProviders 就是一個定義好的 boostrap 類別，它主要就是呼叫 container 來註冊 service provider。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">namespace</span> <span class="nx">Illuminate\Foundation\Bootstrap</span><span class="p">;</span>
+<span style="color:#66d9ef">namespace</span> <span style="color:#a6e22e">Illuminate\Foundation\Bootstrap</span>;
 
-<span class="k">use</span> <span class="nx">Illuminate\Contracts\Foundation\Application</span><span class="p">;</span>
+<span style="color:#66d9ef">use</span> <span style="color:#a6e22e">Illuminate\Contracts\Foundation\Application</span>;
 
-<span class="k">class</span> <span class="nc">RegisterProviders</span>
-<span class="p">{</span>
-    <span class="sd">/**
-</span><span class="sd">     * Bootstrap the given application.
-</span><span class="sd">     *
-</span><span class="sd">     * @param  \Illuminate\Contracts\Foundation\Application  $app
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="nx">Application</span> <span class="nv">$app</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">registerConfiguredProviders</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RegisterProviders</span>
+{
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Bootstrap the given application.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @param  \Illuminate\Contracts\Foundation\Application  $app
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">bootstrap</span>(<span style="color:#a6e22e">Application</span> $app)
+    {
+        $app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerConfiguredProviders</span>();
+    }
+}
 </code></pre></div><h3 id="container-registerconfiguredproviders-">Container registerConfiguredProviders 原始碼</h3>
 <p>這一段原始碼中，laravel 會先將在 config/app.php 裡面有的 provider 先組合出包含 namespace 的 service provider 陣列，然後最在在丟給 ProviderRepository 的 load 方法來進行讀取。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-    <span class="sd">/**
-</span><span class="sd">     * Register all of the configured providers.
-</span><span class="sd">     *
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">registerConfiguredProviders</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nv">$providers</span> <span class="o">=</span> <span class="nx">Collection</span><span class="o">::</span><span class="na">make</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">[</span><span class="s1">&#39;app.providers&#39;</span><span class="p">])</span>
-                        <span class="o">-&gt;</span><span class="na">partition</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nv">$provider</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">return</span> <span class="nx">Str</span><span class="o">::</span><span class="na">startsWith</span><span class="p">(</span><span class="nv">$provider</span><span class="p">,</span> <span class="s1">&#39;Illuminate\\&#39;</span><span class="p">);</span>
-                        <span class="p">});</span>
+    <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Register all of the configured providers.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">registerConfiguredProviders</span>()
+    {
+        $providers <span style="color:#f92672">=</span> <span style="color:#a6e22e">Collection</span><span style="color:#f92672">::</span><span style="color:#a6e22e">make</span>($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">config</span>[<span style="color:#e6db74">&#39;app.providers&#39;</span>])
+                        <span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">partition</span>(<span style="color:#66d9ef">function</span> ($provider) {
+                            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">Str</span><span style="color:#f92672">::</span><span style="color:#a6e22e">startsWith</span>($provider, <span style="color:#e6db74">&#39;Illuminate\\&#39;</span>);
+                        });
 
-        <span class="c1">// 這裡看起來應該是去拿所有 packet 裡面的 provider
-</span><span class="c1"></span>        <span class="nv">$providers</span><span class="o">-&gt;</span><span class="na">splice</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="nx">PackageManifest</span><span class="o">::</span><span class="na">class</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">providers</span><span class="p">()]);</span>
+        <span style="color:#75715e">// 這裡看起來應該是去拿所有 packet 裡面的 provider
+</span><span style="color:#75715e"></span>        $providers<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">splice</span>(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, [$this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#a6e22e">PackageManifest</span><span style="color:#f92672">::</span><span style="color:#a6e22e">class</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">providers</span>()]);
 
-        <span class="p">(</span><span class="k">new</span> <span class="nx">ProviderRepository</span><span class="p">(</span><span class="nv">$this</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Filesystem</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getCachedServicesPath</span><span class="p">()))</span>
-                    <span class="o">-&gt;</span><span class="na">load</span><span class="p">(</span><span class="nv">$providers</span><span class="o">-&gt;</span><span class="na">collapse</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">toArray</span><span class="p">());</span>
-    <span class="p">}</span>
+        (<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ProviderRepository</span>($this, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Filesystem</span>, $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">getCachedServicesPath</span>()))
+                    <span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">load</span>($providers<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">collapse</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">toArray</span>());
+    }
 </code></pre></div><h3 id="providerrepository-">ProviderRepository 原始碼</h3>
 <p>這一段程式碼就是實際執行 service proivder 裡面方法的地方，它的執行流程如下。</p>
 <ol>
@@ -485,33 +496,33 @@ ILogService 的類別，那他就會實體化 AWSLogServcie 出來。</p>
 <li>eager : 直接執行 service provider。</li>
 <li>deferred : 等到要執行 make 前，才會執行 service provider。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-   <span class="sd">/**
-</span><span class="sd">     * Register the application service providers.
-</span><span class="sd">     *
-</span><span class="sd">     * @param  array  $providers
-</span><span class="sd">     * @return void
-</span><span class="sd">     */</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">load</span><span class="p">(</span><span class="k">array</span> <span class="nv">$providers</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// 讀取 boostrap/cache/services.php
-</span><span class="c1"></span>        <span class="nv">$manifest</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">loadManifest</span><span class="p">();</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+   <span style="color:#e6db74">/**
+</span><span style="color:#e6db74">     * Register the application service providers.
+</span><span style="color:#e6db74">     *
+</span><span style="color:#e6db74">     * @param  array  $providers
+</span><span style="color:#e6db74">     * @return void
+</span><span style="color:#e6db74">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">load</span>(<span style="color:#66d9ef">array</span> $providers)
+    {
+        <span style="color:#75715e">// 讀取 boostrap/cache/services.php
+</span><span style="color:#75715e"></span>        $manifest <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">loadManifest</span>();
 
-        <span class="c1">// 產生 boostrap/cache/services.php
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">shouldRecompile</span><span class="p">(</span><span class="nv">$manifest</span><span class="p">,</span> <span class="nv">$providers</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nv">$manifest</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">compileManifest</span><span class="p">(</span><span class="nv">$providers</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">// 產生 boostrap/cache/services.php
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> ($this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">shouldRecompile</span>($manifest, $providers)) {
+            $manifest <span style="color:#f92672">=</span> $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">compileManifest</span>($providers);
+        }
 
-        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$manifest</span><span class="p">[</span><span class="s1">&#39;when&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$provider</span> <span class="o">=&gt;</span> <span class="nv">$events</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">registerLoadEvents</span><span class="p">(</span><span class="nv">$provider</span><span class="p">,</span> <span class="nv">$events</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">foreach</span> ($manifest[<span style="color:#e6db74">&#39;when&#39;</span>] <span style="color:#66d9ef">as</span> $provider <span style="color:#f92672">=&gt;</span> $events) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">registerLoadEvents</span>($provider, $events);
+        }
 
-        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$manifest</span><span class="p">[</span><span class="s1">&#39;eager&#39;</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$provider</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">register</span><span class="p">(</span><span class="nv">$provider</span><span class="p">);</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">foreach</span> ($manifest[<span style="color:#e6db74">&#39;eager&#39;</span>] <span style="color:#66d9ef">as</span> $provider) {
+            $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">register</span>($provider);
+        }
 
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">app</span><span class="o">-&gt;</span><span class="na">addDeferredServices</span><span class="p">(</span><span class="nv">$manifest</span><span class="p">[</span><span class="s1">&#39;deferred&#39;</span><span class="p">]);</span>
-    <span class="p">}</span>
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">app</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">addDeferredServices</span>($manifest[<span style="color:#e6db74">&#39;deferred&#39;</span>]);
+    }
 </code></pre></div><h2 id="heading">備註</h2>
 <h3 id="-boostrapcacheservicesphp">關於 boostrap/cache/services.php</h3>
 <p>這個檔案基本上組合如下圖，共有分為四個部份，它們的功用如下。</p>

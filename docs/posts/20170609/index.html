@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="nodejs, passport" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下的重點 :
+  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
+ passort.js 活著的目的就是為了驗證 request
+ 要使用 passport 來進行驗證，需要設定三個東西 :
+ 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
+ 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
+ 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
+而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
+而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
+var users = { zack: { username: &amp;#39;zack&amp;#39;, password: &amp;#39;1234&amp;#39;, id: 1, }, node: { username: &amp;#39;node&amp;#39;, password: &amp;#39;5678&amp;#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &amp;#39;username&amp;#39;, passwordField: &amp;#39;password&amp;#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &amp;#39;Invalid user&amp;#39; }); }; if (user.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Passport.js 之 Hello 你好嗎 ~  | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們想要知道以下的重點 :
+  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
+ passort.js 活著的目的就是為了驗證 request
+ 要使用 passport 來進行驗證，需要設定三個東西 :
+ 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
+ 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
+ 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
+而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
+而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
+var users = { zack: { username: &#39;zack&#39;, password: &#39;1234&#39;, id: 1, }, node: { username: &#39;node&#39;, password: &#39;5678&#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &#39;username&#39;, passwordField: &#39;password&#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &#39;Invalid user&#39; }); }; if (user.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -151,100 +172,100 @@
 <p>所以在這邊，我們需要定義<code>驗證的策略(演算法)</code>，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。</p>
 <p>而我們這裡直接看官網的自訂驗證策略<code>localStrategy</code>，下面的程式碼中，我們會定義一個<code>localStrategy</code>，它準備用來驗證我們的<code>request</code>。</p>
 <p>而<code>LocalStrategy</code>的兩個參數為<code>options</code>和<code>verify</code>，我們<code>option</code>需要先定義要用來驗證的欄位<code>username</code>、<code>passowrd</code>，然後<code>verify</code>就是驗證規則，就是下面那個<code>function</code>裡面的東東。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">zack</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;zack&#39;</span><span class="p">,</span>
-        <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="nx">node</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;node&#39;</span><span class="p">,</span>
-        <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;5678&#39;</span><span class="p">,</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">}</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">users</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">zack</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;zack&#39;</span>,
+        <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;1234&#39;</span>,
+        <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+    },
+    <span style="color:#a6e22e">node</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;node&#39;</span>,
+        <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;5678&#39;</span>,
+        <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+    },
+}
 
-<span class="c1">// LacalStrategy(options,verify)
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">localStrategy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LocalStrategy</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">usernameField</span><span class="o">:</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
-    <span class="nx">passwordField</span><span class="o">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-<span class="p">}</span><span class="p">,</span>
-    <span class="kd">function</span> <span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">user</span> <span class="o">=</span> <span class="nx">users</span><span class="p">[</span><span class="nx">username</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#75715e">// LacalStrategy(options,verify)
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">localStrategy</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LocalStrategy</span>({
+    <span style="color:#a6e22e">usernameField</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;username&#39;</span>,
+    <span style="color:#a6e22e">passwordField</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;password&#39;</span>,
+},
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">username</span>, <span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">done</span>) {
+        <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">users</span>[<span style="color:#a6e22e">username</span>];
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">user</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="p">{</span> <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Invalid user&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">;</span>
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">user</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">false</span>, { <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Invalid user&#39;</span> });
+        };
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">password</span> <span class="o">!==</span> <span class="nx">password</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="p">{</span> <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Invalid password&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">;</span>
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">password</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">false</span>, { <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Invalid password&#39;</span> });
+        };
 
-        <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+        <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">user</span>);
+    }
+)
 </code></pre></div><p>###那這邊有個問題 ~ 那就是奇怪，為什麼他沒有驗證 username 或 password 這兩個欄位是否合法呢 ?</p>
 <p>因為<code>LocalStrategy</code>已經幫我們處理好了，我們直接來看一下它的原始碼 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Strategy</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">authenticate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">username</span> <span class="o">=</span> <span class="nx">lookup</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_usernameField</span><span class="p">)</span> <span class="o">||</span> <span class="nx">lookup</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_usernameField</span><span class="p">)</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">password</span> <span class="o">=</span> <span class="nx">lookup</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_passwordField</span><span class="p">)</span> <span class="o">||</span> <span class="nx">lookup</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">query</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_passwordField</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Strategy</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">authenticate</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">options</span>) {
+  <span style="color:#a6e22e">options</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">options</span> <span style="color:#f92672">||</span> {};
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">username</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lookup</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>, <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_usernameField</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">lookup</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">query</span>, <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_usernameField</span>);
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">password</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">lookup</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">body</span>, <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_passwordField</span>) <span style="color:#f92672">||</span> <span style="color:#a6e22e">lookup</span>(<span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">query</span>, <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_passwordField</span>);
   
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">username</span> <span class="o">||</span> <span class="o">!</span><span class="nx">password</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="p">{</span> <span class="nx">message</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">badRequestMessage</span> <span class="o">||</span> <span class="s1">&#39;Missing credentials&#39;</span> <span class="p">}</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">username</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">password</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">fail</span>({ <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">badRequestMessage</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#39;Missing credentials&#39;</span> }, <span style="color:#ae81ff">400</span>);
+  }
   
-  <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">self</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>;
   
-  <span class="kd">function</span> <span class="nx">verified</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">user</span><span class="p">,</span> <span class="nx">info</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">self</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">self</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">info</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
-    <span class="nx">self</span><span class="p">.</span><span class="nx">success</span><span class="p">(</span><span class="nx">user</span><span class="p">,</span> <span class="nx">info</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
+  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">verified</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">info</span>) {
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">err</span>); }
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">user</span>) { <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">fail</span>(<span style="color:#a6e22e">info</span>); }
+    <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">success</span>(<span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">info</span>);
+  }
   
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">self</span><span class="p">.</span><span class="nx">_passReqToCallback</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_verify</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">verified</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_verify</span><span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">verified</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">self</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">ex</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+  <span style="color:#66d9ef">try</span> {
+    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">_passReqToCallback</span>) {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_verify</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">username</span>, <span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">verified</span>);
+    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_verify</span>(<span style="color:#a6e22e">username</span>, <span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">verified</span>);
+    }
+  } <span style="color:#66d9ef">catch</span> (<span style="color:#a6e22e">ex</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">error</span>(<span style="color:#a6e22e">ex</span>);
+  }
+};
 </code></pre></div><p>上面這一段是當我們執行了下面這段時程式碼時，就會執行的東東，從上面程式碼中我們可以知道，它會先去<code>req.body</code>中，尋找我們定義的兩個欄位<code>username</code>和<code>passowrd</code>，然後檢查看看他是否合法，當一切都 ok 時，我們就會執行上面有提到的<code>verify</code>函數，來進行驗證。</p>
 <pre><code>Passport.authenticate('local', { session: false })
 </code></pre><h1 id="heading1">中間件的設定</h1>
 <p>接下來我們將要在<code>route</code>中，增加 passport 這個中間件 (middleware)，我們這邊選擇使用 express 來當我們的 web framework。</p>
 <p>我們在使用時需要先選擇我們要使用的策略，我們直接用上面所建立的<code>localStrategy</code>，如果你有建立其它的例如<code>facebook</code>或<code>google</code>的策略也都可以使用。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 註冊策略
-</span><span class="c1"></span><span class="nx">Passport</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="nx">localStrategy</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 註冊策略
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">use</span>(<span style="color:#e6db74">&#39;local&#39;</span>, <span style="color:#a6e22e">localStrategy</span>);
 
-<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">Express</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">BodyParser</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">(</span><span class="p">{</span> <span class="nx">extended</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">BodyParser</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Passport</span><span class="p">.</span><span class="nx">initialize</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Express</span>();
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">BodyParser</span>.<span style="color:#a6e22e">urlencoded</span>({ <span style="color:#a6e22e">extended</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> }));
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">BodyParser</span>.<span style="color:#a6e22e">json</span>());
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">initialize</span>());
 </code></pre></div><p>其中<code>Passport.use('local', localStrategy);</code>這行就是將我們剛剛建立的策略註冊到 passport 中，我們直接看他的原始碼，會更了解它在做啥 :</p>
 <p>嗯他非常的簡單，就是將我們的註冊的策略丟到一個物件中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Authenticator</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">use</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">strategy</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">strategy</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">strategy</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
-    <span class="nx">name</span> <span class="o">=</span> <span class="nx">strategy</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span> <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Authentication strategies must have a name&#39;</span><span class="p">)</span><span class="p">;</span> <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Authenticator</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">use</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">strategy</span>) {
+  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">strategy</span>) {
+    <span style="color:#a6e22e">strategy</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+    <span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">strategy</span>.<span style="color:#a6e22e">name</span>;
+  }
+  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">name</span>) { <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">&#39;Authentication strategies must have a name&#39;</span>); }
   
-  <span class="k">this</span><span class="p">.</span><span class="nx">_strategies</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">strategy</span><span class="p">;</span>
-  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_strategies</span>[<span style="color:#a6e22e">name</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">strategy</span>;
+  <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+};
 
 </code></pre></div><p>然後呢我們就要在 route 上加 passport 中間件，這樣的話，我們每一個進來到這個 route 的 request 都會被 passport 我們指定的策略進行驗證。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span>
-    <span class="s1">&#39;/login&#39;</span><span class="p">,</span>
-    <span class="nx">Passport</span><span class="p">.</span><span class="nx">authenticate</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">session</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">,</span>
-    <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;User ID &#39;</span> <span class="o">+</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(
+    <span style="color:#e6db74">&#39;/login&#39;</span>,
+    <span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">authenticate</span>(<span style="color:#e6db74">&#39;local&#39;</span>, { <span style="color:#a6e22e">session</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> }),
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;User ID &#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">id</span>.<span style="color:#a6e22e">toString</span>());
+    }
+);
 </code></pre></div><h2 id="session">Session的設定</h2>
 <p>我們在驗證完畢後應該是會取得到某個使用者，像我們上面範例中的這行 :</p>
 <pre><code>user = users[username];
@@ -266,84 +287,84 @@
 <li>然後會在使用者的瀏覽器設定 cookie。</li>
 </ul>
 <p>那我們在 passport 要如何使用呢 ? 首先關於第一點，passport 提供了<code>serializeUser</code>讓我們將使用者資訊存放置 server 的 session中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">passport</span><span class="p">.</span><span class="nx">serializeUser</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">user</span><span class="p">,</span> <span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">passport</span>.<span style="color:#a6e22e">serializeUser</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">user</span>, <span style="color:#a6e22e">done</span>) {
+  <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">id</span>);
+});
 </code></pre></div><p>然後關於第二點，每一次進行請求時，passport 都會將傳進來的 cookie 中某個存放該session資訊的欄位，取得到我們剛剛存的<code>user.id</code>，然後在使用它，來取得完整的<code>user</code>資訊，並將它存放到<code>req.user</code>之中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">passport</span><span class="p">.</span><span class="nx">deserializeUser</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">User</span><span class="p">.</span><span class="nx">findById</span><span class="p">(</span><span class="nx">id</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">done</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">passport</span>.<span style="color:#a6e22e">deserializeUser</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">id</span>, <span style="color:#a6e22e">done</span>) {
+  <span style="color:#a6e22e">User</span>.<span style="color:#a6e22e">findById</span>(<span style="color:#a6e22e">id</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">user</span>) {
+    <span style="color:#a6e22e">done</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">user</span>);
+  });
+});
 </code></pre></div><h2 id="heading2">實作一個登入系統</h2>
 <p>我們這邊來實作個登入系統，使用者只要有登入後，接下來的 route 都可以從 session 中取得到該名使用者的資訊。</p>
 <p><a href="https://github.com/h091237557/MyBlogPost/blob/master/code/design/passport_test.js">所有的程式碼</a></p>
 <h3 id="1-appjs-">1. app.js 基本的註冊</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">Passport</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;passport&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">LocalStrategy</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;passport-local&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">Strategy</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">Express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">BodyParser</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;body-parser&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">session</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express-session&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">cookieParser</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;cookie-parser&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Passport</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;passport&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">LocalStrategy</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;passport-local&#39;</span>).<span style="color:#a6e22e">Strategy</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Express</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">BodyParser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;body-parser&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">session</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;express-session&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">cookieParser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;cookie-parser&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">Express</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">BodyParser</span><span class="p">.</span><span class="nx">urlencoded</span><span class="p">(</span><span class="p">{</span> <span class="nx">extended</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">BodyParser</span><span class="p">.</span><span class="nx">json</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">cookieParser</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Express</span>();
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">BodyParser</span>.<span style="color:#a6e22e">urlencoded</span>({ <span style="color:#a6e22e">extended</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> }));
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">BodyParser</span>.<span style="color:#a6e22e">json</span>());
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">cookieParser</span>());
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">session</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">secret</span><span class="o">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span>
-    <span class="nx">resave</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">saveUninitialized</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-<span class="p">}</span><span class="p">)</span><span class="p">)</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Passport</span><span class="p">.</span><span class="nx">initialize</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">Passport</span><span class="p">.</span><span class="nx">session</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// 一定要在 initialize 之後
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">session</span>({
+    <span style="color:#a6e22e">secret</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test&#34;</span>,
+    <span style="color:#a6e22e">resave</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+    <span style="color:#a6e22e">saveUninitialized</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+}))
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">initialize</span>());
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">session</span>()); <span style="color:#75715e">// 一定要在 initialize 之後
 </span></code></pre></div><h3 id="2-">2. 驗證策略</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">users</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">mark</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;mark&#39;</span><span class="p">,</span>
-        <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;1234&#39;</span><span class="p">,</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="nx">node</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;node&#39;</span><span class="p">,</span>
-        <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;5678&#39;</span><span class="p">,</span>
-        <span class="nx">id</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="p">}</span><span class="p">,</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">users</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">mark</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;mark&#39;</span>,
+        <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;1234&#39;</span>,
+        <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+    },
+    <span style="color:#a6e22e">node</span><span style="color:#f92672">:</span> {
+        <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;node&#39;</span>,
+        <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;5678&#39;</span>,
+        <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+    },
+}
 
-<span class="kd">var</span> <span class="nx">localStrategy</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LocalStrategy</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">usernameField</span><span class="o">:</span> <span class="s1">&#39;username&#39;</span><span class="p">,</span>
-    <span class="nx">passwordField</span><span class="o">:</span> <span class="s1">&#39;password&#39;</span><span class="p">,</span>
-<span class="p">}</span><span class="p">,</span>
-    <span class="kd">function</span> <span class="p">(</span><span class="nx">username</span><span class="p">,</span> <span class="nx">password</span><span class="p">,</span> <span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">user</span> <span class="o">=</span> <span class="nx">users</span><span class="p">[</span><span class="nx">username</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">localStrategy</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LocalStrategy</span>({
+    <span style="color:#a6e22e">usernameField</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;username&#39;</span>,
+    <span style="color:#a6e22e">passwordField</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;password&#39;</span>,
+},
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">username</span>, <span style="color:#a6e22e">password</span>, <span style="color:#a6e22e">done</span>) {
+        <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">users</span>[<span style="color:#a6e22e">username</span>];
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">user</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="p">{</span> <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Invalid user&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">;</span>
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">user</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">false</span>, { <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Invalid user&#39;</span> });
+        };
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">user</span><span class="p">.</span><span class="nx">password</span> <span class="o">!==</span> <span class="nx">password</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="p">{</span> <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;Invalid password&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">;</span>
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">password</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">password</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">false</span>, { <span style="color:#a6e22e">message</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Invalid password&#39;</span> });
+        };
 
-        <span class="nx">done</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">user</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+        <span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">null</span>, <span style="color:#a6e22e">user</span>);
+    }
+)
 
-<span class="nx">Passport</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">,</span> <span class="nx">localStrategy</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">use</span>(<span style="color:#e6db74">&#39;local&#39;</span>, <span style="color:#a6e22e">localStrategy</span>);
 
 </code></pre></div><h3 id="3-route">3. 建立登入的route</h3>
 <p>下面為我們登入的 route 建立。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span>
-    <span class="s1">&#39;/login&#39;</span><span class="p">,</span>
-    <span class="nx">Passport</span><span class="p">.</span><span class="nx">authenticate</span><span class="p">(</span><span class="s1">&#39;local&#39;</span><span class="p">,</span><span class="p">{</span><span class="nx">session</span><span class="o">:</span> <span class="kc">true</span><span class="p">}</span><span class="p">)</span><span class="p">,</span>
-    <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">header</span><span class="p">(</span><span class="s2">&#34;Access-Control-Allow-Origin&#34;</span><span class="p">,</span> <span class="s2">&#34;*&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">header</span><span class="p">(</span><span class="s2">&#34;Access-Control-Allow-Headers&#34;</span><span class="p">,</span> <span class="s2">&#34;X-Requested-With&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;User ID &#39;</span> <span class="o">+</span> <span class="nx">req</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">post</span>(
+    <span style="color:#e6db74">&#39;/login&#39;</span>,
+    <span style="color:#a6e22e">Passport</span>.<span style="color:#a6e22e">authenticate</span>(<span style="color:#e6db74">&#39;local&#39;</span>,{<span style="color:#a6e22e">session</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>}),
+    <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">header</span>(<span style="color:#e6db74">&#34;Access-Control-Allow-Origin&#34;</span>, <span style="color:#e6db74">&#34;*&#34;</span>);
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">header</span>(<span style="color:#e6db74">&#34;Access-Control-Allow-Headers&#34;</span>, <span style="color:#e6db74">&#34;X-Requested-With&#34;</span>);
+        <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;User ID &#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">req</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">id</span>.<span style="color:#a6e22e">toString</span>());
+    }
+);
 </code></pre></div><p>那 passport 是那裡置至 session 和 cookie 呢 ?</p>
 <p>答案是在這裡 :</p>
 <pre><code>passport.serializeUser(function(user, done) {
@@ -359,19 +380,19 @@
 })
 </code></pre><h3 id="--deserializeuser-">注意點 : deserializeUser 無法被呼叫到</h3>
 <p>有一點要注意一下，如果你發現你的<code>deserializeUser</code>老是無法被呼叫到，那問題是在下面這段 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">session</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">secret</span><span class="o">:</span> <span class="s2">&#34;test&#34;</span><span class="p">,</span>
-    <span class="nx">resave</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">saveUninitialized</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-<span class="p">}</span><span class="p">)</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">session</span>({
+    <span style="color:#a6e22e">secret</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;test&#34;</span>,
+    <span style="color:#a6e22e">resave</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+    <span style="color:#a6e22e">saveUninitialized</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+}))
 </code></pre></div><p>有些人會寫成下面這樣，<code>cookie: { secure: true }</code>這個參數需要配合<code>https</code>才能使用。</p>
 <p><a href="https://stackoverflow.com/questions/11277779/passportjs-deserializeuser-never-called">你的好朋友 stackoverflow</a></p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">session</span><span class="p">(</span><span class="p">{</span>
-    <span class="nx">secret</span><span class="o">:</span> <span class="s1">&#39;goodjob secret&#39;</span><span class="p">,</span>
-    <span class="nx">resave</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span> <span class="c1">// don&#39;t save session if unmodified
-</span><span class="c1"></span>    <span class="nx">saveUninitialized</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-    <span class="nx">cookie</span><span class="o">:</span> <span class="p">{</span> <span class="nx">secure</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">,</span>
-<span class="p">}</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">use</span>(<span style="color:#a6e22e">session</span>({
+    <span style="color:#a6e22e">secret</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;goodjob secret&#39;</span>,
+    <span style="color:#a6e22e">resave</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>, <span style="color:#75715e">// don&#39;t save session if unmodified
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">saveUninitialized</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>,
+    <span style="color:#a6e22e">cookie</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">secure</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> },
+}));
 </code></pre></div><h2 id="heading3">參考資料</h2>
 <ul>
 <li><a href="http://passportjs.org/docs">passport 官方文件</a></li>

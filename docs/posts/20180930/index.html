@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，|Describe what your web page is about">
+    <meta name="description" property="og:description" content="前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，但你總是會覺得前後知識好像缺了什麼，別人問你一下沒有 HLS 前是如何處理直播傳輸你大概就會倒了，然後上網查查相關知識，但卻發現總是沒有連貫起來的知識，越看越冒出更多的名詞，這對一名想入門影音直播開發的初學者，真的非常的辛苦。
+因此最後就想說當個好人將這方面的知識都整理成一條線好了，因此就產生了這三十篇的文章。
+這三十天的文章基本上理解完後，要開發出一個直播應用事實上就不是太難的事情了，而且你有了這三十篇的知識你接下來要將直播應用開發的更好，你就也更有本錢去學習更進階的東西囉。
+接下來這篇文章就來總結一下這三十天咱們學習了那些東西。
+影音直播開發的 Junior 工程師攻略本 基本上前二十篇是最基礎的東西，這幾篇文章就在說明，如何將一個人的聲音或影像傳遞給對方。。
+!
+聲音與影像的採集、編碼與封裝 首先這五篇文章我們學習了聲音與影像是如何的儲放在電腦裡面，並且因為原始的聲音與影像太大，所以我們需要使用編碼來進行壓縮，最後就準備需要將聲音與影像進行封裝，為了可以讓別人一打開來知道要如何處理這一段聲音或影像編碼。
+ 30-02之聲音的採集與原理 30-03之聲音的編碼與壓縮 30-04之影像的採集與原理 30-05之影像的編碼與壓縮 30-06之聲音與影像的封裝  接下來的兩篇文章，咱們就使用 WebRTC 的一些東西，來實作如何的採集聲音與影像，並且最後將它封裝成一個檔案。
+ 30-07之Web 如何進行語音與影像採集 ? 30-08之 WebRTC 採集的詳細說明與聲音的加工  聲音與影像的傳輸 咱們已經可以將聲音與影像封裝後，就可以開始傳輸給遠方的某個人。
+我們一開始先探討讓對方收到聲音與影像的方法有那些。
+ 30-09之別人要如何聽到我的聲音呢 ?  接下來花了幾篇文章來理解網路傳輸協議。
+ 30-10之通訊協議的基本常識 30-11之 TCP 與 UDP 協議 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議 30-17之 MPEG-DASH 傳輸協議 30-18之影音傳輸協議總整理  在理解完上面幾篇文章以後，我們應該是可以將聲音與影像傳輸給遠方的某個人。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-30之寫給想入門影音直播開發的 Junior 工程師攻略本 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，|Describe what your web page is about">
+    <meta name="twitter:description" content="前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，但你總是會覺得前後知識好像缺了什麼，別人問你一下沒有 HLS 前是如何處理直播傳輸你大概就會倒了，然後上網查查相關知識，但卻發現總是沒有連貫起來的知識，越看越冒出更多的名詞，這對一名想入門影音直播開發的初學者，真的非常的辛苦。
+因此最後就想說當個好人將這方面的知識都整理成一條線好了，因此就產生了這三十篇的文章。
+這三十天的文章基本上理解完後，要開發出一個直播應用事實上就不是太難的事情了，而且你有了這三十篇的知識你接下來要將直播應用開發的更好，你就也更有本錢去學習更進階的東西囉。
+接下來這篇文章就來總結一下這三十天咱們學習了那些東西。
+影音直播開發的 Junior 工程師攻略本 基本上前二十篇是最基礎的東西，這幾篇文章就在說明，如何將一個人的聲音或影像傳遞給對方。。
+!
+聲音與影像的採集、編碼與封裝 首先這五篇文章我們學習了聲音與影像是如何的儲放在電腦裡面，並且因為原始的聲音與影像太大，所以我們需要使用編碼來進行壓縮，最後就準備需要將聲音與影像進行封裝，為了可以讓別人一打開來知道要如何處理這一段聲音或影像編碼。
+ 30-02之聲音的採集與原理 30-03之聲音的編碼與壓縮 30-04之影像的採集與原理 30-05之影像的編碼與壓縮 30-06之聲音與影像的封裝  接下來的兩篇文章，咱們就使用 WebRTC 的一些東西，來實作如何的採集聲音與影像，並且最後將它封裝成一個檔案。
+ 30-07之Web 如何進行語音與影像採集 ? 30-08之 WebRTC 採集的詳細說明與聲音的加工  聲音與影像的傳輸 咱們已經可以將聲音與影像封裝後，就可以開始傳輸給遠方的某個人。
+我們一開始先探討讓對方收到聲音與影像的方法有那些。
+ 30-09之別人要如何聽到我的聲音呢 ?  接下來花了幾篇文章來理解網路傳輸協議。
+ 30-10之通訊協議的基本常識 30-11之 TCP 與 UDP 協議 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議 30-17之 MPEG-DASH 傳輸協議 30-18之影音傳輸協議總整理  在理解完上面幾篇文章以後，我們應該是可以將聲音與影像傳輸給遠方的某個人。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

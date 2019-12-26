@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMan|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMany在mongodb shell執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用node js來建立測試方法。
+在開始測試之前，先介紹一下另一個新增方法Bulk Insert。
+ Bulk Insert 方法 新增方法的效能測試  ~ Bulk Insert方法 ~ Bulk Insert在2.6版時發佈，它也是種新增方法，效能如何等等會比較，基本使用方法有分有兩Unordered Operations和Ordered Operations。
+Ordered Operations Ordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它就會停止下來，不會在繼續執行列表內的其它寫入操作，並且前面的操作不會rollback 。
+使用範例如下。
+var bulk = db.collection.initializeOrderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.insert( { name: &amp;#34;hoho&amp;#34;} ); bulk.execute(); Unordered Operations Unordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它不會停止下來，會繼續執行列表內的其它寫入操作，速度較快。
+使用範例如下。
+var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.insert( { name: &amp;#34;hoho&amp;#34;} ); bulk.execute();  Ordered 與 Unordered我們在要如何選擇使用時機呢，記好只要有相關性的操作就要選擇用Ordered，而如果像是log之類的，流失一兩筆也是沒差，這時可以選用Unordered。
+ ~ 新增方法的效能測試 ~ 建立測試環境 首先我們先建立個新的資料夾，然後在裡面執行npm init來產生package.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-4之MongoDB新手村CRUD---新增之Bulk與新增效能測試 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMan|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMany在mongodb shell執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用node js來建立測試方法。
+在開始測試之前，先介紹一下另一個新增方法Bulk Insert。
+ Bulk Insert 方法 新增方法的效能測試  ~ Bulk Insert方法 ~ Bulk Insert在2.6版時發佈，它也是種新增方法，效能如何等等會比較，基本使用方法有分有兩Unordered Operations和Ordered Operations。
+Ordered Operations Ordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它就會停止下來，不會在繼續執行列表內的其它寫入操作，並且前面的操作不會rollback 。
+使用範例如下。
+var bulk = db.collection.initializeOrderedBulkOp(); bulk.insert( { name: &#34;mark&#34;} ); bulk.insert( { name: &#34;hoho&#34;} ); bulk.execute(); Unordered Operations Unordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它不會停止下來，會繼續執行列表內的其它寫入操作，速度較快。
+使用範例如下。
+var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &#34;mark&#34;} ); bulk.insert( { name: &#34;hoho&#34;} ); bulk.execute();  Ordered 與 Unordered我們在要如何選擇使用時機呢，記好只要有相關性的操作就要選擇用Ordered，而如果像是log之類的，流失一兩筆也是沒差，這時可以選用Unordered。
+ ~ 新增方法的效能測試 ~ 建立測試環境 首先我們先建立個新的資料夾，然後在裡面執行npm init來產生package.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -139,17 +158,17 @@
 <h3 id="ordered-operations">Ordered Operations</h3>
 <p><code>Ordered Operations</code>，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它就會停止下來，不會在繼續執行列表內的其它寫入操作，並且前面的操作不會<code>rollback </code>。</p>
 <p>使用範例如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">initializeOrderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;hoho&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeOrderedBulkOp</span>();
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;hoho&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>();
 </code></pre></div><h3 id="unordered-operations">Unordered Operations</h3>
 <p><code>Unordered Operations</code>，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它不會停止下來，會繼續執行列表內的其它寫入操作，速度較快。</p>
 <p>使用範例如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;hoho&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;hoho&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>();
 </code></pre></div><blockquote>
 <p><code>Ordered</code> 與 <code>Unordered</code>我們在要如何選擇使用時機呢，記好只要有相關性的操作就要選擇用<code>Ordered</code>，而如果像是<code>log</code>之類的，流失一兩筆也是沒差，這時可以選用<code>Unordered</code>。</p>
 </blockquote>
@@ -158,110 +177,110 @@
 <p>首先我們先建立個新的資料夾，然後在裡面執行<code>npm init</code>來產生<code>package.json</code>檔，最後我們需要的元件為<code>mongodb</code>，這是<code>mongodb native driver</code>，透過<code>npm install mongodb --save</code>來進行安裝。</p>
 <p>接下來我們建立測試檔案<code>test.js</code>，內容如下，並附上<a href="https://github.com/h091237557/30-MongoDB/tree/master/Test/30-4">github</a>連結。</p>
 <p>下面的程式碼有個很詭異的地方，測試資料<code>datas</code>產生了三次而且完全一模一樣，會這樣寫是因為如果只寫一個<code>datas</code>然後給三個方法新增，會發生<code>Duplicate ObjectId</code>，也就是說用同一個物件去新增，它所建立的<code>ObjectId</code>會一樣，然後就會出錯，這邊可能要去查一下<code>mongodb native driver </code>的原始碼才知道為啥會降。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">mongodb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongodb&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodb</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;mongodb&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">mongodbServer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">27017</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">auto_reconnect</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nx">poolSize</span><span class="o">:</span> <span class="mi">10</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodbServer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Server</span>(<span style="color:#e6db74">&#39;localhost&#39;</span>, <span style="color:#ae81ff">27017</span>, {
+  <span style="color:#a6e22e">auto_reconnect</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+  <span style="color:#a6e22e">poolSize</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>
+});
 
-<span class="kd">var</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Db</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nx">mongodbServer</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">collection</span><span class="p">)</span> <span class="p">{</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Db</span>(<span style="color:#e6db74">&#39;test&#39;</span>, <span style="color:#a6e22e">mongodbServer</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>;
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">open</span>(<span style="color:#66d9ef">function</span>() {
+  <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>(<span style="color:#e6db74">&#39;user&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">collection</span>) {
 		
-	<span class="cm">/*
-</span><span class="cm">	* Insert測試 
-</span><span class="cm">	*/</span>
-    <span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">datas</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-          <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
-          <span class="s2">&#34;age&#34;</span><span class="o">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
-          <span class="s2">&#34;size&#34;</span><span class="o">:</span> <span class="nx">i</span>
-        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;Insert time&#34;</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">collection</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;Insert time&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;insert error&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#75715e">/*
+</span><span style="color:#75715e">	* Insert測試 
+</span><span style="color:#75715e">	*/</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">push</span>({
+          <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Mark&#34;</span>,
+          <span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;20&#34;</span>,
+          <span style="color:#e6db74">&#34;size&#34;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+        });
+    }
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;Insert time&#34;</span>);
+    <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">datas</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;Insert time&#34;</span>);
+      } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;insert error&#34;</span>);
+      }
+    });
 
 
-	<span class="cm">/*
-</span><span class="cm">	* InsertMany測試 
-</span><span class="cm">	*/</span>
-     <span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">datas</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-            <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;age&#34;</span><span class="o">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;size&#34;</span><span class="o">:</span> <span class="nx">i</span>
-          <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;InsertMany time&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">collection</span><span class="p">.</span><span class="nx">insertMany</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;InsertMany time&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;insert error&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#75715e">/*
+</span><span style="color:#75715e">	* InsertMany測試 
+</span><span style="color:#75715e">	*/</span>
+     <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [];
+     <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span> ; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+          <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">push</span>({
+            <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Mark&#34;</span>,
+            <span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;20&#34;</span>,
+            <span style="color:#e6db74">&#34;size&#34;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+          });
+      }
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;InsertMany time&#34;</span>);
+      <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">insertMany</span>(<span style="color:#a6e22e">datas</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">res</span>) {
+          <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;InsertMany time&#34;</span>);
+        } <span style="color:#66d9ef">else</span> {
+          <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;insert error&#34;</span>);
+        }
+      });
 
 
-	<span class="cm">/*
-</span><span class="cm">	* Unorder Bulk Insert  測試 
-</span><span class="cm">	*/</span>
-      <span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">datas</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-            <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;age&#34;</span><span class="o">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;size&#34;</span><span class="o">:</span> <span class="nx">i</span>
-          <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;Bulk Insert&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;Bulk Insert&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#75715e">/*
+</span><span style="color:#75715e">	* Unorder Bulk Insert  測試 
+</span><span style="color:#75715e">	*/</span>
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [];
+      <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span> ; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+          <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">push</span>({
+            <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Mark&#34;</span>,
+            <span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;20&#34;</span>,
+            <span style="color:#e6db74">&#34;size&#34;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+          });
+      }
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;Bulk Insert&#34;</span>);
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+      <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">i</span>]);
+      }
+      <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>,<span style="color:#a6e22e">res</span>){
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;Bulk Insert&#34;</span>);
+      });
     
       
-    <span class="cm">/*
-</span><span class="cm">	* Ordered Bulk Insert 測試 
-</span><span class="cm">	*/</span>
-      <span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">datas</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-            <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;age&#34;</span><span class="o">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
-            <span class="s2">&#34;size&#34;</span><span class="o">:</span> <span class="nx">i</span>
-          <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;Bulk Insert&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeOrderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-      <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">res</span><span class="p">)</span><span class="p">{</span>
-          <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;Bulk Insert&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">	* Ordered Bulk Insert 測試 
+</span><span style="color:#75715e">	*/</span>
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [];
+      <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span> ; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+          <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">push</span>({
+            <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Mark&#34;</span>,
+            <span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;20&#34;</span>,
+            <span style="color:#e6db74">&#34;size&#34;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+          });
+      }
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;Bulk Insert&#34;</span>);
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeOrderedBulkOp</span>();
+      <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+        <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">i</span>]);
+      }
+      <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>,<span style="color:#a6e22e">res</span>){
+          <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;Bulk Insert&#34;</span>);
+      });
 
-  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  });
+});
 </code></pre></div><h3 id="heading1">開始測試案例</h3>
 <p>測試物件大小約為<code>38Bytes</code>，並且從小測到大，這邊要注意一下，由於<code>mongodb</code>會進行所謂的預分配，將空間換取穩定，每當你第一次建立<code>document</code>，他就會切分固定大小給你，然後你就算刪除<code>document</code>時空間還是會存在，所以如果你先執行一次10萬筆測試，在執行第二次十萬筆測試時，你會發現執行速度變快了，因為它不用在預分配了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-   <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;Mark&#34;</span><span class="p">,</span>
-   <span class="s2">&#34;age&#34;</span><span class="o">:</span> <span class="s2">&#34;20&#34;</span><span class="p">,</span>
-   <span class="s2">&#34;size&#34;</span><span class="o">:</span> <span class="s2">&#34;1&#34;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+   <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Mark&#34;</span>,
+   <span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;20&#34;</span>,
+   <span style="color:#e6db74">&#34;size&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;1&#34;</span>
+}
 </code></pre></div><p>執行結果如下，每筆數測試都會執行兩次，並且不同筆數測試會先將預分配空間完全清除。</p>
 <p>從下面執行結果可以知道幾點事情。</p>
 <ul>

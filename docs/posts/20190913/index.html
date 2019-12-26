@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="mysql, 鐵人賽, 索引" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。
+ 30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹 30-12 之資料庫層的核心 - MySQL 的索引實現  本篇文章分為以下幾個章節 :
+ 索引的重要小觀念 索引的設計流程 索引的使用注意事項 SQL 地雷區  索引的重要小觀念 觀念 1 : 不是索引越多越好 索引不是聖杯，它是雙刃刀，用的好上天堂，用不好下地獄。基本上資料庫的索引幾乎可以影響一個系統的 50% 以上的性能。
+索引可以加快查詢速度，但注意它是以空間換取時間。
+基本上它使用的資源如下 :
+ 每個索引都會建立一顆 b&#43; 樹。 每次新增、更新資料時都會改變 b&#43; 樹。  所以當你索引越多時，你所需要的記憶體與維護索引的 cpu 運算就需要越多。
+觀念 2. 懂的使用 Explain 來分析你的 SQL 索引性能解析 explain 這個指令可以讓你知道你下的 sql 語句是否有命中索引。
+EXPLAIN SELECT * FROM user_no WHERE name = &#39;mark&#39;; ===================================================== id: 1 select_type: SIMPLE table: user partitions: NULL type: const possible_keys: PRIMARY key: PRIMARY key_len: 8 ref: const rows: 1 filtered: 100.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-13 之資料庫層的優化 - 索引設計與雷區 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。
+ 30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹 30-12 之資料庫層的核心 - MySQL 的索引實現  本篇文章分為以下幾個章節 :
+ 索引的重要小觀念 索引的設計流程 索引的使用注意事項 SQL 地雷區  索引的重要小觀念 觀念 1 : 不是索引越多越好 索引不是聖杯，它是雙刃刀，用的好上天堂，用不好下地獄。基本上資料庫的索引幾乎可以影響一個系統的 50% 以上的性能。
+索引可以加快查詢速度，但注意它是以空間換取時間。
+基本上它使用的資源如下 :
+ 每個索引都會建立一顆 b&#43; 樹。 每次新增、更新資料時都會改變 b&#43; 樹。  所以當你索引越多時，你所需要的記憶體與維護索引的 cpu 運算就需要越多。
+觀念 2. 懂的使用 Explain 來分析你的 SQL 索引性能解析 explain 這個指令可以讓你知道你下的 sql 語句是否有命中索引。
+EXPLAIN SELECT * FROM user_no WHERE name = &#39;mark&#39;; ===================================================== id: 1 select_type: SIMPLE table: user partitions: NULL type: const possible_keys: PRIMARY key: PRIMARY key_len: 8 ref: const rows: 1 filtered: 100.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

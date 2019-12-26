@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,20 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安|Describe what your web page is about">
+    <meta name="description" property="og:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安裝docker，都可以使用mongodb，不再需要去找各種東西的安裝方法。
+~ Step1. 安裝Docker ~ Mac安裝 https://docs.docker.com/docker-for-mac/
+docker最開始時還沒支援mac，而是需要用到其它方法來使用，但現在已經有出docker-for-Mac了，但注意雖然他是穩定版，但在mac自動休眠後，常常發生Bad response from Docker engine……，這目前好像沒啥解法，只能reset docker 或 重開機 ……
+Windows7 安裝 https://www.docker.com/products/docker-toolbox
+雖然出了docker-for-windows但目前只支援windows10和Server 2016，windows7哭哭。
+Windows10 安裝 https://docs.docker.com/docker-for-windows/
+懶講。
+Ubuntu 安裝 https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html
+請參考這篇安裝。
+~ Step2. 建立 docker-compose.yml ~ 在某個檔案夾下建立docker-compose.yml，並且內容如下，然後在執行docker-compose up指令，它就自動幫你建立一個裝有mongodb的環境。
+version: &amp;#39;2&amp;#39; services: mongo: image: mongo ports: - &amp;#34;27017:27017&amp;#34; volumes_from: - mongodata mongodata: image: tianon/true volumes: - /data/db 下圖為在該檔案夾下執行docker-compose up結果。可以看到他建立一個port為27017並且資料存放在環境/data/db的mongodb。
+~ Step3. 進入Docker Container裡操作 MongoDB ~ 在執行完docker-compose up後，換到另一個shell，然後你可以執行docker ps指令來確定有mongodb的container有沒有執行，你可以把container想成為一個很小的VM。
+從下圖可知，執行docker ps後可看到你這台電腦有在執行的container，其中mongo就是我們剛剛執行的。
+接下來我們就執行docker exec -ti 333fba82b57e bash，其中333fba82b57e為CONTAINER ID，如下圖，你就進入到這個container中囉。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +55,20 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-2之使用 Docker 來建構 MongoDB | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安|Describe what your web page is about">
+    <meta name="twitter:description" content="由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安裝docker，都可以使用mongodb，不再需要去找各種東西的安裝方法。
+~ Step1. 安裝Docker ~ Mac安裝 https://docs.docker.com/docker-for-mac/
+docker最開始時還沒支援mac，而是需要用到其它方法來使用，但現在已經有出docker-for-Mac了，但注意雖然他是穩定版，但在mac自動休眠後，常常發生Bad response from Docker engine……，這目前好像沒啥解法，只能reset docker 或 重開機 ……
+Windows7 安裝 https://www.docker.com/products/docker-toolbox
+雖然出了docker-for-windows但目前只支援windows10和Server 2016，windows7哭哭。
+Windows10 安裝 https://docs.docker.com/docker-for-windows/
+懶講。
+Ubuntu 安裝 https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html
+請參考這篇安裝。
+~ Step2. 建立 docker-compose.yml ~ 在某個檔案夾下建立docker-compose.yml，並且內容如下，然後在執行docker-compose up指令，它就自動幫你建立一個裝有mongodb的環境。
+version: &#39;2&#39; services: mongo: image: mongo ports: - &#34;27017:27017&#34; volumes_from: - mongodata mongodata: image: tianon/true volumes: - /data/db 下圖為在該檔案夾下執行docker-compose up結果。可以看到他建立一個port為27017並且資料存放在環境/data/db的mongodb。
+~ Step3. 進入Docker Container裡操作 MongoDB ~ 在執行完docker-compose up後，換到另一個shell，然後你可以執行docker ps指令來確定有mongodb的container有沒有執行，你可以把container想成為一個很小的VM。
+從下圖可知，執行docker ps後可看到你這台電腦有在執行的container，其中mongo就是我們剛剛執行的。
+接下來我們就執行docker exec -ti 333fba82b57e bash，其中333fba82b57e為CONTAINER ID，如下圖，你就進入到這個container中囉。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +80,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -144,20 +173,20 @@
 <p>請參考這篇安裝。</p>
 <h2 id="-step2--dockercomposeyml-">~ Step2. 建立 docker-compose.yml ~</h2>
 <p>在某個檔案夾下建立<code>docker-compose.yml</code>，並且內容如下，然後在執行<code>docker-compose up</code>指令，它就自動幫你建立一個裝有<code>mongodb</code>的環境。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;2&#39;</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span>services<span class="p">:</span><span class="w">
-</span><span class="w">  </span>mongo<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>mongo<span class="w">
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;27017:27017&#34;</span><span class="w">
-</span><span class="w">    </span>volumes_from<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>mongodata<span class="w">
-</span><span class="w">  </span>mongodata<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span>tianon/<span class="kc">true</span><span class="w">
-</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>/data/db<span class="w">
-</span></code></pre></div><p>下圖為在該檔案夾下執行<code>docker-compose up</code>結果。可以看到他建立一個port為27017並且資料存放在環境<code>/data/db</code>的<code>mongodb</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">version: <span style="color:#e6db74">&#39;2&#39;</span>
+
+services:
+  mongo:
+    image: mongo
+    ports:
+      - <span style="color:#e6db74">&#34;27017:27017&#34;</span>
+    volumes_from:
+      - mongodata
+  mongodata:
+    image: tianon/<span style="color:#66d9ef">true</span>
+    volumes:
+      - /data/db
+</code></pre></div><p>下圖為在該檔案夾下執行<code>docker-compose up</code>結果。可以看到他建立一個port為27017並且資料存放在環境<code>/data/db</code>的<code>mongodb</code>。</p>
 <p><img src="http://yixiang8780.com/outImg/20161129-1.png" alt="Alt text"></p>
 <h2 id="-step3-docker-container-mongodb-">~ Step3. 進入Docker Container裡操作 MongoDB ~</h2>
 <p>在執行完<code>docker-compose up</code>後，換到另一個<code>shell</code>，然後你可以執行<code>docker ps</code>指令來確定有<code>mongodb</code>的<code>container</code>有沒有執行，你可以把<code>container</code>想成為一個很小的<code>VM</code>。</p>

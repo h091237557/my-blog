@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -49,7 +52,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -97,7 +100,7 @@
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180809/">
@@ -126,15 +129,23 @@
   </div>
   <div>
     
-    在之前筆者的這篇文章中： 一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 在們學習了如何使用 AWS 的相關工具來建立一個用戶行為的 LOG 分析系統。 但是這篇文章中所提到的
-    <a class="muted-link" href="/posts/20180809/">…</a>
+    <div class="summary">
+    在之前筆者的這篇文章中：
+一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
+在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
+但是這篇文章中所提到的架構有個問題。
+這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
+ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
+會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
+如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180808/">
@@ -163,15 +174,23 @@
   </div>
   <div>
     
-    我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201
-    <a class="muted-link" href="/posts/20180808/">…</a>
+    <div class="summary">
+    我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
+在開始搞前先說說我的簡單需求:
+ 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
+ 這時通常時間的儲法會有兩種選擇:
+ Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
+其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
+const streamName = 'mark-stream'; const test = { name: 'Mark III', age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
+curl 127.0.0.1/_search?pretty { &quot;_index&quot; : &quot;api&quot;, &quot;_type&quot; : &quot;log&quot;, &quot;_id&quot; : &quot;2139103&quot;, &quot;_score&quot; : 1.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180629/">
@@ -200,15 +219,26 @@
   </div>
   <div>
     
-    本篇文章中，我們要說明的主題為 : 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。 本篇文章中，我們將分成以下的主題: Log 系統的架構說明 AWS 的工具申請 (Ela
-    <a class="muted-link" href="/posts/20180629/">…</a>
+    <div class="summary">
+    本篇文章中，我們要說明的主題為 :
+ 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
+ 本篇文章中，我們將分成以下的主題:
+ Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
+其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
+這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
+ 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
+V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
+所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
+這裡我們選擇了AWS kinesis，它的優點如下:
+ 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180704/">
@@ -233,15 +263,21 @@
   </div>
   <div>
     
-    在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我
-    <a class="muted-link" href="/posts/20180704/">…</a>
+    <div class="summary">
+    在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:
+ 如何時用 AWS Athena 來尋找 S3 中的資料
+ 另外本篇另一個外傳也要順到說一下，這外傳的主題為:
+ 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !
+ 接下來下面為本篇章節:
+ AWS Athena 的簡單介紹 使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table 使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量) 坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !  AWS Athena 的簡單介紹 簡單的白話文說一下 AWS Athena 是啥:
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180702/">
@@ -270,15 +306,22 @@
   </div>
   <div>
     
-    上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊
-    <a class="muted-link" href="/posts/20180702/">…</a>
+    <div class="summary">
+    上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:
+ 要如何定期的清除 Elasticsearch 文件 ?
+ 然後我們會分成以下幾個章節:
+ 最直覺式的定期刪除方法與缺點。 為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ? 大量文件清除方法 - 時間索引策略。  最直覺式的定期刪除方法與缺點 假設有以下的資料:
+{ data: 'Hi Mark ~', created_at: '20180101' }, { data: 'HI Fuc u Mark', created_at: '20180201' } 那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:
+ 搜尋所有 created_at 為 1 月的 doc。 再將所有搜尋出的 doc 給清除。   上面這方法在小量資料時，是沒問題的，問題是出在大量資料。
+ 那為什麼大量資料刪除會有問題呢 ?
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20171001/">
@@ -303,8 +346,16 @@
   </div>
   <div>
     
-    本篇文章中我們將會學習到以下幾個重點 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ? 什麼是 Prometheus 呢 ? 在我們平常開發完系統時，
-    <a class="muted-link" href="/posts/20171001/">…</a>
+    <div class="summary">
+    本篇文章中我們將會學習到以下幾個重點
+ 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ?  什麼是 Prometheus 呢 ? 在我們平常開發完系統時，我們常常會有個需求，那就是要如何監控我們的系統呢 ? 以確保它 cpu 往上衝時，我們會知道呢。
+當然我們可以很簡單的寫個小程式，定期的去呼叫系統取他的 cpu，這是很淺的東東 ~ 那如果是還要一個 api 的請求次數呢 ? 或是平均的某個 api 的請求次數或圖表呢 ? 這時如果還要自幹一個，那就太麻煩囉，所以這時我們就可以使用Prometheus ~
+Prometheus 官網上面寫了下面這段話 :
+ Power your metrics and alerting with a leading open-source monitoring solution.
+ 這句話就是 Prometheus 存在的目的。
+Prometheus 的架構 太細節的不說囉 ~ 這裡大概列出這個架構的三個重點:
+ Prometheus 是用 pull 去取得目標資訊，下面的 pull metrics 就是這個意思，而這裡你只先去記一點，如果你有個 http server ，然後你要用 Prometheus 去監控 server ，那 Prometheus 就會去 xxxx_host/metrics 取得資訊。 PromQL 是 Prometheus 所提供的查詢語言，利用它可以快速的找到我們想要的資訊 (大概)。 AlertManager 是一個警告系統，你只要配置好 Prometheus 在某個東東到了報警線時，就自動發送警告到 AlertManager 然後它會使用某些方法通知你，例如 email or slack。  安裝 Prometheus 請直接到官網直接下載下來。
+    </div>
   </div>
 </div>
 

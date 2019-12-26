@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,28 @@
     <meta content="nodejs, rabbitmq" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
+訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
+ 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
+ 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
+至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
+使用訊息佇列的十個理由&amp;mdash;簡中
+然後我們先簡單的說明一下訊息系統的基礎。
+訊息系統架構 基本上分為以下兩種 :
+對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
+ 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
+ zeroMQ 他可以幫助我們建立對等式架構。
+ 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
+以下為中介者架構的圖示 :
+ RabbitMQ 就是專門用來建立這個架構的東東。
+ 接下來的文章中，我們將要先來實作一些rabbitmq。
+Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
+如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
+那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
+根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
+它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
+佇列它還有以下三種特性 :
+ 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +63,28 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP|Describe what your web page is about">
+    <meta name="twitter:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
+訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
+ 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
+ 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
+至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
+使用訊息佇列的十個理由&mdash;簡中
+然後我們先簡單的說明一下訊息系統的基礎。
+訊息系統架構 基本上分為以下兩種 :
+對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
+ 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
+ zeroMQ 他可以幫助我們建立對等式架構。
+ 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
+以下為中介者架構的圖示 :
+ RabbitMQ 就是專門用來建立這個架構的東東。
+ 接下來的文章中，我們將要先來實作一些rabbitmq。
+Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
+如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
+那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
+根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
+它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
+佇列它還有以下三種特性 :
+ 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +96,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -208,36 +253,36 @@ brew install rabbitmq
 <p>首先我們會先建立一個<code>producer</code>來負責產生訊息，從下面的程式碼我們可以知道，它需要先連線到我們的<code>rabbitmq server</code>，並且建立一個通道，然後，我們可以指定要將資料送到<code>特定的queue</code>，而我們 queue 取名為<code>mark</code>。</p>
 <p>其中，下面的程式碼中，比較需要注意的下面這行，這行是會判斷該 queue 是否存在，如果不存在則建立，並且<code>durable : false</code>代表的意思為<code>當 queue 重開裡面的資料會消失</code>。</p>
 <pre><code>ch.assertQueue(quenu_name, {durable: false});
-</code></pre><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">amqp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;amqplib/callback_api&#39;</span>);
 
-<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;connect amqp server !&#34;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">amqp</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;amqp://127.0.0.1&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">conn</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;connect amqp server !&#34;</span>);
 
-    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">quenu_name</span> <span class="o">=</span> <span class="s2">&#34;mark&#34;</span><span class="p">;</span>
+    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">createChannel</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ch</span>) {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">quenu_name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mark&#34;</span>;
 
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="nx">quenu_name</span><span class="p">,</span> <span class="p">{</span><span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">assertQueue</span>(<span style="color:#a6e22e">quenu_name</span>, {<span style="color:#a6e22e">durable</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span>});
 
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">sendToQueue</span><span class="p">(</span><span class="nx">quenu_name</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="s1">&#39;Hello Mark&#39;</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Send a message&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span>
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">sendToQueue</span>(<span style="color:#a6e22e">quenu_name</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Buffer</span>(<span style="color:#e6db74">&#39;Hello Mark&#39;</span>));
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Send a message&#39;</span>);
+    })
+})
 </code></pre></div><p>再來我們來實作<code>consumer</code>來當作我們訊息的接受者，一樣也是需要去連線到<code>radditmq server</code>和通道，然後會監聽這個通道所傳下來的訊息。</p>
 <p>其中我們的 <code>ch.consume</code>有個參數是<code>{noAck: true}</code>，代表這如果該<code>channel</code>不會使用<code>act</code>來進行確認，而如果是 false 它代表的意思為，如果中介者未收到 ack (確認)，則訊息就會被保留在佇列裡以待再次處理。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">amqp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;amqplib/callback_api&#39;</span>);
 
-<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">queue_name</span> <span class="o">=</span> <span class="s2">&#34;mark&#34;</span><span class="p">;</span>
+<span style="color:#a6e22e">amqp</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;amqp://127.0.0.1&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">conn</span>) {
+    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">createChannel</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ch</span>) {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">queue_name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;mark&#34;</span>;
 
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="nx">queue_name</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Waitting the meesages&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">consume</span><span class="p">(</span><span class="nx">queue_name</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received the msg : </span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">assertQueue</span>(<span style="color:#a6e22e">queue_name</span>, { <span style="color:#a6e22e">durable</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> });
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Waitting the meesages&#34;</span>);
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">consume</span>(<span style="color:#a6e22e">queue_name</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">msg</span>) {
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">Received the msg : </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">toString</span>()<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
 
-        <span class="p">}</span><span class="p">,</span> <span class="p">{</span><span class="nx">noAck</span><span class="o">:</span> <span class="kc">true</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span>
+        }, {<span style="color:#a6e22e">noAck</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>});
+    })
+})
 </code></pre></div><p>最後我們來執行兩次<code>producer</code>，然後再打開<code>consumer</code>來接受資料，你會發現，他還是接受的得，而且二次傳的資料都有收到，這就是我們前面有提供的<code>message quenue</code>的優點 :</p>
 <blockquote>
 <p>consumer 如果爆了，我 producer 還是一直可以發送資料，等你好了，你還是可以取得完整的資料。</p>
@@ -302,21 +347,21 @@ Received the msg : 20
 <p><img src="http://yixiang8780.com/outImg/20170722-4.png" alt=""></p>
 <p>首先我們來建立<code>producer</code>，下面的程式碼中，可以看到我們會建立一個<code>exchange</code>而不在是<code>queue</code>，並且我們發送訊息的對像也改為<code>exchange</code>。</p>
 <p>還有我們在發送訊息時，有指定<code>routing_key</code>，這也代表我們有指定發送到的綁定 routing key 為<code>error</code>的 queue 。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">amqp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;amqplib/callback_api&#39;</span>);
 
-<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;connect amqp server !&#34;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">amqp</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;amqp://127.0.0.1&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">conn</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;connect amqp server !&#34;</span>);
 
-    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">exchange_name</span> <span class="o">=</span> <span class="s2">&#34;logs&#34;</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">msg</span> <span class="o">=</span> <span class="s2">&#34;Hello mark&#34;</span><span class="p">;</span>
-        <span class="kd">var</span> <span class="nx">routing_key</span> <span class="o">=</span> <span class="s2">&#34;error&#34;</span><span class="p">;</span>
+    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">createChannel</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ch</span>) {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">exchange_name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;logs&#34;</span>;
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">msg</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Hello mark&#34;</span>;
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">routing_key</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;error&#34;</span>;
 
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertExchange</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span><span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="nx">routing_key</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="nx">msg</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">send msg: </span><span class="si">${</span><span class="nx">msg</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span>
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">assertExchange</span>(<span style="color:#a6e22e">exchange_name</span>, <span style="color:#e6db74">&#39;direct&#39;</span>, { <span style="color:#a6e22e">durable</span><span style="color:#f92672">:</span><span style="color:#66d9ef">false</span> });
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">publish</span>(<span style="color:#a6e22e">exchange_name</span>, <span style="color:#a6e22e">routing_key</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Buffer</span>(<span style="color:#a6e22e">msg</span>));
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">send msg: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">msg</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+    })
+})
 
 </code></pre></div><p>其中下面這段程式碼中的<code>direct </code>代表這個 exchange 的種類，我們必須給定這個 exchange 的類型，用來決定要如何將訊息從 exchange 發送出。</p>
 <pre><code>ch.assertExchange(exchange_name, 'direct', { durable:false });
@@ -328,25 +373,25 @@ Received the msg : 20
 <li>header : 它的路由規則是由<code>header</code>來判斷，如果要做一些複雜的路由規則，那就用他。</li>
 </ul>
 <p>接下來我們來看看<code>consumer</code>的程式碼，如下，我們在綁定 queue 時有指定 routing_key ，就代表這個 consume 只能收到指定的 queue 的訊息。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">amqp</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;amqplib/callback_api&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">amqp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;amqplib/callback_api&#39;</span>);
 
-<span class="nx">amqp</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;amqp://127.0.0.1&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">conn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">conn</span><span class="p">.</span><span class="nx">createChannel</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">exchange_name</span> <span class="o">=</span> <span class="s2">&#34;logs&#34;</span><span class="p">;</span>
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertExchange</span><span class="p">(</span><span class="nx">exchange_name</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">durable</span><span class="o">:</span> <span class="kc">false</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">amqp</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;amqp://127.0.0.1&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">conn</span>) {
+    <span style="color:#a6e22e">conn</span>.<span style="color:#a6e22e">createChannel</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ch</span>) {
+        <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">exchange_name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;logs&#34;</span>;
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">assertExchange</span>(<span style="color:#a6e22e">exchange_name</span>, <span style="color:#e6db74">&#39;direct&#39;</span>, { <span style="color:#a6e22e">durable</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">false</span> });
 
-        <span class="nx">ch</span><span class="p">.</span><span class="nx">assertQueue</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">exclusive</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">q</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Waiting for messages&#39;</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">assertQueue</span>(<span style="color:#e6db74">&#39;&#39;</span>, { <span style="color:#a6e22e">exclusive</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> }, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">q</span>) {
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Waiting for messages&#39;</span>);
 
-            <span class="kd">var</span> <span class="nx">routing_key</span> <span class="o">=</span> <span class="s1">&#39;error&#39;</span><span class="p">;</span>
-            <span class="nx">ch</span><span class="p">.</span><span class="nx">bindQueue</span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">queue</span><span class="p">,</span> <span class="nx">exchange_name</span><span class="p">,</span> <span class="nx">routing_key</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">ch</span><span class="p">.</span><span class="nx">consume</span><span class="p">(</span><span class="nx">q</span><span class="p">.</span><span class="nx">queue</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">msg</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Received msg:</span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">content</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
-                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">routing key is:</span><span class="si">${</span><span class="nx">msg</span><span class="p">.</span><span class="nx">fields</span><span class="p">.</span><span class="nx">routingKey</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
-            <span class="p">}</span><span class="p">,</span> <span class="p">{</span> <span class="nx">noAck</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span>
+            <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">routing_key</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;error&#39;</span>;
+            <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">bindQueue</span>(<span style="color:#a6e22e">q</span>.<span style="color:#a6e22e">queue</span>, <span style="color:#a6e22e">exchange_name</span>, <span style="color:#a6e22e">routing_key</span>);
+            <span style="color:#a6e22e">ch</span>.<span style="color:#a6e22e">consume</span>(<span style="color:#a6e22e">q</span>.<span style="color:#a6e22e">queue</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">msg</span>) {
+                <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">Received msg:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">content</span>.<span style="color:#a6e22e">toString</span>()<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+                <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">routing key is:</span><span style="color:#e6db74">${</span><span style="color:#a6e22e">msg</span>.<span style="color:#a6e22e">fields</span>.<span style="color:#a6e22e">routingKey</span>.<span style="color:#a6e22e">toString</span>()<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+            }, { <span style="color:#a6e22e">noAck</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> });
+        })
+    })
+})
 </code></pre></div><p>然後我們就來執行看看，結果如下 :</p>
 <pre><code>// producer
 connect amqp server !

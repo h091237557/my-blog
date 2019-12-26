@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,10 @@
     <meta content="測試, c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的|Describe what your web page is about">
+    <meta name="description" property="og:description" content="Virtual 修飾詞  子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?
+ virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。
+//父類別  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法。  //在該方法加上Virtual，讓子類別可以覆寫該方法。  public virtual string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; ; } } Override 修飾詞 Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。
+// 子類別繼承Car  public class BMWCar :Car { //BMWCar類別建構子  public BMWCar() { Speed = &amp;#34;BMW500&amp;#34;; Color = &amp;#34;BWM_Red&amp;#34;; } //BMW的屬性引擎  public string BMWPower; //定義車子移動的方法  //使用存取修飾詞Overried，來進行覆寫  public override string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; &#43; &amp;#34;『Override』&amp;#34; ; } } 執行結果 正在開『BMW_Red』的車時速『BWM500』在移動『Override』 Override 修飾詞特性 注意 1 你不能覆寫非虛擬或靜態方法。被覆寫的父類別方法必須是Virtual、abstract、Override。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +45,10 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的|Describe what your web page is about">
+    <meta name="twitter:description" content="Virtual 修飾詞  子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?
+ virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。
+//父類別  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &#34;50&#34;; Color = &#34;Blue&#34;; } //定義車子移動的方法。  //在該方法加上Virtual，讓子類別可以覆寫該方法。  public virtual string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; ; } } Override 修飾詞 Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。
+// 子類別繼承Car  public class BMWCar :Car { //BMWCar類別建構子  public BMWCar() { Speed = &#34;BMW500&#34;; Color = &#34;BWM_Red&#34;; } //BMW的屬性引擎  public string BMWPower; //定義車子移動的方法  //使用存取修飾詞Overried，來進行覆寫  public override string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; &#43; &#34;『Override』&#34; ; } } 執行結果 正在開『BMW_Red』的車時速『BWM500』在移動『Override』 Override 修飾詞特性 注意 1 你不能覆寫非虛擬或靜態方法。被覆寫的父類別方法必須是Virtual、abstract、Override。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +60,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -133,76 +142,76 @@
 <p>子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?</p>
 </blockquote>
 <p>virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及<code>允許在衍生類別中給予覆寫</code>。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="c1">//父類別
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
-    <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	 <span style="color:#75715e">//父類別
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>
+    {
 
-        <span class="c1">//車子的速度
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
-        <span class="c1">//車子的顏色
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+        <span style="color:#75715e">//車子的速度
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Speed;
+        <span style="color:#75715e">//車子的顏色
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Color;
 
-        <span class="c1">// 定義建構子，預設Speed為50，Color為Blue
-</span><span class="c1"></span>        <span class="k">public</span>  <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">// 定義建構子，預設Speed為50，Color為Blue
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span>  Car()
+        {
+            Speed = <span style="color:#e6db74">&#34;50&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;Blue&#34;</span>;
+        }
 
-        <span class="c1">//定義車子移動的方法。
-</span><span class="c1"></span>        <span class="c1">//在該方法加上Virtual，讓子類別可以覆寫該方法。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法。
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//在該方法加上Virtual，讓子類別可以覆寫該方法。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> ;
+        }
 
-    <span class="p">}</span>
+    }
 </code></pre></div><h2 id="override-">Override 修飾詞</h2>
 <p>Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="c1">// 子類別繼承Car
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
-    <span class="p">{</span>
-        <span class="c1">//BMWCar類別建構子
-</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 	<span style="color:#75715e">// 子類別繼承Car
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BMWCar</span> :Car
+    {
+        <span style="color:#75715e">//BMWCar類別建構子
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> BMWCar()
+        {
+            Speed = <span style="color:#e6db74">&#34;BMW500&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;BWM_Red&#34;</span>;
+        }
 
-        <span class="c1">//BMW的屬性引擎
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+        <span style="color:#75715e">//BMW的屬性引擎
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> BMWPower;
 
-        <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
-</span><span class="c1"></span>        <span class="k">public</span> <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//使用存取修飾詞Overried，來進行覆寫
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> + <span style="color:#e6db74">&#34;『Override』&#34;</span> ;
+        }
 
-    <span class="p">}</span>
+    }
     
-    <span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
-    <span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">BMW_Red</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="n">BWM500</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span><span class="err">『</span><span class="n">Override</span><span class="err">』</span>
+    <span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
+    <span style="color:#960050;background-color:#1e0010">正</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">開</span><span style="color:#960050;background-color:#1e0010">『</span>BMW_Red<span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">的</span><span style="color:#960050;background-color:#1e0010">車</span><span style="color:#960050;background-color:#1e0010">時</span><span style="color:#960050;background-color:#1e0010">速</span><span style="color:#960050;background-color:#1e0010">『</span>BWM500<span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">移</span><span style="color:#960050;background-color:#1e0010">動</span><span style="color:#960050;background-color:#1e0010">『</span>Override<span style="color:#960050;background-color:#1e0010">』</span>
 </code></pre></div><h2 id="override-1">Override 修飾詞特性</h2>
 <h3 id="-1">注意 1</h3>
 <p>你不能覆寫<code>非虛擬</code>或<code>靜態方法</code>。被覆寫的父類別方法必須是<code>Virtual</code>、<code>abstract</code>、<code>Override</code>。</p>
 <h3 id="-2">注意 2</h3>
 <p><code>override</code> 方法和 <code>virtual</code> 方法都必須有相同的存取層級修飾詞。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">       <span class="c1">//定義車子移動的方法。
-</span><span class="c1"></span>       <span class="c1">//在該方法加上Virtual，讓子類別可以覆寫該方法。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">       <span style="color:#75715e">//定義車子移動的方法。
+</span><span style="color:#75715e"></span>       <span style="color:#75715e">//在該方法加上Virtual，讓子類別可以覆寫該方法。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> ;
+        }
 
-       <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
-</span><span class="c1"></span>        <span class="k">protected</span>  <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
+       <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//使用存取修飾詞Overried，來進行覆寫
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">protected</span>  <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> + <span style="color:#e6db74">&#34;『Override』&#34;</span> ;
+        }
 
-<span class="err">如</span><span class="err">果</span><span class="err">將</span><span class="n">BMWCar類別程式碼其的DriveCar</span><span class="p">(</span><span class="p">)</span><span class="err">方</span><span class="err">法</span><span class="err">改</span><span class="err">為</span> <span class="k">protected</span> <span class="err">則</span><span class="err">會</span><span class="err">出</span><span class="err">錯</span><span class="err">。</span>
+<span style="color:#960050;background-color:#1e0010">如</span><span style="color:#960050;background-color:#1e0010">果</span><span style="color:#960050;background-color:#1e0010">將</span>BMWCar類別程式碼其的DriveCar()<span style="color:#960050;background-color:#1e0010">方</span><span style="color:#960050;background-color:#1e0010">法</span><span style="color:#960050;background-color:#1e0010">改</span><span style="color:#960050;background-color:#1e0010">為</span> <span style="color:#66d9ef">protected</span> <span style="color:#960050;background-color:#1e0010">則</span><span style="color:#960050;background-color:#1e0010">會</span><span style="color:#960050;background-color:#1e0010">出</span><span style="color:#960050;background-color:#1e0010">錯</span><span style="color:#960050;background-color:#1e0010">。</span>
 </code></pre></div><h3 id="-3">注意 3</h3>
 <p>如果是覆寫『屬性』時，則以下有兩項條件</p>
 <ul>
@@ -212,47 +221,47 @@
 <h3 id="-4">注意 4</h3>
 <p>如果方法是在類別指定，而在呼叫的類別有兩個方法相容，則C#編譯器會自動呼叫最適合的方法。</p>
 <p>我們將BMWCar 類別改為如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">// 子類別繼承Car
-</span><span class="c1"></span>   	 <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>
-    <span class="p">{</span>
-        <span class="c1">//BMWCar類別建構子
-</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#75715e">// 子類別繼承Car
+</span><span style="color:#75715e"></span>   	 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BMWCar</span> :Car
+    {
+        <span style="color:#75715e">//BMWCar類別建構子
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> BMWCar()
+        {
+            Speed = <span style="color:#e6db74">&#34;BMW500&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;BWM_Red&#34;</span>;
+        }
 
-        <span class="c1">//BMW的屬性引擎
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+        <span style="color:#75715e">//BMW的屬性引擎
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> BMWPower;
 
-        <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
-</span><span class="c1"></span>        <span class="c1">//參數a 為 string
-</span><span class="c1"></span>        <span class="k">public</span>   <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span> <span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;String--&#34;</span> <span class="p">+</span> <span class="n">a</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//使用存取修飾詞Overried，來進行覆寫
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//參數a 為 string
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span>   <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> DriveCar( <span style="color:#66d9ef">string</span> a)
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> + <span style="color:#e6db74">&#34;『Override』&#34;</span> + <span style="color:#e6db74">&#34;String--&#34;</span> + a;
+        }
 
-        <span class="c1">//參數a 為 int
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;Int--&#34;</span> <span class="p">+</span> <span class="n">a</span>  <span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//參數a 為 int
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> DriveCar(<span style="color:#66d9ef">int</span> a)
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> + <span style="color:#e6db74">&#34;『Override』&#34;</span> + <span style="color:#e6db74">&#34;Int--&#34;</span> + a  ;
+        }
 
-    <span class="p">}</span>
+    }
 </code></pre></div><p>然後實體化並呼叫DriveCar方法。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="kt">int</span> <span class="n">a</span> <span class="p">=</span> <span class="m">1</span><span class="p">;</span>
-    <span class="c1">//string a = &#34;Hello&#34; ;
-</span><span class="c1"></span>    <span class="n">BMWCar</span> <span class="n">MyBMWCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyBMWCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">    <span style="color:#66d9ef">int</span> a = <span style="color:#ae81ff">1</span>;
+    <span style="color:#75715e">//string a = &#34;Hello&#34; ;
+</span><span style="color:#75715e"></span>    BMWCar MyBMWCar = <span style="color:#66d9ef">new</span> BMWCar();
+    TextBox1.Text = MyBMWCar.DriveCar(a) ;
 </code></pre></div><p>則執行結果為如下，會自動呼叫<code>public override string DriveCar(int a)</code>，
 因為編輯器會自動幫我們選擇最適合的方法。</p>
 <pre><code>	正在開『BWM_Red』 的車時速『BWM500』在移動「Override』int--1
 </code></pre><p>而如果實體化並呼叫DriveCar改為</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//int a = 1;
-</span><span class="c1"></span>   	<span class="kt">string</span> <span class="n">a</span> <span class="p">=</span> <span class="s">&#34;Hello&#34;</span><span class="p">;</span>
-    <span class="n">BMWCar</span> <span class="n">MyBMWCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyBMWCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#75715e">//int a = 1;
+</span><span style="color:#75715e"></span>   	<span style="color:#66d9ef">string</span> a = <span style="color:#e6db74">&#34;Hello&#34;</span>;
+    BMWCar MyBMWCar = <span style="color:#66d9ef">new</span> BMWCar();
+    TextBox1.Text = MyBMWCar.DriveCar(a) ;
 </code></pre></div><p>則執行結果為如下。</p>
 <pre><code>	正在開『BWM_Red』 的車時速『BWM500』在移動「Override』String--Hello
 </code></pre><h2 id="heading">參考文章</h2>

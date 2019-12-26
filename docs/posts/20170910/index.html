@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,23 @@
     <meta content="socket" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。 在開始說明 socket 前，我|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。
+在開始說明 socket 前，我們需要先準備一些基本知識，那就是常聽到的 tcp/ip。
+TCP/IP 通訊模型 tcp/ip 它是一種網路協定，它定義了點對點如何的傳輸，如何將資料封裝、定址、傳輸、路由以及在目的地如何接受，全部都加以標準化，它基本上可以分為四層應用層、傳輸層、網路互連層與網路介面層，它常被視為簡化的七層 OSI 模型。
+圖片來源:鳥哥
+在了解 socket 前，我們需要了解應用層與傳輸層的基本概念。
+應用層 這個層級主要是定義 :
+ 應用程式的溝通協定，也可以理解為不同應用程式如何協同工作。
+ 在這個層級的協定，大部份都會使用到兩個傳輸協定tcp與udp，至於何時使用 tcp 或 udp 取決於，該協定是否保證資料完整的傳送到另一端，這邊我們只要記得tcp可靠而udp不可靠這兩件事情就夠了。
+我們常用的 http 就是屬於這一層協定，smtp 也屬於這層，我們簡單的來說明一下 http 的概念。
+HTTP (超文字傳輸協定) 它是一種應用層的傳輸協定，它主要定義了下面的事情 :
+ 它是一個用戶端與伺服器端請求和應答的標準
+ 通常 http 用戶端的發出一個請求，它會建立一個到伺服器端的 TCP 連線 。
+傳輸層 這個層級主要是定義 :
+ 定義點到點如何傳輸
+ 其中tcp、udp就是這一層，我們簡單的來說明一下 tcp 的工作，就會知道這個層級主要是做啥事情。
+TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，這個協定宗旨在於 :
+ 提供一個可靠(不會掉資料)的資料流傳送服務|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +58,23 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket 的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。 在開始說明 socket 前，我|Describe what your web page is about">
+    <meta name="twitter:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。
+在開始說明 socket 前，我們需要先準備一些基本知識，那就是常聽到的 tcp/ip。
+TCP/IP 通訊模型 tcp/ip 它是一種網路協定，它定義了點對點如何的傳輸，如何將資料封裝、定址、傳輸、路由以及在目的地如何接受，全部都加以標準化，它基本上可以分為四層應用層、傳輸層、網路互連層與網路介面層，它常被視為簡化的七層 OSI 模型。
+圖片來源:鳥哥
+在了解 socket 前，我們需要了解應用層與傳輸層的基本概念。
+應用層 這個層級主要是定義 :
+ 應用程式的溝通協定，也可以理解為不同應用程式如何協同工作。
+ 在這個層級的協定，大部份都會使用到兩個傳輸協定tcp與udp，至於何時使用 tcp 或 udp 取決於，該協定是否保證資料完整的傳送到另一端，這邊我們只要記得tcp可靠而udp不可靠這兩件事情就夠了。
+我們常用的 http 就是屬於這一層協定，smtp 也屬於這層，我們簡單的來說明一下 http 的概念。
+HTTP (超文字傳輸協定) 它是一種應用層的傳輸協定，它主要定義了下面的事情 :
+ 它是一個用戶端與伺服器端請求和應答的標準
+ 通常 http 用戶端的發出一個請求，它會建立一個到伺服器端的 TCP 連線 。
+傳輸層 這個層級主要是定義 :
+ 定義點到點如何傳輸
+ 其中tcp、udp就是這一層，我們簡單的來說明一下 tcp 的工作，就會知道這個層級主要是做啥事情。
+TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，這個協定宗旨在於 :
+ 提供一個可靠(不會掉資料)的資料流傳送服務|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +86,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -177,43 +212,43 @@
 <p>在上面大概理解了 socket 機制後，我們簡單的使用 nodejs 來建立兩個 socket 節點，一個為 server ，另一個則為 client。</p>
 <h3 id="server">Server端</h3>
 <p>我們 server socket 主要是用來接受 socket client 的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">net</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;net&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">HOST</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="s1">&#39;61111&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">HOST</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;61111&#39;</span>;
 
 
-<span class="nx">net</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">sock</span><span class="p">)</span><span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Server open !&#39;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">createServer</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">sock</span>){
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Server open !&#39;</span>);
 
-    <span class="nx">sock</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;I receved data from client :&#39;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">sock</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;data&#39;</span>,<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;I receved data from client :&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">data</span>);
+    });
 
-    <span class="nx">sock</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="nx">HOST</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">sock</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;close&#39;</span>,<span style="color:#66d9ef">function</span>(){
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;close&#39;</span>);
+    });
+}).<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">PORT</span>, <span style="color:#a6e22e">HOST</span>);
 
 </code></pre></div><h3 id="client">Client端</h3>
 <p>而我們的 client 端則為每一秒傳輸資料到 server 端去。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">net</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;net&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">HOST</span> <span class="o">=</span> <span class="s1">&#39;127.0.0.1&#39;</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">PORT</span> <span class="o">=</span> <span class="s1">&#39;61111&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">HOST</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;127.0.0.1&#39;</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">PORT</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;61111&#39;</span>;
 
-<span class="kd">var</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">Socket</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">client</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span> <span class="nx">HOST</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;client connected&#39;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">Socket</span>();
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">PORT</span>, <span style="color:#a6e22e">HOST</span>, <span style="color:#66d9ef">function</span>(){
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;client connected&#39;</span>);
 
-    <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">client</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;I am Mark&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">setInterval</span>(<span style="color:#66d9ef">function</span>(){
+        <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;I am Mark&#39;</span>);
+    },<span style="color:#ae81ff">1000</span>)
+});
 
-<span class="nx">client</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;close&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;close client&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;close&#39;</span>, <span style="color:#66d9ef">function</span>(){
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;close client&#39;</span>);
+});
 
 </code></pre></div><h2 id="socket-vs-websocket">Socket VS Websocket</h2>
 <blockquote>
@@ -241,23 +276,23 @@ wss://secure.example.com/
 <li>jsonp-polling</li>
 </ul>
 <p>上面對種類中有<code>polling</code>字樣就是我們上面所說的溝通方式，我們直接拿官網的程式碼來看看使用的方法，下面為 server 端的程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">io</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io&#39;</span>).<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">8080</span>);
 
-<span class="nx">io</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">hello</span><span class="o">:</span> <span class="s1">&#39;world&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">sockets</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;connection&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">socket</span>) {
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">emit</span>(<span style="color:#e6db74">&#39;news&#39;</span>, { <span style="color:#a6e22e">hello</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;world&#39;</span> });
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;my other event&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+    });
+});
 </code></pre></div><p>而下面為前端。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="o">&lt;</span><span class="nx">script</span> <span class="nx">src</span><span class="o">=</span><span class="s2">&#34;/socket.io/socket.io.js&#34;</span><span class="o">&gt;</span><span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
-<span class="o">&lt;</span><span class="nx">script</span><span class="o">&gt;</span>
-    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;data&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="o">&lt;</span><span class="err">/</span><span class="err">s</span><span class="err">c</span><span class="err">r</span><span class="err">i</span><span class="err">p</span><span class="err">t</span><span class="err">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/socket.io/socket.io.js&#34;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">&gt;</span>
+<span style="color:#f92672">&lt;</span><span style="color:#a6e22e">script</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;http://localhost:8080&#39;</span>);
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;news&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+        <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">emit</span>(<span style="color:#e6db74">&#39;my other event&#39;</span>, { <span style="color:#a6e22e">my</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;data&#39;</span> });
+    });
+<span style="color:#f92672">&lt;</span><span style="color:#960050;background-color:#1e0010">/</span><span style="color:#960050;background-color:#1e0010">s</span><span style="color:#960050;background-color:#1e0010">c</span><span style="color:#960050;background-color:#1e0010">r</span><span style="color:#960050;background-color:#1e0010">i</span><span style="color:#960050;background-color:#1e0010">p</span><span style="color:#960050;background-color:#1e0010">t</span><span style="color:#960050;background-color:#1e0010">&gt;</span>
 </code></pre></div><p>這樣就可以完成推播功能。但這邊有個地方有注意一下，我們都沒有設定要用什麼傳輸方式，那它要用那種傳輸方式呢 ? polling ? websocket ?</p>
 <blockquote>
 <p>socket.io 自動會根據瀏覽器支援到什麼程度來決定使用什麼。</p>
@@ -268,22 +303,22 @@ wss://secure.example.com/
 <p>上面一章節有說到 socket 本身是建立在 tcp/ip 網路層級的應用層與傳輸層中間，所以說它本身一開始是定位於網路溝通使用，也就是我們這邊說的<code>network socket</code>，但後來發現在 socket 的概念上，建立一個 IPC 通信，可以使我們電腦內的溝通更有效率，這時的產生出來的東東，就是我們所謂的<code>unix socket</code>。</p>
 <p><code>unix socket</code>不像<code>network socket</code>一樣，它不需要經過網路協定，tcp 連線、握手等步驟，而只是將應用層的資料，從一個 process 傳輸到另一個 process上，它於其它 ipc 機制相比來說，算是目前最常使用的 ipc 機制 (會有另一篇來比較 ipc 機制)。</p>
 <p>在 nodejs 中，我們也可以建立 unix socket 程式碼如下，這裡的程式碼基本上與 network socket 相似，不同點在於我們 listen 不是個網址，而是個檔案，而你可以將這個檔案想成為<code>socket 節點</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">net</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">net</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-  <span class="c1">// &#39;connection&#39; listener
-</span><span class="c1"></span>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;client connected&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">c</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;client disconnected&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">c</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;hello\r\n&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">c</span><span class="p">.</span><span class="nx">pipe</span><span class="p">(</span><span class="nx">c</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-  <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">server</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="s2">&#34;/tmp/echo.sock&#34;</span><span class="p">,</span> <span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;server bound&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">net</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;net&#39;</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">server</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">net</span>.<span style="color:#a6e22e">createServer</span>((<span style="color:#a6e22e">c</span>) =&gt; {
+  <span style="color:#75715e">// &#39;connection&#39; listener
+</span><span style="color:#75715e"></span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;client connected&#39;</span>);
+  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;end&#39;</span>, () =&gt; {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;client disconnected&#39;</span>);
+  });
+  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;hello\r\n&#39;</span>);
+  <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">pipe</span>(<span style="color:#a6e22e">c</span>);
+});
+<span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;error&#39;</span>, (<span style="color:#a6e22e">err</span>) =&gt; {
+  <span style="color:#66d9ef">throw</span> <span style="color:#a6e22e">err</span>;
+});
+<span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#e6db74">&#34;/tmp/echo.sock&#34;</span>, () =&gt; {
+  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;server bound&#39;</span>);
+});
 </code></pre></div><p>然後我們就可以使用以下指令，建立一個連線到<code>/tmp/echo.sock</code>的 client 端 socket 。</p>
 <pre><code>nc -U /tmp/echo.sock
 </code></pre><p>然後 client 端這邊應該會收到從 server 端的 socket 傳送回來的訊息 :</p>

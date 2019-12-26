@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>algorithm on 拿鐵派的馬克 Blog</title>
@@ -6,109 +5,91 @@
     <description>Recent content in algorithm on 拿鐵派的馬克 Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <copyright>&amp;copy;Your Name 2019</copyright>
+    <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
+    <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Tue, 03 Sep 2019 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>30-03 之應用層的運算加速 - 演算法</title>
       <link>https://mark-lin.com/posts/20190903/</link>
       <pubDate>Tue, 03 Sep 2019 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190903/</guid>
-      <description>正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能</description>
     </item>
     
     <item>
       <title>排序之桶子排序法(Bucket Sort)</title>
       <link>https://mark-lin.com/posts/20170427/</link>
       <pubDate>Thu, 27 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170427/</guid>
-      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸</description>
     </item>
     
     <item>
       <title>排序之合併排序法(Merge Sort)</title>
       <link>https://mark-lin.com/posts/20170426/</link>
       <pubDate>Wed, 26 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170426/</guid>
-      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法</description>
     </item>
     
     <item>
       <title>排序之快速排序法(Quick Sort)</title>
       <link>https://mark-lin.com/posts/20170425/</link>
       <pubDate>Tue, 25 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170425/</guid>
-      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi</description>
     </item>
     
     <item>
       <title>排序之堆積排序法(Heap Sort)</title>
       <link>https://mark-lin.com/posts/20170424/</link>
       <pubDate>Mon, 24 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170424/</guid>
-      <description>本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，</description>
     </item>
     
     <item>
       <title>排序之選擇排序法(Selection Sort)</title>
       <link>https://mark-lin.com/posts/20170423/</link>
       <pubDate>Sun, 23 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170423/</guid>
-      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後</description>
     </item>
     
     <item>
       <title>排序之插入排序法 ( Insertion Sort )</title>
       <link>https://mark-lin.com/posts/20170422/</link>
       <pubDate>Sat, 22 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170422/</guid>
-      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作</description>
     </item>
     
     <item>
       <title>搜尋之二元搜尋法 Binary search</title>
       <link>https://mark-lin.com/posts/20170421/</link>
       <pubDate>Fri, 21 Apr 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170421/</guid>
-      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如</description>
     </item>
     
     <item>
       <title>演算法策略---動態規畫法</title>
       <link>https://mark-lin.com/posts/20170325/</link>
       <pubDate>Sat, 25 Mar 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170325/</guid>
-      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免</description>
     </item>
     
     <item>
       <title>演算法策略---分治法</title>
       <link>https://mark-lin.com/posts/20170324/</link>
       <pubDate>Fri, 24 Mar 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170324/</guid>
-      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小</description>
-    </item>
-    
-    <item>
-      <title>演算法之策略---貪心法</title>
-      <link>https://mark-lin.com/posts/20170323/</link>
-      <pubDate>Thu, 23 Mar 2017 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20170323/</guid>
-      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題</description>
     </item>
     
   </channel>

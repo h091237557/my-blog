@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。 I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。
+I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O 』，這兩種 I/O 操作原理大同小議，但是優化方式卻有些不同，接下來這一篇文章，算是混合。
+本篇文章分為以下幾個章節 :
+ I/O 原理。 零拷貝 I/O 的概念與優化原理。 零拷貝的實現。 零拷貝的語言支援與問題探討。  I/O 原理 先從最基本的來看，何謂 I/O ?
+I/O ( Input/Output) 通常是指資料在『系統』與『外部裝置』的輸入與輸入，最簡單的例子，抓取硬碟或 USB 資料就是所謂的 I/O 操作。
+接下來我們簡單的來看一下，在 linux 操作系統上，所謂的『 從硬碟讀取資料，並結果輸出到網路 』到底是在做什麼。
+記憶體層面來看 I/O 流程 記憶體就是作業系統最基本的資料儲放地，接下來我們從記憶體的層面來看，所謂的『從硬碟讀取資料，並將結果輸出到網路』它是如何變化的。
+基本『 讀與寫 』流程如下 :
+在看流程前先說明一下，等等到看到的所謂『 緩衝區 』 就是指在某個記憶體中，切割一些空間出來，來當緩衝區。像等等看到的內核緩衝區就是在內核的記憶體中，拿一些空間來儲放等等要進來的資料。
+接下來就開始看流程。
+ 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料。 有則將內核緩衝區的資料，拷貝到用戶緩衝區。 無則前網硬碟取得。 將硬碟資料拷貝至內核緩存區。 將內核緩衝區資料，拷貝到用戶緩衝區。(內核切成用戶) 在從用戶緩衝區發送 system call write 將用戶記憶體資料拷貝到 socket 緩衝區，這緩衝區也是在內核中。(用戶切內核) 用戶端收到 ack (內核切用戶) 資料飛向世界。  順到說一下，這樣的操作總共會進行 4 次的上下文切換。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-05 之應用層的 I/O 加速 - 零拷貝 ( Zero Copy ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。 I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前二篇文章中，咱們已經學習完運算方面的優化，而接下來幾篇文章，咱們要來說明 I/O 優化這個議題。
+I/O 基本上可以分為兩種，『 文件 I/O 』與『 網路 I/O 』，這兩種 I/O 操作原理大同小議，但是優化方式卻有些不同，接下來這一篇文章，算是混合。
+本篇文章分為以下幾個章節 :
+ I/O 原理。 零拷貝 I/O 的概念與優化原理。 零拷貝的實現。 零拷貝的語言支援與問題探討。  I/O 原理 先從最基本的來看，何謂 I/O ?
+I/O ( Input/Output) 通常是指資料在『系統』與『外部裝置』的輸入與輸入，最簡單的例子，抓取硬碟或 USB 資料就是所謂的 I/O 操作。
+接下來我們簡單的來看一下，在 linux 操作系統上，所謂的『 從硬碟讀取資料，並結果輸出到網路 』到底是在做什麼。
+記憶體層面來看 I/O 流程 記憶體就是作業系統最基本的資料儲放地，接下來我們從記憶體的層面來看，所謂的『從硬碟讀取資料，並將結果輸出到網路』它是如何變化的。
+基本『 讀與寫 』流程如下 :
+在看流程前先說明一下，等等到看到的所謂『 緩衝區 』 就是指在某個記憶體中，切割一些空間出來，來當緩衝區。像等等看到的內核緩衝區就是在內核的記憶體中，拿一些空間來儲放等等要進來的資料。
+接下來就開始看流程。
+ 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料。 有則將內核緩衝區的資料，拷貝到用戶緩衝區。 無則前網硬碟取得。 將硬碟資料拷貝至內核緩存區。 將內核緩衝區資料，拷貝到用戶緩衝區。(內核切成用戶) 在從用戶緩衝區發送 system call write 將用戶記憶體資料拷貝到 socket 緩衝區，這緩衝區也是在內核中。(用戶切內核) 用戶端收到 ack (內核切用戶) 資料飛向世界。  順到說一下，這樣的操作總共會進行 4 次的上下文切換。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -221,7 +244,7 @@
 <h2 id="heading2">零拷貝的語言支援與問題探討</h2>
 <p>接下來這一篇章節咱們簡單看看各種語言零拷貝的實現。</p>
 <p>首先 java NIO 有提供 transferTo 可以實現零拷貝，它的方法如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-java" data-lang="java"><span class="n">transferTo</span><span class="o">(</span><span class="n">position</span><span class="o">,</span> <span class="n">count</span><span class="o">,</span> <span class="n">writableChannel</span><span class="o">)</span><span class="o">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">transferTo<span style="color:#f92672">(</span>position<span style="color:#f92672">,</span> count<span style="color:#f92672">,</span> writableChannel<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 </code></pre></div><p>然後之後查了一下，java 的 Netty 看起來也有支援，但是有人又覺得不太一樣。由於我不是寫 java 的所以也不太懂，以下僅供參考。</p>
 <p><a href="https://segmentfault.com/a/1190000007560884">对于 Netty ByteBuf 的零拷贝(Zero Copy) 的理解</a></p>
 <p>nodejs 有一個『 Buffer 』 功能，這東西它可以在某個地方的記憶體，開啟一些緩衝區，而這個『 某個地方 』目前查了一下，它說 :</p>

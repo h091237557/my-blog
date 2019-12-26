@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、p|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、pull 來使用。
+ 陣列更新修改器攻略  呼好多……
+~ 陣列更新修改器攻略 ~ $push $push是陣列修改器，假如一個document中已經有陣列的結構，使用push會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。
+使用方法如下範例，首先先新增一筆資料，然後新增加一個叫jack的fans。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {$push:{&amp;#34;fans&amp;#34; : &amp;#34;jack&amp;#34;} }) 結果如下圖。
+$each $push一次新增只能新增一筆元素，而搭配$each就可以新增多筆。
+使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個fans分別為jack、landry、max。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {&amp;#34;$push&amp;#34; : {&amp;#34;fans&amp;#34; : {&amp;#34;$each&amp;#34; : [&amp;#34;jack&amp;#34;,&amp;#34;lnadry&amp;#34;,&amp;#34;max&amp;#34;]}}} ) 結果如下圖
+$slice 如果你希望限制一個陣列的大小，就算多push進元素，也不要超過限制大小，這時你就可以用$slice，不過注意它是保留最後n個元素。
+使用方法如下範例，新增一筆資料，然後我們希望fans人數不超過5人，但我們硬多塞一個人進去。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {&amp;#34;$push&amp;#34; : {&amp;#34;fans&amp;#34; : {&amp;#34;$each&amp;#34; : [&amp;#34;jack&amp;#34;,&amp;#34;lnadry&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;$slice&amp;#34; : -5 }}} ) 執行結果如下，可以看到第一位steven被刪除，只保留了最後5位。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-6之MongoDB新手村CRUD---更新之陣列欄位攻略 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、p|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、pull 來使用。
+ 陣列更新修改器攻略  呼好多……
+~ 陣列更新修改器攻略 ~ $push $push是陣列修改器，假如一個document中已經有陣列的結構，使用push會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。
+使用方法如下範例，首先先新增一筆資料，然後新增加一個叫jack的fans。
+db.user.insert({ &#34;name&#34; : &#34;mark&#34;, &#34;fans&#34; : [&#34;steven&#34;,&#34;crisis&#34;,&#34;stanly&#34;] }) db.user.update({&#34;name&#34;:&#34;mark&#34;}, {$push:{&#34;fans&#34; : &#34;jack&#34;} }) 結果如下圖。
+$each $push一次新增只能新增一筆元素，而搭配$each就可以新增多筆。
+使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個fans分別為jack、landry、max。
+db.user.insert({ &#34;name&#34; : &#34;mark&#34;, &#34;fans&#34; : [&#34;steven&#34;,&#34;crisis&#34;,&#34;stanly&#34;] }) db.user.update({&#34;name&#34;:&#34;mark&#34;}, {&#34;$push&#34; : {&#34;fans&#34; : {&#34;$each&#34; : [&#34;jack&#34;,&#34;lnadry&#34;,&#34;max&#34;]}}} ) 結果如下圖
+$slice 如果你希望限制一個陣列的大小，就算多push進元素，也不要超過限制大小，這時你就可以用$slice，不過注意它是保留最後n個元素。
+使用方法如下範例，新增一筆資料，然後我們希望fans人數不超過5人，但我們硬多塞一個人進去。
+db.user.insert({ &#34;name&#34; : &#34;mark&#34;, &#34;fans&#34; : [&#34;steven&#34;,&#34;crisis&#34;,&#34;stanly&#34;] }) db.user.update({&#34;name&#34;:&#34;mark&#34;}, {&#34;$push&#34; : {&#34;fans&#34; : {&#34;$each&#34; : [&#34;jack&#34;,&#34;lnadry&#34;,&#34;max&#34;], &#34;$slice&#34; : -5 }}} ) 執行結果如下，可以看到第一位steven被刪除，只保留了最後5位。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -137,80 +160,80 @@
 <h3 id="push">$push</h3>
 <p><code>$push</code>是陣列修改器，假如一個<code>document</code>中已經有陣列的結構，使用<code>push</code>會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。</p>
 <p>使用方法如下範例，首先先新增一筆資料，然後新增加一個叫<code>jack</code>的<code>fans</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="nx">$push</span><span class="o">:</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">}</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#a6e22e">$push</span><span style="color:#f92672">:</span>{<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jack&#34;</span>}
+	})
 </code></pre></div><p>結果如下圖。</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-1.png" alt=""></p>
 <h3 id="each">$each</h3>
 <p><code>$push</code>一次新增只能新增一筆元素，而搭配<code>$each</code>就可以新增多筆。</p>
 <p>使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個<code>fans</code>分別為<code>jack</code>、<code>landry</code>、<code>max</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
 
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#e6db74">&#34;$push&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;$each&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;jack&#34;</span>,<span style="color:#e6db74">&#34;lnadry&#34;</span>,<span style="color:#e6db74">&#34;max&#34;</span>]}}}
+	)
 </code></pre></div><p>結果如下圖</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-2.png" alt=""></p>
 <h3 id="slice">$slice</h3>
 <p>如果你希望限制一個陣列的大小，就算多<code>push</code>進元素，也不要超過限制大小，這時你就可以用<code>$slice</code>，不過注意它是保留最後<code>n</code>個元素。</p>
 <p>使用方法如下範例，新增一筆資料，然後我們希望<code>fans</code>人數不超過<code>5人</code>，但我們硬多塞一個人進去。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
 
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$push&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
-			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;lnadry&#34;</span><span class="p">,</span><span class="s2">&#34;max&#34;</span><span class="p">]</span><span class="p">,</span>
-			 <span class="s2">&#34;$slice&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">5</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#e6db74">&#34;$push&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> 
+			{<span style="color:#e6db74">&#34;$each&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;jack&#34;</span>,<span style="color:#e6db74">&#34;lnadry&#34;</span>,<span style="color:#e6db74">&#34;max&#34;</span>],
+			 <span style="color:#e6db74">&#34;$slice&#34;</span> <span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">5</span> }}}
+	)
 </code></pre></div><p>執行結果如下，可以看到第一位<code>steven</code>被刪除，只保留了最後5位。</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-3.png" alt=""></p>
 <h3 id="addtoset">$addToSet</h3>
 <p>你可能有這個需求，假設你要新增一個元素到陣列裡，並且保證陣列內的元素不會重複，這時就可以使用<code>$addToSet</code>。</p>
 <p>使用方法如下範例，新增一筆資料，然後<code>fans</code>有<code>steven、landry、stanly</code>，這時我們在新增<code>steven</code>和<code>jack</code>進去，預期應該<code>steven</code>不會被新增進去，也就是不會產生兩個<code>steven</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
 	
-		<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$addToSet&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span> <span class="o">:</span> 
-			<span class="p">{</span><span class="s2">&#34;$each&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">]</span> <span class="p">}</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
+		<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#e6db74">&#34;$addToSet&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> 
+			{<span style="color:#e6db74">&#34;$each&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;jack&#34;</span>] }}}
+	)
 </code></pre></div><p>執行結果如下，符合預期。</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-4.png" alt=""></p>
 <h3 id="pop--pull">$pop 與 pull</h3>
 <p><code>$pop</code>與<code>$pull</code>這兩個修改器都是用來刪除元素用的，<code>$pop</code>可以從頭或尾刪除，而<code>$pull</code>則是基於特定條件來刪除。</p>
 <p>先來看看<code>$pop</code>的使用範例。其中<code>&quot;fans&quot;:1</code>代表從<code>fans</code>陣列尾刪除<code>&quot;fans&quot;:-1</code>則從陣列頭刪除。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
 	
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$pop&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#e6db74">&#34;$pop&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;fans&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>}}
+	)
 
 </code></pre></div><p>下圖為執行結果。</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-5.png" alt=""></p>
 <p>這時我們在來看看<code>$pull</code>用法，假設我們要將<code>crisis</code>這<code>fans</code>刪除，使用方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-		<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;crisis&#34;</span><span class="p">,</span><span class="s2">&#34;stanly&#34;</span><span class="p">]</span>
-	<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+		<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;crisis&#34;</span>,<span style="color:#e6db74">&#34;stanly&#34;</span>]
+	})
 	
-	<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;$pull&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span><span class="p">}</span><span class="p">}</span>
-	<span class="p">)</span>
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},
+		{<span style="color:#e6db74">&#34;$pull&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;fans&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;crisis&#34;</span>}}
+	)
 </code></pre></div><p>執行結果如下圖</p>
 <p><img src="http://yixiang8780.com/outImg/20161204-6.png" alt=""></p>
 <h2 id="--1">~ 結語 ~</h2>

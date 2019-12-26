@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="data structure, graph" name="keywords">
     
     
-    <meta name="description" property="og:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe|Describe what your web page is about">
+    <meta name="description" property="og:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koenigsberg bridge問題不是我們這篇的重點，但還是簡單介紹一下這個圖論中的著名問題。
+在某個國家內，有條河經過兩個市區，並且在這條河中心上還有兩個小島，小島與河的兩岸有七條橋連接這，下圖就是該環境的模擬圖。
+那麼這個問題是 ~
+ 在所有的橋都只能走一次的前題條件下，如何才能把所有的橋都走過一次。
+ 雖然 LeonHard Euler 並沒有解決這個問題，但卻發現了新的研究領域圖論。
+圖形結構之原理 圖(graph)，是一種用來描述點與點關係的資料結構，也可以說是記錄關聯的結構，它和樹狀結構長的得像，而他們的關係在於
+ 樹是一種圖
+ 那什麼時後，它是圖而不是樹呢?
+ 出現一個環時。 他沒有連通時。  一張圖會由數個節點以及數條邊所構成，節點與節點間使用邊來相接，在數學上通常定義成G = (V,E)來表示，其中V是所有節點所成的集合，而E代表所有的邊所成的集合。圖(graph)畫出來長的如下圖。
+接下來我們來認識一些名詞。
+ 頂點(vertex) : 上圖中的A、B、C就為三個項點。 邊(edge) : 上圖中那個每個項點的連線，就稱為邊。 相鄰(adjacent) : 例如上圖中的A與B就為相鄰的，其它的項點也都如此。 附著(incident) : 上圖中，我們可以說明，邊{A,C}與邊{A,B}『附著』在項點 A 。 路徑(path) : 代表某個項點到某個項點的過程。 簡單路徑(simple path) : 在上圖中 A 到 D 的路徑可能有ACBD和ABD，這時我們可以稱ABD為簡單路徑。 長度(length) : 一條路徑上的長度是指該路徑上所有邊的數量。 分支度(degree) : 例如上圖中，我們可以稱項點 B 的分支度為 3 ，但在有向圖中會分成外分支度與內分支度。 子圖(Subgraph) : 請看下圖。  圖的種類 基本上圖又可以分成下述幾重，要選擇那種來使用取決於你的問題。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---圖形結構 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe|Describe what your web page is about">
+    <meta name="twitter:description" content="圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koenigsberg bridge問題不是我們這篇的重點，但還是簡單介紹一下這個圖論中的著名問題。
+在某個國家內，有條河經過兩個市區，並且在這條河中心上還有兩個小島，小島與河的兩岸有七條橋連接這，下圖就是該環境的模擬圖。
+那麼這個問題是 ~
+ 在所有的橋都只能走一次的前題條件下，如何才能把所有的橋都走過一次。
+ 雖然 LeonHard Euler 並沒有解決這個問題，但卻發現了新的研究領域圖論。
+圖形結構之原理 圖(graph)，是一種用來描述點與點關係的資料結構，也可以說是記錄關聯的結構，它和樹狀結構長的得像，而他們的關係在於
+ 樹是一種圖
+ 那什麼時後，它是圖而不是樹呢?
+ 出現一個環時。 他沒有連通時。  一張圖會由數個節點以及數條邊所構成，節點與節點間使用邊來相接，在數學上通常定義成G = (V,E)來表示，其中V是所有節點所成的集合，而E代表所有的邊所成的集合。圖(graph)畫出來長的如下圖。
+接下來我們來認識一些名詞。
+ 頂點(vertex) : 上圖中的A、B、C就為三個項點。 邊(edge) : 上圖中那個每個項點的連線，就稱為邊。 相鄰(adjacent) : 例如上圖中的A與B就為相鄰的，其它的項點也都如此。 附著(incident) : 上圖中，我們可以說明，邊{A,C}與邊{A,B}『附著』在項點 A 。 路徑(path) : 代表某個項點到某個項點的過程。 簡單路徑(simple path) : 在上圖中 A 到 D 的路徑可能有ACBD和ABD，這時我們可以稱ABD為簡單路徑。 長度(length) : 一條路徑上的長度是指該路徑上所有邊的數量。 分支度(degree) : 例如上圖中，我們可以稱項點 B 的分支度為 3 ，但在有向圖中會分成外分支度與內分支度。 子圖(Subgraph) : 請看下圖。  圖的種類 基本上圖又可以分成下述幾重，要選擇那種來使用取決於你的問題。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -219,37 +242,37 @@
 <li><code>Traveral</code> : 該方法可以走訪<code>graph</code>中所有的頂點。</li>
 </ul>
 <p>首先我們先建立<code>graph</code>所需要使用的物件，<code>graph</code>中會存放所有的頂點<code>(vertex)</code>與邊<code>(edge)</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Graph</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Graph</span>() {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">vertexs</span> <span style="color:#f92672">=</span> [];
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span> <span style="color:#f92672">=</span> [];
+}
 </code></pre></div><p>接下來我們會建立兩個方法<code>AddVertex </code>與<code>AddEdge </code>，讓我們可以新增頂點與邊到<code>graph</code>中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addVertex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Graph</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">addVertex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">vertex</span>) {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">vertexs</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">vertex</span>);
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>] <span style="color:#f92672">=</span> [];
+};
 
-<span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addEdge</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">vertexA</span><span class="p">,</span> <span class="nx">vertexB</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertexA</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertexB</span><span class="p">)</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertexB</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">vertexA</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<span style="color:#a6e22e">Graph</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">addEdge</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">vertexA</span>, <span style="color:#a6e22e">vertexB</span>) {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertexA</span>].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">vertexB</span>);
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertexB</span>].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">vertexA</span>);
+};
 </code></pre></div><p>最後我們建立一個<code>print</code>方法來看看我們建立出來的圖。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">print</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="p">(</span><span class="nx">vertex</span> <span class="o">+</span> <span class="s2">&#34; -&gt; &#34;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34; , &#34;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">trim</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>	
-	<span class="p">}</span><span class="p">,</span><span class="k">this</span><span class="p">)</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="s2">&#34; | &#34;</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Graph</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">print</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">vertexs</span>.<span style="color:#a6e22e">map</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">vertex</span>) {
+		<span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">vertex</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; -&gt; &#34;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>].<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34; , &#34;</span>)).<span style="color:#a6e22e">trim</span>();	
+	},<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">join</span>(<span style="color:#e6db74">&#34; | &#34;</span>));
+};
 
-<span class="kd">var</span> <span class="nx">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Graph</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">graph</span><span class="p">.</span><span class="nx">addVertex</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">graph</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Graph</span>();
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">addVertex</span>(<span style="color:#e6db74">&#34;A&#34;</span>);
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">addVertex</span>(<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">addVertex</span>(<span style="color:#e6db74">&#34;C&#34;</span>);
 
-<span class="nx">graph</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">print</span>();
 
-<span class="nx">graph</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">,</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">graph</span><span class="p">.</span><span class="nx">addEdge</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">,</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">graph</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">addEdge</span>(<span style="color:#e6db74">&#34;A&#34;</span>,<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">addEdge</span>(<span style="color:#e6db74">&#34;A&#34;</span>,<span style="color:#e6db74">&#34;C&#34;</span>);
+<span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">print</span>();
 </code></pre></div><p>我們在上述的程式碼中建立了三個頂點<code>A、B、C</code>，並且將<code>A連結B</code>和<code>A連結C</code>，所以我們簡單用腦袋想一下，畫出來的圖形應該是如下圖。</p>
 <pre><code>   A
   /	 \
@@ -275,27 +298,27 @@
 <p>走訪起始頂點，然後尋找相鄰且未走訪的頂點，再做<code>dfs</code>，如果從任何已走訪過的頂點，都無法再走訪到一個尚未被走過的頂點時，則結束走訪。</p>
 </blockquote>
 <p>以下就為實作的程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Graph</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">traverseDFS</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">startVertex</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="o">~</span><span class="k">this</span><span class="p">.</span><span class="nx">vertexs</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">startVertex</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Vertex not found&#34;</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Graph</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">traverseDFS</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">startVertex</span>, <span style="color:#a6e22e">callback</span>) {
+	<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#f92672">~</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">vertexs</span>.<span style="color:#a6e22e">indexOf</span>(<span style="color:#a6e22e">startVertex</span>)) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Vertex not found&#34;</span>);
+	}
 
-	<span class="kd">var</span> <span class="nx">visited</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-	<span class="nx">_traverseDFS</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="nx">startVertex</span><span class="p">,</span><span class="nx">visited</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">visited</span> <span style="color:#f92672">=</span> [];
+	<span style="color:#a6e22e">_traverseDFS</span>.<span style="color:#a6e22e">call</span>(<span style="color:#66d9ef">this</span>,<span style="color:#a6e22e">startVertex</span>,<span style="color:#a6e22e">visited</span>,<span style="color:#a6e22e">callback</span>);
 
-	<span class="kd">function</span> <span class="nx">_traverseDFS</span><span class="p">(</span><span class="nx">vertex</span><span class="p">,</span> <span class="nx">visited</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">visited</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">callback</span><span class="p">(</span><span class="nx">vertex</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">_traverseDFS</span>(<span style="color:#a6e22e">vertex</span>, <span style="color:#a6e22e">visited</span>, <span style="color:#a6e22e">callback</span>) {
+		<span style="color:#a6e22e">visited</span>[<span style="color:#a6e22e">vertex</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+		<span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>] <span style="color:#f92672">!==</span> <span style="color:#66d9ef">undefined</span>) {
+			<span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">vertex</span>);
+		}
 
-		<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">visited</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">_traverseDFS</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="k">this</span><span class="p">.</span><span class="nx">edges</span><span class="p">[</span><span class="nx">vertex</span><span class="p">]</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">,</span> <span class="nx">visited</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>].<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+			<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">visited</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>][<span style="color:#a6e22e">i</span>]]) {
+				<span style="color:#a6e22e">_traverseDFS</span>.<span style="color:#a6e22e">call</span>(<span style="color:#66d9ef">this</span>,<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">vertex</span>][<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">visited</span>, <span style="color:#a6e22e">callback</span>);
+			}
+		}
+	}
+};
 </code></pre></div><p>而假設我們有如下的圖。</p>
 <pre><code>		 A
 	  /   \
@@ -355,62 +378,62 @@ E
 Given n = 5 and edges = [[0, 1], [0, 2], [0, 3], [1, 4]], return true.
 
 Given n = 5 and edges = [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]], return false.
-</code></pre><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">public</span> <span class="kr">class</span> <span class="nx">Solution</span> <span class="p">{</span>
-    <span class="cm">/*
-</span><span class="cm">     * @param n: An integer
-</span><span class="cm">     * @param edges: a list of undirected edges
-</span><span class="cm">     * @return: true if it&#39;s a valid tree, or false
-</span><span class="cm">     */</span>
-    <span class="kr">public</span> <span class="kr">boolean</span> <span class="nx">validTree</span><span class="p">(</span><span class="kr">int</span> <span class="nx">n</span><span class="p">,</span> <span class="kr">int</span><span class="p">[</span><span class="p">]</span><span class="p">[</span><span class="p">]</span> <span class="nx">edges</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// write your code here
-</span><span class="c1"></span>        
-        <span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="p">}</span>
+</code></pre><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * @param n: An integer
+</span><span style="color:#75715e">     * @param edges: a list of undirected edges
+</span><span style="color:#75715e">     * @return: true if it&#39;s a valid tree, or false
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span>(<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">n</span>, <span style="color:#66d9ef">int</span>[][] <span style="color:#a6e22e">edges</span>) {
+        <span style="color:#75715e">// write your code here
+</span><span style="color:#75715e"></span>        
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">n</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>){
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+        }
         
-        <span class="k">if</span><span class="p">(</span><span class="nx">edges</span><span class="p">.</span><span class="nx">length</span> <span class="o">!=</span> <span class="nx">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="p">{</span>
-            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">edges</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>){
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+        }
         
-        <span class="c1">// Integer =&gt; 點
-</span><span class="c1"></span>        <span class="c1">// Set&lt;Interger&gt; =&gt; 點的所有鄰居
-</span><span class="c1"></span>        <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">graph</span> <span class="o">=</span> <span class="nx">initializeGraph</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">edges</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#75715e">// Integer =&gt; 點
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Set&lt;Interger&gt; =&gt; 點的所有鄰居
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">Map</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span>, <span style="color:#a6e22e">Set</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">graph</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">initializeGraph</span>(<span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">edges</span>);
         
-        <span class="c1">// bfs
-</span><span class="c1"></span>        <span class="nx">Queue</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span> <span class="nx">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LinkedList</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span> <span class="nx">hash</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HashSet</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">queue</span><span class="p">.</span><span class="nx">offer</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">hash</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#75715e">// bfs
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">Queue</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">queue</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LinkedList</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>();
+        <span style="color:#a6e22e">Set</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">hash</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashSet</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>();
+        <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">offer</span>(<span style="color:#ae81ff">0</span>);
+        <span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">add</span>(<span style="color:#ae81ff">0</span>);
         
-        <span class="k">while</span> <span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
-            <span class="kr">int</span> <span class="nx">current</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">poll</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="k">for</span> <span class="p">(</span><span class="nx">Integer</span> <span class="nx">neighbor</span> <span class="o">:</span> <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">hash</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">continue</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="nx">hash</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">;</span>
-                <span class="nx">queue</span><span class="p">.</span><span class="nx">offer</span><span class="p">(</span><span class="nx">neighbor</span><span class="p">)</span><span class="p">;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="p">(</span><span class="nx">hash</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">==</span> <span class="nx">n</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
+        <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">size</span>() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>){
+            <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">poll</span>();
+            <span style="color:#66d9ef">for</span> (<span style="color:#a6e22e">Integer</span> <span style="color:#a6e22e">neighbor</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">current</span>)) {
+                <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">contains</span>(<span style="color:#a6e22e">neighbor</span>)) {
+                    <span style="color:#66d9ef">continue</span>;
+                }
+                <span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">neighbor</span>);
+                <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">offer</span>(<span style="color:#a6e22e">neighbor</span>);
+            }
+        }
+        <span style="color:#66d9ef">return</span> (<span style="color:#a6e22e">hash</span>.<span style="color:#a6e22e">size</span>() <span style="color:#f92672">==</span> <span style="color:#a6e22e">n</span>);
+    }
     
-    <span class="kr">private</span> <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">initializeGraph</span><span class="p">(</span><span class="kr">int</span> <span class="nx">n</span><span class="p">,</span> <span class="kr">int</span><span class="p">[</span><span class="p">]</span><span class="p">[</span><span class="p">]</span> <span class="nx">edges</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">Map</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="p">,</span> <span class="nx">Set</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;&gt;</span> <span class="nx">graph</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HashMap</span><span class="o">&lt;</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="k">for</span> <span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span> <span class="nx">n</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">graph</span><span class="p">.</span><span class="nx">put</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span> <span class="k">new</span> <span class="nx">HashSet</span><span class="o">&lt;</span><span class="nx">Integer</span><span class="o">&gt;</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">Map</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span>, <span style="color:#a6e22e">Set</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">initializeGraph</span>(<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">n</span>, <span style="color:#66d9ef">int</span>[][] <span style="color:#a6e22e">edges</span>){
+        <span style="color:#a6e22e">Map</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span>, <span style="color:#a6e22e">Set</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">graph</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashMap</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span>();
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+            <span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">put</span>(<span style="color:#a6e22e">i</span>, <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">HashSet</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">Integer</span><span style="color:#f92672">&gt;</span>());
+        }
         
-        <span class="k">for</span> <span class="p">(</span><span class="kr">int</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span> <span class="nx">edges</span><span class="p">.</span><span class="nx">length</span> <span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-            <span class="kr">int</span> <span class="nx">u</span> <span class="o">=</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="p">;</span>
-            <span class="kr">int</span> <span class="nx">v</span> <span class="o">=</span> <span class="nx">edges</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="p">;</span>
-            <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">graph</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">v</span><span class="p">)</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">edges</span>.<span style="color:#a6e22e">length</span> ; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+            <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">u</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">0</span>];
+            <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">edges</span>[<span style="color:#a6e22e">i</span>][<span style="color:#ae81ff">1</span>];
+            <span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">u</span>).<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">v</span>);
+            <span style="color:#a6e22e">graph</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">v</span>).<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">u</span>);
+        }
         
-        <span class="k">return</span> <span class="nx">graph</span><span class="p">;</span>
-    <span class="p">}</span>   
-<span class="p">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">graph</span>;
+    }   
+}
 </code></pre></div><h2 id="heading6">參考資料</h2>
 <ul>
 <li><a href="http://www.csie.ntnu.edu.tw/~u91029/Graph.html"><a href="http://www.csie.ntnu.edu.tw/~u91029/Graph.html">http://www.csie.ntnu.edu.tw/~u91029/Graph.html</a></a></li>

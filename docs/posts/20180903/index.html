@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="圖片來源 : 馬克 正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下|Describe what your web page is about">
+    <meta name="description" property="og:description" content="圖片來源 : 馬克
+正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下主題 :
+ 聲音的編碼與壓縮
+ 這篇文章中咱們會先說明一下編碼是什麼東西，然後接下來要理解編碼與壓縮的關係，最後咱們在來介紹一些現在在即時音頻通訊中比較常見的幾個編碼。
+ 什麼是聲音的編碼 ? 那為啥會有這麼多種編碼 ? 要如何將聲音所花費的空間變小呢 ? 各種聲音的編碼。  什麼是聲音的編碼 ?  一段用來描述聲音的有規則二進位
+ 上一篇文章中咱們有提到使用 PCM 來將聲音進行數位化，將聲音變成所為的二進位，也就是大概長的如下面這樣，這個 1 與 0 是有規則的，而正常來說這就咱們所謂的編碼。
+10101010010101010100000000111111 …… 而最開始用 PCM 所產生出來的東西，咱們也稱為 PCM 編碼，順到一提它又被稱為無損編碼，但不是指它能完美無損的描敘真實聲音，而是無限接近真實的聲音。
+那為啥會有這麼多種編碼 ?  因為用 PCM 所產生出來的 raw data 太大囉，所以某些神人就幹了一些壓縮編碼
+ 有點兒年紀的人們 ( ex. 馬克 ) 年輕時應該都有用過 MP3 這東東，它裡面裝的就是用 MP3 編碼後的音樂，然後現在常聽到的 AAC 和 Opus 也都是音頻編碼的東東，那為啥會怎麼多種編碼呢 ? 那是因為 raw data 太大了(如下範例)，不適合所有場景，像以前的 MP3 播放器空間小小的( 128 MB ?|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-03之聲音的編碼與壓縮 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="圖片來源 : 馬克 正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下|Describe what your web page is about">
+    <meta name="twitter:description" content="圖片來源 : 馬克
+正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下主題 :
+ 聲音的編碼與壓縮
+ 這篇文章中咱們會先說明一下編碼是什麼東西，然後接下來要理解編碼與壓縮的關係，最後咱們在來介紹一些現在在即時音頻通訊中比較常見的幾個編碼。
+ 什麼是聲音的編碼 ? 那為啥會有這麼多種編碼 ? 要如何將聲音所花費的空間變小呢 ? 各種聲音的編碼。  什麼是聲音的編碼 ?  一段用來描述聲音的有規則二進位
+ 上一篇文章中咱們有提到使用 PCM 來將聲音進行數位化，將聲音變成所為的二進位，也就是大概長的如下面這樣，這個 1 與 0 是有規則的，而正常來說這就咱們所謂的編碼。
+10101010010101010100000000111111 …… 而最開始用 PCM 所產生出來的東西，咱們也稱為 PCM 編碼，順到一提它又被稱為無損編碼，但不是指它能完美無損的描敘真實聲音，而是無限接近真實的聲音。
+那為啥會有這麼多種編碼 ?  因為用 PCM 所產生出來的 raw data 太大囉，所以某些神人就幹了一些壓縮編碼
+ 有點兒年紀的人們 ( ex. 馬克 ) 年輕時應該都有用過 MP3 這東東，它裡面裝的就是用 MP3 編碼後的音樂，然後現在常聽到的 AAC 和 Opus 也都是音頻編碼的東東，那為啥會怎麼多種編碼呢 ? 那是因為 raw data 太大了(如下範例)，不適合所有場景，像以前的 MP3 播放器空間小小的( 128 MB ?|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

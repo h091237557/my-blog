@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="js, javascript, worker, html5" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
+Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
+建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
+var worker = new Worker(&amp;#39;work.js&amp;#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
+(fucntion(){ setTimeout(function(){ postMessage(&amp;#39;This work I spend 2s&amp;#39;); },2000); })(); 兩秒後執行結果就為。
+	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &amp;quot;fileName.js&amp;quot; ) ，下列程式碼為使用範例。
+importScripts( &amp;#34;work2.js&amp;#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&amp;#39;This work , I spend 2 s &amp;#39;); },2000); })() work2.js，如下程式碼。
+var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="HTML5 之走在平行時空的 Web Worker | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
+Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
+建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
+var worker = new Worker(&#39;work.js&#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
+(fucntion(){ setTimeout(function(){ postMessage(&#39;This work I spend 2s&#39;); },2000); })(); 兩秒後執行結果就為。
+	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &quot;fileName.js&quot; ) ，下列程式碼為使用範例。
+importScripts( &#34;work2.js&#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&#39;This work , I spend 2 s &#39;); },2000); })() work2.js，如下程式碼。
+var work2Obj = { taskName:&#34;work2&#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -128,33 +145,33 @@
 <p><code>Worker</code> 主要的用處在避免重度 <code>CPU</code> 運算的任務阻礙到 <code>UI</code> 執行緒運行。</p>
 <h2 id="worker">建立Worker</h2>
 <p>首先我們來建立<code>worker</code>，並且該獨立的<code>script</code>為<code>work.js</code>，並且在<code>worker</code>建立<code>onmessage</code>監聽器，當<code>work.js</code>有執行<code>postMessage()</code>，則會觸發。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">worker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Worker</span><span class="p">(</span><span class="s1">&#39;work.js&#39;</span><span class="p">)</span><span class="p">;</span>
- 	<span class="nx">worker</span><span class="p">.</span><span class="nx">onmessage</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="p">{</span>
-  		 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">worker</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Worker</span>(<span style="color:#e6db74">&#39;work.js&#39;</span>);
+ 	<span style="color:#a6e22e">worker</span>.<span style="color:#a6e22e">onmessage</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">e</span>){
+  		 <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">e</span>.<span style="color:#a6e22e">data</span>);
+	}
 </code></pre></div><p>下面這段程式碼為<code>work.js</code>，以下只是段簡單的兩秒後觸發<code>postMessage()</code>並回傳一段文字回去。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="p">(</span><span class="nx">fucntion</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">postMessage</span><span class="p">(</span><span class="s1">&#39;This work I spend 2s&#39;</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">,</span><span class="mi">2000</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	(<span style="color:#a6e22e">fucntion</span>(){
+		<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){
+			<span style="color:#a6e22e">postMessage</span>(<span style="color:#e6db74">&#39;This work I spend 2s&#39;</span>);
+		},<span style="color:#ae81ff">2000</span>);
+	})();
 </code></pre></div><p>兩秒後執行結果就為。</p>
 <pre><code>	This work I spend 2s
 </code></pre><h2 id="-web-worker--javascript">在 Web Worker 中載入 Javascript</h2>
 <p>在<code>Worker</code>裡面如果要載入<code>Javascript</code>，則需要使用<code>importScripts( &quot;fileName.js&quot; ) </code>，下列程式碼為使用範例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">importScripts</span><span class="p">(</span> <span class="s2">&#34;work2.js&#34;</span> <span class="p">)</span> 
-	<span class="kd">var</span> <span class="nx">work2Obj</span> <span class="o">=</span> <span class="nx">work2Obj</span><span class="p">;</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">importScripts</span>( <span style="color:#e6db74">&#34;work2.js&#34;</span> ) 
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">work2Obj</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">work2Obj</span>; 
 
-	<span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">work2Obj</span><span class="p">.</span><span class="nx">taskName</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-    	<span class="nx">self</span><span class="p">.</span><span class="nx">postMessage</span><span class="p">(</span><span class="s1">&#39;This work , I spend 2 s &#39;</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">,</span><span class="mi">2000</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="p">)</span>
+	(<span style="color:#66d9ef">function</span>(){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">work2Obj</span>.<span style="color:#a6e22e">taskName</span>);
+		<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){
+    	<span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">postMessage</span>(<span style="color:#e6db74">&#39;This work , I spend 2 s &#39;</span>);
+		},<span style="color:#ae81ff">2000</span>);
+	})()
 </code></pre></div><p><code>work2.js</code>，如下程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">work2Obj</span> <span class="o">=</span> <span class="p">{</span>
-		<span class="nx">taskName</span><span class="o">:</span><span class="s2">&#34;work2&#34;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">work2Obj</span> <span style="color:#f92672">=</span> {
+		<span style="color:#a6e22e">taskName</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;work2&#34;</span>
+	}
 </code></pre></div><h2 id="web-worker">Web Worker的限制</h2>
 <p>有幾點要web worker的限制需要注意一下。</p>
 <ul>

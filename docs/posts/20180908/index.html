@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。
+ 採集的詳細說明與聲音的加工。
+ 本篇文章會將之分成以下幾個章節：
+ WebRTC 的 Stream (Media Stream) 組成。 如何對 Media Stream 的聲音進行加工 ？  WebRTC 的 Stream ( Media Stream ) 組成  stream = track A &#43; track B
+ 前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。
+const constraints = { audio: true, video: true } navigator.mediaDevices.getUserMedia(constraints) .then((stream) =&amp;gt; { // stream 就是咱們的聲音與影像 }) .catch((err) =&amp;gt; { // 錯誤處理 }) 然後咱們這裡來問個問題：
+ stream 是由什麼組合的 ?|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-08之 WebRTC 採集的詳細說明與聲音的加工 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。
+ 採集的詳細說明與聲音的加工。
+ 本篇文章會將之分成以下幾個章節：
+ WebRTC 的 Stream (Media Stream) 組成。 如何對 Media Stream 的聲音進行加工 ？  WebRTC 的 Stream ( Media Stream ) 組成  stream = track A &#43; track B
+ 前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。
+const constraints = { audio: true, video: true } navigator.mediaDevices.getUserMedia(constraints) .then((stream) =&gt; { // stream 就是咱們的聲音與影像 }) .catch((err) =&gt; { // 錯誤處理 }) 然後咱們這裡來問個問題：
+ stream 是由什麼組合的 ?|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -178,55 +193,55 @@ MediaStream.getVideoTracks()
 <p>上面這樣說或需還有點兒抽像，接下來咱們簡單的來實作一段程式碼。</p>
 <h3 id="-webrtc-">將 WebRTC 所採集的聲音進行放大，然後在直接輸出給喇叭</h3>
 <p>首先這段程式碼首先會先創造 AudioContext，接下來透過 createMediaStreamSource 來將 WebRTC 所採集的聲音流，轉換成 AudioContext 世界的 AudioNode。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"> <span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"> <span style="color:#a6e22e">navigator</span>.<span style="color:#a6e22e">mediaDevices</span>.<span style="color:#a6e22e">getUserMedia</span>({ <span style="color:#a6e22e">audio</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> })
+    .<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">stream</span>) =&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">audioContext</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">AudioContext</span>;
 
-      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
-      <span class="err">…</span><span class="err">…</span>
-    <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
+      <span style="color:#75715e">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sourceNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">createMediaStreamSource</span>(<span style="color:#a6e22e">stream</span>);
+      <span style="color:#960050;background-color:#1e0010">…</span><span style="color:#960050;background-color:#1e0010">…</span>
+    })
+    .<span style="color:#66d9ef">catch</span>((<span style="color:#a6e22e">err</span>) =&gt; {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;nonono ~~~ !!&#39;</span>);
+    })
 </code></pre></div><p>接下來我們在產生另一個 AudioNode 它是用來將我們來源聲音，音量加大的加工師。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">navigator</span>.<span style="color:#a6e22e">mediaDevices</span>.<span style="color:#a6e22e">getUserMedia</span>({ <span style="color:#a6e22e">audio</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> })
+    .<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">stream</span>) =&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">audioContext</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">AudioContext</span>;
 
-      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sourceNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">createMediaStreamSource</span>(<span style="color:#a6e22e">stream</span>);
 
-      <span class="c1">// 產生音量加工師，用來將來源聲音加大
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">processNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createGain</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">processNode</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-      <span class="nx">sourceNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">processNode</span><span class="p">)</span><span class="p">;</span>
-      <span class="err">…</span><span class="err">…</span>
-    <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
+      <span style="color:#75715e">// 產生音量加工師，用來將來源聲音加大
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">processNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">createGain</span>();
+      <span style="color:#a6e22e">processNode</span>.<span style="color:#a6e22e">gain</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;
+      <span style="color:#a6e22e">sourceNode</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">processNode</span>);
+      <span style="color:#960050;background-color:#1e0010">…</span><span style="color:#960050;background-color:#1e0010">…</span>
+    })
+    .<span style="color:#66d9ef">catch</span>((<span style="color:#a6e22e">err</span>) =&gt; {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;nonono ~~~ !!&#39;</span>);
+    })
 
 </code></pre></div><p>最後在將加工完的聲音丟到終端麥克風。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">  <span class="nx">navigator</span><span class="p">.</span><span class="nx">mediaDevices</span><span class="p">.</span><span class="nx">getUserMedia</span><span class="p">(</span><span class="p">{</span> <span class="nx">audio</span><span class="o">:</span> <span class="kc">true</span> <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="kr">const</span> <span class="nx">audioContext</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AudioContext</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">  <span style="color:#a6e22e">navigator</span>.<span style="color:#a6e22e">mediaDevices</span>.<span style="color:#a6e22e">getUserMedia</span>({ <span style="color:#a6e22e">audio</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span> })
+    .<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">stream</span>) =&gt; {
+      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">audioContext</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">AudioContext</span>;
       
-      <span class="c1">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">sourceNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createMediaStreamSource</span><span class="p">(</span><span class="nx">stream</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 將 WebRTC 所採集的聲音轉換成 AudioNode。
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sourceNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">createMediaStreamSource</span>(<span style="color:#a6e22e">stream</span>);
 
-      <span class="c1">// 產生音量加工師，用來將來源聲音加大
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">processNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">createGain</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">processNode</span><span class="p">.</span><span class="nx">gain</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
-      <span class="nx">sourceNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">processNode</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 產生音量加工師，用來將來源聲音加大
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">processNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">createGain</span>();
+      <span style="color:#a6e22e">processNode</span>.<span style="color:#a6e22e">gain</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>;
+      <span style="color:#a6e22e">sourceNode</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">processNode</span>);
 
-      <span class="c1">// 將加工完的聲音丟給終端麥克風
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">destinationNode</span> <span class="o">=</span> <span class="nx">audioContext</span><span class="p">.</span><span class="nx">destination</span><span class="p">;</span>
-      <span class="nx">processNode</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="nx">destinationNode</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;nonono ~~~ !!&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
+      <span style="color:#75715e">// 將加工完的聲音丟給終端麥克風
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">destinationNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">audioContext</span>.<span style="color:#a6e22e">destination</span>;
+      <span style="color:#a6e22e">processNode</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#a6e22e">destinationNode</span>);
+    })
+    .<span style="color:#66d9ef">catch</span>((<span style="color:#a6e22e">err</span>) =&gt; {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;nonono ~~~ !!&#39;</span>);
+    })
 </code></pre></div><h2 id="heading2">結論</h2>
 <p>本篇文章中咱們學習到了以下的重點：</p>
 <ul>

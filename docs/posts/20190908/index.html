@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :
+ 異步非阻塞的 I/O 操作。
+ 而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?
+簡單的說它可以讓我們實現以下的事情 :
+ 可以在應用層實現同步非阻塞的 I/O 操作
+ 接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。
+ coroutine 協程想要解決的問題。 coroutine 協程實現原理。 Golang 的 goroutine。  coroutine 協程想要解決的問題 首先咱們先來看看它想要解決什麼問題呢 ?
+ 協程它想要將異步非阻塞的 I/O 操作變成同步的。
+ 異步非阻塞寫法 首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :
+ 異步 : callback 機制，也就是下面程式碼裡面的 function。 非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。  &amp;lt;?php $client = new swoole_redis; $client-&amp;gt;connect(&amp;#39;127.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :
+ 異步非阻塞的 I/O 操作。
+ 而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?
+簡單的說它可以讓我們實現以下的事情 :
+ 可以在應用層實現同步非阻塞的 I/O 操作
+ 接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。
+ coroutine 協程想要解決的問題。 coroutine 協程實現原理。 Golang 的 goroutine。  coroutine 協程想要解決的問題 首先咱們先來看看它想要解決什麼問題呢 ?
+ 協程它想要將異步非阻塞的 I/O 操作變成同步的。
+ 異步非阻塞寫法 首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :
+ 異步 : callback 機制，也就是下面程式碼裡面的 function。 非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。  &lt;?php $client = new swoole_redis; $client-&gt;connect(&#39;127.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -152,14 +173,14 @@
 <li>異步 : callback 機制，也就是下面程式碼裡面的 function。</li>
 <li>非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_redis</span><span class="p">;</span>
-<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">GET</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">,</span> <span class="s1">&#39;swoole&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nx">swoole_redis</span> <span class="nv">$client</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">var_dump</span><span class="p">(</span><span class="nv">$result</span><span class="p">);</span>
-    <span class="p">});</span>
-<span class="p">});</span>
+$client <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">swoole_redis</span>;
+$client<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;127.0.0.1&#39;</span>, <span style="color:#ae81ff">6379</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">swoole_redis</span> $client, $result) {
+    $client<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#39;key&#39;</span>, <span style="color:#e6db74">&#39;swoole&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">swoole_redis</span> $client, $result) {
+        <span style="color:#a6e22e">var_dump</span>($result);
+    });
+});
 </code></pre></div><p>基本上有寫過 js 的一看就知道，這是一種很常見的寫法，而它的問題就在於有可能會有 callback 地獄產生。</p>
 <p>而要解決這個問題通常就是以下三個:</p>
 <ul>
@@ -171,18 +192,18 @@
 <h3 id="heading2">同步非阻塞寫法</h3>
 <p>由於上面範例 callback 這種寫法在多層有可能會變成 callback hell，因此就有人想說，能不能寫的和一般同步的測試碼一樣，嗯這就是協程誕生的理由。</p>
 <p>你使用了協程程式碼就會變成如下，如何是不是好看多與直覺多了呢 ?</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="nx">go</span><span class="p">(</span><span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
-    <span class="nv">$redis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swoole\Coroutine\Redis</span><span class="p">();</span>
-    <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">);</span>
-    <span class="nv">$val</span> <span class="o">=</span> <span class="nv">$redis</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">);</span>
-<span class="p">});</span>
+<span style="color:#a6e22e">go</span>(<span style="color:#66d9ef">function</span> () {
+    $redis <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Swoole\Coroutine\Redis</span>();
+    $redis<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;127.0.0.1&#39;</span>, <span style="color:#ae81ff">6379</span>);
+    $val <span style="color:#f92672">=</span> $redis<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;key&#39;</span>);
+});
 </code></pre></div><p>而事實上在 nodejs 中的 async/await 就是協程。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">(</span><span class="nx">async</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="nx">redis</span><span class="p">.</span><span class="nx">createClient</span><span class="p">(</span><span class="p">)</span>
-    <span class="kr">const</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">client</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">(<span style="color:#a6e22e">async</span>() =&gt; {
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">redis</span>.<span style="color:#a6e22e">createClient</span>()
+    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;key&#39;</span>);
+})()
 </code></pre></div><h2 id="coroutine-1">Coroutine 協程實現原理</h2>
 <p>它的實現原理簡單的說就是 :</p>
 <blockquote>

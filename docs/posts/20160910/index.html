@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,19 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜尋原理。
+ Cursor是啥 Cursor的方法 搜尋的原理  P.S 三分之一囉，也代表基本的mongodb的crud要Ending囉。
+~ Cursor 是啥 ~ cursor是find時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是Iterator 模式的實作。
+除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前insertMany時，他會一次回傳全部的結果，mongodb shell就會自動一直輸出，結果看不到後來執行的東西。
+我們實際來看一下cursor的用法，首先我們還是要先新增一些資料。
+for (var i=0;i&amp;lt;10;i&#43;&#43;){ db.test.insert({x:i}) } 然後進行搜尋，並用一個變數cursor存放。
+var cursor = db.test.find(); while (cursor.hasNext()){ obj = cursor.next(); print(obj.x &#43; &amp;#34; ~呼呼~&amp;#34;) } 結行結果如下圖。
+~ Cursor 的方法 ~ limit、skip、sort這三個是很常用的cursor方法，主要功能就是限制、忽略、排序。
+limit 要限制find結果的數量可以用limit，不過注意limit是指定上限而不是指定下限， 使用方法如下，limit(10)就是代表最多只回傳10筆資料。
+db.test.find().limit(10) skip 當你想要忽略前面幾筆，在開始回傳值時，就是可以用skip，使用方法如下，skip(10)，代表忽略前十筆，然後在開始回傳，不過注意『 skip如果數量很多時速度會變很慢 』。
+db.test.find().skip(10) sort sort它主要就是將find出的資料，根據條件，進行排序。
+例如假設我們有以下的資料。
+{&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34; , age:20} {&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34; , age:25} {&amp;#34;name&amp;#34;:&amp;#34;max&amp;#34; , age:10} {&amp;#34;name&amp;#34;:&amp;#34;stanly&amp;#34; , age:40} {&amp;#34;name&amp;#34;:&amp;#34;crisis&amp;#34; , age:5} 然後我們希望可以根據age排序，由小到大，{age:1}代表由小到大，而{age:-1}則相反由大到小。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +54,19 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜尋原理。
+ Cursor是啥 Cursor的方法 搜尋的原理  P.S 三分之一囉，也代表基本的mongodb的crud要Ending囉。
+~ Cursor 是啥 ~ cursor是find時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是Iterator 模式的實作。
+除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前insertMany時，他會一次回傳全部的結果，mongodb shell就會自動一直輸出，結果看不到後來執行的東西。
+我們實際來看一下cursor的用法，首先我們還是要先新增一些資料。
+for (var i=0;i&lt;10;i&#43;&#43;){ db.test.insert({x:i}) } 然後進行搜尋，並用一個變數cursor存放。
+var cursor = db.test.find(); while (cursor.hasNext()){ obj = cursor.next(); print(obj.x &#43; &#34; ~呼呼~&#34;) } 結行結果如下圖。
+~ Cursor 的方法 ~ limit、skip、sort這三個是很常用的cursor方法，主要功能就是限制、忽略、排序。
+limit 要限制find結果的數量可以用limit，不過注意limit是指定上限而不是指定下限， 使用方法如下，limit(10)就是代表最多只回傳10筆資料。
+db.test.find().limit(10) skip 當你想要忽略前面幾筆，在開始回傳值時，就是可以用skip，使用方法如下，skip(10)，代表忽略前十筆，然後在開始回傳，不過注意『 skip如果數量很多時速度會變很慢 』。
+db.test.find().skip(10) sort sort它主要就是將find出的資料，根據條件，進行排序。
+例如假設我們有以下的資料。
+{&#34;name&#34;:&#34;mark&#34; , age:20} {&#34;name&#34;:&#34;steven&#34; , age:25} {&#34;name&#34;:&#34;max&#34; , age:10} {&#34;name&#34;:&#34;stanly&#34; , age:40} {&#34;name&#34;:&#34;crisis&#34; , age:5} 然後我們希望可以根據age排序，由小到大，{age:1}代表由小到大，而{age:-1}則相反由大到小。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +78,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -139,16 +166,16 @@
 <p><code>cursor</code>是<code>find</code>時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是<code>Iterator 模式</code>的實作。</p>
 <p>除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前<code>insertMany</code>時，他會一次回傳全部的結果，<code>mongodb shell</code>就會自動一直輸出，結果看不到後來執行的東西。</p>
 <p>我們實際來看一下<code>cursor</code>的用法，首先我們還是要先新增一些資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">10</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#a6e22e">x</span><span style="color:#f92672">:</span><span style="color:#a6e22e">i</span>})
+}
 </code></pre></div><p>然後進行搜尋，並用一個變數<code>cursor</code>存放。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">cursor</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">cursor</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>();
 
-<span class="k">while</span> <span class="p">(</span><span class="nx">cursor</span><span class="p">.</span><span class="nx">hasNext</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">obj</span> <span class="o">=</span> <span class="nx">cursor</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">print</span><span class="p">(</span><span class="nx">obj</span><span class="p">.</span><span class="nx">x</span> <span class="o">+</span> <span class="s2">&#34; ~呼呼~&#34;</span><span class="p">)</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">cursor</span>.<span style="color:#a6e22e">hasNext</span>()){
+	<span style="color:#a6e22e">obj</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">cursor</span>.<span style="color:#a6e22e">next</span>();
+	<span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">obj</span>.<span style="color:#a6e22e">x</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; ~呼呼~&#34;</span>)
+}
 </code></pre></div><p>結行結果如下圖。</p>
 <p><img src="http://yixiang8780.com/outImg/20161208-1.png" alt=""></p>
 <h2 id="-cursor--1">~ Cursor 的方法 ~</h2>
@@ -156,37 +183,37 @@
 <h3 id="limit">limit</h3>
 <p>要限制<code>find</code>結果的數量可以用<code>limit</code>，不過注意<code>limit</code>是指定上限而不是指定下限，
 使用方法如下，<code>limit(10)</code>就是代表最多只回傳<code>10</code>筆資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">limit</span>(<span style="color:#ae81ff">10</span>)
 </code></pre></div><h3 id="skip">skip</h3>
 <p>當你想要忽略前面幾筆，在開始回傳值時，就是可以用<code>skip</code>，使用方法如下，<code>skip(10)</code>，代表忽略前十筆，然後在開始回傳，不過注意『 <code>skip</code>如果數量很多時速度會變很慢 』。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">skip</span>(<span style="color:#ae81ff">10</span>)
 </code></pre></div><h3 id="sort">sort</h3>
 <p><code>sort</code>它主要就是將<code>find</code>出的資料，根據條件，進行排序。</p>
 <p>例如假設我們有以下的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">25</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;max&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">10</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;stanly&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">40</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;crisis&#34;</span> <span class="p">,</span> <span class="nx">age</span><span class="o">:</span><span class="mi">5</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span> , <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">20</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span> , <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">25</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;max&#34;</span> , <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;stanly&#34;</span> , <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">40</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;crisis&#34;</span> , <span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">5</span>}
 </code></pre></div><p>然後我們希望可以根據<code>age</code>排序，由小到大，<code>{age:1}</code>代表由小到大，而<code>{age:-1}</code>則相反由大到小。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">age</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">sort</span>({<span style="color:#a6e22e">age</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>})
 </code></pre></div><p>結果如下~</p>
 <p><img src="http://yixiang8780.com/outImg/20161208-2.png" alt=""></p>
 <h3 id="heading">三個都可以一起使用</h3>
 <p>這三個條件我們都可以一起使用，例如，你希望尋找先忽略前10筆，並且數量限制為50筆，最後在進行排序，則指令如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">skip</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="nx">x</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>().<span style="color:#a6e22e">skip</span>(<span style="color:#ae81ff">10</span>).<span style="color:#a6e22e">limit</span>(<span style="color:#ae81ff">50</span>).<span style="color:#a6e22e">sort</span>({<span style="color:#a6e22e">x</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>})
 </code></pre></div><h2 id="--">~ 搜尋的原理 ~</h2>
 <p>在不考慮有索引<code>(下一篇會開始說)</code>的條件下，<code>mongodb</code>會如下圖一樣開始搜尋。</p>
 <p><img src="http://yixiang8780.com/outImg/20161208-4.png" alt=""></p>
 <p>所以說如果你要找的值是放在資料的最後面，你找到的時間會最久，給個程式實驗看看。</p>
 <p>首先來個測試資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span><span class="o">:</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1000000</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;x&#34;</span><span style="color:#f92672">:</span><span style="color:#a6e22e">i</span>})
+}
 </code></pre></div><p>來我們來測試看看找到<code>{&quot;x&quot; : 1}</code>和<code>{&quot;x&quot;: 999999}</code>速度會差多少，其中加<code>limit(1)</code>是因為只讓它尋找第一個，如果沒限制它會一直繼續找，看還有沒有符合的，這樣兩者速度是相等的，因為都是全文掃描，而<code>explain(&quot;executionStats&quot;)</code>是叫<code>mongodb</code>列出詳細的執行結果。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>({<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>}).<span style="color:#a6e22e">limit</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">explain</span>(<span style="color:#e6db74">&#34;executionStats&#34;</span>)
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">999999</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">limit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>({<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">999999</span>}).<span style="color:#a6e22e">limit</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">explain</span>(<span style="color:#e6db74">&#34;executionStats&#34;</span>)
 </code></pre></div><p>首先看看下圖，是 <code>{ &quot;x&quot; : 1 }</code>的，可以看到執行時間幾乎沒有，而掃描的<code>document</code>之有<code>2</code>，也就是只找兩個<code>document</code>就找到<code>{ &quot;x&quot; :1 }</code>，而那兩個就是<code> { &quot;x&quot; : 0 } 和 { &quot;x&quot; : 1 }</code>。</p>
 <p><img src="http://yixiang8780.com/outImg/20161208-5.png" alt=""></p>
 <p>然後我們在來看看 <code>{ &quot;x&quot; : 999999 }</code>的結果，執行時間<code>413ms</code>差距和<code>{&quot;x&quot;:1}</code>差距實在很大，而它幾乎要全部掃描完<code>document</code>才找到 <code>{ &quot;x&quot; : 999999 } </code>，難怪會著麼慢。</p>

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,12 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是|Describe what your web page is about">
+    <meta name="description" property="og:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然有人(編譯器)會打斷你的腿的…很恐怖的…
+Interface使用時機
+ 有時候，你必須根據物件能夠做什麼來將它們歸類。 想要做到類似C&#43;&#43;中的多重繼承功能。  程式說明 建立UnitityCar的類別，該類別為未來車的概念。它可以飛(Fly)和跑(Run)，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到Interface。
+首先新增兩個Interface分別為ICanFly 與 IDrive。ICanFly定義飛的方法Fly() 與飛的速度FlySpeed。IRun定義跑的方法Run()與跑的速度RunSpeed (註:新增IRun Interface只是要給各位官爺看多個Interface使用)
+//宣告ICanFly介面  interface ICanFly { //介面不可以包含『欄位』。  string flySpeed { get ;} //介面不存放資料，因為不能增加欄位  //string test = &amp;#34;Hello&amp;#34;;  //任何實作該介面的類別必需具備一個接受Fly()的方法。  string fly(); } //宣告IDrive介面  interface IDrive { //driveSpeed屬性，但介面不儲存資料，所以不會有欄位。  string driveSpeed { get ; set; } //任何實作此介面的類別，必需具備接受 drive() 方法。  string drive(); } UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。
+//繼承基底類別Car  //並實作IDrive與IcanFly Interface  //假設UnitityCar在未來，他有兩個種類方法Drive與Fly。  public class UnitityCar :Car , IDrive, ICanFly { //由於在未來飛行速度(FlySpeed)，有限制100，  //因此設立唯讀的FlySpeed，不給人修改。  //一定要有!|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +47,12 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 6-『 Interface 介面 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是|Describe what your web page is about">
+    <meta name="twitter:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然有人(編譯器)會打斷你的腿的…很恐怖的…
+Interface使用時機
+ 有時候，你必須根據物件能夠做什麼來將它們歸類。 想要做到類似C&#43;&#43;中的多重繼承功能。  程式說明 建立UnitityCar的類別，該類別為未來車的概念。它可以飛(Fly)和跑(Run)，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到Interface。
+首先新增兩個Interface分別為ICanFly 與 IDrive。ICanFly定義飛的方法Fly() 與飛的速度FlySpeed。IRun定義跑的方法Run()與跑的速度RunSpeed (註:新增IRun Interface只是要給各位官爺看多個Interface使用)
+//宣告ICanFly介面  interface ICanFly { //介面不可以包含『欄位』。  string flySpeed { get ;} //介面不存放資料，因為不能增加欄位  //string test = &#34;Hello&#34;;  //任何實作該介面的類別必需具備一個接受Fly()的方法。  string fly(); } //宣告IDrive介面  interface IDrive { //driveSpeed屬性，但介面不儲存資料，所以不會有欄位。  string driveSpeed { get ; set; } //任何實作此介面的類別，必需具備接受 drive() 方法。  string drive(); } UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。
+//繼承基底類別Car  //並實作IDrive與IcanFly Interface  //假設UnitityCar在未來，他有兩個種類方法Drive與Fly。  public class UnitityCar :Car , IDrive, ICanFly { //由於在未來飛行速度(FlySpeed)，有限制100，  //因此設立唯讀的FlySpeed，不給人修改。  //一定要有!|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +64,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -139,124 +152,124 @@
 建立<code>UnitityCar</code>的類別，該類別為未來車的概念。它可以<code>飛(Fly)</code>和<code>跑(Run)</code>，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到<code>Interface</code>。</p>
 <p>首先新增兩個<code>Interface</code>分別為<code>ICanFly</code> 與 <code>IDrive</code>。<code>ICanFly</code>定義飛的方法Fly() 與飛的速度<code>FlySpeed</code>。<code>IRun</code>定義跑的方法<code>Run()</code>與跑的速度<code>RunSpeed</code>
 (註:新增IRun Interface只是要給各位官爺看多個Interface使用)</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//宣告ICanFly介面
-</span><span class="c1"></span>     <span class="k">interface</span> <span class="n">ICanFly</span>
-    <span class="p">{</span>
-         <span class="c1">//介面不可以包含『欄位』。
-</span><span class="c1"></span>         <span class="kt">string</span> <span class="n">flySpeed</span> <span class="p">{</span> <span class="k">get</span> <span class="p">;</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#75715e">//宣告ICanFly介面
+</span><span style="color:#75715e"></span>     <span style="color:#66d9ef">interface</span> ICanFly
+    {
+         <span style="color:#75715e">//介面不可以包含『欄位』。
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">string</span> flySpeed { <span style="color:#66d9ef">get</span> ;}
 
-        <span class="c1">//介面不存放資料，因為不能增加欄位
-</span><span class="c1"></span>         <span class="c1">//string test = &#34;Hello&#34;;
-</span><span class="c1"></span>
-         <span class="c1">//任何實作該介面的類別必需具備一個接受Fly()的方法。
-</span><span class="c1"></span>         <span class="kt">string</span> <span class="n">fly</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#75715e">//介面不存放資料，因為不能增加欄位
+</span><span style="color:#75715e"></span>         <span style="color:#75715e">//string test = &#34;Hello&#34;;
+</span><span style="color:#75715e"></span>
+         <span style="color:#75715e">//任何實作該介面的類別必需具備一個接受Fly()的方法。
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">string</span> fly();
 
-    <span class="p">}</span>
+    }
 
-	<span class="c1">//宣告IDrive介面
-</span><span class="c1"></span>    <span class="k">interface</span> <span class="n">IDrive</span>
-    <span class="p">{</span>
-        <span class="c1">//driveSpeed屬性，但介面不儲存資料，所以不會有欄位。
-</span><span class="c1"></span>        <span class="kt">string</span> <span class="n">driveSpeed</span> <span class="p">{</span> <span class="k">get</span> <span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+	<span style="color:#75715e">//宣告IDrive介面
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">interface</span> IDrive
+    {
+        <span style="color:#75715e">//driveSpeed屬性，但介面不儲存資料，所以不會有欄位。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">string</span> driveSpeed { <span style="color:#66d9ef">get</span> ; <span style="color:#66d9ef">set</span>; }
         
-        <span class="c1">//任何實作此介面的類別，必需具備接受 drive() 方法。
-</span><span class="c1"></span>        <span class="kt">string</span> <span class="n">drive</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#75715e">//任何實作此介面的類別，必需具備接受 drive() 方法。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">string</span> drive();
       
-    <span class="p">}</span>
+    }
 </code></pre></div><p>UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="c1">//繼承基底類別Car
-</span><span class="c1"></span>    <span class="c1">//並實作IDrive與IcanFly Interface
-</span><span class="c1"></span>    <span class="c1">//假設UnitityCar在未來，他有兩個種類方法Drive與Fly。
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">UnitityCar</span> <span class="p">:</span><span class="n">Car</span> <span class="p">,</span> <span class="n">IDrive</span><span class="p">,</span> <span class="n">ICanFly</span>
-    <span class="p">{</span>
-        <span class="c1">//由於在未來飛行速度(FlySpeed)，有限制100，
-</span><span class="c1"></span>        <span class="c1">//因此設立唯讀的FlySpeed，不給人修改。
-</span><span class="c1"></span>        <span class="c1">//一定要有!!!不然有人會打斷你的腿。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">flySpeed</span>
-        <span class="p">{</span>
-            <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;100&#34;</span><span class="p">;</span> <span class="p">}</span>
-        <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	 <span style="color:#75715e">//繼承基底類別Car
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//並實作IDrive與IcanFly Interface
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//假設UnitityCar在未來，他有兩個種類方法Drive與Fly。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnitityCar</span> :Car , IDrive, ICanFly
+    {
+        <span style="color:#75715e">//由於在未來飛行速度(FlySpeed)，有限制100，
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//因此設立唯讀的FlySpeed，不給人修改。
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//一定要有!!!不然有人會打斷你的腿。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> flySpeed
+        {
+            <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;100&#34;</span>; }
+        }
 
-        <span class="c1">//在未來UnitityCar還是可以開，而且無限制時速
-</span><span class="c1"></span>        <span class="c1">//所以設立 driveSpeed可自行控制。
-</span><span class="c1"></span>        <span class="c1">//一定要有!!!不然有人會打斷你的腿。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">driveSpeed</span>
-        <span class="p">{</span>
-            <span class="k">set</span> <span class="p">{</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span> <span class="p">}</span>
-            <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Speed</span> <span class="p">;</span> <span class="p">}</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//在未來UnitityCar還是可以開，而且無限制時速
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//所以設立 driveSpeed可自行控制。
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//一定要有!!!不然有人會打斷你的腿。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> driveSpeed
+        {
+            <span style="color:#66d9ef">set</span> { <span style="color:#66d9ef">string</span> Speed; }
+            <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> Speed ; }
+        }
 
-        <span class="c1">//一定要有!!!不然有人會打斷你的腿。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">drive</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;Drive~~&#34;</span> <span class="p">+</span> <span class="n">DriveSpeed</span> <span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//一定要有!!!不然有人會打斷你的腿。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> drive()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Drive~~&#34;</span> + DriveSpeed ;
+        }
 
-        <span class="c1">//一定要有!!!不然有人會打斷你的腿。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">fly</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;Fly&#34;</span> <span class="p">+</span> <span class="n">FlySpeed</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span style="color:#75715e">//一定要有!!!不然有人會打斷你的腿。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> fly()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Fly&#34;</span> + FlySpeed;
+        }
+    }
 </code></pre></div><p>實體化UnitityCar為MyCar物件。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="n">UnitityCar</span> <span class="n">myCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UnitityCar</span> <span class="p">{</span> <span class="n">RunSpeed</span> <span class="p">=</span><span class="s">&#34;50&#34;</span> <span class="p">}</span><span class="p">;</span>
-    <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">myCar</span><span class="p">.</span><span class="n">drive</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="n">TextBox6</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">myCar</span><span class="p">.</span><span class="n">fly</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	UnitityCar myCar = <span style="color:#66d9ef">new</span> UnitityCar { RunSpeed =<span style="color:#e6db74">&#34;50&#34;</span> };
+    TextBox1.Text = myCar.drive();
+    TextBox6.Text = myCar.fly();
 	
-	<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
-	<span class="n">Drive</span><span class="p">~</span><span class="p">~</span><span class="m">5</span><span class="m">0</span>
-	<span class="n">Fly</span> <span class="m">1</span><span class="m">0</span><span class="m">0</span>
+	<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
+	Drive~~<span style="color:#ae81ff">5</span><span style="color:#ae81ff">0</span>
+	Fly <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>
 </code></pre></div><h2 id="interface-">Interface 之特性</h2>
 <h3 id="-1---new-">特性 1 : 你不能將 NEW 關鍵字用在介面上。會發生編譯錯誤。</h3>
 <p>為什麼呢 ? 因為 interfacce 的方法與特性都沒有任何實作內容。假如你能夠從介面建立物件，該物件怎麼知道有什麼樣的行為呢???</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="n">CanFly</span> <span class="n">IFly</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ICanFly</span> <span class="p">(</span><span class="p">)</span> <span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">    CanFly IFly = <span style="color:#66d9ef">new</span> ICanFly () ;
 </code></pre></div><h3 id="-2--interface">特性 2 : Interface不存放資料</h3>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">		 <span class="k">interface</span> <span class="n">ICanFly</span>
-    	<span class="p">{</span>
-         <span class="c1">//介面不可以包含『欄位』，然而，當你在類別中實作此唯讀特性時，
-</span><span class="c1"></span>         <span class="c1">//對別的物件來說，看起來就象屬性。
-</span><span class="c1"></span>         <span class="kt">string</span> <span class="n">flySpeed</span> <span class="p">{</span> <span class="k">get</span> <span class="p">;</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">		 <span style="color:#66d9ef">interface</span> ICanFly
+    	{
+         <span style="color:#75715e">//介面不可以包含『欄位』，然而，當你在類別中實作此唯讀特性時，
+</span><span style="color:#75715e"></span>         <span style="color:#75715e">//對別的物件來說，看起來就象屬性。
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">string</span> flySpeed { <span style="color:#66d9ef">get</span> ;}
 
-         <span class="c1">//介面不存放資料，因為不能增加欄位，會編譯錯誤喔!
-</span><span class="c1"></span>         <span class="kt">string</span> <span class="n">test</span> <span class="p">=</span> <span class="s">&#34;Hello&#34;</span> <span class="p">;</span>
+         <span style="color:#75715e">//介面不存放資料，因為不能增加欄位，會編譯錯誤喔!
+</span><span style="color:#75715e"></span>         <span style="color:#66d9ef">string</span> test = <span style="color:#e6db74">&#34;Hello&#34;</span> ;
 
-         <span class="kt">string</span> <span class="n">fly</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    	<span class="p">}</span>
+         <span style="color:#66d9ef">string</span> fly();
+    	}
 </code></pre></div><h3 id="-3--">特性 3 : 一個類別可以實作多個介面</h3>
 <p>這就是可以做到類別C++的多重繼承。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">		<span class="k">public</span> <span class="k">class</span> <span class="nc">UnitityCar</span> <span class="p">:</span><span class="n">Car</span> <span class="p">,</span> <span class="n">IDrive</span><span class="p">,</span> <span class="n">ICanFly</span>
-    	<span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">		<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnitityCar</span> :Car , IDrive, ICanFly
+    	{
        
-    	<span class="p">}</span>
+    	}
 </code></pre></div><h3 id="-4--">特性 4 : 你不能夠實體化一個介面，但可以參照它</h3>
 <p>假設你有一個<code>方法Fly()</code>，你需要一個能夠執行<code>Fly()</code>，任何實作<code>ICanFly介面</code>的物件都可以。這正是介面參考(Interface reference)發揮作用的地方。iFly參照任何實作ICanFly的物件(MyCar)。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 		<span class="n">UnitityCar</span> <span class="n">MyCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UnitityCar</span> <span class="p">{</span> <span class="n">RunSpeed</span> <span class="p">=</span><span class="s">&#34;50&#34;</span> <span class="p">}</span><span class="p">;</span>
-            <span class="c1">//即時物件能夠做很多事，但是，當你使用介面參考時，
-</span><span class="c1"></span>            <span class="c1">//你只能存取到介面中所宣告的方法。
-</span><span class="c1"></span>            <span class="n">ICanFly</span> <span class="n">iFly</span> <span class="p">=</span> <span class="n">MyCar</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 		UnitityCar MyCar = <span style="color:#66d9ef">new</span> UnitityCar { RunSpeed =<span style="color:#e6db74">&#34;50&#34;</span> };
+            <span style="color:#75715e">//即時物件能夠做很多事，但是，當你使用介面參考時，
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//你只能存取到介面中所宣告的方法。
+</span><span style="color:#75715e"></span>            ICanFly iFly = MyCar;
 
-             <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">iFly</span><span class="p">.</span><span class="n">fly</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="n">TextBox6</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">iFly</span><span class="p">.</span><span class="n">flySpeed</span><span class="p">;</span>
+             TextBox1.Text = iFly.fly();
+            TextBox6.Text = iFly.flySpeed;
 </code></pre></div><h3 id="-5--">特性 5 : 介面能夠繼承其他介面</h3>
 <p>由於IBirdFly繼承Fly介面，因此也需要實作Fly()方法與FlySpeed屬性。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">		<span class="c1">//實作IBirdFly，由於IBirdFly繼承Fly介面，
-</span><span class="c1"></span>    	<span class="c1">//因此也需要實作Fly的方法。
-</span><span class="c1"></span>    	<span class="k">public</span> <span class="k">class</span> <span class="nc">Bird</span> <span class="p">:</span> <span class="n">IBirdFly</span>
-    	<span class="p">{</span>
-        	<span class="k">public</span> <span class="kt">string</span> <span class="n">fly_Bird</span><span class="p">(</span><span class="p">)</span>
-        	<span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;Bird~~~Fly~~~~&#34;</span> <span class="p">;</span>
-        	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">		<span style="color:#75715e">//實作IBirdFly，由於IBirdFly繼承Fly介面，
+</span><span style="color:#75715e"></span>    	<span style="color:#75715e">//因此也需要實作Fly的方法。
+</span><span style="color:#75715e"></span>    	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Bird</span> : IBirdFly
+    	{
+        	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> fly_Bird()
+        	{
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Bird~~~Fly~~~~&#34;</span> ;
+        	}
 
-        	<span class="k">public</span> <span class="kt">string</span> <span class="n">fly</span><span class="p">(</span><span class="p">)</span>
-        	<span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;Fly&#34;</span> <span class="p">;</span>
-        	<span class="p">}</span>
-        	<span class="k">public</span> <span class="kt">string</span> <span class="n">flySpeed</span>
-        	<span class="p">{</span>
-            <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="s">&#34;100&#34;</span><span class="p">;</span> <span class="p">}</span>
-        	<span class="p">}</span>
-    	<span class="p">}</span>
+        	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> fly()
+        	{
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Fly&#34;</span> ;
+        	}
+        	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> flySpeed
+        	{
+            <span style="color:#66d9ef">get</span> { <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;100&#34;</span>; }
+        	}
+    	}
 </code></pre></div><h2 id="heading">參考資料</h2>
 <ul>
 <li><a href="http://msdn.microsoft.com/zh-tw/library/ms173156.aspx">http://msdn.microsoft.com/zh-tw/library/ms173156.aspx</a></li>

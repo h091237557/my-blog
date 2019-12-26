@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,9 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構|Describe what your web page is about">
+    <meta name="description" property="og:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。
+父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將Car類別，新增Sealed修飾詞，主要目的為不然其它類別繼承。
+/// &amp;lt;summary&amp;gt;  /// 父類別  /// &amp;lt;/summary&amp;gt;  public sealed class Car //增加Sealed  { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &amp;lt;summary&amp;gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &amp;lt;/summary&amp;gt;  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; ; } } 子類別BMWCar 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +44,9 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 4 -『 物件導向特性-繼承(Inheritance) 3 - Sealed 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構|Describe what your web page is about">
+    <meta name="twitter:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。
+父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將Car類別，新增Sealed修飾詞，主要目的為不然其它類別繼承。
+/// &lt;summary&gt;  /// 父類別  /// &lt;/summary&gt;  public sealed class Car //增加Sealed  { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &lt;summary&gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &lt;/summary&gt;  public Car() { Speed = &#34;50&#34;; Color = &#34;Blue&#34;; } //定義車子移動的方法  public string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; ; } } 子類別BMWCar 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +58,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -131,84 +138,84 @@
     <h2 id="-1---sealed-">特點 1 - 使用 Sealed 關鍵字使類別不能被繼承</h2>
 <p>下列為簡單的Sealed範例。</p>
 <p><code>父類別Class Car</code> ，有兩個屬性分別為<code>Speed</code>與<code>Color</code>，並自行訂定建構子<code>Car()</code> ，以及<code>DriveCar()</code>方法，在這範例中我們將<code>Car類別</code>，新增<code>Sealed修飾詞</code>，主要目的為不然其它類別繼承。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">/// &lt;summary&gt;
-</span><span class="c1"></span>    <span class="c1">/// 父類別
-</span><span class="c1"></span>    <span class="c1">/// &lt;/summary&gt;
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">sealed</span>  <span class="k">class</span> <span class="nc">Car</span>   <span class="c1">//增加Sealed
-</span><span class="c1"></span>    <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#75715e">/// &lt;summary&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/// 父類別
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/// &lt;/summary&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">sealed</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>   <span style="color:#75715e">//增加Sealed
+</span><span style="color:#75715e"></span>    {
 
-        <span class="c1">//車子的速度
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Speed</span><span class="p">;</span>
-        <span class="c1">//車子的顏色
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>  
-        <span class="c1">/// &lt;summary&gt;
-</span><span class="c1"></span>        <span class="c1">/// 定義建構子，預設Speed為50，Color為Blue
-</span><span class="c1"></span>        <span class="c1">/// &lt;/summary&gt;
-</span><span class="c1"></span>        <span class="k">public</span>  <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//車子的速度
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Speed;
+        <span style="color:#75715e">//車子的顏色
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Color;  
+        <span style="color:#75715e">/// &lt;summary&gt;
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">/// 定義建構子，預設Speed為50，Color為Blue
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">/// &lt;/summary&gt;
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span>  Car()
+        {
+            Speed = <span style="color:#e6db74">&#34;50&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;Blue&#34;</span>;
+        }
 
-        <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> ;
+        }
 
-    <span class="p">}</span>
+    }
 </code></pre></div><p><code>子類別BMWCar</code> 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="c1">/// &lt;summary&gt;
-</span><span class="c1"></span>    <span class="c1">/// 子類別想繼承Car Class，但因為Car有加Sealed因此無法被繼承。
-</span><span class="c1"></span>    <span class="c1">/// &lt;/summary&gt;
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span> <span class="p">:</span><span class="n">Car</span>   
-    <span class="p">{</span>
-        <span class="c1">//BMWCar類別建構子
-</span><span class="c1"></span>        <span class="k">public</span> <span class="n">BMWCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;BMW500&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;BWM_Red&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">    <span style="color:#75715e">/// &lt;summary&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/// 子類別想繼承Car Class，但因為Car有加Sealed因此無法被繼承。
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">/// &lt;/summary&gt;
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BMWCar</span> :Car   
+    {
+        <span style="color:#75715e">//BMWCar類別建構子
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> BMWCar()
+        {
+            Speed = <span style="color:#e6db74">&#34;BMW500&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;BWM_Red&#34;</span>;
+        }
 
-        <span class="c1">//BMW的屬性引擎
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">BMWPower</span><span class="p">;</span>
+        <span style="color:#75715e">//BMW的屬性引擎
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> BMWPower;
 
-    <span class="p">}</span>
+    }
 </code></pre></div><h2 id="-2--">特點 2 - 已覆寫完的方法不給衍生類別再覆寫</h2>
 <p>有時在使用時，我們不想讓已經覆寫過的方法要著麼做呢 ? 下列程式碼，有三個類別Car、BMWCar、IBMWCar。繼承關於為<code>Car → BMWCar → IBMWCar</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">    <span class="c1">//父類別
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
-    <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">    <span style="color:#75715e">//父類別
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>
+    {
 
-        <span class="c1">//定義車子移動的方法。
-</span><span class="c1"></span>        <span class="c1">//在該方法加上Virtual，讓該方法可以被衍生類別覆寫。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="k">virtual</span>   <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span> <span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法。
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//在該方法加上Virtual，讓該方法可以被衍生類別覆寫。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">virtual</span>   <span style="color:#66d9ef">string</span> DriveCar( <span style="color:#66d9ef">string</span> a)
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> ;
+        }
+    }
 </code></pre></div><p>要讓BWMCar已覆寫過的DriveCar()不被IBMWCa覆寫，要在DriveCar前加上<code>sealed</code>修飾詞。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="c1">//BMWCar繼承Car Class
-</span><span class="c1"></span>	<span class="k">public</span> <span class="k">class</span> <span class="nc">BMWCar</span><span class="p">:</span> <span class="n">Car</span>
-    <span class="p">{</span>
-        <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="c1">//使用存取修飾詞Overried，來進行覆寫
-</span><span class="c1"></span>        <span class="c1">//參數a 為 string
-</span><span class="c1"></span>        <span class="k">public</span> <span class="k">sealed</span>   <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span> <span class="p">+</span> <span class="s">&#34;『Override』&#34;</span> <span class="p">+</span> <span class="s">&#34;String--&#34;</span> <span class="p">+</span> <span class="n">a</span><span class="p">;</span>
-        <span class="p">}</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	 <span style="color:#75715e">//BMWCar繼承Car Class
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BMWCar</span>: Car
+    {
+        <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//使用存取修飾詞Overried，來進行覆寫
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//參數a 為 string
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">sealed</span>   <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> DriveCar(<span style="color:#66d9ef">string</span> a)
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed + <span style="color:#e6db74">&#34;』在移動&#34;</span> + <span style="color:#e6db74">&#34;『Override』&#34;</span> + <span style="color:#e6db74">&#34;String--&#34;</span> + a;
+        }
+	}
 
-	<span class="c1">//測試可不覆寫DriveCar();
-</span><span class="c1"></span>	<span class="c1">//IBMWCar 繼承 BMWCar
-</span><span class="c1"></span>	<span class="k">public</span> <span class="k">class</span> <span class="nc">IBMWCar</span> <span class="p">:</span> <span class="n">BMWCar</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="k">override</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span> <span class="kt">string</span> <span class="n">a</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;ICar&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+	<span style="color:#75715e">//測試可不覆寫DriveCar();
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//IBMWCar 繼承 BMWCar
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">IBMWCar</span> : BMWCar
+    {
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">string</span> DriveCar( <span style="color:#66d9ef">string</span> a)
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;ICar&#34;</span> ;
+        }
+    }
 </code></pre></div><p>這時就會發生下列錯誤，告知該方法無法在被覆寫。</p>
 <h2 id="heading">參考資料</h2>
 <ul>

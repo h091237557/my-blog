@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,10 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也|Describe what your web page is about">
+    <meta name="description" property="og:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。
+類別 小弟是把類別想成是『汽車藍圖』，它定義好了汽車的屬性與方法， 但它沒有實體(Instance)，也就是說，你必須實作這張汽車藍圖它才能產生實體(可以開的車~)。
+class Car { //定義車子的速度欄位  public int Speed; //車子的顏色欄位  public string Color; //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed.ToString() &#43; &amp;#34;』在移動&amp;#34;; } } 物件 就是實際做出來的車。以程式術語來說，運用汽車藍圖做出車的過程就是所謂的 『實體化』系統會自動給予物件記憶體。以下為實體化的C#程式碼。
+//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red 	Car MyCar = new Car { Speed = 100, Color = &amp;#34;red&amp;#34; }; TextBox1.Text = MyCar.DriveCar(); 執行結果 正在開『red』的車時速『100』在移動  建構子或建構函式 ( constructor ) 其中Car MyCar = new Car ，即為產生一個名叫MyCar的Car實體。 new Car 除了產生實體，它還會幫你呼叫一個名為Car()的方法。該方法就是所謂的建構子(constructor)。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +45,10 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 1-『 基本概念 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也|Describe what your web page is about">
+    <meta name="twitter:description" content="物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。
+類別 小弟是把類別想成是『汽車藍圖』，它定義好了汽車的屬性與方法， 但它沒有實體(Instance)，也就是說，你必須實作這張汽車藍圖它才能產生實體(可以開的車~)。
+class Car { //定義車子的速度欄位  public int Speed; //車子的顏色欄位  public string Color; //定義車子移動的方法  public string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed.ToString() &#43; &#34;』在移動&#34;; } } 物件 就是實際做出來的車。以程式術語來說，運用汽車藍圖做出車的過程就是所謂的 『實體化』系統會自動給予物件記憶體。以下為實體化的C#程式碼。
+//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red 	Car MyCar = new Car { Speed = 100, Color = &#34;red&#34; }; TextBox1.Text = MyCar.DriveCar(); 執行結果 正在開『red』的車時速『100』在移動  建構子或建構函式 ( constructor ) 其中Car MyCar = new Car ，即為產生一個名叫MyCar的Car實體。 new Car 除了產生實體，它還會幫你呼叫一個名為Car()的方法。該方法就是所謂的建構子(constructor)。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +60,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -133,28 +142,28 @@
 <h2 id="heading">類別</h2>
 <p>小弟是把類別想成是『汽車藍圖』，它定義好了汽車的屬性與方法，
 但它沒有實體(Instance)，也就是說，你必須實作這張汽車藍圖它才能產生實體(可以開的車~)。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="k">class</span> <span class="nc">Car</span>
-   	<span class="p">{</span>
-        <span class="c1">//定義車子的速度欄位
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">int</span> <span class="n">Speed</span><span class="p">;</span>
-        <span class="c1">//車子的顏色欄位
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">Color</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>
+   	{
+        <span style="color:#75715e">//定義車子的速度欄位
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> Speed;
+        <span style="color:#75715e">//車子的顏色欄位
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> Color;
 
-        <span class="c1">//定義車子移動的方法
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">string</span> <span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;正在開『&#34;</span> <span class="p">+</span> <span class="n">Color</span> <span class="p">+</span> <span class="s">&#34;』的車&#34;</span> <span class="p">+</span> <span class="s">&#34;時速『&#34;</span> <span class="p">+</span> <span class="n">Speed</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="p">)</span> <span class="p">+</span> <span class="s">&#34;』在移動&#34;</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span style="color:#75715e">//定義車子移動的方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> DriveCar()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;正在開『&#34;</span> + Color + <span style="color:#e6db74">&#34;』的車&#34;</span> + <span style="color:#e6db74">&#34;時速『&#34;</span> + Speed.ToString() + <span style="color:#e6db74">&#34;』在移動&#34;</span>;
+        }
+    }
 </code></pre></div><h2 id="heading1">物件</h2>
 <p>就是實際做出來的車。以程式術語來說，運用汽車藍圖做出車的過程就是所謂的
 『實體化』系統會自動給予物件記憶體。以下為實體化的C#程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="c1">//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red
-</span><span class="c1"></span>	<span class="n">Car</span> <span class="n">MyCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span> <span class="p">{</span> <span class="n">Speed</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="m">0</span><span class="p">,</span> <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;red&#34;</span> <span class="p">}</span><span class="p">;</span>
-	<span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#75715e">//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red
+</span><span style="color:#75715e"></span>	Car MyCar = <span style="color:#66d9ef">new</span> Car { Speed = <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span>, Color = <span style="color:#e6db74">&#34;red&#34;</span> };
+	TextBox1.Text = MyCar.DriveCar();
 	
-	<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
-	<span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">red</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="m">1</span><span class="m">0</span><span class="m">0</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+	<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
+	<span style="color:#960050;background-color:#1e0010">正</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">開</span><span style="color:#960050;background-color:#1e0010">『</span>red<span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">的</span><span style="color:#960050;background-color:#1e0010">車</span><span style="color:#960050;background-color:#1e0010">時</span><span style="color:#960050;background-color:#1e0010">速</span><span style="color:#960050;background-color:#1e0010">『</span><span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">移</span><span style="color:#960050;background-color:#1e0010">動</span>
 </code></pre></div><p><img src="http://user-image.logdown.io/user/13878/blog/13097/post/291235/Sq9edW1RDL2E34GPLBtw_ScreenClip.png" alt="ScreenClip.png"></p>
 <hr>
 <h2 id="--constructor-">建構子或建構函式 ( constructor )</h2>
@@ -162,20 +171,20 @@
 <code>new Car </code>除了產生實體，它還會幫你呼叫一個名為<code>Car()</code>的方法。該方法就是所謂的建構子(constructor)。</p>
 <p>但我並沒有定義Car()方法， C#預設會自動產生一個同名的方法，稱為建構子或建構函式(constructor)
 而你自已也可以定義。建構子主要的目的為『幫助實體化時設定初始值』</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">        <span class="c1">/// 
-</span><span class="c1"></span>        <span class="c1">/// 定義建構子，預設Speed為50，Color為Blue
-</span><span class="c1"></span>        <span class="c1">/// 
-</span><span class="c1"></span>        <span class="k">public</span> <span class="n">Car</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">Speed</span> <span class="p">=</span> <span class="s">&#34;50&#34;</span><span class="p">;</span>
-            <span class="n">Color</span> <span class="p">=</span> <span class="s">&#34;Blue&#34;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">        <span style="color:#75715e">/// 
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">/// 定義建構子，預設Speed為50，Color為Blue
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">/// 
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> Car()
+        {
+            Speed = <span style="color:#e6db74">&#34;50&#34;</span>;
+            Color = <span style="color:#e6db74">&#34;Blue&#34;</span>;
        
       
-  		<span class="n">Car</span> <span class="n">MyCar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-  		<span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">MyCar</span><span class="p">.</span><span class="n">DriveCar</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+  		Car MyCar = <span style="color:#66d9ef">new</span> Car();
+  		TextBox1.Text = MyCar.DriveCar();
 		
-		<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
-		<span class="err">正</span><span class="err">在</span><span class="err">開</span><span class="err">『</span><span class="n">Blue</span><span class="err">』</span><span class="err">的</span><span class="err">車</span><span class="err">時</span><span class="err">速</span><span class="err">『</span><span class="m">5</span><span class="m">0</span><span class="err">』</span><span class="err">在</span><span class="err">移</span><span class="err">動</span>
+		<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
+		<span style="color:#960050;background-color:#1e0010">正</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">開</span><span style="color:#960050;background-color:#1e0010">『</span>Blue<span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">的</span><span style="color:#960050;background-color:#1e0010">車</span><span style="color:#960050;background-color:#1e0010">時</span><span style="color:#960050;background-color:#1e0010">速</span><span style="color:#960050;background-color:#1e0010">『</span><span style="color:#ae81ff">5</span><span style="color:#ae81ff">0</span><span style="color:#960050;background-color:#1e0010">』</span><span style="color:#960050;background-color:#1e0010">在</span><span style="color:#960050;background-color:#1e0010">移</span><span style="color:#960050;background-color:#1e0010">動</span>
 
 </code></pre></div><h2 id="heading2">參考資料</h2>
 <ul>

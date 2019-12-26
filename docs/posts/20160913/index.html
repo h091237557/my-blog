@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,12 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明幾個比較特別索引使用的方法。
+ 索引陣列欄位 索引子欄位 全文索引  P.S 快要一半囉~~&#43;u^13
+~ 索引陣列欄位 ~ 假設你有下列資料，但發現搜尋fans裡的值很慢，你想要建立索引，要著麼建呢?
+{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;max&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;jack&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;hello&amp;#34;,&amp;#34;mmark&amp;#34;]} 事實上就和之前幾篇建立索引一樣。
+db.user.ensureIndex({&amp;#34;fans&amp;#34;:1}) 那我們在再假設資料如下。
+{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;a&amp;#34; , &amp;#34;age&amp;#34; :11}, {&amp;#34;name&amp;#34; : &amp;#34;b&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] }, { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;e&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;f&amp;#34; , &amp;#34;age&amp;#34; :20}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] } 這時如果我們建立fans裡的name為索引，指令會如下。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +47,12 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-13之MongoDB索引(3)---比較特別的索引使用 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明幾個比較特別索引使用的方法。
+ 索引陣列欄位 索引子欄位 全文索引  P.S 快要一半囉~~&#43;u^13
+~ 索引陣列欄位 ~ 假設你有下列資料，但發現搜尋fans裡的值很慢，你想要建立索引，要著麼建呢?
+{ &#34;name&#34; : &#34;mark&#34; , &#34;fans&#34; : [&#34;steven&#34;,&#34;jack&#34;,&#34;mmark&#34;]} { &#34;name&#34; : &#34;steven&#34; , &#34;fans&#34; : [&#34;max&#34;,&#34;jack&#34;,&#34;mmark&#34;]} { &#34;name&#34; : &#34;jack&#34; , &#34;fans&#34; : [&#34;steven&#34;,&#34;hello&#34;,&#34;mmark&#34;]} 事實上就和之前幾篇建立索引一樣。
+db.user.ensureIndex({&#34;fans&#34;:1}) 那我們在再假設資料如下。
+{ &#34;name&#34; : &#34;mark&#34; , &#34;fans&#34; : [ {&#34;name&#34; : &#34;a&#34; , &#34;age&#34; :11}, {&#34;name&#34; : &#34;b&#34; , &#34;age&#34; :10}, {&#34;name&#34; : &#34;c&#34; , &#34;age&#34; :21}, ] }, { &#34;name&#34; : &#34;steven&#34; , &#34;fans&#34; : [ {&#34;name&#34; : &#34;e&#34; , &#34;age&#34; :10}, {&#34;name&#34; : &#34;f&#34; , &#34;age&#34; :20}, {&#34;name&#34; : &#34;c&#34; , &#34;age&#34; :21}, ] } 這時如果我們建立fans裡的name為索引，指令會如下。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +64,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -137,28 +150,28 @@
 <p><code>P.S</code> 快要一半囉~~<code>+u^13</code></p>
 <h2 id="--">~ 索引陣列欄位 ~</h2>
 <p>假設你有下列資料，但發現搜尋<code>fans</code>裡的值很慢，你想要建立索引，要著麼建呢?</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;jack&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span> <span class="p">,</span> <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;hello&#34;</span><span class="p">,</span><span class="s2">&#34;mmark&#34;</span><span class="p">]</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span> , <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;jack&#34;</span>,<span style="color:#e6db74">&#34;mmark&#34;</span>]}
+{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span> , <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;max&#34;</span>,<span style="color:#e6db74">&#34;jack&#34;</span>,<span style="color:#e6db74">&#34;mmark&#34;</span>]}
+{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jack&#34;</span> , <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [<span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;hello&#34;</span>,<span style="color:#e6db74">&#34;mmark&#34;</span>]}
 </code></pre></div><p>事實上就和之前幾篇建立索引一樣。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">ensureIndex</span>({<span style="color:#e6db74">&#34;fans&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>})
 </code></pre></div><p>那我們在再假設資料如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">,</span> 
-  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span> 
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;a&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">11</span><span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;b&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">10</span><span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;c&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">21</span><span class="p">}</span><span class="p">,</span>
-  <span class="p">]</span>
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span> <span class="p">,</span> 
-  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span> 
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;e&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">10</span><span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;f&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">,</span>
-    <span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;c&#34;</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span><span class="mi">21</span><span class="p">}</span><span class="p">,</span>
-  <span class="p">]</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span> , 
+  <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [ 
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;a&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">11</span>},
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;b&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>},
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;c&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">21</span>},
+  ]
+},
+{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span> , 
+  <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [ 
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;e&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">10</span>},
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;f&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">20</span>},
+    {<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;c&#34;</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">21</span>},
+  ]
+}
 </code></pre></div><p>這時如果我們建立<code>fans</code>裡的<code>name</code>為索引，指令會如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;fans.name&#34;</span><span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">ensureIndex</span>({<span style="color:#e6db74">&#34;fans.name&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>})
 </code></pre></div><p>通過以上的方法就可以很簡單的將陣列欄位建立索引，但要是有幾點要注意。</p>
 <ul>
 <li>陣列索引的代價比一般的索引高，因為它需要更新的更多。</li>
@@ -191,21 +204,21 @@
 <p>因為如果<code>a</code>有<code>n</code>個元素，而<code>b</code>有<code>m</code>個元素，那索引就會建立<code>n * m</code>個索引列表，會爆炸，所以才有這限制。</p>
 <h2 id="--1">~ 索引子欄位 ~</h2>
 <p>假設有下列資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-  <span class="s2">&#34;address&#34;</span> <span class="o">:</span> <span class="p">{</span>
-     <span class="s2">&#34;city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span><span class="p">,</span>
-     <span class="s2">&#34;zip&#34;</span> <span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+  <span style="color:#e6db74">&#34;address&#34;</span> <span style="color:#f92672">:</span> {
+     <span style="color:#e6db74">&#34;city&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;taipei&#34;</span>,
+     <span style="color:#e6db74">&#34;zip&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">100</span>,
+  }
+}
 </code></pre></div><p>如果我們需要在<code>city</code>這子欄位上建立索引，可下達該指令。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;address.city&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">ensureIndex</span>({<span style="color:#e6db74">&#34;address.city&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>})
 </code></pre></div><blockquote>
 <p>注意，<code>{&quot;address&quot; : 1}</code>與 <code>{&quot;address.city&quot; : 1}</code>這兩種是不同的，
 對主欄位建立索引，只能用下列指令，才能使用索引進行查詢。</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;address&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span> <span class="p">,</span> <span class="s2">&#34;zip&#34;</span> <span class="o">:</span> <span class="mi">100</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;address&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;city&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;taipei&#34;</span> , <span style="color:#e6db74">&#34;zip&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">100</span> }})
 </code></pre></div><p>而無法使用如下的搜尋，除非索引為<code>{&quot;address.city&quot; : 1}</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="p">{</span><span class="s2">&#34;address.city&#34;</span> <span class="o">:</span> <span class="s2">&#34;taipei&#34;</span> <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">find</span>( {<span style="color:#e6db74">&#34;address.city&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;taipei&#34;</span> })
 </code></pre></div><h2 id="--2">~ 全文索引 ~</h2>
 <p><code>mongodb</code>中有一種專門用來搜尋<code>全文</code>的索引，前面有一篇有說到可以用正規表達式來進行搜尋，但它的缺點就在於大型全文的速度會非常慢，而且無法處理語言的理解。</p>
 <p>以下有兩點要注意。</p>
@@ -217,33 +230,33 @@
 </blockquote>
 <h3 id="heading">全文索引使用方法</h3>
 <p>假設測試資料如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-   <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-   <span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;Indexes support the efficient execution of queries 
-</span><span class="s2">    		      in MongoDB&#34;</span>
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span>
-   <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-   <span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;MongoDB can use the index to limit the number of
-</span><span class="s2">                  documents it must inspect.&#34;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+   <span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+   <span style="color:#e6db74">&#34;post_content&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Indexes support the efficient execution of queries 
+</span><span style="color:#e6db74">    		      in MongoDB&#34;</span>
+},
+{
+   <span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+   <span style="color:#e6db74">&#34;post_content&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;MongoDB can use the index to limit the number of
+</span><span style="color:#e6db74">                  documents it must inspect.&#34;</span>
 
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span>
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-	<span class="s2">&#34;post_content&#34;</span> <span class="o">:</span> <span class="s2">&#34;hello word&#34;</span>
-<span class="p">}</span>
+},
+{
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>,
+	<span style="color:#e6db74">&#34;post_content&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;hello word&#34;</span>
+}
 </code></pre></div><p>然後我們來建立全文索引。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="nx">post_content</span><span class="o">:</span><span class="s2">&#34;text&#34;</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">posts</span>.<span style="color:#a6e22e">ensureIndex</span>({<span style="color:#a6e22e">post_content</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;text&#34;</span>})
 </code></pre></div><p>當建立好索引後，我們就可以使用索引來進行搜尋，例如我們想要找出有包含<code>mongodb</code>單詞的文章。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongodb&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">posts</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;$text&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;$search&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mongodb&#34;</span> }})
 </code></pre></div><p>執行結果如下，找到了兩筆，並且可以知道在全文索引中是不分大小寫的。</p>
 <p><img src="http://yixiang8780.com/outImg/20161211-1.png" alt=""></p>
 <p>而如你想要精確的查詢例如尋找<code>mongodb can</code>，則可以用雙引號括起來，如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;\&#34;mongodb can\&#34;&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">posts</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;$text&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;$search&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;\&#34;mongodb can\&#34;&#34;</span> }})
 </code></pre></div><p>結果如下。</p>
 <p><img src="http://yixiang8780.com/outImg/20161211-2.png" alt=""></p>
 <p>想要尋找<code>mongodb</code>或<code>word</code>的<code>document</code>，則使用下面的搜尋式。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">posts</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$text&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$search&#34;</span> <span class="o">:</span> <span class="s2">&#34;mongodb word&#34;</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">posts</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;$text&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;$search&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mongodb word&#34;</span> }})
 </code></pre></div><p>結果如下，呃不小心多建立一個<code>id:3</code>。</p>
 <p><img src="http://yixiang8780.com/outImg/20161211-3.png" alt=""></p>
 <h2 id="--3">~ 結語 ~</h2>

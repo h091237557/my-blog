@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="elasticsearch, aws kinesis" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在之前筆者的這篇文章中： 一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 在們學習了如何使用 AWS 的相關工具來建立一個用戶行為的 LOG 分析系統。 但是這篇文章中所提到的|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在之前筆者的這篇文章中：
+一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
+在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
+但是這篇文章中所提到的架構有個問題。
+這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
+ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
+會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
+如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 ( 加強版 ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在之前筆者的這篇文章中： 一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 在們學習了如何使用 AWS 的相關工具來建立一個用戶行為的 LOG 分析系統。 但是這篇文章中所提到的|Describe what your web page is about">
+    <meta name="twitter:description" content="在之前筆者的這篇文章中：
+一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
+在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
+但是這篇文章中所提到的架構有個問題。
+這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
+ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
+會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
+如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -180,33 +197,33 @@ Amazon Kinesis Data Firehose 有以下限制。</p>
 </ul>
 <h4 id="-shard">如何將資料傳輸到指定的 Shard</h4>
 <p>下面為一段 nodejs 寫入資料到 stream 的範例碼，其中注意到<code>PartitionKey</code>這個東東，它就是可以幫助你指定到想要的 Shard。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#e6db74">&#39;use strict&#39;</span>;
 
-<span class="kr">const</span> <span class="nx">AWS</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;aws-sdk&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">streamName</span> <span class="o">=</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;AWS_KINESIS_STREAM&#39;</span><span class="p">]</span><span class="p">;</span>
-<span class="kr">const</span> <span class="nx">uuidv1</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;uuid/v1&#39;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">AWS</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;aws-sdk&#39;</span>);
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">streamName</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>[<span style="color:#e6db74">&#39;AWS_KINESIS_STREAM&#39;</span>];
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">uuidv1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;uuid/v1&#39;</span>);
 
-<span class="kr">const</span> <span class="nx">kinesis</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AWS</span><span class="p">.</span><span class="nx">Kinesis</span><span class="p">(</span><span class="p">{</span><span class="nx">region</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">[</span><span class="s1">&#39;AWS_KINESIS_REGION&#39;</span><span class="p">]</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">kinesis</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">AWS</span>.<span style="color:#a6e22e">Kinesis</span>({<span style="color:#a6e22e">region</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>[<span style="color:#e6db74">&#39;AWS_KINESIS_REGION&#39;</span>]});
 
-<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">putRecord</span><span class="o">:</span> <span class="p">(</span><span class="nx">packet</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="c1">// 多加換行符號是因為這樣才能在 aws athena 進行解析
-</span><span class="c1"></span>      <span class="kr">const</span> <span class="nx">recordParams</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="nx">Data</span><span class="o">:</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">packet</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;\n&#39;</span><span class="p">,</span>
-        <span class="nx">StreamName</span><span class="o">:</span> <span class="nx">streamName</span><span class="p">,</span>
-        <span class="nx">PartitionKey</span><span class="o">:</span> <span class="nx">uuidv1</span><span class="p">(</span><span class="p">)</span>
-      <span class="p">}</span><span class="p">;</span>
+<span style="color:#a6e22e">module</span>.<span style="color:#a6e22e">exports</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">putRecord</span><span style="color:#f92672">:</span> (<span style="color:#a6e22e">packet</span>) =&gt; {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+    <span style="color:#75715e">// 多加換行符號是因為這樣才能在 aws athena 進行解析
+</span><span style="color:#75715e"></span>      <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">recordParams</span> <span style="color:#f92672">=</span> {
+        <span style="color:#a6e22e">Data</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">stringify</span>(<span style="color:#a6e22e">packet</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#39;\n&#39;</span>,
+        <span style="color:#a6e22e">StreamName</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">streamName</span>,
+        <span style="color:#a6e22e">PartitionKey</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">uuidv1</span>()
+      };
 
-      <span class="nx">kinesis</span><span class="p">.</span><span class="nx">putRecord</span><span class="p">(</span><span class="nx">recordParams</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">reject</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="nx">resolve</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+      <span style="color:#a6e22e">kinesis</span>.<span style="color:#a6e22e">putRecord</span>(<span style="color:#a6e22e">recordParams</span>, (<span style="color:#a6e22e">err</span>) =&gt; {
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">err</span>) {
+          <span style="color:#a6e22e">reject</span>(<span style="color:#a6e22e">err</span>);
+        }
+        <span style="color:#a6e22e">resolve</span>();
+      });
+    });
+  }
+};
 </code></pre></div><p><code>PartitionKey</code>基本上就是用來讓 AWS kinesis 來決定你要去那一個 Shard。</p>
 <p>假設你的文件 A 傳輸時 PartitionKey 設為 GroupA 這個文字，那它就會跑到某個 Shard A 去，如果這時再傳輸個文件 B 並且 PartitionKey 也設定為 GroupA，那這一份文件也會傳輸到 Shard A。</p>
 <p>所以當你想將同一類型的文件，都傳輸到同一個 Shard 時，記得將 PartitionKey 設為相同。</p>

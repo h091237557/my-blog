@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="nodejs, design pattern" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下兩件事情 :
+  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
+var user = { login: function (type) { if (type == &amp;#34;google&amp;#34;) { doGoogleLoginSomething(); console.log(&amp;#34;google login process&amp;#34;); } else if (type == &amp;#34;facebook&amp;#34;) { doFbLoginSomething(); console.log(&amp;#34;facebook login process&amp;#34;); } else { doSomething(); console.log(&amp;#34;custom login process&amp;#34;); } } } user.login(&amp;#34;google&amp;#34;); 那上面這段程式碼中，有那些缺點呢 ?
+首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
+第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
+ 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
+好處 : 較好維護、較好測試、可重複使用
+ 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
+策略模式簡單的來說，就是為了處理以下的情況 :|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node設計模式之策略模式 ( Stratgey ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們想要知道以下兩件事情 :
+  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
+var user = { login: function (type) { if (type == &#34;google&#34;) { doGoogleLoginSomething(); console.log(&#34;google login process&#34;); } else if (type == &#34;facebook&#34;) { doFbLoginSomething(); console.log(&#34;facebook login process&#34;); } else { doSomething(); console.log(&#34;custom login process&#34;); } } } user.login(&#34;google&#34;); 那上面這段程式碼中，有那些缺點呢 ?
+首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
+第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
+ 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
+好處 : 較好維護、較好測試、可重複使用
+ 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
+策略模式簡單的來說，就是為了處理以下的情況 :|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -137,23 +156,23 @@
 </blockquote>
 <h2 id="-">為什麼要使用策略模式呢 ?</h2>
 <p>我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用<code>google</code>、<code>facebook</code>的方法，來進行登入。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">login</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">==</span> <span class="s2">&#34;google&#34;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">doGoogleLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;google login process&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">type</span> <span class="o">==</span> <span class="s2">&#34;facebook&#34;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">doFbLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;facebook login process&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">doSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;custom login process&#34;</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">login</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">type</span>) {
+        <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">type</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;google&#34;</span>) {
+            <span style="color:#a6e22e">doGoogleLoginSomething</span>();
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;google login process&#34;</span>);
+        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">type</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;facebook&#34;</span>) {
+            <span style="color:#a6e22e">doFbLoginSomething</span>();
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;facebook login process&#34;</span>);
+        } <span style="color:#66d9ef">else</span> {
+            <span style="color:#a6e22e">doSomething</span>();
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;custom login process&#34;</span>);
+        }
+    }
+}
 
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="s2">&#34;google&#34;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">login</span>(<span style="color:#e6db74">&#34;google&#34;</span>);
 </code></pre></div><p>那上面這段程式碼中，有那些缺點呢 ?</p>
 <p>首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。</p>
 <p>第二個為該函數缺泛彈性，如果你想增加<code>twitter</code>的登入，那就必須修改這函數的內部實作，這樣違反了<code>開放封閉原則</code></p>
@@ -178,26 +197,26 @@
 </blockquote>
 <p>以我們上面登入的範例來看，<code>login</code>裡面的每一種登入方法就是一種演算法，但他都丟在裡面，所以我們策略模式就是要將他，一個一個封裝起來，並且可以相互的替換。</p>
 <p>如下面的程式碼，我們將每一個登入的演算法都封裝起來，然後在需要那個的時後，就使用那個。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">login</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">stragtegy</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">stragtegy</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">login</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">stragtegy</span>) {
+        <span style="color:#a6e22e">stragtegy</span>();
+    }
+}
 
 
-<span class="kd">var</span> <span class="nx">loginStrategy</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="nx">fb</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">doFbLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="nx">google</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">doGoogleLoginSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">,</span>
-    <span class="nx">custom</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">doSomething</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">loginStrategy</span> <span style="color:#f92672">=</span> {
+    <span style="color:#a6e22e">fb</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(){
+        <span style="color:#a6e22e">doFbLoginSomething</span>();
+    },
+    <span style="color:#a6e22e">google</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(){
+        <span style="color:#a6e22e">doGoogleLoginSomething</span>();
+    },
+    <span style="color:#a6e22e">custom</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">function</span>(){
+        <span style="color:#a6e22e">doSomething</span>();
+    }
+}
 
-<span class="nx">user</span><span class="p">.</span><span class="nx">login</span><span class="p">(</span><span class="nx">loginStrategy</span><span class="p">.</span><span class="nx">fb</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">login</span>(<span style="color:#a6e22e">loginStrategy</span>.<span style="color:#a6e22e">fb</span>);
 </code></pre></div><p>首先我們先來看看<code>可維護性</code>，上面的程式碼中，我們假設要新增一個<code>twitter</code>，那你只需要在<code>loginStrategy</code>裡新增一個<code>twitter</code>的策略，這樣就不會動到主題的<code>login</code>函數，以防止，當你修改了<code>login</code>會影響到其它登入方法的問題。</p>
 <p>再來來看看<code>可測試性</code>，我們只需要<code>mock</code>你要測試的策略，然後在將他丟到<code>login</code>裡面，進行測試，非常的簡單，如果是沒用策略模式的程式碼，我還真的要動腦想一下著麼寫<code>單元測試</code>了。</p>
 <h2 id="heading">結論</h2>

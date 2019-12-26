@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,19 @@
     <meta content="redis, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。
+資料庫單機性能優化到最後，仍然還是逃不過性能的貧頸，但這並不是說單機優化沒有意義，因為單機如果沒有將它優化好，而直接開機器來增加性能，那只能說是拿錢堆起來的性能，而且可能會出問題。
+那要如何在增加性能呢 ? 這時通常會使用以下的策略 :
+ 緩存
+ 也就是說架構會變的如上圖 1 所示，在 mysql 前面會多增加一個緩存服務，這個服務我們通常會選擇用 redis。當資料在緩存服務有時直接回傳，沒有則去資料庫服務取得。
+圖 1 : 加入緩存服務圖
+在開始緩存策略前，咱們要先來研究一下基本的緩存服務『 redis 』。
+本篇文章分為以下幾個章節 :
+ Redis 的架構 Redis 的一致性難題處理 Redis 性能使用的要點  Redis 的架構 首先咱們簡單的介紹一下 redis 是啥 ?
+簡單的說它算是一種資料庫，redis 是將所有的資料存在『 記憶體 』中，而 mysql 則是將主要資料存在『 硬碟中 』。
+ 它適合當緩存服務的重點就在於儲『 記憶體 』。
+ 而它適合當緩存服務的重點就在於這裡，它將資料儲放在記憶體，因此操作速度非常的快，咱們來簡單複習一下儲硬碟和記憶體取資料的差異，如下圖 2 所示，mysql 讀取資料，基本上要運行 3 次的拷貝，而 redis 則只需要 1 次 ( 每條線就是一次拷貝 )。
+圖 2 : redis vs mysql 讀取資料比較|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +54,19 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-18 之資料緩存層的服務 - Redis 概念與一致性難題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。
+資料庫單機性能優化到最後，仍然還是逃不過性能的貧頸，但這並不是說單機優化沒有意義，因為單機如果沒有將它優化好，而直接開機器來增加性能，那只能說是拿錢堆起來的性能，而且可能會出問題。
+那要如何在增加性能呢 ? 這時通常會使用以下的策略 :
+ 緩存
+ 也就是說架構會變的如上圖 1 所示，在 mysql 前面會多增加一個緩存服務，這個服務我們通常會選擇用 redis。當資料在緩存服務有時直接回傳，沒有則去資料庫服務取得。
+圖 1 : 加入緩存服務圖
+在開始緩存策略前，咱們要先來研究一下基本的緩存服務『 redis 』。
+本篇文章分為以下幾個章節 :
+ Redis 的架構 Redis 的一致性難題處理 Redis 性能使用的要點  Redis 的架構 首先咱們簡單的介紹一下 redis 是啥 ?
+簡單的說它算是一種資料庫，redis 是將所有的資料存在『 記憶體 』中，而 mysql 則是將主要資料存在『 硬碟中 』。
+ 它適合當緩存服務的重點就在於儲『 記憶體 』。
+ 而它適合當緩存服務的重點就在於這裡，它將資料儲放在記憶體，因此操作速度非常的快，咱們來簡單複習一下儲硬碟和記憶體取資料的差異，如下圖 2 所示，mysql 讀取資料，基本上要運行 3 次的拷貝，而 redis 則只需要 1 次 ( 每條線就是一次拷貝 )。
+圖 2 : redis vs mysql 讀取資料比較|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +78,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -300,15 +327,15 @@ EXEC ( 執行隊列操作 )
 <p><a href="http://redisdoc.com/">Redis 命令参考</a></p>
 <h3 id="-2--pipepine">建議 2. 懂的使用 Pipepine</h3>
 <p>假設你有一個操作如下，這裡以 php 為範例如下，它要執行 set 100 次 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$client = new Predis\Client();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$client = new Predis\Client();
 
-for ($i = 0; $i <span class="p">&lt;</span> <span class="nt">100</span><span class="err">;</span> <span class="err">$</span><span class="na">i</span><span class="err">+</span><span class="err">+</span><span class="err">)</span><span class="err">{</span>
-  <span class="err">$</span><span class="na">client-</span><span class="p"></span><span class="p">&gt;</span>set(&#34;key:$i&#34;, &#39;test&#39;);
+for ($i = 0; $i &lt; <span style="color:#f92672">100</span><span style="color:#960050;background-color:#1e0010">;</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">i</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#960050;background-color:#1e0010">)</span><span style="color:#960050;background-color:#1e0010">{</span>
+  <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">client-</span>&gt;set(&#34;key:$i&#34;, &#39;test&#39;);
 }
 </code></pre></div><p>那這種情況建議改成使用 pipeline，因為這樣它就只會發『 一條 』指令給 redis，而這時網路的 latency 與傳輸資料就會減少非常多，如下圖 6 所示。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$responses = $client-&gt;pipeline(function ($pipe) {
-    for ($i = 0; $i <span class="p">&lt;</span> <span class="nt">100</span><span class="err">;</span> <span class="err">$</span><span class="na">i</span><span class="err">+</span><span class="err">+</span><span class="err">)</span> <span class="err">{</span>
-        <span class="err">$</span><span class="na">pipe-</span><span class="p"></span><span class="p">&gt;</span>set(&#34;key:$i&#34;, &#39;test&#39;);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$responses = $client-&gt;pipeline(function ($pipe) {
+    for ($i = 0; $i &lt; <span style="color:#f92672">100</span><span style="color:#960050;background-color:#1e0010">;</span> <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">i</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#960050;background-color:#1e0010">+</span><span style="color:#960050;background-color:#1e0010">)</span> <span style="color:#960050;background-color:#1e0010">{</span>
+        <span style="color:#960050;background-color:#1e0010">$</span><span style="color:#a6e22e">pipe-</span>&gt;set(&#34;key:$i&#34;, &#39;test&#39;);
     }
 });
 </code></pre></div><p><img src="https://ithelp.ithome.com.tw/upload/images/20191003/20089358QA9TuRQFNl.png" alt="">

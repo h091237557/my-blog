@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,20 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這部份最主要探討的主題為：
+ 別人要如何聽的到我的聲音呢 ?
+ 基本上這題的大約有三種思路，而這也是本篇文章的三個章節：
+ 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播一樣即時的將聲音傳送給對方 ( 方法 3 )  備註 讓對方看的到影像的方法也與聲音相同，所以這裡就以聲音為例來進行說明。
+將聲音檔案直接丟給對方 ( 方法 1 ) 這個是最原始的一種方法，它就是將檔案丟給對方，然後等對方全部下載完後，才能聽到聲音，概念圖如下：
+但是實作上的概念圖應該是如下圖，基本上在即時通訊軟體上，不太會是 client 與 client 進行 P2P 連線來直接丟聲音檔案，例如 line 之類的通訊軟體，因為它都要支援離線傳輸，因此架構實際上應該是會選擇將檔案丟到 server 然後再發送個通知給對方說有個檔案你可以下載。
+這種作法基本一小段的聲音檔還行，但如果是要傳送一段很長的聲音或影像檔(ex 電影)，那基本上這個方法的缺點就會被放大，因為它要全部下載完你才可能看或聽，而且占空間，並且如果是音樂或電影，說不定還有版權的問題，因為這也代表你有音樂檔，可以分享給其它人。
+這也是為什麼後來誕生了串流傳輸的技術囉。 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 串流用比較白話文一點的說話就是:
+ 它是一種將資料一段一段的丟給去給你，而不會將所有的資料。
+ 詳細的串流說明可以去筆者之前寫的文章『Node.js 的串流之旅之基本概念』
+那這樣有什麼好處理 ?
+基本上有以下幾個好處：
+ 客戶端可以一邊下載一邊收聽。 不會花費客戶端的儲存空間，它會將一小段一小段的聲音傳送到客戶端的緩衝記憶體中，然後播放器會去記憶體中讀取後並播出，然後再捨棄掉。 由於客戶端沒有實際上儲放檔案，因此不會有一些音樂或影片版權的問題 (有檔案就可以傳來傳去)。  然後咱們這個方法的實作概念圖大概如下。
+上面的簡易架構圖有一些東西咱們要來理解一下。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +55,20 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-09之別人要如何聽到我的聲音呢 ? | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這部份最主要探討的主題為：
+ 別人要如何聽的到我的聲音呢 ?
+ 基本上這題的大約有三種思路，而這也是本篇文章的三個章節：
+ 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播一樣即時的將聲音傳送給對方 ( 方法 3 )  備註 讓對方看的到影像的方法也與聲音相同，所以這裡就以聲音為例來進行說明。
+將聲音檔案直接丟給對方 ( 方法 1 ) 這個是最原始的一種方法，它就是將檔案丟給對方，然後等對方全部下載完後，才能聽到聲音，概念圖如下：
+但是實作上的概念圖應該是如下圖，基本上在即時通訊軟體上，不太會是 client 與 client 進行 P2P 連線來直接丟聲音檔案，例如 line 之類的通訊軟體，因為它都要支援離線傳輸，因此架構實際上應該是會選擇將檔案丟到 server 然後再發送個通知給對方說有個檔案你可以下載。
+這種作法基本一小段的聲音檔還行，但如果是要傳送一段很長的聲音或影像檔(ex 電影)，那基本上這個方法的缺點就會被放大，因為它要全部下載完你才可能看或聽，而且占空間，並且如果是音樂或電影，說不定還有版權的問題，因為這也代表你有音樂檔，可以分享給其它人。
+這也是為什麼後來誕生了串流傳輸的技術囉。 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 串流用比較白話文一點的說話就是:
+ 它是一種將資料一段一段的丟給去給你，而不會將所有的資料。
+ 詳細的串流說明可以去筆者之前寫的文章『Node.js 的串流之旅之基本概念』
+那這樣有什麼好處理 ?
+基本上有以下幾個好處：
+ 客戶端可以一邊下載一邊收聽。 不會花費客戶端的儲存空間，它會將一小段一小段的聲音傳送到客戶端的緩衝記憶體中，然後播放器會去記憶體中讀取後並播出，然後再捨棄掉。 由於客戶端沒有實際上儲放檔案，因此不會有一些音樂或影片版權的問題 (有檔案就可以傳來傳去)。  然後咱們這個方法的實作概念圖大概如下。
+上面的簡易架構圖有一些東西咱們要來理解一下。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +80,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

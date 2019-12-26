@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -49,7 +52,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -97,7 +100,7 @@
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20180901/">
@@ -126,15 +129,27 @@
   </div>
   <div>
     
-    前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內
-    <a class="muted-link" href="/posts/20180901/">…</a>
+    <div class="summary">
+    前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內容提供(點播)，接下來這 30 天咱們將要從 0 到 1 的來研究要如何將聲音、影象或音樂傳送給遠在天邊的某位仁兄，並且也看看現今的直播或點播基本是如何建造而成的。
+為什麼會寫這個主題呢 ? 事情的開端是降的。
+忘了是啥時，咱公司的某些人在討論一下關於音視頻開發的東西，說了很多的專有名詞 ~ 例如 HLS、RTMP、AAC、H.264、MP4 啊，然後呢我就表現的像下面這張臉一樣。嗯嗯你們了的。
+圖片來源:網路
+然後我就開始研究這些名詞，一個一個慢慢研究，然後發覺奇怪怎麼都完全無法連成一條線呢 ? 例如 rtmp 我雖然知道它是做啥用的，但它的前身是啥，不知道，然後他傳輸時的有規定要用啥編碼嗎 ? 嗯不知清楚好像是 H.264 ，那 H.264 是語音還是視頻編碼呢? 嗯不知道……，那如果不能用 rtmp 要用啥? 嗯還是不知道……
+圖片來源:網路
+由於以上的種種慘況，所以我希望透過這三十天的文章，希望從 0 到 1 的完全理解即時音視頻開發的種種事情，並且希望可以讓想學習這塊領域的人，能更輕鬆的將這些專有名詞的知識連成一條直線，別謝我。 (BTW 這塊領域真的有點難連成線)
+開端 這 30 天的主題是『30天之即時網路影音開發攻略(小白本)』，事實上我很想將他縮到成直播應用(ex. 如何在30天幹出一個 17 直播)就好，但是這樣很多東西會無法解釋，因為直接研究直播會發生缺了一些東西，因此將題目命名為此，但是這樣事實上還是有點兒抽象，所以一開咱們會從最基本的一個問題來進行探討，問題如下:
+ 馬克的俊臉與美聲要如何給遠在天邊的夢中人呢看到與聽到呢 ?
+ 下圖就是這問題的基本解圖，接下來的 30 天咱們就會根據這張圖的內容，來一步一步的理解裡面每個部份的內容，並且儘可能的將每編文章的知識都連灌起來，並且也順到理一理，現今咱們熱門的直播應用或是語音通話這些應用到底是如何建立起來的，然後最後在介紹 WebRTC 的相關資訊，這 30 天大概就降。
+! 圖片來源:我做的
+最後就開始吧 ~ BTW 這是我的第二次 ~ 好痛啊 
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170915/">
@@ -163,15 +178,22 @@
   </div>
   <div>
     
-    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client
-    <a class="muted-link" href="/posts/20170915/">…</a>
+    <div class="summary">
+    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
+var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
+Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
+前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io('xxxx')時，他就會去後端建立連線。
+&lt;script src=&#34;/socket.io/socket.io.js&#34;&gt;&lt;/script&gt; &lt;script&gt; var socket = io(&#39;http://localhost&#39;); socket.on(&#39;connect&#39;, function(){}); &lt;/script&gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
+lookup 原始碼
+function lookup (uri, opts) { .... if (newConnection) { debug(&#39;ignoring socket cache for %s&#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&#39;new io instance for %s&#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170914/">
@@ -200,15 +222,24 @@
   </div>
   <div>
     
-    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳
-    <a class="muted-link" href="/posts/20170914/">…</a>
+    <div class="summary">
+    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
+你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
+但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
+websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
+那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
+Socket.io 的組成 請參考筆者的這篇文章。
+Socketio 的架構
+簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &quot;world&quot;}訊息。
+var io = require(&#39;socket.io&#39;).listen(8080); io.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170913/">
@@ -237,15 +268,22 @@
   </div>
   <div>
     
-    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成
-    <a class="muted-link" href="/posts/20170913/">…</a>
+    <div class="summary">
+    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
+socket.io 主要由以下幾個東東構成的 :
+ engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
+engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
+目前 engine.io 所提供的溝通方式有以下幾種 :
+ polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
+var engine = require(&#39;engine.io&#39;); var server = engine.listen(80); server.on(&#39;connection&#39;, function(socket){ socket.send(&#39;utf 8 string&#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170912/">
@@ -270,15 +308,22 @@
   </div>
   <div>
     
-    在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由
-    <a class="muted-link" href="/posts/20170912/">…</a>
+    <div class="summary">
+    在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ?
+通常聊天群是會由用戶提出申請，然後管理者來加入到該群裡，而聊天室則不相同，它是用戶可以自由自在的加入或退出，這也代表這，通常聊天群會限制人數，像 line 好像就限制 500 人，而聊天室則否，他通常不會限制人數。
+那這也代表我們要面對什麼問題呢 ? 我目前想想主要有兩個 :
+ 由於沒有限制人數，所以通常我們的架構要考慮擴展性。 訊息的即時性非常的要求，如果一個訊息傳輸慢了，會導致其它人無法理解上下文。  最簡單的聊天室架構 V-1 基本上和聊天群的架構相同，都是一個Business Server和一個Message Server，其中前者做的事情是為所有需要使用 http 協議的工作，更正確的說是 http 短連接的工作，如新增聊天室、登入、登出、註冊這類事情的，都屬於 Business Server ，而所有使用 websocket 協議的都是屬於 Message Server 的工作。
+聊天室 V-2 上面的架構有沒有啥問題呢 ? 有的 ! 請想像一個情境 :
+ 用戶 A 從 business server 登入後，然後再去 message server 建立連線，但問題是 message server 怎麼知道這條連線是用戶 A 呢 ?
+ 在一般的 web 應用中，每當 client 連結 server 時，server 會產生唯一個 sessionId ，並用它來連結 server 內的存放空間，然後會將 sessionId 存放到 cookie 中，這樣每一次 client 進行請求時，server 都會去 cookie 中取得 sessionId 然後再去 session 取得資料。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170911/">
@@ -303,8 +348,17 @@
   </div>
   <div>
     
-    本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們
-    <a class="muted-link" href="/posts/20170911/">…</a>
+    <div class="summary">
+    本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。
+差別在那呢 ? 假設我們開一個todolist功能，事實上大部份的工作就是crud的事情，每當要新增一個 todo 時，只要發送 http 到後端新增資料到資料庫裡去，然後在回傳結果就好了，但聊天群這種，如果你每發送一個訊息都使用 http 那一定爆掉的。
+像聊天群這樣類型的，我們稱為InstantMessaging IM中文為即時通訊，本篇文章我們將會說明要建立這種IM應用所需要的基本知識。
+開始吧 ~
+從 Web 到 IM 的通信過程轉變 在最開始時瀏覽器它沒有辦法直接連接到另一個瀏覽器的通信功能，也就是說你不能從 A client 直接傳送訊息到 B client 去，我們只能在它們的中間，建立一個 server ，來將 A 要傳送的訊息儲放起來，然後 B 在自已去 server 取得資料，如下圖 :
+這種做不行嗎 ? 說實話，功能是有做出來 ~ 但浪費太多的資源，你想想，根據上面的說法，當 A 發送訊息到 server 後，你 B 要如何知道 server 有你的訊息 ? 記好 http 只能從client發送到server，不能反之，所以這也代表這你 B 只能定時的去 server 問問看，說有沒有我的資料啊 ~
+很明顯的，你可能問了十次，只有一次才有你要的訊息，那其它九次，不就都浪費掉了，這也代表你的 IM 系統有 90 % 的效能在處理沒用的事情。
+當然中間處理的其它方法先不說，後來 html5 提出了一個應用層的協議websocket，來解決這事兒 ~
+Hello WebSocket 這個協議可以幫助我們可以實現，從 server 端推送資料到 client 端，而且從建立的通道是持久連接，在 http 1.
+    </div>
   </div>
 </div>
 

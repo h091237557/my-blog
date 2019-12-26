@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,19 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時輕鬆些，接下來咱們要學習將這些東東封裝在一個容器中。
+ 聲音與影像的封裝
+ 本篇文章中我們將會分為以下章節，來探討這個主題：
+ 什麼是封裝呢 ? 常見的容器(文件、格式) 容器的實際模樣 ( 以 wav 為範例 )  什麼是封裝呢 ?  封裝就是將聲音與影像編碼丟到一個容器中的過程。
+ 簡而言之如下圖：
+那為啥要封裝到容器呢 ? 基本上有以下幾個理由：
+ 可以讓不同的媒體內容同步變的方便，例如聲音與影像。 可以提供索引內容，讓用戶可以決定想要看或聽什麼地方。 如果沒有容器，只傳送一串影像編碼，那你還要在傳送聲音編碼才會有聲音。 如果只傳送編碼，如果沒有一些編碼資訊，那接受要如何解碼呢 ?  編碼與容器是一對多的關係 有些東西需要先搞個清楚一下，不然我一開始研究時常常在混亂中。
+例如咱們很常說的 MP3 編碼、文件、格式，它到底是指啥 ? 編碼還是容器 ?
+ 咱們常看到的 .mp3 檔是個容器(文件、格式)，然後它裡面放了 MP3 編碼，再外加一些資訊。
+ 那 mp3 編碼可以放到其它容器裡嗎 ? 當然可以 ! 像他就可以放到 .mp4 或 .avi 容器中。
+所以說基本上一種音頻編碼是可以有多種容器選擇的。
+常見的容器(文件、格式) 接下來將介紹一些常見的容器，這也先說一下網路上在說明容器時有很多種名稱，例如音頻文件、音頻格式、音頻檔這些，它們指的都是容器的概念。
+.wav (聲音) WAV (Waveform Audio File Format) 它是微軟開發出來的聲音容器，雖然它是微軟開發出來的，但在其它的平台也廣泛的支持，基本上它就是聲音 raw data 容器，就是用來儲放 PCM 編碼的。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +54,19 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-06之聲音與影像的封裝 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時輕鬆些，接下來咱們要學習將這些東東封裝在一個容器中。
+ 聲音與影像的封裝
+ 本篇文章中我們將會分為以下章節，來探討這個主題：
+ 什麼是封裝呢 ? 常見的容器(文件、格式) 容器的實際模樣 ( 以 wav 為範例 )  什麼是封裝呢 ?  封裝就是將聲音與影像編碼丟到一個容器中的過程。
+ 簡而言之如下圖：
+那為啥要封裝到容器呢 ? 基本上有以下幾個理由：
+ 可以讓不同的媒體內容同步變的方便，例如聲音與影像。 可以提供索引內容，讓用戶可以決定想要看或聽什麼地方。 如果沒有容器，只傳送一串影像編碼，那你還要在傳送聲音編碼才會有聲音。 如果只傳送編碼，如果沒有一些編碼資訊，那接受要如何解碼呢 ?  編碼與容器是一對多的關係 有些東西需要先搞個清楚一下，不然我一開始研究時常常在混亂中。
+例如咱們很常說的 MP3 編碼、文件、格式，它到底是指啥 ? 編碼還是容器 ?
+ 咱們常看到的 .mp3 檔是個容器(文件、格式)，然後它裡面放了 MP3 編碼，再外加一些資訊。
+ 那 mp3 編碼可以放到其它容器裡嗎 ? 當然可以 ! 像他就可以放到 .mp4 或 .avi 容器中。
+所以說基本上一種音頻編碼是可以有多種容器選擇的。
+常見的容器(文件、格式) 接下來將介紹一些常見的容器，這也先說一下網路上在說明容器時有很多種名稱，例如音頻文件、音頻格式、音頻檔這些，它們指的都是容器的概念。
+.wav (聲音) WAV (Waveform Audio File Format) 它是微軟開發出來的聲音容器，雖然它是微軟開發出來的，但在其它的平台也廣泛的支持，基本上它就是聲音 raw data 容器，就是用來儲放 PCM 編碼的。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +78,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>nodejs on 拿鐵派的馬克 Blog</title>
@@ -6,118 +5,91 @@
     <description>Recent content in nodejs on 拿鐵派的馬克 Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <copyright>&amp;copy;Your Name 2019</copyright>
+    <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
+    <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Fri, 08 Mar 2019 19:51:35 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Nodejs 之運行機制原理</title>
       <link>https://mark-lin.com/posts/20190308/</link>
       <pubDate>Fri, 08 Mar 2019 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190308/</guid>
-      <description>Nodejs 出來時它的官網寫這以下的描述 : Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world. 簡</description>
     </item>
     
     <item>
       <title>Node設計模式之命令模式 ( Command )</title>
       <link>https://mark-lin.com/posts/20170611/</link>
       <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170611/</guid>
-      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能</description>
     </item>
     
     <item>
       <title>Node設計模式之策略模式 ( Stratgey )</title>
       <link>https://mark-lin.com/posts/20170610/</link>
       <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170610/</guid>
-      <description>本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登</description>
     </item>
     
     <item>
       <title>Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ)</title>
       <link>https://mark-lin.com/posts/20170607/</link>
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170607/</guid>
-      <description>在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP</description>
     </item>
     
     <item>
       <title>Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ)</title>
       <link>https://mark-lin.com/posts/20170608/</link>
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170608/</guid>
-      <description>上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si</description>
     </item>
     
     <item>
       <title>Passport.js 之 Hello 你好嗎 ~ </title>
       <link>https://mark-lin.com/posts/20170609/</link>
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170609/</guid>
-      <description>本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗</description>
     </item>
     
     <item>
       <title>Node之可擴展性 --- Nginx反向代理建立</title>
       <link>https://mark-lin.com/posts/20170606/</link>
       <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170606/</guid>
-      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一</description>
     </item>
     
     <item>
       <title>Node之可擴展性 --- Node的Cluster</title>
       <link>https://mark-lin.com/posts/20170605/</link>
       <pubDate>Mon, 05 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170605/</guid>
-      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執</description>
     </item>
     
     <item>
       <title>Node之CPU吃重的任務要如何處理 ? </title>
       <link>https://mark-lin.com/posts/20170604/</link>
       <pubDate>Sun, 04 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170604/</guid>
-      <description>這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們</description>
     </item>
     
     <item>
       <title>Node 設計模式之代理器 ( Proxy )</title>
       <link>https://mark-lin.com/posts/20170603/</link>
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170603/</guid>
-      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模</description>
-    </item>
-    
-    <item>
-      <title>Node.js 的串流之旅之雙工串流與管道</title>
-      <link>https://mark-lin.com/posts/20170602/</link>
-      <pubDate>Fri, 02 Jun 2017 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20170602/</guid>
-      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du</description>
-    </item>
-    
-    <item>
-      <title>Node.js 的串流之旅之基本概念</title>
-      <link>https://mark-lin.com/posts/20170601/</link>
-      <pubDate>Thu, 01 Jun 2017 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20170601/</guid>
-      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來</description>
     </item>
     
   </channel>

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,21 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信|Describe what your web page is about">
+    <meta name="description" property="og:description" content="接下來咱們會從最基本的開始 :
+ 儘可能的優化單機性能
+ 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信他開發出來的分散式架構是高性能的。
+ 單機處理的好，才是高性能的前提。
+ 本篇會分為以下幾個章節，來探討單機領域的優化方向，這個方向也就是之後文章的目錄。
+ 單機系統的優化路線 Step 1 (應用服務、資料庫服務)。 單機系統的優化路線 Step 2 (快取服務、CDN 服務)。 一個系統效能的評估指標。  單機系統的優化路線 Step 1 (應用服務、資料庫服務) 單機系統的最基本最基本架構應該長的如下圖 1，就是最簡單的應用服務與資料庫服務，咱們這裡先以最大眾的 web 服務為主 :
+ 應用層服務 資料庫層服務  圖 1 : 最簡單的應用架構。
+單機應用層的性能優化方向 基本上單機應用層的優化目標如下 :
+ 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
+ 而要完成這件事情，基本上有幾個方向可以研究。
+ 以最少的資源進行運算，這裡比較白話文的來說就，用最少的 CPU 與 Memeory 來完成工作。 I/O 處理，大部份的 Web 應用都是讀取資料庫或啥的，這裡如果沒處理好，你的系統絕對只能做很少的事情。 I/O 的一些加速技術例如 stream、零拷貝、線程、連線池。  不過簡單來說就分兩種『運算』與『I/O』。
+圖 2 : 應用服務性能重點。
+資料庫層的性能優化方向 資料庫層是的優化目標基本上如上應用層一樣:
+ 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
+ 基本上在性能方向會有幾個方向可以研究 :|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +56,21 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-02 之單機架構的性能優化方向與目標 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信|Describe what your web page is about">
+    <meta name="twitter:description" content="接下來咱們會從最基本的開始 :
+ 儘可能的優化單機性能
+ 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信他開發出來的分散式架構是高性能的。
+ 單機處理的好，才是高性能的前提。
+ 本篇會分為以下幾個章節，來探討單機領域的優化方向，這個方向也就是之後文章的目錄。
+ 單機系統的優化路線 Step 1 (應用服務、資料庫服務)。 單機系統的優化路線 Step 2 (快取服務、CDN 服務)。 一個系統效能的評估指標。  單機系統的優化路線 Step 1 (應用服務、資料庫服務) 單機系統的最基本最基本架構應該長的如下圖 1，就是最簡單的應用服務與資料庫服務，咱們這裡先以最大眾的 web 服務為主 :
+ 應用層服務 資料庫層服務  圖 1 : 最簡單的應用架構。
+單機應用層的性能優化方向 基本上單機應用層的優化目標如下 :
+ 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
+ 而要完成這件事情，基本上有幾個方向可以研究。
+ 以最少的資源進行運算，這裡比較白話文的來說就，用最少的 CPU 與 Memeory 來完成工作。 I/O 處理，大部份的 Web 應用都是讀取資料庫或啥的，這裡如果沒處理好，你的系統絕對只能做很少的事情。 I/O 的一些加速技術例如 stream、零拷貝、線程、連線池。  不過簡單來說就分兩種『運算』與『I/O』。
+圖 2 : 應用服務性能重點。
+資料庫層的性能優化方向 資料庫層是的優化目標基本上如上應用層一樣:
+ 以最快與最少的資源來處理請求，並且可以最快的速度將結果回應給客戶，讓客戶於愉悅。
+ 基本上在性能方向會有幾個方向可以研究 :|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +82,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

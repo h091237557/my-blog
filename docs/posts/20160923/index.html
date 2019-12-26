@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、更多容量空間的來做一些哩哩扣扣的事情。
+ 分片原理。 分片實作。  ~分片原理~ 分片是啥 ? 它主要的概念就是將collection拆分，將其分散到不同的機器，來分擔單一server的壓力。
+咱們先來看看我們平常單一server的mongodb結構，其中mongod就代表我們實際上存放資料的地方，它平常都是指令和client端通信，client就有點像咱們平常用的mongodb shell之類的。
+而咱們在來看看，如果用了分片會變啥樣，如下圖，三個mongod都會統一通信到mongos，在和client進行通訊，mongos不存儲任何資料，它就是個路由server，你要什麼資料就發給它，它在去決定去那個mongod裡尋找資料。
+那這邊有個問題來囉~這三個mongod要著麼決定誰要存放那些資料 ? 答案是下面標題片鍵~
+片鍵 Shard Keys 片鍵是啥 ? 它就是當你要進行分片時，你選定的collection切分的依據，假設我們有下面的資料。
+{ &amp;quot;name&amp;quot;:&amp;quot;mark&amp;quot; , &amp;quot;age&amp;quot; :18} { &amp;quot;name&amp;quot;:&amp;quot;steven&amp;quot; , &amp;quot;age&amp;quot; :20} { &amp;quot;name&amp;quot;:&amp;quot;ian&amp;quot; , &amp;quot;age&amp;quot; :20} { &amp;quot;name&amp;quot;:&amp;quot;jack&amp;quot; , &amp;quot;age&amp;quot; :30} { &amp;quot;name&amp;quot;:&amp;quot;stanly&amp;quot; , &amp;quot;age&amp;quot; :31} { &amp;quot;name&amp;quot;:&amp;quot;jiro&amp;quot; , &amp;quot;age&amp;quot; :32} { &amp;quot;name&amp;quot;:&amp;quot;hello&amp;quot; , &amp;quot;age&amp;quot; :41} { &amp;quot;name&amp;quot;:&amp;quot;world&amp;quot; , &amp;quot;age&amp;quot; :52} ... ... { &amp;quot;name&amp;quot;:&amp;quot;ho&amp;quot;,&amp;quot;age&amp;quot; : 100} 它就有可能會分片成這樣，假設咱們拆分為三片，然後我們指定片鍵為age欄位，它就大致上可能會分成這樣，會根據片鍵建立chunk，然後再將這堆chunk分散到這幾個分片中，{min~10}就是一個chunk，就是一組document。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-23之MongoDB分片Sharding---Hello Sharding | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明 mongodb 的分片`，上一章節說明了如何將資料同步到其它台節點上，而本篇文章是將要說明，如何將資料分割到其它台節點，讓我們可以更快速、更多容量空間的來做一些哩哩扣扣的事情。
+ 分片原理。 分片實作。  ~分片原理~ 分片是啥 ? 它主要的概念就是將collection拆分，將其分散到不同的機器，來分擔單一server的壓力。
+咱們先來看看我們平常單一server的mongodb結構，其中mongod就代表我們實際上存放資料的地方，它平常都是指令和client端通信，client就有點像咱們平常用的mongodb shell之類的。
+而咱們在來看看，如果用了分片會變啥樣，如下圖，三個mongod都會統一通信到mongos，在和client進行通訊，mongos不存儲任何資料，它就是個路由server，你要什麼資料就發給它，它在去決定去那個mongod裡尋找資料。
+那這邊有個問題來囉~這三個mongod要著麼決定誰要存放那些資料 ? 答案是下面標題片鍵~
+片鍵 Shard Keys 片鍵是啥 ? 它就是當你要進行分片時，你選定的collection切分的依據，假設我們有下面的資料。
+{ &quot;name&quot;:&quot;mark&quot; , &quot;age&quot; :18} { &quot;name&quot;:&quot;steven&quot; , &quot;age&quot; :20} { &quot;name&quot;:&quot;ian&quot; , &quot;age&quot; :20} { &quot;name&quot;:&quot;jack&quot; , &quot;age&quot; :30} { &quot;name&quot;:&quot;stanly&quot; , &quot;age&quot; :31} { &quot;name&quot;:&quot;jiro&quot; , &quot;age&quot; :32} { &quot;name&quot;:&quot;hello&quot; , &quot;age&quot; :41} { &quot;name&quot;:&quot;world&quot; , &quot;age&quot; :52} ... ... { &quot;name&quot;:&quot;ho&quot;,&quot;age&quot; : 100} 它就有可能會分片成這樣，假設咱們拆分為三片，然後我們指定片鍵為age欄位，它就大致上可能會分成這樣，會根據片鍵建立chunk，然後再將這堆chunk分散到這幾個分片中，{min~10}就是一個chunk，就是一組document。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -186,17 +201,17 @@
 <p>首先咱們先在單機上來建立看看，一樣先進入<code>mongodb shell</code>。</p>
 <pre><code>mongo --nodb
 </code></pre><p>然後使用<code>ShardingTest</code>來建立分片用的<code>cluster</code>，其中<code>shards</code>為<code>3</code>代表建立3個分片，而<code>chungszie</code>之後會講，先簡單設<code>1</code>就好。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">cluster</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ShardingTest</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;shards&#34;</span> <span class="o">:</span> <span class="mi">3</span> <span class="p">,</span> <span class="s2">&#34;chunksize&#34;</span> <span class="o">:</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">cluster</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">ShardingTest</span>({ <span style="color:#e6db74">&#34;shards&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span> , <span style="color:#e6db74">&#34;chunksize&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">1</span>})
 </code></pre></div><p>執行完我們可以看到它的輸出。</p>
 <p><img src="http://yixiang8780.com/outImg/20161223-3.png" alt=""></p>
 <p>然後就準備換到另一個<code>shell</code>，接下來我們就可以連接到<code>mongos</code>囉，根據我們上面的結果可知，我們的<code>mongos</code>是建立在<code>port : 20006</code>的位置，來連吧~</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span> <span class="o">=</span> <span class="p">(</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20006&#34;</span><span class="p">)</span><span class="p">)</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> ( <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Mongo</span>(<span style="color:#e6db74">&#34;127.0.0.1:20006&#34;</span>)).<span style="color:#a6e22e">getDB</span>(<span style="color:#e6db74">&#34;test&#34;</span>)
 </code></pre></div><p>進去以後我們來丟些資料，來測試看看。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">objs</span> <span style="color:#f92672">=</span> [];
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1000000</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">push</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">i</span>});
+}
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">objs</span>);
 </code></pre></div><p>然後我們可以執行<code>sh.status()</code>來看看這個<code>cluster</code>的運行狀況。</p>
 <p><img src="http://yixiang8780.com/outImg/20161223-4.png" alt=""></p>
 <p>但是我們的分片可還沒啟用喔，它還需要執行這行指令。</p>
@@ -212,7 +227,7 @@
 <p>其中可以看到他<code>shared0000</code>裡已經將<code>collection</code>開拆成很多個<code>chunk</code>囉，不過因為我們<code>Balancer</code>的東西還沒啟動，所以還沒分配到其它<code>shard</code>，這篇我們下章節在來說說。</p>
 <p><img src="http://yixiang8780.com/outImg/20161223-6.png" alt=""></p>
 <p>然後我們來搜尋看看詳細資訊，下圖結果可以知道它去這<code>shard0000</code>尋找到<code>doument</code>，並且就如同索引一樣，不需要全部掃描來尋找，是的你可以把片鍵想成索引。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;user889391&#34;</span><span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">find</span>({<span style="color:#e6db74">&#34;user889391&#34;</span>}).<span style="color:#a6e22e">explain</span>(<span style="color:#e6db74">&#34;executionStats&#34;</span>)
 </code></pre></div><p><img src="http://yixiang8780.com/outImg/20161223-7.png" alt=""></p>
 <h2 id="heading2">~結語~</h2>
 <p>本篇文章中，我們學習了分片的基本知識，也簡單的介紹建立分片的方法，但事實上還有很多分片的原理我們沒有完全說到，例如如何分片、片鍵的選擇、<code>chunk</code>的拆分，這些我們後面幾篇都會來說明說明。</p>

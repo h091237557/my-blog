@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="algorithm, merge sort" name="keywords">
     
     
-    <meta name="description" property="og:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法|Describe what your web page is about">
+    <meta name="description" property="og:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
+大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
+合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
+首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
+然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
+合併排序法的速度效能 平均 O(nlogn)
+最好 O(n)
+最壞 O(nlogn)
+合併排序法的空間效能 O(n)
+javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
+ Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &amp;gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &amp;lt; len; i&#43;&#43;) { if (i &amp;lt; mid) { left.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="排序之合併排序法(Merge Sort) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法|Describe what your web page is about">
+    <meta name="twitter:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
+大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
+合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
+首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
+然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
+合併排序法的速度效能 平均 O(nlogn)
+最好 O(n)
+最壞 O(nlogn)
+合併排序法的空間效能 O(n)
+javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
+ Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &lt; len; i&#43;&#43;) { if (i &lt; mid) { left.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -152,134 +175,134 @@
 <p>注意，基本上只有在拆分時作法不一樣，但在<code>merge</code>時，這邊都是呼叫它一個方法。</p>
 </blockquote>
 <h3 id="top-down"><code>Top Down實作</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">debugger</span>;
 
-<span class="cm">/**
-</span><span class="cm"> * mergeSort_TopDown 
-</span><span class="cm"> * @param datas
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">len</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">right</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">left</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * mergeSort_TopDown 
+</span><span style="color:#75715e"> * @param datas
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">mergeSort_TopDown</span>(<span style="color:#a6e22e">datas</span>) {
+  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">1</span>) {
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span>;
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mid</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>(<span style="color:#a6e22e">len</span> <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>);
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> [];
 
-    <span class="c1">//將datas陣列分兩左子陣列與右子陣列
-</span><span class="c1"></span>    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">mid</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">left</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">right</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
+    <span style="color:#75715e">//將datas陣列分兩左子陣列與右子陣列
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">mid</span>) {
+        <span style="color:#a6e22e">left</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">i</span>]);
+      } <span style="color:#66d9ef">else</span> {
+        <span style="color:#a6e22e">right</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">i</span>]);
+      }
+    }
 
-    <span class="kd">var</span> <span class="nx">leftSort</span> <span class="o">=</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">rightSort</span> <span class="o">=</span> <span class="nx">mergeSort_TopDown</span><span class="p">(</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">leftSort</span><span class="p">,</span> <span class="nx">rightSort</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">datas</span><span class="p">;</span>
-<span class="p">}</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">leftSort</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">mergeSort_TopDown</span>(<span style="color:#a6e22e">left</span>);
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">rightSort</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">mergeSort_TopDown</span>(<span style="color:#a6e22e">right</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">merge</span>(<span style="color:#a6e22e">leftSort</span>, <span style="color:#a6e22e">rightSort</span>);
+  }
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">datas</span>;
+}
 
 
-<span class="cm">/**
-</span><span class="cm"> * merge
-</span><span class="cm"> * 將已排序的左與右子陣列，進行合併
-</span><span class="cm"> * @param left
-</span><span class="cm"> * @param right
-</span><span class="cm"> * @returns {Array} sortedData
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">sortedData</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
-    <span class="nx">leftLen</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-    <span class="nx">rightLen</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-    <span class="nx">leftIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">rightIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * merge
+</span><span style="color:#75715e"> * 將已排序的左與右子陣列，進行合併
+</span><span style="color:#75715e"> * @param left
+</span><span style="color:#75715e"> * @param right
+</span><span style="color:#75715e"> * @returns {Array} sortedData
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">merge</span>(<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">right</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sortedData</span> <span style="color:#f92672">=</span> [],
+    <span style="color:#a6e22e">leftLen</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">left</span>.<span style="color:#a6e22e">length</span>,
+    <span style="color:#a6e22e">rightLen</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">right</span>.<span style="color:#a6e22e">length</span>,
+    <span style="color:#a6e22e">leftIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+    <span style="color:#a6e22e">rightIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">leftLen</span> <span class="o">+</span> <span class="nx">rightLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">leftLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">rightLen</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
 
-    <span class="c1">// 如果left陣列已比較完，則都輸入right陣列
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">leftIndex</span> <span class="o">==</span> <span class="nx">leftLen</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#75715e">// 如果left陣列已比較完，則都輸入right陣列
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">leftIndex</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">leftLen</span>) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 如果right陣列已比較完，則都輸入left陣列 
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">rightIndex</span> <span class="o">==</span> <span class="nx">rightLen</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 如果right陣列已比較完，則都輸入left陣列 
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">rightIndex</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">rightLen</span>) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span>] <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span>]) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 相反的，則將right資料存放至sortedData
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">sortedData</span><span class="p">;</span>
-<span class="p">}</span>
+      <span style="color:#75715e">// 相反的，則將right資料存放至sortedData
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span><span style="color:#f92672">++</span>]);
+    }
+  }
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sortedData</span>;
+}
 
 
 </code></pre></div><h3 id="bottom-up"><code>Bottom Up</code>實作</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * mergeSort_BottomUp
-</span><span class="cm"> *
-</span><span class="cm"> * @param datas
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">mergeSort_BottomUp</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * mergeSort_BottomUp
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param datas
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">mergeSort_BottomUp</span>(<span style="color:#a6e22e">datas</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span>;
 
-	<span class="c1">//2、4、8 這邊跑
-</span><span class="c1"></span>	<span class="c1">//例如 [1,2,3,4,5,6,7,8] 第一圈會跑[1,2]、[3,4]、[5,6]、[7,8]
-</span><span class="c1"></span>	<span class="c1">//第二圈會跑 [1,2,3,4]、[5,6,7,8
-</span><span class="c1"></span>	<span class="c1">//第三圈會跑 [1,2,3,4,5,6,7,8]
-</span><span class="c1"></span>  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">width</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">width</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="nx">width</span><span class="p">)</span> <span class="p">{</span>
-			<span class="kd">var</span> <span class="nx">sortedDatas</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">datas</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">i</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="p">)</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="p">,</span><span class="nx">i</span><span class="o">+</span><span class="nx">width</span><span class="o">+</span><span class="nx">width</span><span class="p">)</span><span class="p">)</span>	
-			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">k</span><span class="o">&lt;</span><span class="nx">sortedDatas</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span><span class="nx">k</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-				<span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="o">+</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="nx">sortedDatas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">;</span>	
-			<span class="p">}</span>	
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">datas</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+	<span style="color:#75715e">//2、4、8 這邊跑
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//例如 [1,2,3,4,5,6,7,8] 第一圈會跑[1,2]、[3,4]、[5,6]、[7,8]
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//第二圈會跑 [1,2,3,4]、[5,6,7,8
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//第三圈會跑 [1,2,3,4,5,6,7,8]
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">width</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">width</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">width</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">width</span>) {
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">width</span>) {
+			<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sortedDatas</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">merge</span>(<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#a6e22e">i</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#a6e22e">width</span>),<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">slice</span>(<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#a6e22e">width</span>,<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#a6e22e">width</span><span style="color:#f92672">+</span><span style="color:#a6e22e">width</span>))	
+			<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">k</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">k</span><span style="color:#f92672">&lt;</span><span style="color:#a6e22e">sortedDatas</span>.<span style="color:#a6e22e">length</span>;<span style="color:#a6e22e">k</span><span style="color:#f92672">++</span>){
+				<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span><span style="color:#f92672">+</span><span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">sortedDatas</span>[<span style="color:#a6e22e">k</span>];	
+			}	
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">datas</span>);
+			}
+  }
+}
 
-<span class="cm">/**
-</span><span class="cm"> * merge
-</span><span class="cm"> * 將已排序的左與右子陣列，進行合併
-</span><span class="cm"> * @param left
-</span><span class="cm"> * @param right
-</span><span class="cm"> * @returns {Array} sortedData
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">left</span><span class="p">,</span> <span class="nx">right</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">sortedData</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">,</span>
-    <span class="nx">leftLen</span> <span class="o">=</span> <span class="nx">left</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-    <span class="nx">rightLen</span> <span class="o">=</span> <span class="nx">right</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span>
-    <span class="nx">leftIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">rightIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * merge
+</span><span style="color:#75715e"> * 將已排序的左與右子陣列，進行合併
+</span><span style="color:#75715e"> * @param left
+</span><span style="color:#75715e"> * @param right
+</span><span style="color:#75715e"> * @returns {Array} sortedData
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">merge</span>(<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">right</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">sortedData</span> <span style="color:#f92672">=</span> [],
+    <span style="color:#a6e22e">leftLen</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">left</span>.<span style="color:#a6e22e">length</span>,
+    <span style="color:#a6e22e">rightLen</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">right</span>.<span style="color:#a6e22e">length</span>,
+    <span style="color:#a6e22e">leftIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+    <span style="color:#a6e22e">rightIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">leftLen</span> <span class="o">+</span> <span class="nx">rightLen</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">leftLen</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">rightLen</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
 
-    <span class="c1">// 如果left陣列已比較完，則都輸入right陣列
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="nx">leftIndex</span> <span class="o">==</span> <span class="nx">leftLen</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#75715e">// 如果left陣列已比較完，則都輸入right陣列
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">leftIndex</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">leftLen</span>) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 如果right陣列已比較完，則都輸入left陣列 
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">rightIndex</span> <span class="o">==</span> <span class="nx">rightLen</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 如果right陣列已比較完，則都輸入left陣列 
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">rightIndex</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">rightLen</span>) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="p">]</span> <span class="o">&lt;</span> <span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="p">]</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">left</span><span class="p">[</span><span class="nx">leftIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
+      <span style="color:#75715e">// 如果left陣列資料小於right陣列資料，則將資料放置sortedData	
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span>] <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span>]) {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">left</span>[<span style="color:#a6e22e">leftIndex</span><span style="color:#f92672">++</span>]);
 
-      <span class="c1">// 相反的，則將right資料存放至sortedData
-</span><span class="c1"></span>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-      <span class="nx">sortedData</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">right</span><span class="p">[</span><span class="nx">rightIndex</span><span class="o">++</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-  <span class="k">return</span> <span class="nx">sortedData</span><span class="p">;</span>
-<span class="p">}</span>
+      <span style="color:#75715e">// 相反的，則將right資料存放至sortedData
+</span><span style="color:#75715e"></span>    } <span style="color:#66d9ef">else</span> {
+      <span style="color:#a6e22e">sortedData</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">right</span>[<span style="color:#a6e22e">rightIndex</span><span style="color:#f92672">++</span>]);
+    }
+  }
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sortedData</span>;
+}
 
 </code></pre></div><h2 id="heading6">參考資料</h2>
 <ul>

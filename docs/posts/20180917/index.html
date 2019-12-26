@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="instant messaging, 鐵人賽, mpeg-dash" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。
+ MPEG-DASH 協議
+ 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議：
+ MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它想做的事情呢 ? 建立 MPEG-DASH 的串流傳輸流程。 MPEG-DASH 的特點總結。  MPEG-DASH 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ 嗯事實上它想完成的事情和 HLS 事實上是相同的，那為啥他會誕生出來呢 ? 比較大的問題是
+ HLS 是由蘋果所主導的協議，而不是國際通用協議，這也代表蘋果怎麼改，其它人也要一起動，也就是說一切蘋果說的算。
+ 因此在 MPEG 的主導下在與一些大廠合作下 MPEG-DASH 這種國際標準的協議就誕生了。
+ISO/IEC 23009-1:2012
+MPEG-DASH 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。
+ 就如同 HLS 一樣。
+建立 MPEG-DASH 的串流傳輸流程 它的基本流程如下圖。
+1. 直播主將聲音或影像傳輸到 Server 這裡可以使用 RTMP 來將聲音推收到 Server，又或是如果不是直播情況可以直接將聲音檔例如 .|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-17之 MPEG-DASH 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 MPEG-DASH協議。
+ MPEG-DASH 協議
+ 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議：
+ MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它想做的事情呢 ? 建立 MPEG-DASH 的串流傳輸流程。 MPEG-DASH 的特點總結。  MPEG-DASH 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ 嗯事實上它想完成的事情和 HLS 事實上是相同的，那為啥他會誕生出來呢 ? 比較大的問題是
+ HLS 是由蘋果所主導的協議，而不是國際通用協議，這也代表蘋果怎麼改，其它人也要一起動，也就是說一切蘋果說的算。
+ 因此在 MPEG 的主導下在與一些大廠合作下 MPEG-DASH 這種國際標準的協議就誕生了。
+ISO/IEC 23009-1:2012
+MPEG-DASH 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。
+ 就如同 HLS 一樣。
+建立 MPEG-DASH 的串流傳輸流程 它的基本流程如下圖。
+1. 直播主將聲音或影像傳輸到 Server 這裡可以使用 RTMP 來將聲音推收到 Server，又或是如果不是直播情況可以直接將聲音檔例如 .|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -181,23 +206,23 @@
 <li>SegmentBase : 實際聲音的聲音或影像檔案。</li>
 </ul>
 <p>然後下面為某一段實際的 .mpd 檔，從這檔案可以知道它提供了 1080p 與 720p 的 mp4 影像。全部的檔案請拉到最下面的備註。</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;MPD</span> <span class="na">xmlns=</span><span class="s">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span class="na">mediaPresentationDuration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">minBufferTime=</span><span class="s">&#34;PT1.5S&#34;</span> <span class="na">profiles=</span><span class="s">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
-<span class="na">type=</span><span class="s">&#34;static&#34;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;Period</span> <span class="na">duration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">start=</span><span class="s">&#34;PT0S&#34;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;video&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;4190760&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.640028&#34;</span> <span class="na">height=</span><span class="s">&#34;1080&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1920&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-89.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;674-1149&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-673&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;2073921&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401f&#34;</span> <span class="na">height=</span><span class="s">&#34;720&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1280&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-88.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;MPD</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span style="color:#a6e22e">mediaPresentationDuration=</span><span style="color:#e6db74">&#34;PT0H3M1.63S&#34;</span> <span style="color:#a6e22e">minBufferTime=</span><span style="color:#e6db74">&#34;PT1.5S&#34;</span> <span style="color:#a6e22e">profiles=</span><span style="color:#e6db74">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
+<span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;static&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;Period</span> <span style="color:#a6e22e">duration=</span><span style="color:#e6db74">&#34;PT0H3M1.63S&#34;</span> <span style="color:#a6e22e">start=</span><span style="color:#e6db74">&#34;PT0S&#34;</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">&lt;AdaptationSet</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;ContentComponent</span> <span style="color:#a6e22e">contentType=</span><span style="color:#e6db74">&#34;video&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">/&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;4190760&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.640028&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;1080&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;1920&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-89.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;674-1149&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-673&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;2073921&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d401f&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;720&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;1280&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-88.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;708-1183&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-707&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
 </code></pre></div><h3 id="3--http-server--mpd-">3. 聽眾向 HTTP Server 請求 .mpd 檔</h3>
 <h3 id="4--mpd--mp4-">4. 然後根據 .mpd 開始去請求一小段一小段的 .mp4 檔。</h3>
 <h2 id="mpegdash-">MPEG-DASH 特點總結</h2>
@@ -215,71 +240,71 @@
 <li><a href="https://blog.csdn.net/qq_27582179/article/details/51598208">MPEG-DASH介绍</a></li>
 </ul>
 <h2 id="heading2">備註</h2>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;MPD</span> <span class="na">xmlns=</span><span class="s">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span class="na">mediaPresentationDuration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">minBufferTime=</span><span class="s">&#34;PT1.5S&#34;</span> <span class="na">profiles=</span><span class="s">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
-<span class="na">type=</span><span class="s">&#34;static&#34;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;Period</span> <span class="na">duration=</span><span class="s">&#34;PT0H3M1.63S&#34;</span> <span class="na">start=</span><span class="s">&#34;PT0S&#34;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;video&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;4190760&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.640028&#34;</span> <span class="na">height=</span><span class="s">&#34;1080&#34;</span> <span class="na">id=</span><span class="s">&#34;1&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1920&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-89.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;674-1149&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-673&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;2073921&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401f&#34;</span> <span class="na">height=</span><span class="s">&#34;720&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;1280&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-88.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;869460&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401e&#34;</span> <span class="na">height=</span><span class="s">&#34;480&#34;</span> <span class="na">id=</span><span class="s">&#34;3&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;854&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-87.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;686521&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d401e&#34;</span> <span class="na">height=</span><span class="s">&#34;360&#34;</span> <span class="na">id=</span><span class="s">&#34;4&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;640&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-86.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;708-1183&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-707&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;264835&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d4015&#34;</span> <span class="na">height=</span><span class="s">&#34;240&#34;</span> <span class="na">id=</span><span class="s">&#34;5&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;426&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-85.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;672-1147&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-671&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;100000&#34;</span> <span class="na">codecs=</span><span class="s">&#34;avc1.4d4015&#34;</span> <span class="na">height=</span><span class="s">&#34;144&#34;</span> <span class="na">id=</span><span class="s">&#34;5&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;video/mp4&#34;</span> <span class="na">width=</span><span class="s">&#34;256&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-160.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;671-1146&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-670&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-    <span class="nt">&lt;/AdaptationSet&gt;</span>
-    <span class="nt">&lt;AdaptationSet</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;ContentComponent</span> <span class="na">contentType=</span><span class="s">&#34;audio&#34;</span> <span class="na">id=</span><span class="s">&#34;2&#34;</span> <span class="nt">/&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;127236&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.2&#34;</span> <span class="na">id=</span><span class="s">&#34;6&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;2&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;44100&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8c.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;255236&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.2&#34;</span> <span class="na">id=</span><span class="s">&#34;7&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;2&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;44100&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8d.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-      <span class="nt">&lt;Representation</span> <span class="na">bandwidth=</span><span class="s">&#34;31749&#34;</span> <span class="na">codecs=</span><span class="s">&#34;mp4a.40.5&#34;</span> <span class="na">id=</span><span class="s">&#34;8&#34;</span> <span class="na">mimeType=</span><span class="s">&#34;audio/mp4&#34;</span> <span class="na">numChannels=</span><span class="s">&#34;1&#34;</span> <span class="na">sampleRate=</span><span class="s">&#34;22050&#34;</span><span class="nt">&gt;</span>
-        <span class="nt">&lt;BaseURL</span><span class="nt">&gt;</span>car-20120827-8b.mp4<span class="nt">&lt;/BaseURL&gt;</span>
-        <span class="nt">&lt;SegmentBase</span> <span class="na">indexRange=</span><span class="s">&#34;592-851&#34;</span><span class="nt">&gt;</span>
-          <span class="nt">&lt;Initialization</span> <span class="na">range=</span><span class="s">&#34;0-591&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;/SegmentBase&gt;</span>
-      <span class="nt">&lt;/Representation&gt;</span>
-    <span class="nt">&lt;/AdaptationSet&gt;</span>
-  <span class="nt">&lt;/Period&gt;</span>
-<span class="nt">&lt;/MPD&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;MPD</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;urn:mpeg:DASH:schema:MPD:2011&#34;</span> <span style="color:#a6e22e">mediaPresentationDuration=</span><span style="color:#e6db74">&#34;PT0H3M1.63S&#34;</span> <span style="color:#a6e22e">minBufferTime=</span><span style="color:#e6db74">&#34;PT1.5S&#34;</span> <span style="color:#a6e22e">profiles=</span><span style="color:#e6db74">&#34;urn:mpeg:dash:profile:isoff-on-demand:2011&#34;</span>
+<span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;static&#34;</span><span style="color:#f92672">&gt;</span>
+  <span style="color:#f92672">&lt;Period</span> <span style="color:#a6e22e">duration=</span><span style="color:#e6db74">&#34;PT0H3M1.63S&#34;</span> <span style="color:#a6e22e">start=</span><span style="color:#e6db74">&#34;PT0S&#34;</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">&lt;AdaptationSet</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;ContentComponent</span> <span style="color:#a6e22e">contentType=</span><span style="color:#e6db74">&#34;video&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#f92672">/&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;4190760&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.640028&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;1080&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;1920&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-89.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;674-1149&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-673&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;2073921&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d401f&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;720&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;1280&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-88.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;708-1183&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-707&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;869460&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d401e&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;480&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;3&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;854&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-87.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;708-1183&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-707&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;686521&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d401e&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;360&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;4&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;640&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-86.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;708-1183&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-707&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;264835&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d4015&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;240&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;5&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;426&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-85.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;672-1147&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-671&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;100000&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;avc1.4d4015&#34;</span> <span style="color:#a6e22e">height=</span><span style="color:#e6db74">&#34;144&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;5&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;video/mp4&#34;</span> <span style="color:#a6e22e">width=</span><span style="color:#e6db74">&#34;256&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-160.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;671-1146&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-670&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+    <span style="color:#f92672">&lt;/AdaptationSet&gt;</span>
+    <span style="color:#f92672">&lt;AdaptationSet</span><span style="color:#f92672">&gt;</span>
+      <span style="color:#f92672">&lt;ContentComponent</span> <span style="color:#a6e22e">contentType=</span><span style="color:#e6db74">&#34;audio&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#f92672">/&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;127236&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;mp4a.40.2&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;6&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;audio/mp4&#34;</span> <span style="color:#a6e22e">numChannels=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#a6e22e">sampleRate=</span><span style="color:#e6db74">&#34;44100&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-8c.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;592-851&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-591&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;255236&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;mp4a.40.2&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;7&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;audio/mp4&#34;</span> <span style="color:#a6e22e">numChannels=</span><span style="color:#e6db74">&#34;2&#34;</span> <span style="color:#a6e22e">sampleRate=</span><span style="color:#e6db74">&#34;44100&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-8d.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;592-851&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-591&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+      <span style="color:#f92672">&lt;Representation</span> <span style="color:#a6e22e">bandwidth=</span><span style="color:#e6db74">&#34;31749&#34;</span> <span style="color:#a6e22e">codecs=</span><span style="color:#e6db74">&#34;mp4a.40.5&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;8&#34;</span> <span style="color:#a6e22e">mimeType=</span><span style="color:#e6db74">&#34;audio/mp4&#34;</span> <span style="color:#a6e22e">numChannels=</span><span style="color:#e6db74">&#34;1&#34;</span> <span style="color:#a6e22e">sampleRate=</span><span style="color:#e6db74">&#34;22050&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;BaseURL</span><span style="color:#f92672">&gt;</span>car-20120827-8b.mp4<span style="color:#f92672">&lt;/BaseURL&gt;</span>
+        <span style="color:#f92672">&lt;SegmentBase</span> <span style="color:#a6e22e">indexRange=</span><span style="color:#e6db74">&#34;592-851&#34;</span><span style="color:#f92672">&gt;</span>
+          <span style="color:#f92672">&lt;Initialization</span> <span style="color:#a6e22e">range=</span><span style="color:#e6db74">&#34;0-591&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/SegmentBase&gt;</span>
+      <span style="color:#f92672">&lt;/Representation&gt;</span>
+    <span style="color:#f92672">&lt;/AdaptationSet&gt;</span>
+  <span style="color:#f92672">&lt;/Period&gt;</span>
+<span style="color:#f92672">&lt;/MPD&gt;</span>
 
 </code></pre></div>
   </section>

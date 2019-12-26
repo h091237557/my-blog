@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用這種方案就已經可以處理很好了。
+但 !
+如果你已經將資料庫層與緩存層的架構都已經建立好，但還是發現有性能貧頸，那接下來才會建議使用幾個方案，因為這些方案沒用好，會衍生出非常多的問題。
+本篇文章分為以下幾個章節，這些就是接下來咱們要來學的擴展法。
+ 分庫 分表 分庫與分表的問題  重要 : 使用前注意事項 要使用以下的擴展方法時，先確認你的資料庫是否以下的問題是否有發生。
+ 問題 1 : 單庫太大，導致硬碟空間不夠囉。 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。 問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。  有以上事情發生才開始往接下來的擴展走。
+ 沒事真的別用它們
+ 分庫  它可以解決 問題 1 : 單庫太大，導致硬碟空間不夠囉 與 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊
+ 首先第一個要介紹的就是分庫，它的基本定義如下 :
+ 將一個大大的資料庫，依據『 規則 』拆分成小的資料庫
+ 其中上述說的規則，在傳統上可以分為以下幾種 :
+ 垂直切分 : 根據『 業務 』來拆分成多個小資料庫 ( 圖 1 所示 )。 水平切分 : 根據『 特性 』來拆分成多個小資料庫，例如地區 ( 圖 2 所示 )。  圖 1 : 垂直切分範例|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-26之資料庫層的擴展 - 分庫分表架構 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用這種方案就已經可以處理很好了。
+但 !
+如果你已經將資料庫層與緩存層的架構都已經建立好，但還是發現有性能貧頸，那接下來才會建議使用幾個方案，因為這些方案沒用好，會衍生出非常多的問題。
+本篇文章分為以下幾個章節，這些就是接下來咱們要來學的擴展法。
+ 分庫 分表 分庫與分表的問題  重要 : 使用前注意事項 要使用以下的擴展方法時，先確認你的資料庫是否以下的問題是否有發生。
+ 問題 1 : 單庫太大，導致硬碟空間不夠囉。 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。 問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。  有以上事情發生才開始往接下來的擴展走。
+ 沒事真的別用它們
+ 分庫  它可以解決 問題 1 : 單庫太大，導致硬碟空間不夠囉 與 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊
+ 首先第一個要介紹的就是分庫，它的基本定義如下 :
+ 將一個大大的資料庫，依據『 規則 』拆分成小的資料庫
+ 其中上述說的規則，在傳統上可以分為以下幾種 :
+ 垂直切分 : 根據『 業務 』來拆分成多個小資料庫 ( 圖 1 所示 )。 水平切分 : 根據『 特性 』來拆分成多個小資料庫，例如地區 ( 圖 2 所示 )。  圖 1 : 垂直切分範例|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -314,7 +339,7 @@ D 表 : 4,8,12,16
 <p>可以使用它來產生全局的順序編號，但缺點就在於需要連 redis 處理，還要考慮它是否活這。</p>
 <h4 id="-5---">問題 5 : 分表分頁如何處理呢 ?</h4>
 <p>像咱們在單一表進行分頁時，通常是會下如下的指令，說要拿第 6 至 15 的資料 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">table</span> <span class="k">ORDER</span> <span class="k">BY</span> <span class="n">time</span> <span class="k">LIMIT</span> <span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#66d9ef">table</span> <span style="color:#66d9ef">ORDER</span> <span style="color:#66d9ef">BY</span> time <span style="color:#66d9ef">LIMIT</span> <span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">10</span>;
 </code></pre></div><p>但是現在一個大表變成如下 :</p>
 <pre><code>table = tableA + tableB + tableC
 </code></pre><p>在分表的情境中，要如何處理呢 ?</p>

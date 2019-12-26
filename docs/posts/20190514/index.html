@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="php, reactor, reactphp" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reactPHP。
+本篇文章分為以下三個章節 :
+ reactPHP 基本概念 reactPHP 非阻塞 I/O 實現 reactPHP 使用時注意事項  reactPHP 基本概念 reactPHP 官網寫這一段話 :
+ Event-driven, non-blocking I/O with PHP
+ 它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :
+ 可以建立一個非阻塞 I/O 的網路服務。 可以建立一個定時排程服務。  http server 的範例 下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。
+$loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) { return new React\Http\Response( 200, array(&amp;#39;Content-Type&amp;#39; =&amp;gt; &amp;#39;text/plain&amp;#39;), &amp;#34;Hello World!|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac|Describe what your web page is about">
+    <meta name="twitter:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reactPHP。
+本篇文章分為以下三個章節 :
+ reactPHP 基本概念 reactPHP 非阻塞 I/O 實現 reactPHP 使用時注意事項  reactPHP 基本概念 reactPHP 官網寫這一段話 :
+ Event-driven, non-blocking I/O with PHP
+ 它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :
+ 可以建立一個非阻塞 I/O 的網路服務。 可以建立一個定時排程服務。  http server 的範例 下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。
+$loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) { return new React\Http\Response( 200, array(&#39;Content-Type&#39; =&gt; &#39;text/plain&#39;), &#34;Hello World!|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -143,7 +158,7 @@
 </ul>
 <h3 id="http-server-">http server 的範例</h3>
 <p>下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
 
 $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) {
     return new React\Http\Response(
@@ -160,7 +175,7 @@ echo &#34;Server running at http://127.0.0.1:8080\n&#34;;
 
 $loop-&gt;run();
 </code></pre></div><h4 id="heading">排程服務的範例</h4>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">$loop = React\EventLoop\Factory::create();
 
 // 5 秒後執行
 $loop-&gt;addPeriodicTimer(5, function () {
@@ -187,7 +202,7 @@ $loop-&gt;run();
 <li>event loop 當發現 I/O 操作有回復時，則執行 callback function</li>
 <li>echo $chunk。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">(1) $loop = React\EventLoop\Factory::create();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">(1) $loop = React\EventLoop\Factory::create();
     $client = new React\HttpClient\Client($loop);
 
     // 5 秒後執行
@@ -209,34 +224,34 @@ $loop-&gt;run();
 <p>reactPHP 理論上是 php 版的 nodejs 但實際使用要注意，不是。</p>
 <p>假設我們使用 reactPHP 然後來寫一個 http server。</p>
 <p>然後當 server 收到一個請求時，它會再使用<code>file_get_contents</code>這個方法去打某個 api，這 api 需要一分鐘左右才能回應。</p>
-<div class="highlight"><pre class="chroma"><code class="language-PHP" data-lang="PHP"><span class="cp">&lt;?php</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-PHP" data-lang="PHP"><span style="color:#75715e">&lt;?php</span> 
 
-<span class="k">require</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">require</span> <span style="color:#66d9ef">__DIR__</span> <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;/vendor/autoload.php&#39;</span>;
 
-<span class="nv">$loop</span> <span class="o">=</span> <span class="nx">React\EventLoop\Factory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+$loop <span style="color:#f92672">=</span> <span style="color:#a6e22e">React\EventLoop\Factory</span><span style="color:#f92672">::</span><span style="color:#a6e22e">create</span>();
 
-<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Http\Server</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Psr\Http\Message\ServerRequestInterface</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$client</span><span class="p">)</span> <span class="p">{</span>
+$server <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Http\Server</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span> $request) <span style="color:#66d9ef">use</span> ($client) {
 
-    <span class="c1">// ----------------------------------------------------
-</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
-    <span class="c1">// 假設這一段要執行一分鐘。
-</span><span class="c1"></span>    <span class="nv">$response</span> <span class="o">=</span> <span class="nx">file_get_contents</span><span class="p">(</span><span class="s1">&#39;http://127.0.0.1:3000&#39;</span><span class="p">);</span>
-    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
-    <span class="c1">// ----------------------------------------------------
-</span><span class="c1"></span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">React\Http\Response</span><span class="p">(</span>
-        <span class="mi">200</span><span class="p">,</span>
-        <span class="k">array</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">),</span>
-        <span class="s2">&#34;Hello World!</span><span class="se">\n</span><span class="s2">&#34;</span>
-    <span class="p">);</span>
-<span class="p">});</span>
+    <span style="color:#75715e">// ----------------------------------------------------
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;wait...&#39;</span>);
+    <span style="color:#75715e">// 假設這一段要執行一分鐘。
+</span><span style="color:#75715e"></span>    $response <span style="color:#f92672">=</span> <span style="color:#a6e22e">file_get_contents</span>(<span style="color:#e6db74">&#39;http://127.0.0.1:3000&#39;</span>);
+    <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;done !...&#39;</span>);
+    <span style="color:#75715e">// ----------------------------------------------------
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Http\Response</span>(
+        <span style="color:#ae81ff">200</span>,
+        <span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#39;Content-Type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;text/plain&#39;</span>),
+        <span style="color:#e6db74">&#34;Hello World!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+    );
+});
 
-<span class="nv">$socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Socket\Server</span><span class="p">(</span><span class="mi">8080</span><span class="p">,</span> <span class="nv">$loop</span><span class="p">);</span>
-<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">listen</span><span class="p">(</span><span class="nv">$socket</span><span class="p">);</span>
+$socket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Socket\Server</span>(<span style="color:#ae81ff">8080</span>, $loop);
+$server<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">listen</span>($socket);
 
-<span class="k">echo</span> <span class="s2">&#34;Server running at http://127.0.0.1:8080</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+<span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;Server running at http://127.0.0.1:8080</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 
-<span class="nv">$loop</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+$loop<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">run</span>();
 </code></pre></div><h4 id="-reactphp--http-server-wait--">假設往這個使用 reactPHP 寫的 http server，發送兩次請求，上面的 wait 會看到幾次呢 ?</h4>
 <p>答案是 : 1 次</p>
 <p>因為第一次請求時，就將整個 process 給阻塞住了，所以第二個請求完全無法處理。</p>
@@ -244,43 +259,43 @@ $loop-&gt;run();
 <p>嗯對的，它有提供，但是前提假設為，你要使用它。</p>
 <p>你在寫 nodejs 時，上面這個相似範例 process 就不會被阻塞住，因為它在給 v8 處理完 binding c++ 階段時，會將所有的 I/O 操作執行完並且丟到 event loop 機制中，所以在 nodejs 操作 I/O 時，你什麼都沒做，就會是非阻塞的 I/O 操作。</p>
 <p>而在 reactPHP 中，你要自已處理又或是使用它所提供的 http client 才能讓變成非阻塞 I/O 的操作。如下範例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span> 
 
-<span class="k">require</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/vendor/autoload.php&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">require</span> <span style="color:#66d9ef">__DIR__</span> <span style="color:#f92672">.</span> <span style="color:#e6db74">&#39;/vendor/autoload.php&#39;</span>;
 
-<span class="nv">$loop</span> <span class="o">=</span> <span class="nx">React\EventLoop\Factory</span><span class="o">::</span><span class="na">create</span><span class="p">();</span>
+$loop <span style="color:#f92672">=</span> <span style="color:#a6e22e">React\EventLoop\Factory</span><span style="color:#f92672">::</span><span style="color:#a6e22e">create</span>();
 
-<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\HttpClient\Client</span><span class="p">(</span><span class="nv">$loop</span><span class="p">);</span>
+$client <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\HttpClient\Client</span>($loop);
 
-<span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Http\Server</span><span class="p">(</span><span class="k">function</span> <span class="p">(</span><span class="nx">Psr\Http\Message\ServerRequestInterface</span> <span class="nv">$request</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$client</span><span class="p">)</span> <span class="p">{</span>
+$server <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Http\Server</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">Psr\Http\Message\ServerRequestInterface</span> $request) <span style="color:#66d9ef">use</span> ($client) {
 
-    <span class="c1">// ----------------------------------------------------
-</span><span class="c1"></span>    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;wait...&#39;</span><span class="p">);</span>
-    <span class="nv">$request</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">request</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;http://127.0.0.1:3000&#39;</span><span class="p">);</span>
-    <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;response&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$chunk</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">echo</span> <span class="nv">$chunk</span><span class="p">;</span>
-    <span class="p">});</span>
-    <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">echo</span> <span class="s1">&#39;DONE&#39;</span><span class="p">;</span>
-    <span class="p">});</span>
+    <span style="color:#75715e">// ----------------------------------------------------
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;wait...&#39;</span>);
+    $request <span style="color:#f92672">=</span> $client<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">request</span>(<span style="color:#e6db74">&#39;GET&#39;</span>, <span style="color:#e6db74">&#39;http://127.0.0.1:3000&#39;</span>);
+    $request<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;response&#39;</span>, <span style="color:#66d9ef">function</span> ($response) {
+    $response<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;data&#39;</span>, <span style="color:#66d9ef">function</span> ($chunk) {
+        <span style="color:#66d9ef">echo</span> $chunk;
+    });
+    $response<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;end&#39;</span>, <span style="color:#66d9ef">function</span>() {
+        <span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#39;DONE&#39;</span>;
+    });
     
-    <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;done !...&#39;</span><span class="p">);</span>
-    <span class="c1">// ----------------------------------------------------
-</span><span class="c1"></span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nx">React\Http\Response</span><span class="p">(</span>
-        <span class="mi">200</span><span class="p">,</span>
-        <span class="k">array</span><span class="p">(</span><span class="s1">&#39;Content-Type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">),</span>
-        <span class="s2">&#34;Hello World!</span><span class="se">\n</span><span class="s2">&#34;</span>
-    <span class="p">);</span>
-<span class="p">});</span>
+    <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;done !...&#39;</span>);
+    <span style="color:#75715e">// ----------------------------------------------------
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Http\Response</span>(
+        <span style="color:#ae81ff">200</span>,
+        <span style="color:#66d9ef">array</span>(<span style="color:#e6db74">&#39;Content-Type&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;text/plain&#39;</span>),
+        <span style="color:#e6db74">&#34;Hello World!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>
+    );
+});
 
-<span class="nv">$socket</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">React\Socket\Server</span><span class="p">(</span><span class="mi">8080</span><span class="p">,</span> <span class="nv">$loop</span><span class="p">);</span>
-<span class="nv">$server</span><span class="o">-&gt;</span><span class="na">listen</span><span class="p">(</span><span class="nv">$socket</span><span class="p">);</span>
+$socket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">React\Socket\Server</span>(<span style="color:#ae81ff">8080</span>, $loop);
+$server<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">listen</span>($socket);
 
-<span class="k">echo</span> <span class="s2">&#34;Server running at http://127.0.0.1:8080</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">;</span>
+<span style="color:#66d9ef">echo</span> <span style="color:#e6db74">&#34;Server running at http://127.0.0.1:8080</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>;
 
-<span class="nv">$loop</span><span class="o">-&gt;</span><span class="na">run</span><span class="p">();</span>
+$loop<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">run</span>();
 </code></pre></div><h2 id="heading2">結論</h2>
 <p>本篇文章中我們學習了幾個重點:</p>
 <h4 id="reactphp-1">reactPHP 基本概念</h4>

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="js, javascript, settimeout" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
+setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
+下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&amp;ldquo;Hello&amp;rdquo;)。
+setTimeout(function(){ console.log(&amp;#34;Hello&amp;#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
+var start = new Date; setTimeout(function(){ var end = new Date; console.log(&amp;#39;Time elapsed:&amp;#39;, end - start, &amp;#39;ms&amp;#39;); }, 1000); while (new Date - start &amp;lt; 2000) {}; &amp;lt;!-- tas --&amp;gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
+setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(&amp;quot;Mark&amp;quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
+如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Javascript 非同步編程的方法 - setTimeout | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中|Describe what your web page is about">
+    <meta name="twitter:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
+setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
+下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&ldquo;Hello&rdquo;)。
+setTimeout(function(){ console.log(&#34;Hello&#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
+var start = new Date; setTimeout(function(){ var end = new Date; console.log(&#39;Time elapsed:&#39;, end - start, &#39;ms&#39;); }, 1000); while (new Date - start &lt; 2000) {}; &lt;!-- tas --&gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
+setTimeout(function(){ console.log(&quot;Hello&quot;); },0) console.log(&quot;Mark&quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
+如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -128,20 +143,20 @@
 <h2 id="settimeout">setTimeout基本用法</h2>
 <p>SetTimeout為Javascript的原生函數，主要的用法為<code>在一個指定的延遲時間後執行某個函數</code>。</p>
 <p>下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&ldquo;Hello&rdquo;)。</p>
-<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS">	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>
-	<span class="p">}</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JS" data-lang="JS">	<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Hello&#34;</span>)
+	},<span style="color:#ae81ff">1000</span>);
 </code></pre></div><p>這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被<code>While</code>阻塞，<code>setTimeout</code>就不會在1秒後執行，而是等while執行完在執行。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">start</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">;</span> 
-	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">end</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">;</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Time elapsed:&#39;</span><span class="p">,</span> <span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span><span class="p">,</span> <span class="s1">&#39;ms&#39;</span><span class="p">)</span><span class="p">;</span> 
-	<span class="p">}</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
-	<span class="k">while</span> <span class="p">(</span><span class="k">new</span> <span class="nb">Date</span> <span class="o">-</span> <span class="nx">start</span> <span class="o">&lt;</span> <span class="mi">2000</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="c">&lt;!--</span> <span class="nx">tas</span> <span class="o">--</span><span class="o">&gt;</span>
-	<span class="nx">輸出結果</span><span class="err">：</span>
-	<span class="nx">Time</span> <span class="nx">elapsed</span><span class="o">:</span> <span class="mi">2002</span> <span class="nx">ms</span>
-<span class="o">--</span><span class="o">-</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date; 
+	<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">end</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date;
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Time elapsed:&#39;</span>, <span style="color:#a6e22e">end</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">start</span>, <span style="color:#e6db74">&#39;ms&#39;</span>); 
+	}, <span style="color:#ae81ff">1000</span>);
+	<span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">new</span> Date <span style="color:#f92672">-</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">2000</span>) {};
+<span style="color:#75715e">&lt;!--</span> <span style="color:#a6e22e">tas</span> <span style="color:#f92672">--</span><span style="color:#f92672">&gt;</span>
+	<span style="color:#a6e22e">輸出結果</span><span style="color:#960050;background-color:#1e0010">：</span>
+	<span style="color:#a6e22e">Time</span> <span style="color:#a6e22e">elapsed</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2002</span> <span style="color:#a6e22e">ms</span>
+<span style="color:#f92672">--</span><span style="color:#f92672">-</span>
 </code></pre></div><h2 id="settimeout--0--">setTimeout ( 0 ) 的意思</h2>
 <p>SetTimeout為<code>在一個指定的延遲時間後執行某個函數</code>，所以如果帶入<code>(0)</code>，則是否意味馬上執行的意思?來看下面程式碼。</p>
 <pre><code>setTimeout(function(){
@@ -160,19 +175,19 @@ Hello
 <hr>
 <p>## setTimeout非同步的範例</p>
 <p>首先看看下面的程式碼，<code>doSomething</code>函數需要等到取得到<code>data</code>才執行，但<code>getData</code>會執行很久，但下面的<code>doSomething1</code>與<code>2</code>不需要<code>data</code>就可以執行，所以這時這種寫法就會很浪費時間。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">getData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">doSomething</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getData</span>();
+	<span style="color:#a6e22e">doSomething</span>(<span style="color:#a6e22e">data</span>);
 	
-	<span class="nx">doSomething1</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">doSomething2</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">doSomething1</span>();
+	<span style="color:#a6e22e">doSomething2</span>();
 </code></pre></div><p>所以我們將<code>getData</code>fucntion修改為如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">function</span> <span class="nx">getData</span><span class="p">(</span><span class="nx">callBack</span><span class="p">)</span><span class="p">{</span>			
-		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-			<span class="c1">//getData要執行的程式碼
-</span><span class="c1"></span>			
-			<span class="nx">callBack</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getData</span>(<span style="color:#a6e22e">callBack</span>){			
+		<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span>(){
+			<span style="color:#75715e">//getData要執行的程式碼
+</span><span style="color:#75715e"></span>			
+			<span style="color:#a6e22e">callBack</span>();
+		},<span style="color:#ae81ff">10</span>);
+	}
 </code></pre></div><p>然後我們整段程式碼就可以改成。</p>
 <pre><code>	getData(doSomething);
 	doSomething1();

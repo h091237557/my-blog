@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。 Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling S|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。
+ Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling Server的實作選擇。  Signaling Server 要做的事情 在上一篇文章，我們大概知道了 Signaling Server 要做的事情，它要做的就是：
+ 在建立 WebRTC 時，讓不認識的雙方可以相互的認識 (也就是知道對方的位置)
+ 順到說一下 WebRTC 並沒有定議 Signaling Server 的標準。
+那 Signaling 是如何讓雙方知道對方的位置呢 ? Signaling 是如何讓雙方認識呢 ?
+它就像是一個交友仲介商，每當某位用戶要進行聯誼時，用戶會提交一份履歷，這裡面就寫這他家在那，然後有配對到時，就會將這份履歷交給配對者，然後配對者如果覺得可以認識看看，他也會提供一份履歷給 Signaling Server，這樣雙向就可以進行面談了，其中已 Signaling 角度而言，履歷就是指 SDP。
+什麼是 SDP ? 下章節在說。
+為啥 WebRTC 不建立 Signaling Server 的標準呢 ? 因為事實上要讓兩個瀏覽器能進行溝通，可以不需要 Signaling Server，如果你知道對方在那的情況下，在筆者的『30-10之通訊協議的基本常識』這篇文章中有提到，假設你知道了對方的 port 就代表你可以找到對方電腦內某個應用程式的位置，而你知道了 ip 那就代表你知道對方在那，所以這時你事實上就可以與對方溝通。
+WebRTC 與 SDP SDP (Session Description Protocol) 中文叫會話描述協議，在一段會話建立起來前，咱們需要一些建立這會話雙方的資訊，假設 A 與 B 要建立會話，所以這時 A 會發送一個 SDP 給 Signaling，內容包含了 A 的地址、媒體類型、傳輸協議、媒體格式等或是一些它所在的時區資訊，然後 Signaling 會將 A 發送的 SDP 給 B，這樣雙方就知道如何建立連線了。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-27之 WebRTC 的 Signaling Server | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。 Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling S|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。
+ Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling Server的實作選擇。  Signaling Server 要做的事情 在上一篇文章，我們大概知道了 Signaling Server 要做的事情，它要做的就是：
+ 在建立 WebRTC 時，讓不認識的雙方可以相互的認識 (也就是知道對方的位置)
+ 順到說一下 WebRTC 並沒有定議 Signaling Server 的標準。
+那 Signaling 是如何讓雙方知道對方的位置呢 ? Signaling 是如何讓雙方認識呢 ?
+它就像是一個交友仲介商，每當某位用戶要進行聯誼時，用戶會提交一份履歷，這裡面就寫這他家在那，然後有配對到時，就會將這份履歷交給配對者，然後配對者如果覺得可以認識看看，他也會提供一份履歷給 Signaling Server，這樣雙向就可以進行面談了，其中已 Signaling 角度而言，履歷就是指 SDP。
+什麼是 SDP ? 下章節在說。
+為啥 WebRTC 不建立 Signaling Server 的標準呢 ? 因為事實上要讓兩個瀏覽器能進行溝通，可以不需要 Signaling Server，如果你知道對方在那的情況下，在筆者的『30-10之通訊協議的基本常識』這篇文章中有提到，假設你知道了對方的 port 就代表你可以找到對方電腦內某個應用程式的位置，而你知道了 ip 那就代表你知道對方在那，所以這時你事實上就可以與對方溝通。
+WebRTC 與 SDP SDP (Session Description Protocol) 中文叫會話描述協議，在一段會話建立起來前，咱們需要一些建立這會話雙方的資訊，假設 A 與 B 要建立會話，所以這時 A 會發送一個 SDP 給 Signaling，內容包含了 A 的地址、媒體類型、傳輸協議、媒體格式等或是一些它所在的時區資訊，然後 Signaling 會將 A 發送的 SDP 給 B，這樣雙方就知道如何建立連線了。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

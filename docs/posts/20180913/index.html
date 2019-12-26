@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="instant messaging, 鐵人賽, rtsp" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。
+ RTSP 協議
+ 本篇文章將會分成幾個章節來理解 RTSP 協議：
+ RTSP 協議是要用來完成什麼事情呢 ? RTSP 協議如何完成它想做的事情呢 ? 建立 RTSP 的串流傳輸流程。 RTSP 的特點。  RTSP 協議是要用來完成什麼事情呢 ?  它是被設計出來為，為了控制串流媒體 Sever 的協議 (ex. 快轉、暫停影片之類)
+ RTSP 它被設計出來是為了可以控制串流媒體伺服器的協議 (所以他是 C/S 架構)，例如我們先發送一個觀看影片的請求給 Server，然後它就開始以串流型式來傳輸影片，然後這時我們可以用 RTSP 所提供的一些方法，來進行影片的快轉或暫停，為了能控制串流就是它被設計出來的原理。
+就如同下圖所示，RTSP 讓我們可以操控串流媒體。
+RTSP 協議如何完成它想做的事情呢 ? 那它要如何控制呢串流呢 ?
+ 它定義了控制的方法與參數
+ 就如同 HTTP 一樣，它定義了一些方法可以給我們控制，例如 Play 這個動作，當串流 Server 看到這個動詞後，就會開始傳輸影片給請求者。
+建立 RTSP 的串流傳輸流程 我們直接去使用網路上所提供的 RTSP 進行請求看看。這個連結你可以使用 ffplay 來開啟 (ffplay 之後會提)。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-13之 RTSP 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。
+ RTSP 協議
+ 本篇文章將會分成幾個章節來理解 RTSP 協議：
+ RTSP 協議是要用來完成什麼事情呢 ? RTSP 協議如何完成它想做的事情呢 ? 建立 RTSP 的串流傳輸流程。 RTSP 的特點。  RTSP 協議是要用來完成什麼事情呢 ?  它是被設計出來為，為了控制串流媒體 Sever 的協議 (ex. 快轉、暫停影片之類)
+ RTSP 它被設計出來是為了可以控制串流媒體伺服器的協議 (所以他是 C/S 架構)，例如我們先發送一個觀看影片的請求給 Server，然後它就開始以串流型式來傳輸影片，然後這時我們可以用 RTSP 所提供的一些方法，來進行影片的快轉或暫停，為了能控制串流就是它被設計出來的原理。
+就如同下圖所示，RTSP 讓我們可以操控串流媒體。
+RTSP 協議如何完成它想做的事情呢 ? 那它要如何控制呢串流呢 ?
+ 它定義了控制的方法與參數
+ 就如同 HTTP 一樣，它定義了一些方法可以給我們控制，例如 Play 這個動作，當串流 Server 看到這個動詞後，就會開始傳輸影片給請求者。
+建立 RTSP 的串流傳輸流程 我們直接去使用網路上所提供的 RTSP 進行請求看看。這個連結你可以使用 ffplay 來開啟 (ffplay 之後會提)。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

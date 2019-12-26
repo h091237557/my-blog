@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="instant messaging, 鐵人賽, hls" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HLS 協議。 HLS 協議 本篇文章將會分成幾個章節來理解 HLS 協議： HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HLS 協議。
+ HLS 協議
+ 本篇文章將會分成幾個章節來理解 HLS 協議：
+ HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建立 HLS 的串流傳輸流程。 HLS 的延遲問題。 HLS 的特點總結。  HLS 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ HLS ( HTTP Live Streaming ) 是由高大尚的蘋果公司所開發，再 HLS 還沒誕生之前，這世界大部份的流媒體傳輸都是被 RTMP 所佔據，最主要的原因在於當時，大部份的電腦都有裝 Flash Player。
+而蘋果開發出 HLS 主要有兩個原因：
+ 不想被 Flash 綁死，所以它大部份的設備都慢慢的把 Flash 拔掉(當時)。 RTMP 有個問題就是，它不是透過 HTTP 來進行傳輸，所以它很有可能會被一些防火墻防掉。  HLS 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-15之 HLS 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HLS 協議。 HLS 協議 本篇文章將會分成幾個章節來理解 HLS 協議： HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HLS 協議。
+ HLS 協議
+ 本篇文章將會分成幾個章節來理解 HLS 協議：
+ HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建立 HLS 的串流傳輸流程。 HLS 的延遲問題。 HLS 的特點總結。  HLS 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ HLS ( HTTP Live Streaming ) 是由高大尚的蘋果公司所開發，再 HLS 還沒誕生之前，這世界大部份的流媒體傳輸都是被 RTMP 所佔據，最主要的原因在於當時，大部份的電腦都有裝 Flash Player。
+而蘋果開發出 HLS 主要有兩個原因：
+ 不想被 Flash 綁死，所以它大部份的設備都慢慢的把 Flash 拔掉(當時)。 RTMP 有個問題就是，它不是透過 HTTP 來進行傳輸，所以它很有可能會被一些防火墻防掉。  HLS 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

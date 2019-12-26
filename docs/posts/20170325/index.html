@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="algorithm, dp" name="keywords">
     
     
-    <meta name="description" property="og:description" content="動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免|Describe what your web page is about">
+    <meta name="description" property="og:description" content="動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。
+費波那西數列 最簡單說明動態規畫法的問題就是費波那西數列，它的定義如下。
+ F0 = 0
+F1 = 1
+Fn = Fn-1 &#43; Fn-2
+ 也就是說F2所代表的意思為F2 = F1 &#43; F0，也就等於F2 = 1 &#43; 0。
+我們直接來看程式碼，首先先看沒有用cache的費波那西數列。非常的簡單就只用遞迴來計算每個數列的值。
+function fib (n){ if(n&amp;lt;=1){ return n; } return fib(n-1)&#43;fib(n-2); } 我們這邊使用個例子，來說明它的計算流程，我們執行fib(5)，然後我們直接看下面這張圖來了解它的過程，首先是項點fib(5)，它就是由fib(4)、fib(3)組成，然後再將之分解，就會如下圖的結果。其中我們有用綠色底來上色的地方，它就代表我們有重複的數字，像fib(2)就被計算了3次，所以上面這個演算法事實上做了很多重複的事情。
+而接下來，我們就將它改良一下，也就是用動態規畫法的概念下修改而成，它每次計算過一個數字後，就會先存起來，然後有需要時，就在將它拿出來。
+程式碼如下，它會將每個有計算過的數列儲放在記憶體內，有用到它時，就將它拿出來用。 下面就是簡單的使用動態規畫法概念實作的費波南西數列。
+//有用Cache var memo = []; var count = 0; var fib_cache = function(n){ if(n &amp;lt;=1){ return n; } if( typeof memo[n] !== &amp;#39;undefined&amp;#39;){ return memo[n]; }else{ memo[n] = fib_cache(n-1) &#43; fib_cache(n-2); return memo[n]; } } 背包問題（Knapsack Problem） 這個問題的定義如下。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="演算法策略---動態規畫法 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免|Describe what your web page is about">
+    <meta name="twitter:description" content="動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。
+費波那西數列 最簡單說明動態規畫法的問題就是費波那西數列，它的定義如下。
+ F0 = 0
+F1 = 1
+Fn = Fn-1 &#43; Fn-2
+ 也就是說F2所代表的意思為F2 = F1 &#43; F0，也就等於F2 = 1 &#43; 0。
+我們直接來看程式碼，首先先看沒有用cache的費波那西數列。非常的簡單就只用遞迴來計算每個數列的值。
+function fib (n){ if(n&lt;=1){ return n; } return fib(n-1)&#43;fib(n-2); } 我們這邊使用個例子，來說明它的計算流程，我們執行fib(5)，然後我們直接看下面這張圖來了解它的過程，首先是項點fib(5)，它就是由fib(4)、fib(3)組成，然後再將之分解，就會如下圖的結果。其中我們有用綠色底來上色的地方，它就代表我們有重複的數字，像fib(2)就被計算了3次，所以上面這個演算法事實上做了很多重複的事情。
+而接下來，我們就將它改良一下，也就是用動態規畫法的概念下修改而成，它每次計算過一個數字後，就會先存起來，然後有需要時，就在將它拿出來。
+程式碼如下，它會將每個有計算過的數列儲放在記憶體內，有用到它時，就將它拿出來用。 下面就是簡單的使用動態規畫法概念實作的費波南西數列。
+//有用Cache var memo = []; var count = 0; var fib_cache = function(n){ if(n &lt;=1){ return n; } if( typeof memo[n] !== &#39;undefined&#39;){ return memo[n]; }else{ memo[n] = fib_cache(n-1) &#43; fib_cache(n-2); return memo[n]; } } 背包問題（Knapsack Problem） 這個問題的定義如下。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -134,32 +157,32 @@
 </blockquote>
 <p>也就是說<code>F2</code>所代表的意思為<code>F2 = F1 + F0</code>，也就等於<code>F2 = 1 + 0</code>。</p>
 <p>我們直接來看程式碼，首先先看沒有用<code>cache</code>的費波那西數列。非常的簡單就只用遞迴來計算每個數列的值。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">fib</span> <span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">if</span><span class="p">(</span><span class="nx">n</span><span class="o">&lt;=</span><span class="mi">1</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
-	<span class="p">}</span>
-	<span class="k">return</span> <span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">+</span><span class="nx">fib</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">fib</span> (<span style="color:#a6e22e">n</span>){
+	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>){
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span>;
+	}
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">fib</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">+</span><span style="color:#a6e22e">fib</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>);
+}
 </code></pre></div><p>我們這邊使用個例子，來說明它的計算流程，我們執行<code>fib(5)</code>，然後我們直接看下面這張圖來了解它的過程，首先是項點<code>fib(5)</code>，它就是由<code>fib(4)、fib(3)</code>組成，然後再將之分解，就會如下圖的結果。其中我們有用綠色底來上色的地方，它就代表我們有重複的數字，像<code>fib(2)</code>就被計算了<code>3次</code>，所以上面這個演算法事實上做了很多重複的事情。</p>
 <p><img src="http://yixiang8780.com/outImg/20170331-1.png" alt=""></p>
 <p>而接下來，我們就將它改良一下，也就是用動態規畫法的概念下修改而成，它每次計算過一個數字後，就會先存起來，然後有需要時，就在將它拿出來。</p>
 <p>程式碼如下，它會將每個有計算過的數列儲放在記憶體內，有用到它時，就將它拿出來用。
 下面就是簡單的使用<code>動態規畫法</code>概念實作的費波南西數列。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//有用Cache
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">memo</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">fib_cache</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">if</span><span class="p">(</span><span class="nx">n</span> <span class="o">&lt;=</span><span class="mi">1</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">//有用Cache
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">memo</span> <span style="color:#f92672">=</span> [];
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">fib_cache</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">n</span>){
+	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">n</span> <span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">1</span>){
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span>;
+	}
 
-	<span class="k">if</span><span class="p">(</span> <span class="k">typeof</span> <span class="nx">memo</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">return</span> <span class="nx">memo</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span><span class="k">else</span><span class="p">{</span>
-		<span class="nx">memo</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span> <span class="o">=</span> <span class="nx">fib_cache</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nx">fib_cache</span><span class="p">(</span><span class="nx">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nx">memo</span><span class="p">[</span><span class="nx">n</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+	<span style="color:#66d9ef">if</span>( <span style="color:#66d9ef">typeof</span> <span style="color:#a6e22e">memo</span>[<span style="color:#a6e22e">n</span>] <span style="color:#f92672">!==</span> <span style="color:#e6db74">&#39;undefined&#39;</span>){
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">memo</span>[<span style="color:#a6e22e">n</span>];
+	}<span style="color:#66d9ef">else</span>{
+		<span style="color:#a6e22e">memo</span>[<span style="color:#a6e22e">n</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">fib_cache</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">fib_cache</span>(<span style="color:#a6e22e">n</span><span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>);
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">memo</span>[<span style="color:#a6e22e">n</span>];
+	}
+}
 </code></pre></div><h2 id="knapsack-problem">背包問題（Knapsack Problem）</h2>
 <p>這個問題的定義如下。</p>
 <blockquote>
@@ -202,74 +225,74 @@
 <p>然後我們在來看右手邊，一開始選擇產品A這分支，因為它選擇了A，所以限重量只剩<code>(1)</code>，所以這邊我們不沒辦法在選<code>B</code>，所以這層的總價值為<code>3</code>。</p>
 <p>最後我們在來看決定要選擇 <code>A</code>還是選擇<code>B</code>，上述的流程都已經計算出這兩個選項的結果，因此我們選擇<code>選擇產品A</code>這個結果<code>(3&gt;2)</code>。</p>
 <p>接下來我們來實作程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="p">[</span><span class="p">{</span>
-	<span class="nx">w</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-	<span class="nx">v</span><span class="o">:</span> <span class="mi">3</span>
-<span class="p">}</span><span class="p">,</span> <span class="p">{</span>
-	<span class="nx">w</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-	<span class="nx">v</span><span class="o">:</span> <span class="mi">2</span>
-<span class="p">}</span><span class="p">,</span> <span class="p">{</span>
-	<span class="nx">w</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-	<span class="nx">v</span><span class="o">:</span> <span class="mi">4</span>
-<span class="p">}</span><span class="p">,</span> <span class="p">{</span>
-	<span class="nx">w</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-	<span class="nx">v</span><span class="o">:</span> <span class="mi">2</span>
-<span class="p">}</span><span class="p">]</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">debugger</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">items</span> <span style="color:#f92672">=</span> [{
+	<span style="color:#a6e22e">w</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+	<span style="color:#a6e22e">v</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>
+}, {
+	<span style="color:#a6e22e">w</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+	<span style="color:#a6e22e">v</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>
+}, {
+	<span style="color:#a6e22e">w</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>,
+	<span style="color:#a6e22e">v</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">4</span>
+}, {
+	<span style="color:#a6e22e">w</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+	<span style="color:#a6e22e">v</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>
+}];
 
-<span class="kd">function</span> <span class="nx">Array2DVar</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 定義二維陣列原型
-</span><span class="c1"></span>	<span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span> <span class="c1">// x 維度長度
-</span><span class="c1"></span>	<span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span> <span class="c1">// y 維度長度
-</span><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="c1">// 建立個元素陣列
-</span><span class="c1"></span>		<span class="k">this</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span><span class="p">;</span> <span class="c1">// this 代表物件本身
-</span><span class="c1"></span><span class="p">}</span>
-<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Array2DVar</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Array2DVar</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>) { <span style="color:#75715e">// 定義二維陣列原型
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">x</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">x</span>; <span style="color:#75715e">// x 維度長度
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">y</span>; <span style="color:#75715e">// y 維度長度
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) <span style="color:#75715e">// 建立個元素陣列
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">this</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Array(<span style="color:#a6e22e">y</span>); <span style="color:#75715e">// this 代表物件本身
+</span><span style="color:#75715e"></span>}
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">temp</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Array2DVar</span>(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">5</span>);
 
-<span class="kd">function</span> <span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">weight</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">temp</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">[</span><span class="nx">weight</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">temp</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">[</span><span class="nx">weight</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span>, <span style="color:#a6e22e">weight</span>) {
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">temp</span>[<span style="color:#a6e22e">index</span>][<span style="color:#a6e22e">weight</span>] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">temp</span>[<span style="color:#a6e22e">index</span>][<span style="color:#a6e22e">weight</span>];
+	}
 
-	<span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">items</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">w</span> <span class="o">&gt;</span> <span class="nx">weight</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span><span class="p">)</span><span class="p">,</span> <span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span> <span class="o">-</span> <span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">w</span><span class="p">)</span> <span class="o">+</span> <span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">items</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">index</span>) {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">w</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">weight</span>) {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span>);
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span>), <span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">w</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">v</span>);
+	}
 
-	<span class="nx">temp</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">[</span><span class="nx">weight</span><span class="p">]</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>
-	<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span>
+	<span style="color:#a6e22e">temp</span>[<span style="color:#a6e22e">index</span>][<span style="color:#a6e22e">weight</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">result</span>;
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
+}
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">5</span>));
 
 </code></pre></div><p>其中下面這段程式碼，是要產生一個矩陣，用來存放我們曾經計算過的值，當然也不一定要用矩陣，只要可以存放就好，至於為什麼這裡要用矩陣等等會說明。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Array2DVar</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span> <span class="c1">// 定義二維陣列原型
-</span><span class="c1"></span>	<span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">;</span> <span class="c1">// x 維度長度
-</span><span class="c1"></span>	<span class="k">this</span><span class="p">.</span><span class="nx">y</span> <span class="o">=</span> <span class="nx">y</span><span class="p">;</span> <span class="c1">// y 維度長度
-</span><span class="c1"></span>	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="c1">// 建立個元素陣列
-</span><span class="c1"></span>		<span class="k">this</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Array</span><span class="p">(</span><span class="nx">y</span><span class="p">)</span><span class="p">;</span> <span class="c1">// this 代表物件本身
-</span><span class="c1"></span><span class="p">}</span>
-<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Array2DVar</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Array2DVar</span>(<span style="color:#a6e22e">x</span>, <span style="color:#a6e22e">y</span>) { <span style="color:#75715e">// 定義二維陣列原型
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">x</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">x</span>; <span style="color:#75715e">// x 維度長度
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">y</span>; <span style="color:#75715e">// y 維度長度
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) <span style="color:#75715e">// 建立個元素陣列
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">this</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Array(<span style="color:#a6e22e">y</span>); <span style="color:#75715e">// this 代表物件本身
+</span><span style="color:#75715e"></span>}
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">temp</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Array2DVar</span>(<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">5</span>);
 </code></pre></div><p>然後下面這段程式碼是判斷，如果有已經計算過的值，則直接從記憶體取出。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="k">if</span> <span class="p">(</span><span class="nx">temp</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">[</span><span class="nx">weight</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">temp</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">[</span><span class="nx">weight</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">temp</span>[<span style="color:#a6e22e">index</span>][<span style="color:#a6e22e">weight</span>] <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">temp</span>[<span style="color:#a6e22e">index</span>][<span style="color:#a6e22e">weight</span>];
+	}
 </code></pre></div><p>接下來這段是重點，它有三個區塊，首先第一個區塊，當<code>items.length == index</code>時，也就代表這，它已經沒有item可以繼續選擇下去了，再來第二個區塊，這塊是在說明如果<code>某產品的重量</code>大於<code>剩於限重量</code>，則往下一個產品繼續選擇，再來最後一個區塊就是我們上面所提到的過程，如下，它會將狀況分成兩種，然後再深入的去選擇。</p>
 <blockquote>
 <p>當物品重量小於限制重量時，考慮兩種狀況 (1) 將該商品放入後的情況 (2) 不將該商品放入後的情況。再取兩者間最大的價值。</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="k">if</span> <span class="p">(</span><span class="nx">items</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">w</span> <span class="o">&gt;</span> <span class="nx">weight</span><span class="p">)</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">result</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span><span class="p">)</span><span class="p">,</span> <span class="nx">dpProcess</span><span class="p">(</span><span class="nx">items</span><span class="p">,</span> <span class="nx">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">weight</span> <span class="o">-</span> <span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">w</span><span class="p">)</span> <span class="o">+</span> <span class="nx">items</span><span class="p">[</span><span class="nx">index</span><span class="p">]</span><span class="p">.</span><span class="nx">v</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">items</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">index</span>) {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">w</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">weight</span>) {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span>);
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span>), <span style="color:#a6e22e">dpProcess</span>(<span style="color:#a6e22e">items</span>, <span style="color:#a6e22e">index</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>, <span style="color:#a6e22e">weight</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">w</span>) <span style="color:#f92672">+</span> <span style="color:#a6e22e">items</span>[<span style="color:#a6e22e">index</span>].<span style="color:#a6e22e">v</span>);
+	}
 </code></pre></div>
   </section>
 

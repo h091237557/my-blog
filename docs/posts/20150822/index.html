@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,10 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加|Describe what your web page is about">
+    <meta name="description" property="og:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。
+程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。
+//部分類別(Employee其中一個組件)  public partial class Employee { public string PracticeTime; public void DoWork() { } } //部分類別(Employee其中一個組件)  public partial class Employee { public string GoToDinner() { return &amp;#34;GoToDinner&amp;#34; ; } } protected void Page_Load(object sender, EventArgs e) { Employee Employ = new Employee { PracticeTime = &amp;#34;100&amp;#34; TextBox1.Text = Employ.GoToDinner(); TextBox6.Text = Employ.PracticeTime; } 執行結果
+	GoToDinner 100 部分類別的特性  所有組件都必需在相同的命名空間(Namespace) 如果有任何組件宣告為abstract則被視為抽象，如果宣告為Sealed則被視為密封，如果其中一繼承某基底類別，整個型別都會繼承 任何組件都可以指定不同的基底介面，最後的型別會實作所有部份宣告的任何介面  部份方法的特性  部分方法的簽章是在部分型別中的一部分定義，而其實作是在型別的另一部分中定義。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +45,10 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單7-『 部分類別 ( Partial Class ) 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加|Describe what your web page is about">
+    <meta name="twitter:description" content="部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。
+程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。
+//部分類別(Employee其中一個組件)  public partial class Employee { public string PracticeTime; public void DoWork() { } } //部分類別(Employee其中一個組件)  public partial class Employee { public string GoToDinner() { return &#34;GoToDinner&#34; ; } } protected void Page_Load(object sender, EventArgs e) { Employee Employ = new Employee { PracticeTime = &#34;100&#34; TextBox1.Text = Employ.GoToDinner(); TextBox6.Text = Employ.PracticeTime; } 執行結果
+	GoToDinner 100 部分類別的特性  所有組件都必需在相同的命名空間(Namespace) 如果有任何組件宣告為abstract則被視為抽象，如果宣告為Sealed則被視為密封，如果其中一繼承某基底類別，整個型別都會繼承 任何組件都可以指定不同的基底介面，最後的型別會實作所有部份宣告的任何介面  部份方法的特性  部分方法的簽章是在部分型別中的一部分定義，而其實作是在型別的另一部分中定義。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +60,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -131,32 +140,32 @@
     <h2 id="--partial-class-">部份類別 ( Partial Class )</h2>
 <p>部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。</p>
 <p>程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="c1">//部分類別(Employee其中一個組件)
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="kt">string</span> <span class="n">PracticeTime</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 	<span style="color:#75715e">//部分類別(Employee其中一個組件)
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span>
+    {
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> PracticeTime;
        
-        <span class="k">public</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> DoWork()
+        {
+        }
+    }
 
-    <span class="c1">//部分類別(Employee其中一個組件)
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
-    <span class="p">{</span>
-        <span class="k">public</span> <span class="kt">string</span>   <span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="k">return</span> <span class="s">&#34;GoToDinner&#34;</span> <span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+    <span style="color:#75715e">//部分類別(Employee其中一個組件)
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span>
+    {
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span>   GoToDinner()
+        {
+            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;GoToDinner&#34;</span> ;
+        }
+    }
 
  	
- 	<span class="k">protected</span> <span class="k">void</span> <span class="n">Page_Load</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
-   	<span class="p">{</span>
-            <span class="n">Employee</span> <span class="n">Employ</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Employee</span> <span class="p">{</span> <span class="n">PracticeTime</span> <span class="p">=</span> <span class="s">&#34;100&#34;</span> 
-            <span class="n">TextBox1</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">Employ</span><span class="p">.</span><span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="n">TextBox6</span><span class="p">.</span><span class="n">Text</span> <span class="p">=</span> <span class="n">Employ</span><span class="p">.</span><span class="n">PracticeTime</span><span class="p">;</span>     
-    <span class="p">}</span>
+ 	<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> Page_Load(<span style="color:#66d9ef">object</span> sender, EventArgs e)
+   	{
+            Employee Employ = <span style="color:#66d9ef">new</span> Employee { PracticeTime = <span style="color:#e6db74">&#34;100&#34;</span> 
+            TextBox1.Text = Employ.GoToDinner();
+            TextBox6.Text = Employ.PracticeTime;     
+    }
 </code></pre></div><p>執行結果</p>
 <pre><code>	GoToDinner
 	100
@@ -170,32 +179,32 @@
 <blockquote>
 <p>部分方法的簽章是在部分型別中的一部分定義，而其實作是在型別的另一部分中定義。</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 		<span class="c1">//部份類別
-</span><span class="c1"></span>   		 <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
-    	<span class="p">{</span>
-        <span class="k">public</span> <span class="kt">string</span> <span class="n">PracticeTime</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 		<span style="color:#75715e">//部份類別
+</span><span style="color:#75715e"></span>   		 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span>
+    	{
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">string</span> PracticeTime;
 
-        <span class="c1">//定義方法
-</span><span class="c1"></span>        <span class="k">partial</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#75715e">//定義方法
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">void</span> DoWork();
        
        
-    	<span class="p">}</span>
+    	}
 
-    	<span class="c1">//部份類別
-</span><span class="c1"></span>    	<span class="k">public</span>   <span class="k">partial</span> <span class="k">class</span> <span class="nc">Employee</span>
-    	<span class="p">{</span>
-       	 <span class="c1">//部分方法，實作。
-</span><span class="c1"></span>         	<span class="k">partial</span> <span class="k">void</span> <span class="n">DoWork</span><span class="p">(</span><span class="p">)</span>
-        	<span class="p">{</span>
-          	  <span class="n">Console</span> <span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;DoWork~~~&#34;</span> <span class="p">)</span><span class="p">;</span>
-        	<span class="p">}</span>
+    	<span style="color:#75715e">//部份類別
+</span><span style="color:#75715e"></span>    	<span style="color:#66d9ef">public</span>   <span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span>
+    	{
+       	 <span style="color:#75715e">//部分方法，實作。
+</span><span style="color:#75715e"></span>         	<span style="color:#66d9ef">partial</span> <span style="color:#66d9ef">void</span> DoWork()
+        	{
+          	  Console .WriteLine(<span style="color:#e6db74">&#34;DoWork~~~&#34;</span> );
+        	}
 
 
-        	<span class="k">public</span>   <span class="kt">string</span>   <span class="n">GoToDinner</span><span class="p">(</span><span class="p">)</span>
-        	<span class="p">{</span>
-          	  <span class="k">return</span> <span class="s">&#34;GoToDinner&#34;</span> <span class="p">;</span>
-        	<span class="p">}</span>
-    	<span class="p">}</span>
+        	<span style="color:#66d9ef">public</span>   <span style="color:#66d9ef">string</span>   GoToDinner()
+        	{
+          	  <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;GoToDinner&#34;</span> ;
+        	}
+    	}
 </code></pre></div><p>如果其中一個部分型別改成</p>
 <pre><code> 		partial void DoWork()
   	 	{

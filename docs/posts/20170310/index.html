@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="data structure, tree" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :
+ 中序追蹤 (in-order) : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG) 前序追蹤 (pre-order) : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG) 後序追蹤 (post-order) : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA) level-order : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)   補充: 這裡我們在補充第四種追蹤level-order，事實上它就是BFS，也就是一層一層的掃
+ 那為什麼我們這裡要在拿來說一次呢 ?
+ 因為我們之前實作的方法是用『 Recursion 』來實作。
+ 有寫過程式的人大概會知道，在使用recursion 實作程式碼，常常有可能會發生memory leak事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。
+中序追蹤 (in-order)  左 =&amp;gt; 根 =&amp;gt; 右
+ iteration  直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。 然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。 接下來在從 pop 出的節點的右子樹開始重複第一個步驟。  /** * Tree inordrTraversal (no recursive) * Tip: 左根右 */ BinarySearchTree.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="樹狀結構的遍歷 Traversal ( Iteration ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果|Describe what your web page is about">
+    <meta name="twitter:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :
+ 中序追蹤 (in-order) : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG) 前序追蹤 (pre-order) : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG) 後序追蹤 (post-order) : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA) level-order : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)   補充: 這裡我們在補充第四種追蹤level-order，事實上它就是BFS，也就是一層一層的掃
+ 那為什麼我們這裡要在拿來說一次呢 ?
+ 因為我們之前實作的方法是用『 Recursion 』來實作。
+ 有寫過程式的人大概會知道，在使用recursion 實作程式碼，常常有可能會發生memory leak事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。
+中序追蹤 (in-order)  左 =&gt; 根 =&gt; 右
+ iteration  直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。 然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。 接下來在從 pop 出的節點的右子樹開始重複第一個步驟。  /** * Tree inordrTraversal (no recursive) * Tip: 左根右 */ BinarySearchTree.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -150,37 +165,37 @@
 <li>然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。</li>
 <li>接下來在從 pop 出的節點的右子樹開始重複第一個步驟。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Tree inordrTraversal (no recursive)
-</span><span class="cm"> * Tip: 左根右
-</span><span class="cm"> */</span>
-<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">inorderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">current</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Tree inordrTraversal (no recursive)
+</span><span style="color:#75715e"> * Tip: 左根右
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">inorderTraversal</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">stack</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>;
 
-    <span class="k">while</span> <span class="p">(</span><span class="nx">current</span> <span class="o">!==</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">!==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">while</span><span class="p">(</span><span class="nx">current</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-		  <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
-          <span class="nx">current</span> <span class="o">=</span> <span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
-		<span class="p">}</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">val</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">current</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">!==</span> <span style="color:#ae81ff">0</span>) {
+        <span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">current</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+		  <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>);
+          <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">left</span>;
+		}
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">val</span>);
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">right</span>;
+    }
+}
 </code></pre></div><h3 id="recursion">recursion</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">inOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">inOrderTraverse</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">callback</span>) {
 
-	<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">inOrderTraverseNode</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>,<span style="color:#a6e22e">callback</span>);
 
-	<span class="kd">function</span> <span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">inOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>	
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">inOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>,<span style="color:#a6e22e">callback</span>) {
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">node</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">null</span>){
+			<span style="color:#a6e22e">inOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>,<span style="color:#a6e22e">callback</span>);
+			<span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>);
+			<span style="color:#a6e22e">inOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>,<span style="color:#a6e22e">callback</span>);
+		}
+	}	
+};
 </code></pre></div><h2 id="-preorder">前序追蹤 (pre-order)</h2>
 <blockquote>
 <p>根 =&gt; 左 =&gt; 右</p>
@@ -192,40 +207,40 @@
 <li>接下來在將左右子樹放入 stack。</li>
 <li>重複第二個步驟。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Tree preorderTraversal (no recursive)
-</span><span class="cm"> * Tip: 根左右
-</span><span class="cm"> */</span>
-<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">preorderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">current</span><span class="p">;</span>
-    <span class="k">while</span> <span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Tree preorderTraversal (no recursive)
+</span><span style="color:#75715e"> * Tip: 根左右
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">preorderTraversal</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">stack</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>);
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">current</span>;
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">data</span>);
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">right</span>){
+            <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">right</span>);
+        }
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">left</span>){
+            <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">left</span>);
+        }
+    }
+}
 </code></pre></div><h3 id="recursion1">recursion</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">preOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">preOrderTraverse</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">callback</span>) {
 
-	<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">preOrderTraverseNode</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>,<span style="color:#a6e22e">callback</span>);
 
-	<span class="kd">function</span> <span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">preOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>	
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">preOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>,<span style="color:#a6e22e">callback</span>) {
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">node</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">null</span>){
+			<span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>);
+			<span style="color:#a6e22e">preOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>,<span style="color:#a6e22e">callback</span>);
+			<span style="color:#a6e22e">preOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>,<span style="color:#a6e22e">callback</span>);
+		}
+	}	
+};
 </code></pre></div><h2 id="-postorder">後序追蹤 (post-order)</h2>
 <blockquote>
 <p>左 =&gt; 右 =&gt; 根</p>
@@ -239,48 +254,48 @@
 <li>重複 while</li>
 <li>最後在將 temp 陣列中的節點取出。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Tree postOrder Traversal (no recursive)
-</span><span class="cm"> * Tip: 左右根
-</span><span class="cm"> */</span>
-<span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">postOrderTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">stack</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">temp</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">current</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">isEnd</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Tree postOrder Traversal (no recursive)
+</span><span style="color:#75715e"> * Tip: 左右根
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">postOrderTraversal</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">stack</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">temp</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>;
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
 
-    <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">while</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">temp</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>);
+    <span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>){
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#a6e22e">temp</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>);
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">left</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">right</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+            <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">left</span>);
+        }
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+            <span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">right</span>);
+        }
+    }
 
-    <span class="k">while</span><span class="p">(</span><span class="nx">temp</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#66d9ef">while</span>(<span style="color:#a6e22e">temp</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>){
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">temp</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">data</span>);
+    }
 
-<span class="p">}</span>
+}
 </code></pre></div><h3 id="recursion2">recursion</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">postOrderTraverse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">postOrderTraverse</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">callback</span>) {
 
-	<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">postOrderTraverseNode</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>,<span style="color:#a6e22e">callback</span>);
 
-	<span class="kd">function</span> <span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">node</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">postOrderTraverseNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">callback</span><span class="p">)</span><span class="p">;</span>
-			<span class="nx">callback</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>	
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">postOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>,<span style="color:#a6e22e">callback</span>) {
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">node</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">null</span>){
+			<span style="color:#a6e22e">postOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>,<span style="color:#a6e22e">callback</span>);
+			<span style="color:#a6e22e">postOrderTraverseNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>,<span style="color:#a6e22e">callback</span>);
+			<span style="color:#a6e22e">callback</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>);
+		}
+	}	
+};
 </code></pre></div><h2 id="-levelorder-bfs">層級追蹤 (level-order BFS)</h2>
 <blockquote>
 <p>就是所謂的 BFS 廣度優先搜尋，也就是一層一層找。</p>
@@ -297,56 +312,56 @@
  
 [[1],[2,3]]
 </code></pre><h3 id="iteration3">iteration</h3>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">bfsTraversal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">current</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">queue</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">return</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">bfsTraversal</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">current</span>;
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">queue</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>){
+        <span style="color:#66d9ef">return</span> [];
+    }
     
-    <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-        <span class="nx">node</span><span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span>
-        <span class="nx">level</span><span class="o">:</span> <span class="mi">0</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">push</span>({
+        <span style="color:#a6e22e">node</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>,
+        <span style="color:#a6e22e">level</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+    });
     
-    <span class="k">while</span> <span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="p">{</span>
-        <span class="nx">current</span> <span class="o">=</span> <span class="nx">queue</span><span class="p">.</span><span class="nx">shift</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>){
+        <span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">shift</span>();
 
-        <span class="k">if</span><span class="p">(</span><span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="k">else</span><span class="p">{</span>
-            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-            <span class="nx">result</span><span class="p">[</span><span class="nx">current</span><span class="p">.</span><span class="nx">level</span><span class="p">]</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">result</span>[<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span>]){
+            <span style="color:#a6e22e">result</span>[<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span>].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>);
+        }<span style="color:#66d9ef">else</span>{
+            <span style="color:#a6e22e">result</span>[<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span>] <span style="color:#f92672">=</span> [];
+            <span style="color:#a6e22e">result</span>[<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span>].<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>);
+        }
         
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-                <span class="nx">node</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span>
-                <span class="nx">level</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+            <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">push</span>({
+                <span style="color:#a6e22e">node</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>,
+                <span style="color:#a6e22e">level</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+            });
+        }
         
-        <span class="k">if</span><span class="p">(</span><span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span><span class="p">{</span>
-            <span class="nx">queue</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span>
-                <span class="nx">node</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span>
-                <span class="nx">level</span><span class="o">:</span> <span class="nx">current</span><span class="p">.</span><span class="nx">level</span> <span class="o">+</span> <span class="mi">1</span>
-            <span class="p">}</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span>
+        <span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>){
+            <span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">push</span>({
+                <span style="color:#a6e22e">node</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>,
+                <span style="color:#a6e22e">level</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">current</span>.<span style="color:#a6e22e">level</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+            })
+        }
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
+}
 
-<span class="kd">let</span> <span class="nx">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BinarySearchTree</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tree</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">BinarySearchTree</span>();
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">1</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">2</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">3</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">4</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">5</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">6</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">7</span>));
 
-<span class="c1">//輸出: [ [ 1 ], [ 2, 3 ], [ 4, 5, 6, 7 ] ]
+<span style="color:#75715e">//輸出: [ [ 1 ], [ 2, 3 ], [ 4, 5, 6, 7 ] ]
 </span></code></pre></div><h2 id="heading">參考資料</h2>
 <ul>
 <li><a href="http://www.geeksforgeeks.org/">geeksforgeeks</a></li>

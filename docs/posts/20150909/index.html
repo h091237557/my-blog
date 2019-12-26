@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="js, javascript, promise, jqeury" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
+deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
+When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
+下列程式碼為when的基本使用方法。
+var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
+var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
+從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
+deferred.then()方法的回傳可以做以下兩件事。
+ 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
+$.get(&amp;#39;/getData&amp;#39;) .done(function(response) { if(response.error) { console.log(&amp;#39;Error&amp;#39;); }else { console.log(&amp;#39;Success&amp;#39;); } }) .fail(function(response) { console.log(&amp;#39;Error&amp;#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
+var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Jquery 的 Promise 之 when 與 then ( pipe ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務|Describe what your web page is about">
+    <meta name="twitter:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
+deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
+When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
+下列程式碼為when的基本使用方法。
+var promise1 = $.get(&#39;/test1&#39;); var promise2 = $.get(&#39;/test2&#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
+var promise1 = $.get(&#39;/test1&#39;); var promise2 = $.get(&#39;/test2&#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
+從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
+deferred.then()方法的回傳可以做以下兩件事。
+ 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
+$.get(&#39;/getData&#39;) .done(function(response) { if(response.error) { console.log(&#39;Error&#39;); }else { console.log(&#39;Success&#39;); } }) .fail(function(response) { console.log(&#39;Error&#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
+var getData = $.get(&#39;/getData&#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -129,19 +152,19 @@
 <p>在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用<code>when</code>來完成這種類型的工作。</p>
 <p><code>When</code>相當與執行<code>Promise</code>情況的<code>AND</code>。也就是說一旦給定的所有<code>Promise</code>均已執行後，就立即執行<code>when</code>方法產生的<code>Promise</code>對象。而一旦任一個<code>Promise</code>被拒絕，則立即拒絕<code>when</code>產生的<code>Promise</code>。</p>
 <p>下列程式碼為<code>when</code>的基本使用方法。</p>
-<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS">	<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test1&#39;</span><span class="p">)</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test2&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JS" data-lang="JS">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/test1&#39;</span>);
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/test2&#39;</span>);
 	
-	<span class="nx">$</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="nx">promise1</span><span class="p">,</span><span class="nx">promise2</span><span class="p">)</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="c1">//promise1與promise2都完成時會執行的事情。
-</span><span class="c1"></span>	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">when</span>(<span style="color:#a6e22e">promise1</span>,<span style="color:#a6e22e">promise2</span>).<span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">function</span>(){
+		<span style="color:#75715e">//promise1與promise2都完成時會執行的事情。
+</span><span style="color:#75715e"></span>	});
 </code></pre></div><p>如果要取得<code>promise1</code>與<code>promise2</code>的回傳參數則如下程式碼，其中<code>arg1</code>為<code>promise1</code>的回傳參數，而<code>arg2</code>為<code>promise2</code>的回傳參數。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">promise1</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test1&#39;</span><span class="p">)</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">promise2</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/test2&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise1</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/test1&#39;</span>);
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise2</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/test2&#39;</span>);
 	
-	<span class="nx">$</span><span class="p">.</span><span class="nx">when</span><span class="p">(</span><span class="nx">promise1</span><span class="p">,</span><span class="nx">promise2</span><span class="p">)</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">arg1</span><span class="p">,</span><span class="nx">arg2</span><span class="p">)</span><span class="p">{</span>
-		<span class="c1">//promise1與promise2都完成時會執行的事情。
-</span><span class="c1"></span>	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">when</span>(<span style="color:#a6e22e">promise1</span>,<span style="color:#a6e22e">promise2</span>).<span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">arg1</span>,<span style="color:#a6e22e">arg2</span>){
+		<span style="color:#75715e">//promise1與promise2都完成時會執行的事情。
+</span><span style="color:#75715e"></span>	});
 </code></pre></div><p>##d eferred.then(.pipe)</p>
 <p>從<code>Jquery1.8</code>開始，官網建議將<code>deferred.pipe()</code>由<code>deferred.then()</code>替代。</p>
 <p><code>deferred.then()</code>方法的回傳可以做以下兩件事。</p>
@@ -150,32 +173,32 @@
 <li>如果<code>then</code>回傳為<code>非promise</code>物件，則<code>then</code>生成的<code>promise</code>物件會立即因該回傳值而執行、拒絕或通知，取決於<code>then</code>那個初使<code>promise</code>發生什麼事了。</li>
 </ul>
 <p>來看看使用情況，假設某<code>api</code>回傳發生錯誤時，不是回傳<code>http status XXX</code>，而是回傳個<code>Json</code>如<code>{error:true}</code>之類的，由於<code>promise</code>是在<code>http</code>請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在<code>done</code>裡。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">)</span>
-  	<span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
-   	   	<span class="k">if</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
-       	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span><span class="p">;</span>
-    	<span class="p">}</span><span class="k">else</span> <span class="p">{</span>
-        	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Success&#39;</span><span class="p">)</span><span class="p">;</span>
-      	<span class="p">}</span>
-	<span class="p">}</span><span class="p">)</span>
-	<span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
-   		 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/getData&#39;</span>)
+  	.<span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">response</span>) {
+   	   	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">response</span>.<span style="color:#a6e22e">error</span>) {
+       	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Error&#39;</span>);
+    	}<span style="color:#66d9ef">else</span> {
+        	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Success&#39;</span>);
+      	}
+	})
+	.<span style="color:#a6e22e">fail</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">response</span>) {
+   		 <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;Error&#39;</span>);
+	});
 </code></pre></div><p>上述程式碼，不是個好的解決方法，非得要在<code>done</code>做兩次判斷，因此我們這時就可以使用<code>.then</code>，來過濾<code>Promise</code>，如下程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">getData</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">error</span><span class="p">)</span>
-			<span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">;</span>
-		<span class="k">else</span>
-		   <span class="k">return</span> <span class="nx">response</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">return</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>	
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">getData</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/getData&#39;</span>).<span style="color:#a6e22e">then</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">response</span>){
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">response</span>.<span style="color:#a6e22e">error</span>)
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">Deferred</span>().<span style="color:#a6e22e">reject</span>(<span style="color:#a6e22e">response</span>);
+		<span style="color:#66d9ef">else</span>
+		   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">response</span>;
+	},<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">response</span>){
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">Deferred</span>().<span style="color:#a6e22e">reject</span>(<span style="color:#a6e22e">response</span>);
+	});	
 
-	<span class="nx">getData</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Success&#34;</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Fail&#34;</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#a6e22e">getData</span>.<span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">response</span>){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Success&#34;</span>);
+	}).<span style="color:#a6e22e">fail</span>(<span style="color:#66d9ef">function</span>(){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Fail&#34;</span>);
+	});
 </code></pre></div><p>這樣在<code>done</code>就不需要在進行兩次判斷，其中<code>then</code>的回傳值為<code>promise</code>，因此該<code>promise</code>會模仿<code>$.get('/getData')</code>的<code>promise</code>。</p>
 <h2 id="heading">參考資料</h2>
 <ul>

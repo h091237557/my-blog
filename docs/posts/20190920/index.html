@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="redis, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :
+ 如果緩存失效的情況，與可能會發生什麼事情呢 ?
+ 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。
+圖 1 : 緩存失效圖
+而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :
+ 緩存失效情況 - 緩存穿透 緩存失效情況 - 緩存雪崩 緩存失效情況 - 緩存服務炸了  緩存失效情況 - 緩存穿透 這個的主要情境如下 :
+ 查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。
+ 圖 2 : 緩存穿透
+通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。
+解法 1 : 硬處理 這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。
+這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-20 之資料緩存失效問題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :
+ 如果緩存失效的情況，與可能會發生什麼事情呢 ?
+ 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。
+圖 1 : 緩存失效圖
+而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :
+ 緩存失效情況 - 緩存穿透 緩存失效情況 - 緩存雪崩 緩存失效情況 - 緩存服務炸了  緩存失效情況 - 緩存穿透 這個的主要情境如下 :
+ 查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。
+ 圖 2 : 緩存穿透
+通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。
+解法 1 : 硬處理 這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。
+這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -154,21 +177,21 @@
 <h3 id="-1--">解法 1 : 硬處理</h3>
 <p>這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。</p>
 <p>這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// 概念碼
-</span><span class="c1"></span>
-<span class="kr">const</span> <span class="nx">userId</span> <span class="o">=</span> <span class="s1">&#39;A&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// 概念碼
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">userId</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;A&#39;</span>;
 
-<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-  <span class="k">return</span> <span class="nx">getCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isExistInCache</span>(<span style="color:#a6e22e">userId</span>)){
+  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">getCache</span>(<span style="color:#a6e22e">userId</span>);
+}
 
-<span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">let</span> <span class="nx">cacheValue</span> <span class="o">=</span> <span class="nx">user</span><span class="p">;</span>
-<span class="k">if</span><span class="p">(</span> <span class="nx">user</span> <span class="o">===</span> <span class="kc">null</span> <span class="p">)</span><span class="p">{</span>
-  <span class="nx">cacheValue</span> <span class="o">=</span> <span class="nx">getDefaultEmptyValue</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">user</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getUser</span>(<span style="color:#a6e22e">userId</span>);
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">cacheValue</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">user</span>;
+<span style="color:#66d9ef">if</span>( <span style="color:#a6e22e">user</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">null</span> ){
+  <span style="color:#a6e22e">cacheValue</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getDefaultEmptyValue</span>();
+}
 
-<span class="nx">setCache</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">cacheValue</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">setCache</span>(<span style="color:#a6e22e">userId</span>, <span style="color:#a6e22e">cacheValue</span>);
 </code></pre></div><p><strong>不過這種方案還是有缺點</strong></p>
 <blockquote>
 <p>它無法防護隨機編號的攻擊，因為每一次都是不同的</p>
@@ -204,18 +227,18 @@
 <p>詳細的布隆過濾器原理，這裡就不說了，有興趣的友人請自行查查。</p>
 <h4 id="heading1">實現</h4>
 <p>好然後拉回來，如果要用布隆過濾器來處理緩存穿透時，咱們大概會用以下程式碼來實現 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="s1">&#39;Mark&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">target</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Mark&#39;</span>;
 
-<span class="c1">// 這裡會先判斷 target 有沒有存在，透布隆過濾器表來判斷
-</span><span class="c1"></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">isExistBoolFilter</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-   <span class="k">return</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#75715e">// 這裡會先判斷 target 有沒有存在，透布隆過濾器表來判斷
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span>(<span style="color:#f92672">!</span><span style="color:#a6e22e">isExistBoolFilter</span>(<span style="color:#a6e22e">target</span>)){
+   <span style="color:#66d9ef">return</span>;
+}
 
-<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-  <span class="nx">rturn</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isExistInCache</span>(<span style="color:#a6e22e">target</span>)){
+  <span style="color:#a6e22e">rturn</span> <span style="color:#a6e22e">cache</span>[<span style="color:#a6e22e">target</span>];
+}
 
-<span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">target</span>);
 </code></pre></div><p>然後我覺得比較重要的點在於，<strong>你的 boolFilter 要如何維護呢 ?</strong></p>
 <p>目前想到比較簡單的處理是，當 target 被新增的時後，則更新一次記憶體中的 boolFilter，而如果是移除了，則不理它，反正 cache 那會防。</p>
 <p>別忘了這裡是為了達到 :</p>
@@ -257,13 +280,13 @@ redis&gt; EXPIRE mykey 10
 圖 5 : 緩存服務炸了</p>
 <p><strong>~ 小備註 ~</strong></p>
 <p>這裡應該會有人覺得很奇怪，假設咱們程式碼如下所示，那基本緩存服務掛了，資料庫那層應該是不會處理啊，因為錯誤囉。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">target</span> <span class="o">=</span> <span class="s1">&#39;Mark&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">target</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;Mark&#39;</span>;
 
-<span class="k">if</span><span class="p">(</span><span class="nx">isExistInCache</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">)</span><span class="p">{</span>
-  <span class="nx">rturn</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">target</span><span class="p">]</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">isExistInCache</span>(<span style="color:#a6e22e">target</span>)){
+  <span style="color:#a6e22e">rturn</span> <span style="color:#a6e22e">cache</span>[<span style="color:#a6e22e">target</span>];
+}
 
-<span class="k">return</span> <span class="nx">db</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">target</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">target</span>);
 </code></pre></div><p>對是沒錯。</p>
 <p>但這時你要想想，這樣是對的嗎 ?</p>
 <p>緩存是為了什麼 ? 是為了加快查詢的速度與保護資料庫層。那你想想，你覺得緩存服務掛了，要讓整個『 系統業務 』都死嗎，如果你有個記錄 log 的服務掛了，也要整個系統都死嗎 ?</p>

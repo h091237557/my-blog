@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>mysql on 拿鐵派的馬克 Blog</title>
@@ -6,118 +5,91 @@
     <description>Recent content in mysql on 拿鐵派的馬克 Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <copyright>&amp;copy;Your Name 2019</copyright>
+    <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
+    <webMaster>h091237557@gmail.com (marklin)</webMaster>
     <lastBuildDate>Sun, 29 Sep 2019 20:16:57 +0800</lastBuildDate>
     
-	<atom:link href="https://mark-lin.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://mark-lin.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</title>
       <link>https://mark-lin.com/posts/20190929/</link>
       <pubDate>Sun, 29 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190929/</guid>
-      <description>正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文</description>
     </item>
     
     <item>
       <title>30-28 之資料庫層擴展難題 -  MySQL 分散式事務處理</title>
       <link>https://mark-lin.com/posts/20190928/</link>
       <pubDate>Sat, 28 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190928/</guid>
-      <description>正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。 本篇分為以下幾個章節 : 分散式</description>
     </item>
     
     <item>
       <title>30-27之資料庫層的擴展 - 分區表</title>
       <link>https://mark-lin.com/posts/20190927/</link>
       <pubDate>Fri, 27 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190927/</guid>
-      <description>正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的</description>
     </item>
     
     <item>
       <title>30-26之資料庫層的擴展 - 分庫分表架構</title>
       <link>https://mark-lin.com/posts/20190926/</link>
       <pubDate>Thu, 26 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190926/</guid>
-      <description>正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用</description>
     </item>
     
     <item>
       <title>30-25之資料庫層的擴展 - 讀寫分離架構</title>
       <link>https://mark-lin.com/posts/20190925/</link>
       <pubDate>Wed, 25 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190925/</guid>
-      <description>正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。 在正式開始章節之前，我們先來想想看一件</description>
     </item>
     
     <item>
       <title>30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 )</title>
       <link>https://mark-lin.com/posts/20190917/</link>
       <pubDate>Tue, 17 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190917/</guid>
-      <description>正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上</description>
     </item>
     
     <item>
       <title>30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )</title>
       <link>https://mark-lin.com/posts/20190916/</link>
       <pubDate>Mon, 16 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190916/</guid>
-      <description>正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾</description>
     </item>
     
     <item>
       <title>30-15 之資料庫層的難題 - 單機『 故障 』一致性難題</title>
       <link>https://mark-lin.com/posts/20190915/</link>
       <pubDate>Sun, 15 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190915/</guid>
-      <description>正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性</description>
     </item>
     
     <item>
       <title>30-14 之資料庫層的優化 - 表的設計</title>
       <link>https://mark-lin.com/posts/20190914/</link>
       <pubDate>Sat, 14 Sep 2019 20:16:57 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190914/</guid>
-      <description>正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時</description>
     </item>
     
     <item>
       <title>30-13 之資料庫層的優化 - 索引設計與雷區</title>
       <link>https://mark-lin.com/posts/20190913/</link>
       <pubDate>Fri, 13 Sep 2019 20:12:39 +0800</pubDate>
-      
+      <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190913/</guid>
-      <description>正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演</description>
-    </item>
-    
-    <item>
-      <title>30-12 之資料庫層的核心 - MySQL 的索引實現</title>
-      <link>https://mark-lin.com/posts/20190912/</link>
-      <pubDate>Thu, 12 Sep 2019 20:11:06 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20190912/</guid>
-      <description>正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使</description>
-    </item>
-    
-    <item>
-      <title>30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</title>
-      <link>https://mark-lin.com/posts/20190911/</link>
-      <pubDate>Wed, 11 Sep 2019 19:51:35 +0800</pubDate>
-      
-      <guid>https://mark-lin.com/posts/20190911/</guid>
-      <description>正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何</description>
     </item>
     
   </channel>

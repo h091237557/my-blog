@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
+ 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
+ 分區表
+ 本篇文章分以下幾個章節 :
+ 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
+ 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
+ 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
+ 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
+user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = &#39;mark&#39;; 而如果是『 分區表 』的話為 :|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-27之資料庫層的擴展 - 分區表 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
+ 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
+ 分區表
+ 本篇文章分以下幾個章節 :
+ 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
+ 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
+ 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
+ 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
+user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = &#39;mark&#39;; 而如果是『 分區表 』的話為 :|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -193,16 +212,16 @@ SELECT * FROM user_type_A WHERE name = 'mark';
 </blockquote>
 <h4 id="-1--range-">類型 1 : RANGE 分區</h4>
 <p>假設咱們由一張儲員工的資料表，那咱們可以選擇以『 RANGE 』來分區，通常這種分區欄位比較常見的有日期或啥有順序的編號之類。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
-    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">RANGE</span> <span class="p">(</span><span class="n">age</span><span class="p">)</span> <span class="p">(</span>
-    <span class="n">PARTITION</span> <span class="n">p0</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="p">,</span>
-    <span class="n">PARTITION</span> <span class="n">p1</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">30</span><span class="p">)</span><span class="p">,</span>
-    <span class="n">PARTITION</span> <span class="n">p2</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="p">,</span>
-    <span class="n">PARTITION</span> <span class="n">p3</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+    id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+)
+PARTITION <span style="color:#66d9ef">BY</span> RANGE (age) (
+    PARTITION p0 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">20</span>),
+    PARTITION p1 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">30</span>),
+    PARTITION p2 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">40</span>),
+    PARTITION p3 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">50</span>)
+);
 </code></pre></div><p>假設咱們有以下的員工 :</p>
 <pre><code>A : age = 18
 B : age = 25
@@ -216,15 +235,15 @@ p2 : C
 p 3 : D
 </code></pre><h4 id="-2--list-">類型 2 : LIST 分區</h4>
 <p>list 這種分區通常是用在枚舉類型上，如下範例，咱們有一個 type 欄位，然後使用數字來代表類型，然後就使用這個類型來決定分區。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
-    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
-<span class="p">)</span>
-<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">list</span> <span class="p">(</span><span class="k">type</span><span class="p">)</span> <span class="p">(</span>
-    <span class="n">PARTITION</span> <span class="n">p0</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="p">,</span>
-    <span class="n">PARTITION</span> <span class="n">p1</span> <span class="k">VALUES</span> <span class="k">LESS</span> <span class="k">THAN</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">,</span>
-<span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+    id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    <span style="color:#66d9ef">type</span> INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+)
+PARTITION <span style="color:#66d9ef">BY</span> list (<span style="color:#66d9ef">type</span>) (
+    PARTITION p0 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">0</span>,<span style="color:#ae81ff">1</span>),
+    PARTITION p1 <span style="color:#66d9ef">VALUES</span> <span style="color:#66d9ef">LESS</span> <span style="color:#66d9ef">THAN</span> (<span style="color:#ae81ff">2</span>),
+);
 </code></pre></div><p>假設咱們有以下的員工 :</p>
 <pre><code>A : age = 18, type : 0
 B : age = 25, type : 1
@@ -236,33 +255,33 @@ E : age = 15, type : 1
 p1 : E
 </code></pre><h4 id="-3--hash-">類型 3 : Hash 分區</h4>
 <p>它就是會直接將 id 進行 hash 後分成四個區。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
-    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
-<span class="p">)</span>
-<span class="n">PARTITION</span> <span class="k">BY</span> <span class="n">HASH</span><span class="p">(</span><span class="n">id</span><span class="p">)</span>
-<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+    id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    <span style="color:#66d9ef">type</span> INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+)
+PARTITION <span style="color:#66d9ef">BY</span> HASH(id)
+PARTITIONS <span style="color:#ae81ff">4</span>;
 </code></pre></div><h4 id="-4--key-">類型 4 : KEY 分區</h4>
 <p>它就是會直接根據指定的 pk 來分區。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
-    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="p">,</span>
-    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
-<span class="p">)</span>
-<span class="n">PARTITION</span> <span class="k">BY</span> <span class="k">KEY</span><span class="p">(</span><span class="p">)</span>
-<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+    id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>, ,
+    age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    <span style="color:#66d9ef">type</span> INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+)
+PARTITION <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">KEY</span>()
+PARTITIONS <span style="color:#ae81ff">4</span>;
 </code></pre></div><h2 id="heading3">分區使用的注意事項</h2>
 <hr>
 <h3 id="-1--">注意 1 : 查詢時一定有用到分區鍵，不然還是會每個分區找</h3>
 <p>假設咱們有以下的分區表。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">users</span> <span class="p">(</span>
-    <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="p">,</span>
-    <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-    <span class="k">type</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span>
-<span class="p">)</span>
-<span class="n">PARTITION</span> <span class="k">BY</span> <span class="k">KEY</span><span class="p">(</span><span class="p">)</span>
-<span class="n">PARTITIONS</span> <span class="mi">4</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> users (
+    id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>, ,
+    age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+    <span style="color:#66d9ef">type</span> INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>
+)
+PARTITION <span style="color:#66d9ef">BY</span> <span style="color:#66d9ef">KEY</span>()
+PARTITIONS <span style="color:#ae81ff">4</span>;
 </code></pre></div><p>然後咱們下達以下的指令進行 query :</p>
 <pre><code>EXPLAIN SELECT * FROM users WHERE age = 10;
 </code></pre><p>那你會看到以下的結果如下 explain 的結果，你會發現它去每一個分區都找過。</p>

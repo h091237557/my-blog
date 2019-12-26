@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="instant messaging, 鐵人賽, http-flv" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。
+ HTTP-FLV 協議
+ 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：
+ HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。  HTTP-FLV 協議是要用來完成什麼事情呢 ?  可以使用 HTTP 來完成低延遲的串流媒體傳輸。
+ 那為啥他想使用 HTTP 呢 ?
+先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。
+那為啥不用 HLS 呢 ?
+使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。
+HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。
+ 以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-16之 HTTP-FLV 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。
+ HTTP-FLV 協議
+ 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：
+ HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。  HTTP-FLV 協議是要用來完成什麼事情呢 ?  可以使用 HTTP 來完成低延遲的串流媒體傳輸。
+ 那為啥他想使用 HTTP 呢 ?
+先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。
+那為啥不用 HLS 呢 ?
+使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。
+HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。
+ 以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -164,28 +185,28 @@
 <p>而 http 流式傳輸需要使用<code>chunk</code>這個東西，它的使用方法如下，就是在 http response header 加上下面的欄位，這樣 http 的回應就會變成一段一段的。</p>
 <pre><code>Transfer-Encoding: chunked
 </code></pre><p>這裡簡單使用 nodejs 簡單寫個 http chunk 的使用，如下範例，不過下面的程式碼沒有在 http 加 header 欄位是因為 nodejs 的 http 本身如果不執行 res.end() 這一段，它就會自動的幫你加 chunked。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// test.js
-</span><span class="c1"></span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// test.js
+</span><span style="color:#75715e"></span><span style="color:#e6db74">&#39;use strict&#39;</span>;
 
-<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">http</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;http&#39;</span>);
 
-<span class="kr">const</span> <span class="nx">sleep</span> <span class="o">=</span> <span class="nx">ms</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">r</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">r</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sleep</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">ms</span> =&gt; <span style="color:#66d9ef">new</span> Promise(<span style="color:#a6e22e">r</span> =&gt; <span style="color:#a6e22e">setTimeout</span>(<span style="color:#a6e22e">r</span>, <span style="color:#a6e22e">ms</span>));
 
-<span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="p">{</span> <span class="s1">&#39;Content-Type&#39;</span><span class="o">:</span> <span class="s1">&#39;text/html&#39;</span><span class="p">,</span> <span class="s1">&#39;charset&#39;</span><span class="o">:</span> <span class="s1">&#39;utf-8&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">app</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">createServer</span>(<span style="color:#a6e22e">async</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) =&gt; {
+  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">writeHead</span>(<span style="color:#ae81ff">200</span>, { <span style="color:#e6db74">&#39;Content-Type&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;text/html&#39;</span>, <span style="color:#e6db74">&#39;charset&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;utf-8&#39;</span> });
   
-  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;loading...
-</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;wait: 2000ms
-</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">await</span> <span class="nx">sleep</span><span class="p">(</span><span class="mi">5000</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s1">&#39;wait: 5000ms
-</span><span class="s1">&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;loading...
+</span><span style="color:#e6db74">&#39;</span>);
+  <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">sleep</span>(<span style="color:#ae81ff">2000</span>);
+  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;wait: 2000ms
+</span><span style="color:#e6db74">&#39;</span>);
+  <span style="color:#a6e22e">await</span> <span style="color:#a6e22e">sleep</span>(<span style="color:#ae81ff">5000</span>);
+  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#39;wait: 5000ms
+</span><span style="color:#e6db74">&#39;</span>);
+  <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">end</span>();
+});
 
-<span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">app</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">3000</span>);
 </code></pre></div><p>接下來咱們來執行它看看。</p>
 <pre><code>node test.js
 </code></pre><p>執果如下圖，你可以看到這個 http response 的 header 的 Transfer-Encoding 為 chunked 。</p>

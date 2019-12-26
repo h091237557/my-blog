@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,22 @@
     <meta content="data structure, graph" name="keywords">
     
     
-    <meta name="description" property="og:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆|Describe what your web page is about">
+    <meta name="description" property="og:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。
+資料結構&amp;mdash;樹狀結構與二元樹
+不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合每個節點最多有兩個子樹這個特性，才能稱為二元樹。
+在大概知道了二元樹後，我們就可以開始本篇文章的重點堆積heap。
+ 堆積的原理 二元樹轉成堆積 程式碼實作  堆積 Heap 的原理 堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為堆積。
+ 任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。 堆積是種完全樹。   完全樹 : 除了最低層外，其它層的節都都被塞滿。
+ 我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。
+二元樹轉換成堆積 上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。
+傳統上有二種方法，由下而上與由上而下，我們本章節將說明由下而上的方法，不然文章會太長……。
+這個方法的基本流程如下，我們以下說明都以max heap為主，也就是根節點為最大值。
+ 計算出此棵樹的節點數量，假設為n。 在從其n/2節點(事實上也就是最後一個父節點)開始進行比較。 若子節點的值大於父節點，則相互對調。 若有交換，還比較在去子節點進行比較。  我們來舉個例子，假設我們有如下圖的二元素。
+接下來我們開始說明他的轉換成堆積的流程。
+最後下圖就是二元樹轉換成堆積的結果。
+程式碼實作 最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。
+function Node(data, index) { this.data = data; this.index = index; this.left = null; this.right = null; } function BinaryTree() { this.root = null; this.count = 0; } 然後我們將要新增個方法，可以新增節點到二元樹中。
+BinaryTree.prototype.add = function(node) { node.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +57,22 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---堆積 Heap | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆|Describe what your web page is about">
+    <meta name="twitter:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。
+資料結構&mdash;樹狀結構與二元樹
+不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合每個節點最多有兩個子樹這個特性，才能稱為二元樹。
+在大概知道了二元樹後，我們就可以開始本篇文章的重點堆積heap。
+ 堆積的原理 二元樹轉成堆積 程式碼實作  堆積 Heap 的原理 堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為堆積。
+ 任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。 堆積是種完全樹。   完全樹 : 除了最低層外，其它層的節都都被塞滿。
+ 我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。
+二元樹轉換成堆積 上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。
+傳統上有二種方法，由下而上與由上而下，我們本章節將說明由下而上的方法，不然文章會太長……。
+這個方法的基本流程如下，我們以下說明都以max heap為主，也就是根節點為最大值。
+ 計算出此棵樹的節點數量，假設為n。 在從其n/2節點(事實上也就是最後一個父節點)開始進行比較。 若子節點的值大於父節點，則相互對調。 若有交換，還比較在去子節點進行比較。  我們來舉個例子，假設我們有如下圖的二元素。
+接下來我們開始說明他的轉換成堆積的流程。
+最後下圖就是二元樹轉換成堆積的結果。
+程式碼實作 最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。
+function Node(data, index) { this.data = data; this.index = index; this.left = null; this.right = null; } function BinaryTree() { this.root = null; this.count = 0; } 然後我們將要新增個方法，可以新增節點到二元樹中。
+BinaryTree.prototype.add = function(node) { node.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +84,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -165,98 +198,98 @@
 <p><img src="http://yixiang8780.com/outImg/20170314-7.png" alt=""></p>
 <h2 id="heading1">程式碼實作</h2>
 <p>最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Node</span><span class="p">(</span><span class="nx">data</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">index</span> <span class="o">=</span> <span class="nx">index</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Node</span>(<span style="color:#a6e22e">data</span>, <span style="color:#a6e22e">index</span>) {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">index</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+}
 
-<span class="kd">function</span> <span class="nx">BinaryTree</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">BinaryTree</span>() {
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+}
 </code></pre></div><p>然後我們將要新增個方法，可以新增節點到二元樹中。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">node</span><span class="p">.</span><span class="nx">index</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">count</span><span class="o">++</span><span class="p">;</span>
-	<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">insertNode</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">add</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">node</span>) {
+	<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">count</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">count</span><span style="color:#f92672">++</span>;
+	<span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">insertNode</span>( <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">node</span>);
+	}
 
-	<span class="kd">function</span> <span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
-		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
-		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-			<span class="kd">let</span> <span class="nx">leftChild</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">leftChild</span><span class="p">.</span><span class="nx">left</span> <span class="o">===</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">leftChild</span><span class="p">.</span><span class="nx">right</span> <span class="o">===</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">newNode</span>) {
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">null</span>) {
+			<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newNode</span>;
+		} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">null</span>) {
+			<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newNode</span>;
+		} <span style="color:#66d9ef">else</span> {
+			<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">leftChild</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>;
+			<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">leftChild</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">leftChild</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">null</span>) {
+				<span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">newNode</span>);
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">newNode</span>);
+			}
+		}
+	}
+};
 </code></pre></div><p>完成上需的新增方法，我們就可以新增節點至二元樹中，使用方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BinaryTree</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">tree</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">BinaryTree</span>();
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">14</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">16</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">4</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">17</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">42</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">20</span>));
 </code></pre></div><p>接下來才是我們本篇的重點，將二元樹轉換成堆積，我們會直接在<code>BinaryTree</code>這物件下新增方法<code>transToHeap</code>，該方法可以轉換成堆積。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">searchByIndex</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">index</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">result</span> <span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">postOrderTraverse</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">index</span> <span class="o">===</span> <span class="nx">index</span><span class="p">)</span>
-			<span class="nx">result</span><span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-	<span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">searchByIndex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">index</span>) {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> ;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">postOrderTraverse</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">node</span>) {
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">index</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">index</span>)
+			<span style="color:#a6e22e">result</span><span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+	});
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
+};
 
-<span class="nx">BinaryTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">transToHeap</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">startNodeIndex</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">size</span><span class="p">(</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">startNodeIndex</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">startNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">searchByIndex</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">startNode</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+<span style="color:#a6e22e">BinaryTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">transToHeap</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">startNodeIndex</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">size</span>() <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">startNodeIndex</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">startNode</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">searchByIndex</span>(<span style="color:#a6e22e">i</span>);
+		<span style="color:#a6e22e">maxHeapIfy</span>(<span style="color:#a6e22e">startNode</span>);
+	}
 
-	<span class="kd">function</span> <span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">maxNode</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
-			<span class="k">return</span><span class="p">;</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">swap</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
-				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">;</span>
-			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">maxHeapIfy</span>(<span style="color:#a6e22e">node</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">maxNode</span>;
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>)
+			<span style="color:#66d9ef">return</span>;
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+			<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>) {
+				<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">node</span>);
+				<span style="color:#a6e22e">maxNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>;
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">maxNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+			}
+		}
 
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">!==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">node</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">swap</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
-				<span class="nx">maxNode</span> <span class="o">=</span> <span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">null</span>) {
+			<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span>) {
+				<span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">node</span>);
+				<span style="color:#a6e22e">maxNode</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>;
+			}
+		}
 
-		<span class="k">if</span> <span class="p">(</span><span class="nx">maxNode</span> <span class="o">!=</span> <span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">maxHeapIfy</span><span class="p">(</span><span class="nx">maxNode</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">maxNode</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">node</span>) {
+			<span style="color:#a6e22e">maxHeapIfy</span>(<span style="color:#a6e22e">maxNode</span>);
+		}
+	}
 
-	<span class="kd">function</span> <span class="nx">swap</span><span class="p">(</span><span class="nx">nodeA</span><span class="p">,</span> <span class="nx">nodeB</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">nodeB</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
-		<span class="nx">nodeB</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">nodeA</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
-		<span class="nx">nodeA</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="nx">temp</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">swap</span>(<span style="color:#a6e22e">nodeA</span>, <span style="color:#a6e22e">nodeB</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">temp</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">nodeB</span>.<span style="color:#a6e22e">data</span>;
+		<span style="color:#a6e22e">nodeB</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">nodeA</span>.<span style="color:#a6e22e">data</span>;
+		<span style="color:#a6e22e">nodeA</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">temp</span>;
+	}
+};
 </code></pre></div><h2 id="heading2">參考資料</h2>
 <ul>
 <li><a href="https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)"><a href="https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)">https://zh.wikipedia.org/zh-tw/%E5%A0%86_(%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84)</a></a></li>

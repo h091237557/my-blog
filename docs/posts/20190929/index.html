@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,19 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :
+ MyCAT
+ 本篇文章分為以下幾個章節 :
+ MyCAT 基本概念 MyCAT 的各種架構實現配置 使用 Docker 來實現 MyCAT 讀寫分離  MyCAT 基本概念 在資料庫中間件中，事實上分為兩種類型 :
+ proxy smart-client  它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。
+而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。
+圖 1 : proxy vs smart-client
+而其中 mycat 就是屬於 proxy 的其中一種應用。
+~ 小知識 ~
+現在幾個比較可以說的出名字的中間件有 :
+proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。
+有興趣的友人可以自已查查來比較看看。
+這裡問一下，那一種比較好呢 ? 首先咱們先說說 smart-client 的優點 :|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +54,19 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :
+ MyCAT
+ 本篇文章分為以下幾個章節 :
+ MyCAT 基本概念 MyCAT 的各種架構實現配置 使用 Docker 來實現 MyCAT 讀寫分離  MyCAT 基本概念 在資料庫中間件中，事實上分為兩種類型 :
+ proxy smart-client  它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。
+而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。
+圖 1 : proxy vs smart-client
+而其中 mycat 就是屬於 proxy 的其中一種應用。
+~ 小知識 ~
+現在幾個比較可以說的出名字的中間件有 :
+proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。
+有興趣的友人可以自已查查來比較看看。
+這裡問一下，那一種比較好呢 ? 首先咱們先說說 smart-client 的優點 :|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +78,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -206,27 +233,27 @@ smart-client : 大部份語言有實現簡單版的，而如果是支援比較�
 <li>switchType : 主從切換模式，但是有點看不太懂它的類型</li>
 <li>slaveThreshold : 主從延遲 hreshold，也就是說主從的延遲超過這個時間，這此從庫不會參於這次分配。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
-<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
-<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;mycat:schema</span> <span style="color:#a6e22e">xmlns:mycat=</span><span style="color:#e6db74">&#34;http://io.mycat/&#34;</span><span style="color:#f92672">&gt;</span>
 
-	<span class="c">&lt;!--</span><span class="c"> 1. 定義 mycat 邏輯資料庫 </span><span class="c">--&gt;</span>
-	<span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;masterdb&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;db1&#34;</span> <span class="nt">/&gt;</span>
+	<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 1. 定義 mycat 邏輯資料庫 </span><span style="color:#75715e">--&gt;</span>
+	<span style="color:#f92672">&lt;schema</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;masterdb&#34;</span> <span style="color:#a6e22e">checkSQLschema=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">sqlMaxLimit=</span><span style="color:#e6db74">&#34;100&#34;</span> <span style="color:#a6e22e">dataNode=</span><span style="color:#e6db74">&#34;db1&#34;</span> <span style="color:#f92672">/&gt;</span>
 
-	<span class="c">&lt;!--</span><span class="c"> 2. 定義 mycat 邏輯資料操作節點 </span><span class="c">--&gt;</span>
-    <span class="c">&lt;!--</span><span class="c"> 不過比較特別的是 database 它是指實際要連到的預設資料庫 </span><span class="c">--&gt;</span>
-	<span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;db1&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;xxx-db&#34;</span> <span class="na">database=</span><span class="s">&#34;test&#34;</span> <span class="nt">/&gt;</span>
+	<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 2. 定義 mycat 邏輯資料操作節點 </span><span style="color:#75715e">--&gt;</span>
+    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 不過比較特別的是 database 它是指實際要連到的預設資料庫 </span><span style="color:#75715e">--&gt;</span>
+	<span style="color:#f92672">&lt;dataNode</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;db1&#34;</span> <span style="color:#a6e22e">dataHost=</span><span style="color:#e6db74">&#34;xxx-db&#34;</span> <span style="color:#a6e22e">database=</span><span style="color:#e6db74">&#34;test&#34;</span> <span style="color:#f92672">/&gt;</span>
 
-	<span class="c">&lt;!--</span><span class="c"> 3. 定義 mycat 邏輯 host   </span><span class="c">--&gt;</span>
-	<span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;xxx-db&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;1&#34;</span>
-			  <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;-1&#34;</span> <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
-		<span class="c">&lt;!--</span><span class="c"> 4. 定義實際使用資料庫位置 </span><span class="c">--&gt;</span>
-		<span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;m1&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.10:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;/writeHost&gt;</span>
-	<span class="nt">&lt;/dataHost&gt;</span>
+	<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 3. 定義 mycat 邏輯 host   </span><span style="color:#75715e">--&gt;</span>
+	<span style="color:#f92672">&lt;dataHost</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;xxx-db&#34;</span> <span style="color:#a6e22e">maxCon=</span><span style="color:#e6db74">&#34;1000&#34;</span> <span style="color:#a6e22e">minCon=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">balance=</span><span style="color:#e6db74">&#34;1&#34;</span>
+			  <span style="color:#a6e22e">writeType=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">dbType=</span><span style="color:#e6db74">&#34;mysql&#34;</span> <span style="color:#a6e22e">dbDriver=</span><span style="color:#e6db74">&#34;native&#34;</span> <span style="color:#a6e22e">switchType=</span><span style="color:#e6db74">&#34;-1&#34;</span> <span style="color:#a6e22e">slaveThreshold=</span><span style="color:#e6db74">&#34;100&#34;</span><span style="color:#f92672">&gt;</span>
+		<span style="color:#f92672">&lt;heartbeat</span><span style="color:#f92672">&gt;</span>select user()<span style="color:#f92672">&lt;/heartbeat&gt;</span>
+		<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 4. 定義實際使用資料庫位置 </span><span style="color:#75715e">--&gt;</span>
+		<span style="color:#f92672">&lt;writeHost</span> <span style="color:#a6e22e">host=</span><span style="color:#e6db74">&#34;m1&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;192.168.0.10:3306&#34;</span> <span style="color:#a6e22e">user=</span><span style="color:#e6db74">&#34;root&#34;</span><span style="color:#f92672">&gt;</span>
+		<span style="color:#f92672">&lt;/writeHost&gt;</span>
+	<span style="color:#f92672">&lt;/dataHost&gt;</span>
 
-<span class="nt">&lt;/mycat:schema&gt;</span>
+<span style="color:#f92672">&lt;/mycat:schema&gt;</span>
 </code></pre></div><p>這裡簡單畫一下配置的關係圖，如下圖 2 所示。</p>
 <p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358sPVF5WeBJR.png" alt="">
 圖 2 : mycat 配置圖關係</p>
@@ -237,26 +264,26 @@ smart-client : 大部份語言有實現簡單版的，而如果是支援比較�
 <li>增加 readHost 配置。</li>
 </ul>
 <p>當要使用時，你可以下以下的 sql 來取得資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
-<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
-<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;mycat:schema</span> <span style="color:#a6e22e">xmlns:mycat=</span><span style="color:#e6db74">&#34;http://io.mycat/&#34;</span><span style="color:#f92672">&gt;</span>
 
-	<span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;db&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;db-node&#34;</span> <span class="nt">/&gt;</span>
+	<span style="color:#f92672">&lt;schema</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;db&#34;</span> <span style="color:#a6e22e">checkSQLschema=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">sqlMaxLimit=</span><span style="color:#e6db74">&#34;100&#34;</span> <span style="color:#a6e22e">dataNode=</span><span style="color:#e6db74">&#34;db-node&#34;</span> <span style="color:#f92672">/&gt;</span>
 
-	<span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;db-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;db-host&#34;</span> <span class="na">database=</span><span class="s">&#34;test&#34;</span> <span class="nt">/&gt;</span>
+	<span style="color:#f92672">&lt;dataNode</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;db-node&#34;</span> <span style="color:#a6e22e">dataHost=</span><span style="color:#e6db74">&#34;db-host&#34;</span> <span style="color:#a6e22e">database=</span><span style="color:#e6db74">&#34;test&#34;</span> <span style="color:#f92672">/&gt;</span>
 
-    <span class="c">&lt;!--</span><span class="c"> 以下有變  </span><span class="c">--&gt;</span>
-	<span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;db-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;3&#34;</span>
-			  <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;-1&#34;</span> <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
-		<span class="c">&lt;!--</span><span class="c"> !. 定義實際使用資料庫位置 (寫)  </span><span class="c">--&gt;</span>
-		<span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;writer&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.10:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;pass&#34;</span><span class="nt">&gt;</span>
-			<span class="c">&lt;!--</span><span class="c"> !. 定義實際使用資料庫位置 (讀)  </span><span class="c">--&gt;</span>
-			<span class="nt">&lt;readHost</span> <span class="na">host=</span><span class="s">&#34;reader&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.0.20:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;pass&#34;</span> <span class="nt">/&gt;</span>
-		<span class="nt">&lt;/writeHost&gt;</span>
-	<span class="nt">&lt;/dataHost&gt;</span>
+    <span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 以下有變  </span><span style="color:#75715e">--&gt;</span>
+	<span style="color:#f92672">&lt;dataHost</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;db-host&#34;</span> <span style="color:#a6e22e">maxCon=</span><span style="color:#e6db74">&#34;1000&#34;</span> <span style="color:#a6e22e">minCon=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">balance=</span><span style="color:#e6db74">&#34;3&#34;</span>
+			  <span style="color:#a6e22e">writeType=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">dbType=</span><span style="color:#e6db74">&#34;mysql&#34;</span> <span style="color:#a6e22e">dbDriver=</span><span style="color:#e6db74">&#34;native&#34;</span> <span style="color:#a6e22e">switchType=</span><span style="color:#e6db74">&#34;-1&#34;</span> <span style="color:#a6e22e">slaveThreshold=</span><span style="color:#e6db74">&#34;100&#34;</span><span style="color:#f92672">&gt;</span>
+		<span style="color:#f92672">&lt;heartbeat</span><span style="color:#f92672">&gt;</span>select user()<span style="color:#f92672">&lt;/heartbeat&gt;</span>
+		<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> !. 定義實際使用資料庫位置 (寫)  </span><span style="color:#75715e">--&gt;</span>
+		<span style="color:#f92672">&lt;writeHost</span> <span style="color:#a6e22e">host=</span><span style="color:#e6db74">&#34;writer&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;192.168.0.10:3306&#34;</span> <span style="color:#a6e22e">user=</span><span style="color:#e6db74">&#34;root&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;pass&#34;</span><span style="color:#f92672">&gt;</span>
+			<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> !. 定義實際使用資料庫位置 (讀)  </span><span style="color:#75715e">--&gt;</span>
+			<span style="color:#f92672">&lt;readHost</span> <span style="color:#a6e22e">host=</span><span style="color:#e6db74">&#34;reader&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;192.168.0.20:3306&#34;</span> <span style="color:#a6e22e">user=</span><span style="color:#e6db74">&#34;root&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;pass&#34;</span> <span style="color:#f92672">/&gt;</span>
+		<span style="color:#f92672">&lt;/writeHost&gt;</span>
+	<span style="color:#f92672">&lt;/dataHost&gt;</span>
 
-<span class="nt">&lt;/mycat:schema&gt;</span>
+<span style="color:#f92672">&lt;/mycat:schema&gt;</span>
 </code></pre></div><p>下圖 3 為 mycat 讀寫分離的配置概念圖。</p>
 <p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358ExN78AQM1s.png" alt="">
 圖 3 : mycat 讀寫分離的配置概念圖</p>
@@ -264,27 +291,27 @@ smart-client : 大部份語言有實現簡單版的，而如果是支援比較�
 有個東西要注意一下，mysql 的資料同步是要自已實現，mycat 不能會幫你處理喔。</p>
 <h3 id="mycat-4">MyCAT 分庫實現</h3>
 <p>分庫的配置就是什麼都建立兩組，然後用戶端要打時，自已決定去打那一個位置。</p>
-<div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="cp">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
-<span class="cp">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
-<span class="nt">&lt;mycat:schema</span> <span class="na">xmlns:mycat=</span><span class="s">&#34;http://io.mycat/&#34;</span><span class="nt">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34;?&gt;</span>
+<span style="color:#75715e">&lt;!DOCTYPE mycat:schema SYSTEM &#34;schema.dtd&#34;&gt;</span>
+<span style="color:#f92672">&lt;mycat:schema</span> <span style="color:#a6e22e">xmlns:mycat=</span><span style="color:#e6db74">&#34;http://io.mycat/&#34;</span><span style="color:#f92672">&gt;</span>
         
-        <span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;Order&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;order-node&#34;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;schema</span> <span class="na">name=</span><span class="s">&#34;User&#34;</span> <span class="na">checkSQLschema=</span><span class="s">&#34;false&#34;</span> <span class="na">sqlMaxLimit=</span><span class="s">&#34;100&#34;</span> <span class="na">dataNode=</span><span class="s">&#34;user-node&#34;</span><span class="nt">/&gt;</span>
+        <span style="color:#f92672">&lt;schema</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Order&#34;</span> <span style="color:#a6e22e">checkSQLschema=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">sqlMaxLimit=</span><span style="color:#e6db74">&#34;100&#34;</span> <span style="color:#a6e22e">dataNode=</span><span style="color:#e6db74">&#34;order-node&#34;</span><span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;schema</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;User&#34;</span> <span style="color:#a6e22e">checkSQLschema=</span><span style="color:#e6db74">&#34;false&#34;</span> <span style="color:#a6e22e">sqlMaxLimit=</span><span style="color:#e6db74">&#34;100&#34;</span> <span style="color:#a6e22e">dataNode=</span><span style="color:#e6db74">&#34;user-node&#34;</span><span style="color:#f92672">/&gt;</span>
         
-        <span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;order-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;order-host&#34;</span> <span class="na">database=</span><span class="s">&#34;db1&#34;</span> <span class="nt">/&gt;</span>
-        <span class="nt">&lt;dataNode</span> <span class="na">name=</span><span class="s">&#34;user-node&#34;</span> <span class="na">dataHost=</span><span class="s">&#34;user-host&#34;</span> <span class="na">database=</span><span class="s">&#34;db2&#34;</span> <span class="nt">/&gt;</span>
+        <span style="color:#f92672">&lt;dataNode</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;order-node&#34;</span> <span style="color:#a6e22e">dataHost=</span><span style="color:#e6db74">&#34;order-host&#34;</span> <span style="color:#a6e22e">database=</span><span style="color:#e6db74">&#34;db1&#34;</span> <span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;dataNode</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;user-node&#34;</span> <span style="color:#a6e22e">dataHost=</span><span style="color:#e6db74">&#34;user-host&#34;</span> <span style="color:#a6e22e">database=</span><span style="color:#e6db74">&#34;db2&#34;</span> <span style="color:#f92672">/&gt;</span>
         
-        <span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;order-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;2&#34;</span>
-                          <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;1&#34;</span>  <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
-                <span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;host1&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.1.199:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;123456&#34;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/dataHost&gt;</span>
-        <span class="nt">&lt;dataHost</span> <span class="na">name=</span><span class="s">&#34;user-host&#34;</span> <span class="na">maxCon=</span><span class="s">&#34;1000&#34;</span> <span class="na">minCon=</span><span class="s">&#34;10&#34;</span> <span class="na">balance=</span><span class="s">&#34;2&#34;</span>
-                          <span class="na">writeType=</span><span class="s">&#34;0&#34;</span> <span class="na">dbType=</span><span class="s">&#34;mysql&#34;</span> <span class="na">dbDriver=</span><span class="s">&#34;native&#34;</span> <span class="na">switchType=</span><span class="s">&#34;1&#34;</span>  <span class="na">slaveThreshold=</span><span class="s">&#34;100&#34;</span><span class="nt">&gt;</span>
-                <span class="nt">&lt;heartbeat</span><span class="nt">&gt;</span>select user()<span class="nt">&lt;/heartbeat&gt;</span>
-                <span class="nt">&lt;writeHost</span> <span class="na">host=</span><span class="s">&#34;host2&#34;</span> <span class="na">url=</span><span class="s">&#34;192.168.1.166:3306&#34;</span> <span class="na">user=</span><span class="s">&#34;root&#34;</span> <span class="na">password=</span><span class="s">&#34;123456&#34;</span><span class="nt">/&gt;</span>
-        <span class="nt">&lt;/dataHost&gt;</span>
-<span class="nt">&lt;/mycat:schema&gt;</span>
+        <span style="color:#f92672">&lt;dataHost</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;order-host&#34;</span> <span style="color:#a6e22e">maxCon=</span><span style="color:#e6db74">&#34;1000&#34;</span> <span style="color:#a6e22e">minCon=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">balance=</span><span style="color:#e6db74">&#34;2&#34;</span>
+                          <span style="color:#a6e22e">writeType=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">dbType=</span><span style="color:#e6db74">&#34;mysql&#34;</span> <span style="color:#a6e22e">dbDriver=</span><span style="color:#e6db74">&#34;native&#34;</span> <span style="color:#a6e22e">switchType=</span><span style="color:#e6db74">&#34;1&#34;</span>  <span style="color:#a6e22e">slaveThreshold=</span><span style="color:#e6db74">&#34;100&#34;</span><span style="color:#f92672">&gt;</span>
+                <span style="color:#f92672">&lt;heartbeat</span><span style="color:#f92672">&gt;</span>select user()<span style="color:#f92672">&lt;/heartbeat&gt;</span>
+                <span style="color:#f92672">&lt;writeHost</span> <span style="color:#a6e22e">host=</span><span style="color:#e6db74">&#34;host1&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;192.168.1.199:3306&#34;</span> <span style="color:#a6e22e">user=</span><span style="color:#e6db74">&#34;root&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;123456&#34;</span><span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/dataHost&gt;</span>
+        <span style="color:#f92672">&lt;dataHost</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;user-host&#34;</span> <span style="color:#a6e22e">maxCon=</span><span style="color:#e6db74">&#34;1000&#34;</span> <span style="color:#a6e22e">minCon=</span><span style="color:#e6db74">&#34;10&#34;</span> <span style="color:#a6e22e">balance=</span><span style="color:#e6db74">&#34;2&#34;</span>
+                          <span style="color:#a6e22e">writeType=</span><span style="color:#e6db74">&#34;0&#34;</span> <span style="color:#a6e22e">dbType=</span><span style="color:#e6db74">&#34;mysql&#34;</span> <span style="color:#a6e22e">dbDriver=</span><span style="color:#e6db74">&#34;native&#34;</span> <span style="color:#a6e22e">switchType=</span><span style="color:#e6db74">&#34;1&#34;</span>  <span style="color:#a6e22e">slaveThreshold=</span><span style="color:#e6db74">&#34;100&#34;</span><span style="color:#f92672">&gt;</span>
+                <span style="color:#f92672">&lt;heartbeat</span><span style="color:#f92672">&gt;</span>select user()<span style="color:#f92672">&lt;/heartbeat&gt;</span>
+                <span style="color:#f92672">&lt;writeHost</span> <span style="color:#a6e22e">host=</span><span style="color:#e6db74">&#34;host2&#34;</span> <span style="color:#a6e22e">url=</span><span style="color:#e6db74">&#34;192.168.1.166:3306&#34;</span> <span style="color:#a6e22e">user=</span><span style="color:#e6db74">&#34;root&#34;</span> <span style="color:#a6e22e">password=</span><span style="color:#e6db74">&#34;123456&#34;</span><span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/dataHost&gt;</span>
+<span style="color:#f92672">&lt;/mycat:schema&gt;</span>
 </code></pre></div><p><img src="https://ithelp.ithome.com.tw/upload/images/20191014/20089358cu2pPkzWjr.png" alt="">
 圖 4 : 分庫分表 mycat 配置概念圖</p>
 <h2 id="-docker--mycat-">使用 Docker 來實現 MyCAT 讀寫分離</h2>
@@ -307,22 +334,22 @@ host: 127.0.0.1:8066
 username: root
 password: pass
 </code></pre><p>然後你就可以在裡面下指令了，一開始應該是空的，那你可以使用以下指令建立一下測試資訊。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="n">use</span> <span class="n">db</span><span class="p">;</span>
-<span class="k">create</span> <span class="k">table</span> <span class="k">user</span><span class="p">(</span>
-   <span class="n">id</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="n">AUTO_INCREMENT</span><span class="p">,</span>
-   <span class="n">name</span> <span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-   <span class="n">age</span> <span class="nb">INT</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
-   <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span> <span class="n">id</span> <span class="p">)</span>
-<span class="p">)</span> <span class="n">ENGINE</span><span class="o">=</span><span class="n">InnoDB</span> <span class="n">AUTO_INCREMENT</span><span class="o">=</span><span class="mi">1</span> <span class="k">DEFAULT</span> <span class="n">CHARSET</span><span class="o">=</span><span class="n">utf8mb4</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">use db;
+<span style="color:#66d9ef">create</span> <span style="color:#66d9ef">table</span> <span style="color:#66d9ef">user</span>(
+   id INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span> AUTO_INCREMENT,
+   name VARCHAR(<span style="color:#ae81ff">20</span>) <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+   age INT <span style="color:#66d9ef">NOT</span> <span style="color:#66d9ef">NULL</span>,
+   <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span> ( id )
+) ENGINE<span style="color:#f92672">=</span>InnoDB AUTO_INCREMENT<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">DEFAULT</span> CHARSET<span style="color:#f92672">=</span>utf8mb4;
 
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">A-Mark</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span><span class="p">;</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">B-Jack</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span><span class="p">;</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">C-Ian</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">36</span><span class="p">)</span><span class="p">;</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">E-Jiro</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span><span class="p">;</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">D-Fucc</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">27</span><span class="p">)</span><span class="p">;</span>
-<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">user</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">age</span><span class="p">)</span> <span class="k">VALUES</span> <span class="p">(</span><span class="s1">&#39;</span><span class="s1">C-Mark</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">46</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">A-Mark</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">18</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">B-Jack</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">10</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">C-Ian</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">36</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">E-Jiro</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">30</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">D-Fucc</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">27</span>);
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> <span style="color:#66d9ef">user</span> (name, age) <span style="color:#66d9ef">VALUES</span> (<span style="color:#e6db74">&#39;</span><span style="color:#e6db74">C-Mark</span><span style="color:#e6db74">&#39;</span>, <span style="color:#ae81ff">46</span>);
 </code></pre></div><p>然後你就可以正常的執行 sql 操作囉。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="k">user</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SELECT</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">FROM</span> <span style="color:#66d9ef">user</span>;
 </code></pre></div><h3 id="dockercompose-">Docker-Compose 檔說明</h3>
 <p>這裡使用 docker-compose 來配置一個模擬的 mycat 讀寫分離情境，其中有三個服務 :</p>
 <ul>
@@ -333,68 +360,68 @@ password: pass
 <p>有幾個重點說一下。</p>
 <p>首先讀與寫的 mysql 服務都是使用 bitnami/mysql:5.7 ，是因為它可以很簡單的讓我可以使用兩台資料庫資料同步的功能，不然用原生的很配置要寫很常。</p>
 <p>然後這裡還有設置 db 的 docker network，不知道為什麼嘗試的時後直接使用 link 會失敗，詳細原因就待查，反正這只是淺淺的範例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-yml" data-lang="yml">version<span class="p">:</span><span class="w"> </span><span class="s1">&#39;3&#39;</span><span class="w">
-</span><span class="w">
-</span><span class="w"></span>services<span class="p">:</span><span class="w">
-</span><span class="w">  </span>mysql_write<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;bitnami/mysql:5.7&#39;</span><span class="w"> 
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="m">33061</span><span class="p">:</span><span class="m">3306</span><span class="w">
-</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
-</span><span class="w">      </span>db<span class="p">:</span><span class="w">
-</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.10</span><span class="w">
-</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_MODE=master<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_USER=repl_user<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_USER=mark<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_DATABASE=test<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>ALLOW_EMPTY_PASSWORD=yes<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_ROOT_PASSWORD=pass<span class="w">
-</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./mysql/write/<span class="p">:</span>/etc/mysql/conf.d<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./config/hosts<span class="p">:</span>/etc/hosts<span class="p">:</span>ro<span class="w">
-</span><span class="w">  </span>mysql_read<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;bitnami/mysql:5.7&#39;</span><span class="w"> 
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="m">33062</span><span class="p">:</span><span class="m">3306</span><span class="w">
-</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
-</span><span class="w">      </span>db<span class="p">:</span><span class="w">
-</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.20</span><span class="w">
-</span><span class="w">    </span>environment<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_MODE=slave<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_REPLICATION_USER=repl_user<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_USER=mark<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_DATABASE=test<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_HOST=<span class="m">192.168</span><span class="m">.0</span><span class="m">.10</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_PORT_NUMBER=<span class="m">3306</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>MYSQL_MASTER_ROOT_PASSWORD=pass<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>ALLOW_EMPTY_PASSWORD=yes<span class="w">
-</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./mysql/read/<span class="p">:</span>/etc/mysql/conf.d<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./config/hosts<span class="p">:</span>/etc/hosts<span class="p">:</span>ro<span class="w">
-</span><span class="w">  </span>mycat<span class="p">:</span><span class="w">
-</span><span class="w">    </span>image<span class="p">:</span><span class="w"> </span><span class="s1">&#39;qiyue/mycat:1.6.5&#39;</span><span class="w">
-</span><span class="w">    </span>volumes<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./config/mycat/<span class="p">:</span>/usr/local/mycat/conf/<span class="w">
-</span><span class="w">      </span>-<span class="w"> </span>./log/mycat-logs/<span class="p">:</span>/mycat/logs/<span class="p">:</span>rw<span class="w">
-</span><span class="w">    </span>ports<span class="p">:</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;8066:8066&#34;</span><span class="w">
-</span><span class="w">      </span>-<span class="w"> </span><span class="s2">&#34;9066:9066&#34;</span><span class="w">
-</span><span class="w">    </span>networks<span class="p">:</span><span class="w">
-</span><span class="w">      </span>db<span class="p">:</span><span class="w">
-</span><span class="w">        </span>ipv4_address<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.5</span><span class="w">
-</span><span class="w">    </span>ulimits<span class="p">:</span><span class="w">
-</span><span class="w">      </span>nproc<span class="p">:</span><span class="w"> </span><span class="m">65535</span><span class="w">
-</span><span class="w">    </span>hostname<span class="p">:</span><span class="w"> </span>mycat<span class="w">
-</span><span class="w">    </span>restart<span class="p">:</span><span class="w"> </span>always<span class="w">
-</span><span class="w"></span>networks<span class="p">:</span><span class="w">
-</span><span class="w">    </span>db<span class="p">:</span><span class="w">
-</span><span class="w">      </span>driver<span class="p">:</span><span class="w"> </span>bridge<span class="w">
-</span><span class="w">      </span>ipam<span class="p">:</span><span class="w">
-</span><span class="w">        </span>driver<span class="p">:</span><span class="w"> </span>default<span class="w">
-</span><span class="w">        </span>config<span class="p">:</span><span class="w">
-</span><span class="w">          </span>-<span class="w"> </span>subnet<span class="p">:</span><span class="w"> </span><span class="m">192.168</span><span class="m">.0</span><span class="m">.0</span>/<span class="m">24</span><span class="w">
-</span></code></pre></div><p>然後還有這三個服務都配置在 db 這個 network 內網中，然後這裡比較特別的是，會將這三台服務配置 config/hosts 也就是讓人在內網中打 writer 就會對應到 192.168.0.10 這個位置，概念就像是 localhost 指向。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml">version: <span style="color:#e6db74">&#39;3&#39;</span>
+
+services:
+  mysql_write:
+    image: <span style="color:#e6db74">&#39;bitnami/mysql:5.7&#39;</span> 
+    ports:
+      - <span style="color:#ae81ff">33061</span>:<span style="color:#ae81ff">3306</span>
+    networks:
+      db:
+        ipv4_address: <span style="color:#ae81ff">192.168</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.10</span>
+    environment:
+      - MYSQL_REPLICATION_MODE=master
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=mark
+      - MYSQL_DATABASE=test
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=pass
+    volumes:
+      - ./mysql/write/:/etc/mysql/conf.d
+      - ./config/hosts:/etc/hosts:ro
+  mysql_read:
+    image: <span style="color:#e6db74">&#39;bitnami/mysql:5.7&#39;</span> 
+    ports:
+      - <span style="color:#ae81ff">33062</span>:<span style="color:#ae81ff">3306</span>
+    networks:
+      db:
+        ipv4_address: <span style="color:#ae81ff">192.168</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.20</span>
+    environment:
+      - MYSQL_REPLICATION_MODE=slave
+      - MYSQL_REPLICATION_USER=repl_user
+      - MYSQL_USER=mark
+      - MYSQL_DATABASE=test
+      - MYSQL_MASTER_HOST=<span style="color:#ae81ff">192.168</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.10</span>
+      - MYSQL_MASTER_PORT_NUMBER=<span style="color:#ae81ff">3306</span>
+      - MYSQL_MASTER_ROOT_PASSWORD=pass
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./mysql/read/:/etc/mysql/conf.d
+      - ./config/hosts:/etc/hosts:ro
+  mycat:
+    image: <span style="color:#e6db74">&#39;qiyue/mycat:1.6.5&#39;</span>
+    volumes:
+      - ./config/mycat/:/usr/local/mycat/conf/
+      - ./log/mycat-logs/:/mycat/logs/:rw
+    ports:
+      - <span style="color:#e6db74">&#34;8066:8066&#34;</span>
+      - <span style="color:#e6db74">&#34;9066:9066&#34;</span>
+    networks:
+      db:
+        ipv4_address: <span style="color:#ae81ff">192.168</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.5</span>
+    ulimits:
+      nproc: <span style="color:#ae81ff">65535</span>
+    hostname: mycat
+    restart: always
+networks:
+    db:
+      driver: bridge
+      ipam:
+        driver: default
+        config:
+          - subnet: <span style="color:#ae81ff">192.168</span><span style="color:#ae81ff">.0</span><span style="color:#ae81ff">.0</span>/<span style="color:#ae81ff">24</span>
+</code></pre></div><p>然後還有這三個服務都配置在 db 這個 network 內網中，然後這裡比較特別的是，會將這三台服務配置 config/hosts 也就是讓人在內網中打 writer 就會對應到 192.168.0.10 這個位置，概念就像是 localhost 指向。</p>
 <p>原本想嘗試在 mycat 中直接配置 ip，但嘗試了一下不太行，原因還是待查，難怪看起他人的配置都是要配置 config/hosts。</p>
 <pre><code>127.0.0.1	localhost
 192.168.0.10	writer

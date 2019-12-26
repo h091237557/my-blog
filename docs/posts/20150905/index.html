@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="js, javascript, 單線程, event driven" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，它一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
+事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ） 先來說說事件驅動(Event Driven)，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了ENTER之類的事件來決定，而不像一些如批次程式設計（batch programming）是由程式開發者來決定。
+我們來看看下面這張Philip Roberts在JSConf EU 2014講述Javascript event-loop時所出現的這圖。
+首先左上角為V8 Javascript runtime，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。
+ one thread == one call stack == on thing at time
+ 其中Stack裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至callback queue裡尋找看看有沒有callback要執行。
+Javascript程式碼單線程運行流程範例 我們將以下列這段簡單的程式碼來看Javascript的執行流程。
+console.log(&amp;#34;hi&amp;#34;) setTimeout(function cb(){ console.log(&amp;#34;there&amp;#34;); },5000); console.log(&amp;#34;Mark Lin&amp;#34;); 首先為第一張圖，在還沒執行程式程式碼時，所有的Stack與Task Quenu都是空的。 然後我們開始執行，首先載入這段JS，Stack會產生main()這個區塊，再執行到 console.log(&#39;hi&#39;)時，也會在Stack產生console.log(&#39;hi&#39;)的區塊，並在Console印出hi，最後console.log(&#39;hi&#39;)工作完成，會從Stack中釋放出。
+執行到setTimeoout，Stack會產生setTimeout的區塊，並且會向api發送工作，然後繼續往下執行。
+執行console.log(&amp;quot;Mark Lin&amp;quot;)，最後工作剛成後，Stack全部清空。
+Stack全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將CallBack cb放置Task Quenu，並且由於Stack已清空，它會自動去Task Quenu尋找Task，這時發現了Cb然後就執行consoel.log(&amp;quot;there&amp;quot;)。
+參考資料  https://www.youtube.com/watch?v=8aGhZQkoFbQ https://vimeo.com/96425312 http://www.ruanyifeng.com/blog/2014/10/event-loop.html  |Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Javascript 之 Event Driven | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，|Describe what your web page is about">
+    <meta name="twitter:description" content="在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，它一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
+事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ） 先來說說事件驅動(Event Driven)，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了ENTER之類的事件來決定，而不像一些如批次程式設計（batch programming）是由程式開發者來決定。
+我們來看看下面這張Philip Roberts在JSConf EU 2014講述Javascript event-loop時所出現的這圖。
+首先左上角為V8 Javascript runtime，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。
+ one thread == one call stack == on thing at time
+ 其中Stack裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至callback queue裡尋找看看有沒有callback要執行。
+Javascript程式碼單線程運行流程範例 我們將以下列這段簡單的程式碼來看Javascript的執行流程。
+console.log(&#34;hi&#34;) setTimeout(function cb(){ console.log(&#34;there&#34;); },5000); console.log(&#34;Mark Lin&#34;); 首先為第一張圖，在還沒執行程式程式碼時，所有的Stack與Task Quenu都是空的。 然後我們開始執行，首先載入這段JS，Stack會產生main()這個區塊，再執行到 console.log(&#39;hi&#39;)時，也會在Stack產生console.log(&#39;hi&#39;)的區塊，並在Console印出hi，最後console.log(&#39;hi&#39;)工作完成，會從Stack中釋放出。
+執行到setTimeoout，Stack會產生setTimeout的區塊，並且會向api發送工作，然後繼續往下執行。
+執行console.log(&quot;Mark Lin&quot;)，最後工作剛成後，Stack全部清空。
+Stack全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將CallBack cb放置Task Quenu，並且由於Stack已清空，它會自動去Task Quenu尋找Task，這時發現了Cb然後就執行consoel.log(&quot;there&quot;)。
+參考資料  https://www.youtube.com/watch?v=8aGhZQkoFbQ https://vimeo.com/96425312 http://www.ruanyifeng.com/blog/2014/10/event-loop.html  |Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -136,11 +161,11 @@
 <p>其中<code>Stack</code>裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至<code>callback queue</code>裡尋找看看有沒有<code>callback</code>要執行。</p>
 <h2 id="javascript">Javascript程式碼單線程運行流程範例</h2>
 <p>我們將以下列這段簡單的程式碼來看Javascript的執行流程。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;hi&#34;</span><span class="p">)</span>
-	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="nx">cb</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;there&#34;</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">,</span><span class="mi">5000</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;Mark Lin&#34;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;hi&#34;</span>)
+	<span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">cb</span>(){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;there&#34;</span>);
+	},<span style="color:#ae81ff">5000</span>);
+	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;Mark Lin&#34;</span>);
 </code></pre></div><p>首先為第一張圖，在還沒執行程式程式碼時，所有的<code>Stack</code>與<code>Task Quenu</code>都是空的。
 <img src="http://user-image.logdown.io/user/13878/blog/13097/post/294474/ImVy3COXT7SiCmPhKVmS_ScreenClip.png" alt="ScreenClip.png"></p>
 <p>然後我們開始執行，首先載入這段JS，<code>Stack</code>會產生<code>main()</code>這個區塊，再執行到

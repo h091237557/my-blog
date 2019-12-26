@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="php, laravel" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 : &amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :
+&amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 :
+&amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。
+Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
+ 定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。
+ 畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。
+程式碼範例 假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。
+&amp;lt;?php interface IMessage { public function push(); } class LineSDK implements IMessage { public function push() { var_dump(&amp;#39;I push a message to line&amp;#39;); } } 然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。
+&amp;lt;?php class MessageFacade { private $sdk; public function __construct(IMessage $sdk) { $this-&amp;gt;sdk = $sdk; } public function push() { $this-&amp;gt;sdk-&amp;gt;push(); } } 最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP Laravel 的 Facade 的理解 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 : &lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :
+&lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 :
+&lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。
+Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
+ 定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。
+ 畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。
+程式碼範例 假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。
+&lt;?php interface IMessage { public function push(); } class LineSDK implements IMessage { public function push() { var_dump(&#39;I push a message to line&#39;); } } 然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。
+&lt;?php class MessageFacade { private $sdk; public function __construct(IMessage $sdk) { $this-&gt;sdk = $sdk; } public function push() { $this-&gt;sdk-&gt;push(); } } 最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -127,14 +146,14 @@
     <p><img src="http://yixiang8780.com/outImg/20181228-1.png" alt=""></p>
 <h2 id="-laravel-facade-">什麼是 Laravel Facade ?</h2>
 <p>在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="nv">$userService</span> <span class="o">=</span> <span class="nv">$app</span><span class="o">-&gt;</span><span class="na">make</span><span class="p">(</span><span class="s1">&#39;UserService&#39;</span><span class="p">);</span>
-<span class="nv">$userService</span><span class="o">-&gt;</span><span class="na">createUser</span><span class="p">();</span>
+$userService <span style="color:#f92672">=</span> $app<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">make</span>(<span style="color:#e6db74">&#39;UserService&#39;</span>);
+$userService<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">createUser</span>();
 </code></pre></div><p>但是有時後你會看到如下的程式碼 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="nx">UserService</span><span class="o">::</span><span class="na">createUser</span><span class="p">();</span>
+<span style="color:#a6e22e">UserService</span><span style="color:#f92672">::</span><span style="color:#a6e22e">createUser</span>();
 </code></pre></div><p>而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。</p>
 <h3 id="facade-">Facade(外觀) 設計模式</h3>
 <p>Facade 設計模式基本的定義如下 :</p>
@@ -145,45 +164,45 @@
 <p><img src="http://yixiang8780.com/outImg/20181228-2.png" alt=""></p>
 <h4 id="heading">程式碼範例</h4>
 <p>假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">interface</span> <span class="nx">IMessage</span> 
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">();</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">IMessage</span> 
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">push</span>();
+}
 
 
-<span class="k">class</span> <span class="nc">LineSDK</span> <span class="k">implements</span> <span class="nx">IMessage</span> 
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;I push a message to line&#39;</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LineSDK</span> <span style="color:#66d9ef">implements</span> <span style="color:#a6e22e">IMessage</span> 
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">push</span>()
+    {
+        <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;I push a message to line&#39;</span>);
+    }
+}
 </code></pre></div><p>然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="k">class</span> <span class="nc">MessageFacade</span>
-<span class="p">{</span>
-    <span class="k">private</span> <span class="nv">$sdk</span><span class="p">;</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MessageFacade</span>
+{
+    <span style="color:#66d9ef">private</span> $sdk; 
 
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">IMessage</span> <span class="nv">$sdk</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sdk</span> <span class="o">=</span> <span class="nv">$sdk</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#a6e22e">IMessage</span> $sdk)
+    {
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">sdk</span> <span style="color:#f92672">=</span> $sdk;
+    }
 
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sdk</span><span class="o">-&gt;</span><span class="na">push</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">push</span>()
+    {
+        $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">sdk</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">push</span>();
+    }
+}
 </code></pre></div><p>最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="c1">// 備註，在 laravel 時這裡嚴格來說會寫成
-</span><span class="c1">// $app-&gt;make(&#39;Imessage&#39;)
-</span><span class="c1">// 而不會看到 linesdk 這東西
-</span><span class="c1"></span><span class="nv">$sdk</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MessageFacade</span><span class="p">(</span><span class="k">new</span> <span class="nx">LineSDK</span><span class="p">());</span>
-<span class="nv">$sdk</span><span class="o">-&gt;</span><span class="na">push</span><span class="p">();</span>
+<span style="color:#75715e">// 備註，在 laravel 時這裡嚴格來說會寫成
+</span><span style="color:#75715e">// $app-&gt;make(&#39;Imessage&#39;)
+</span><span style="color:#75715e">// 而不會看到 linesdk 這東西
+</span><span style="color:#75715e"></span>$sdk <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MessageFacade</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LineSDK</span>());
+$sdk<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">push</span>();
 </code></pre></div><h4 id="-">這樣有什麼好處 ?</h4>
 <blockquote>
 <p>當 sdk 進行修改時，你就不需要修改應用層的也方，只要修改 Facade 就好。</p>
@@ -193,39 +212,39 @@
 <h3 id="laravel-facade--">Laravel Facade 是如何實現的呢 ?</h3>
 <p>就單來說，它就如下圖所示，主要的核心就是在 Facade 這個抽象類別，它裡面會定義一個 php 的 <code>__callStatic</code> 方法，它被執行到的時機為，這個類別中被呼叫靜態方法時，他就會被執行到。</p>
 <p><img src="http://yixiang8780.com/outImg/20181228-3.png" alt=""></p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
 
-<span class="k">abstract</span> <span class="k">class</span> <span class="nc">Facade</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="fm">__callStatic</span><span class="p">(</span><span class="nv">$method</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="nv">$instance</span> <span class="o">=</span> <span class="k">static</span><span class="o">::</span><span class="na">getFacadeAccessor</span><span class="p">();</span>
-        <span class="k">return</span> <span class="nv">$instance</span><span class="o">::</span><span class="nv">$method</span><span class="p">(</span><span class="o">...</span><span class="nv">$args</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
+<span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Facade</span> {
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">function</span> __callStatic($method, $args)
+    {
+        $instance <span style="color:#f92672">=</span> <span style="color:#66d9ef">static</span><span style="color:#f92672">::</span><span style="color:#a6e22e">getFacadeAccessor</span>();
+        <span style="color:#66d9ef">return</span> $instance<span style="color:#f92672">::</span>$method(<span style="color:#f92672">...</span>$args);
+    }
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
 
-<span class="k">class</span> <span class="nc">MessageFacade</span> <span class="k">extends</span> <span class="nx">Facade</span>
-<span class="p">{</span>
-    <span class="k">protected</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getFacadeAccessor</span><span class="p">(){</span>
-        <span class="k">return</span> <span class="k">new</span> <span class="nx">LineSDK</span><span class="p">();</span> 
-    <span class="p">}</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MessageFacade</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Facade</span>
+{
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getFacadeAccessor</span>(){
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">LineSDK</span>(); 
+    }
+}
 
-<span class="k">class</span> <span class="nc">LineSDK</span> 
-<span class="p">{</span>
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">push</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nx">var_dump</span><span class="p">(</span><span class="s1">&#39;I push a message to line&#39;</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">
-<span class="cp">&lt;?php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LineSDK</span> 
+{
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">push</span>()
+    {
+        <span style="color:#a6e22e">var_dump</span>(<span style="color:#e6db74">&#39;I push a message to line&#39;</span>);
+    }
+}
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">
+<span style="color:#75715e">&lt;?php</span>
 
-<span class="k">include</span> <span class="s1">&#39;Facades/MessageFacade.php&#39;</span><span class="p">;</span>
+<span style="color:#66d9ef">include</span> <span style="color:#e6db74">&#39;Facades/MessageFacade.php&#39;</span>;
 
-<span class="nx">MessageFacade</span><span class="o">::</span><span class="na">push</span><span class="p">();</span>
+<span style="color:#a6e22e">MessageFacade</span><span style="color:#f92672">::</span><span style="color:#a6e22e">push</span>();
 </code></pre></div><h2 id="laravel-facade-">Laravel Facade 的爭論</h2>
 <p>它們的爭論點就是 :</p>
 <blockquote>
@@ -234,37 +253,37 @@
 <p>這裡大至上會分成兩派 :</p>
 <h3 id="-laravel-facade">使用 Laravel Facade</h3>
 <p>這一派的程式碼會寫的如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
-<span class="k">class</span> <span class="nc">Log</span>
-<span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Log</span>
+{
   
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">()</span>
-    <span class="p">{</span>
-    <span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct()
+    {
+    }
 
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
-    <span class="p">{</span>
-        <span class="nx">LogService</span><span class="o">::</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
-    <span class="p">}</span>  
-<span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">log</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">void</span>
+    {
+        <span style="color:#a6e22e">LogService</span><span style="color:#f92672">::</span><span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">log</span>);
+    }  
+}
 </code></pre></div><h3 id="-laravel-facade1">不使用 Laravel Facade</h3>
 <p>而這一派的程式碼會寫的如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">class</span> <span class="nc">Log</span>
-<span class="p">{</span>
-    <span class="k">private</span> <span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">;</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Log</span>
+{
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">ILogService</span> $logService;
   
-    <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">ILogService</span> <span class="nv">$logService</span><span class="p">)</span>
-    <span class="p">{</span>
-      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span> <span class="o">=</span> <span class="nv">$logService</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> __construct(<span style="color:#a6e22e">ILogService</span> $logService)
+    {
+      $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">logService</span> <span style="color:#f92672">=</span> $logService;
+    }
 
-    <span class="k">public</span> <span class="k">function</span> <span class="nf">send</span><span class="p">(</span><span class="nx">log</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
-    <span class="p">{</span>
-      <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logService</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
-    <span class="p">}</span>  
-<span class="p">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">log</span>)<span style="color:#f92672">:</span> <span style="color:#a6e22e">void</span>
+    {
+      $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">logService</span><span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">send</span>(<span style="color:#a6e22e">log</span>);
+    }  
+}
 </code></pre></div><h3 id="heading1">支持與反對的看法</h3>
 <p>首先支持使用 Facade 這一派的他們提出以下使用後的優點 :</p>
 <ol>
@@ -282,23 +301,23 @@
 <p>順到說一下，在下面的參考資料裡包含了大部份吵架的文章，有興趣的人可以去看看。</p>
 <h2 id="---laravel-facade-">備註 : 關於使用 Laravel Facade 有更高的可測試性說明</h2>
 <p>在 Laravel Facade 中，如果你有一段程式碼直接的使用 Laravel Facade 如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">public</span> <span class="k">function</span> <span class="nf">getIndex</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="nx">Event</span><span class="o">::</span><span class="na">fire</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Dayle&#39;</span><span class="p">]);</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getIndex</span>()
+{
+    <span style="color:#a6e22e">Event</span><span style="color:#f92672">::</span><span style="color:#a6e22e">fire</span>(<span style="color:#e6db74">&#39;foo&#39;</span>, [<span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;Dayle&#39;</span>]);
 
-    <span class="k">return</span> <span class="s1">&#39;All done!&#39;</span><span class="p">;</span>
-<span class="p">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#39;All done!&#39;</span>;
+}
 </code></pre></div><p>然後你這時要進行測試時，可以使用<code>shouldReceive</code>的方法來模擬 Event :</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php"><span class="cp">&lt;?php</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php"><span style="color:#75715e">&lt;?php</span>
 
-<span class="k">public</span> <span class="k">function</span> <span class="nf">testGetIndex</span><span class="p">()</span>
-<span class="p">{</span>
-    <span class="nx">Event</span><span class="o">::</span><span class="na">shouldReceive</span><span class="p">(</span><span class="s1">&#39;fire&#39;</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">once</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">with</span><span class="p">(</span><span class="s1">&#39;foo&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Dayle&#39;</span><span class="p">]);</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">testGetIndex</span>()
+{
+    <span style="color:#a6e22e">Event</span><span style="color:#f92672">::</span><span style="color:#a6e22e">shouldReceive</span>(<span style="color:#e6db74">&#39;fire&#39;</span>)<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">once</span>()<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">with</span>(<span style="color:#e6db74">&#39;foo&#39;</span>, [<span style="color:#e6db74">&#39;name&#39;</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;Dayle&#39;</span>]);
 
-    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">call</span><span class="p">(</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">);</span>
-<span class="p">}</span>
+    $this<span style="color:#f92672">-&gt;</span><span style="color:#a6e22e">call</span>(<span style="color:#e6db74">&#39;GET&#39;</span>, <span style="color:#e6db74">&#39;/&#39;</span>);
+}
 </code></pre></div><h2 id="heading2">參考資料</h2>
 <ul>
 <li><a href="https://programmingarehard.com/2014/01/11/stop-using-facades.html/">Stop Using Facades</a></li>

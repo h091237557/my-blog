@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別。
+ MongoDB的刪除方法 比較一下速度  ~ MongoDB的刪除方法 ~ remove remove方法是mongodb裡最基本的刪除document的方法，但這邊要注意就算你刪除了 document它的index與預分配空間都不會刪除。
+使用方法與參數如下
+ justOne預設false，代表query到幾個就會刪除幾個，true則只會刪第一個。 witeConecern為拋出異常的級別。 collation是3.4版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持collation前一徑依字節來對比。  db.collection.remove( &amp;lt;query&amp;gt;, { justOne: &amp;lt;boolean&amp;gt;, writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下，我們來新增三筆資料，然後刪除掉steven該筆資料。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.remove({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) 刪除所有資料 remove可以用來刪除collection的所有資料，但還有另一種方法也是刪除collection的所有資料，那就是drop，但它同時會將index給全部刪除。
+兩種的使用方法如下。
+db.user.remove({}) db.user.drop() deleteMany與deleteOne deleteMany與deleteOne也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和remove不同點大概只差在回傳值上，至於速度上等等來trytry看。
+使用兩種方法的參數如下，與remove也大至差不多。
+db.collection.deleteMany( &amp;lt;filter&amp;gt;, { writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.deleteMany({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) db.user.deleteOne({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;}) bulk delete bulk操作故明思意就是要來衝一下大筆資料刪除的效能方法。
+使用方法如下。
+//先新增二筆資料 var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-7之MongoDB新手村CRUD---刪除 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別。
+ MongoDB的刪除方法 比較一下速度  ~ MongoDB的刪除方法 ~ remove remove方法是mongodb裡最基本的刪除document的方法，但這邊要注意就算你刪除了 document它的index與預分配空間都不會刪除。
+使用方法與參數如下
+ justOne預設false，代表query到幾個就會刪除幾個，true則只會刪第一個。 witeConecern為拋出異常的級別。 collation是3.4版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持collation前一徑依字節來對比。  db.collection.remove( &lt;query&gt;, { justOne: &lt;boolean&gt;, writeConcern: &lt;document&gt;, collation: &lt;document&gt; } ) 使用範例如下，我們來新增三筆資料，然後刪除掉steven該筆資料。
+db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); db.user.remove({&#34;name&#34;:&#34;steven&#34;}) 刪除所有資料 remove可以用來刪除collection的所有資料，但還有另一種方法也是刪除collection的所有資料，那就是drop，但它同時會將index給全部刪除。
+兩種的使用方法如下。
+db.user.remove({}) db.user.drop() deleteMany與deleteOne deleteMany與deleteOne也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和remove不同點大概只差在回傳值上，至於速度上等等來trytry看。
+使用兩種方法的參數如下，與remove也大至差不多。
+db.collection.deleteMany( &lt;filter&gt;, { writeConcern: &lt;document&gt;, collation: &lt;document&gt; } ) 使用範例如下。
+db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); db.user.deleteMany({&#34;name&#34;:&#34;steven&#34;}) db.user.deleteOne({&#34;name&#34;:&#34;jj&#34;}) bulk delete bulk操作故明思意就是要來衝一下大筆資料刪除的效能方法。
+使用方法如下。
+//先新增二筆資料 var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &#34;mark&#34;} ); bulk.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -143,119 +168,119 @@
 <li><code>witeConecern</code>為拋出異常的級別。</li>
 <li><code>collation</code>是<code>3.4</code>版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持<code>collation</code>前一徑依字節來對比。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span>
-   <span class="o">&lt;</span><span class="nx">query</span><span class="o">&gt;</span><span class="p">,</span>
-   <span class="p">{</span>
-     <span class="nx">justOne</span><span class="o">:</span> <span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
-     <span class="nx">writeConcern</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">document</span><span class="o">&gt;</span><span class="p">,</span>
-     <span class="nx">collation</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">document</span><span class="o">&gt;</span>
-   <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">remove</span>(
+   <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">query</span><span style="color:#f92672">&gt;</span>,
+   {
+     <span style="color:#a6e22e">justOne</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">boolean</span><span style="color:#f92672">&gt;</span>,
+     <span style="color:#a6e22e">writeConcern</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span>document<span style="color:#f92672">&gt;</span>,
+     <span style="color:#a6e22e">collation</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span>document<span style="color:#f92672">&gt;</span>
+   }
+)
 </code></pre></div><p>使用範例如下，我們來新增三筆資料，然後刪除掉<code>steven</code>該筆資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;jj&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">}</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">remove</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>})
 </code></pre></div><h4 id="heading">刪除所有資料</h4>
 <p><code>remove</code>可以用來刪除<code>collection</code>的所有資料，但還有另一種方法也是刪除<code>collection</code>的所有資料，那就是<code>drop</code>，但它同時會將<code>index</code>給全部刪除。</p>
 <p>兩種的使用方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="p">{</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">remove</span>({})
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">drop</span><span class="p">(</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">drop</span>()
 </code></pre></div><h3 id="deletemanydeleteone">deleteMany與deleteOne</h3>
 <p><code>deleteMany</code>與<code>deleteOne</code>也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和<code>remove</code>不同點大概只差在回傳值上，至於速度上等等來trytry看。</p>
 <p>使用兩種方法的參數如下，與<code>remove</code>也大至差不多。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">(</span>
-   <span class="o">&lt;</span><span class="nx">filter</span><span class="o">&gt;</span><span class="p">,</span>
-   <span class="p">{</span>
-      <span class="nx">writeConcern</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">document</span><span class="o">&gt;</span><span class="p">,</span>
-      <span class="nx">collation</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">document</span><span class="o">&gt;</span>
-   <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">deleteMany</span>(
+   <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">filter</span><span style="color:#f92672">&gt;</span>,
+   {
+      <span style="color:#a6e22e">writeConcern</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span>document<span style="color:#f92672">&gt;</span>,
+      <span style="color:#a6e22e">collation</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span>document<span style="color:#f92672">&gt;</span>
+   }
+)
 </code></pre></div><p>使用範例如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;jj&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">}</span><span class="p">)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">deleteOne</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">}</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">deleteMany</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>})
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">deleteOne</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;jj&#34;</span>})
 </code></pre></div><h3 id="bulk-delete"><code>bulk delete</code></h3>
 <p><code>bulk</code>操作故明思意就是要來衝一下大筆資料刪除的效能方法。</p>
 <p>使用方法如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">//先新增二筆資料
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s2">&#34;hoho&#34;</span><span class="p">}</span> <span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">//先新增二筆資料
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>( { <span style="color:#a6e22e">name</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;hoho&#34;</span>} );
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>();
 
-<span class="c1">//然後再刪除掉mark該筆
-</span><span class="c1"></span><span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span> <span class="p">{</span> <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span> <span class="p">}</span> <span class="p">)</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#75715e">//然後再刪除掉mark該筆
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">find</span>( { <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span> } ).<span style="color:#a6e22e">remove</span>();
+<span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>();
 </code></pre></div><h2 id="--">~ 來比較一下速度 ~</h2>
 <p>事實上用到現在有時會在想為什麼<code>mongodb</code>一個刪除文檔，要同時推出三個方法(新增也是)，這到現在還是有點無解，而且<code>remove</code>在<code>nodejs drivers</code>已經被<code>Deprecated</code>(<a href="http://mongodb.github.io/node-mongodb-native/2.0/api/Collection.html#remove">這邊</a>)，扣憐……，他建議改用<code>deleteMany</code>。</p>
 <p>也因為上述原因這次測試就跳過<code>remove</code>了(真的扣憐)，因為我們要用<code>nodejs drivers</code>。</p>
 <h3 id="heading1">測試案例</h3>
 <p>統一都用<code>bulk insert</code>來進行資料新增，然後再來比較<code>deleteMany</code>與<code>bulk delete</code>不同數量的刪除速度。</p>
 <p>測試程式碼如下<a href="https://github.com/h091237557/30-MongoDB/tree/master/Test/30-7">github</a>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">mongodb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongodb&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">debugger</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodb</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;mongodb&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">mongodbServer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">27017</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">auto_reconnect</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nx">poolSize</span><span class="o">:</span> <span class="mi">10</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodbServer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Server</span>(<span style="color:#e6db74">&#39;localhost&#39;</span>, <span style="color:#ae81ff">27017</span>, {
+  <span style="color:#a6e22e">auto_reconnect</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+  <span style="color:#a6e22e">poolSize</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>
+});
 
-<span class="kd">var</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Db</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nx">mongodbServer</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">1000000</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">collection</span><span class="p">)</span> <span class="p">{</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Db</span>(<span style="color:#e6db74">&#39;test&#39;</span>, <span style="color:#a6e22e">mongodbServer</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000000</span>;
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">open</span>(<span style="color:#66d9ef">function</span>() {
+  <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>(<span style="color:#e6db74">&#39;home&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">collection</span>) {
 
-    <span class="cm">/*
-</span><span class="cm">     * deleteMany  測試 
-</span><span class="cm">     */</span>
-    <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-        <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-        <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-        <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="mi">0</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;deleteMany&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">collection</span><span class="p">.</span><span class="nx">deleteMany</span><span class="p">(</span><span class="p">{</span>
-        <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span>
-      <span class="p">}</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;deleteMany&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * deleteMany  測試 
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+      <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>({
+        <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+        <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+        <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+      });
+    }
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;deleteMany&#34;</span>);
+      <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">deleteMany</span>({
+        <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>
+      }, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;deleteMany&#34;</span>);
+      });
+    });
 
 
-    <span class="cm">/*
-</span><span class="cm">     * bulk  測試 
-</span><span class="cm">     */</span>
-    <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-        <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-        <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span>
-        <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="mi">0</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;bulkDelete&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="kd">var</span> <span class="nx">deletebulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">deletebulk</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span>
-        <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;steven&#34;</span>
-      <span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-      <span class="nx">deletebulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;bulkDelete&#34;</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * bulk  測試 
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+      <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>({
+        <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+        <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>,
+        <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+      });
+    }
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;bulkDelete&#34;</span>);
+      <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">deletebulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+      <span style="color:#a6e22e">deletebulk</span>.<span style="color:#a6e22e">find</span>({
+        <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>
+      }).<span style="color:#a6e22e">remove</span>();
+      <span style="color:#a6e22e">deletebulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;bulkDelete&#34;</span>);
+      })
+    });
+  });
+});
 
 
 </code></pre></div><p>從下測試就果可知幾個結論</p>

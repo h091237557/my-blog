@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,20 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~
+ 完美的片鍵定義(這鬼不存在的) 片鍵的種類  ~ 完美的片鍵定義(這鬼不存在) ~ 在我們開始學習片鍵的選擇前，我們要先知道，什麼樣的片鍵是最好的，最理想的，但想也知道最好的東西是不存在的，但我們還是要知道，才能給我們的選擇給個基準。
+整體來說完美的片鍵有下面特性
+ 所有的新增、刪除、更新等寫的操作，都可以平均分配到所有的分片。 所有的搜尋等讀的操作，都可以平均分配到所有的分片。 所有的操作都只會發到相關的分片，例如更新時不會跑去分片內是空的進行更新。  我們先來說說第一個特性，如果沒有該項特性會發生什麼事情，假設我們的cluster有四個分片，我們當然是希望每個分片可以處理25%的事情，但是假設我們做那些寫的操作時(ex.新增)全部都集中在其中一個分片，那你會發覺那個分片會越來越大~越來越大~ ，而且別忘了我們上章節說的chunk分配，它是根據數量來進行分配，不是用大小，因此你的那個分片內的chunk不會分配到其它分片，這樣也就失去你用分片的意義了。
+而至於第二點特性，mongos在處理搜尋請求時主要會分成下述兩種的處理方式。
+ 搜尋時不包含片鍵，則會將搜尋分配到發有的分片，然後合并搜尋結果，再返回給client。 搜尋時包含片鍵，則直接根據片鍵，然後找出要尋找的chunk，向相對的分片發送搜尋請求。  根據上面的說明，我們知道mongos的讀操作過程，然後我們這時在回來思考，如果這時搜尋時都集中在一個分片上，會發生什麼事，首先搜尋時不包含片鍵這種類型影響不大，但另一種就會影響到，因為原本該分散的壓力，反而都集中在一個分片，運氣不好搜尋請求過多，就爆掉了。
+而至於第三點，就只是浪費資源囉~
+這邊我們大概來整理一下，根據以上三點大概可以拆分成幾個良好片鍵的特性。
+ 容易分割片鍵 : 容易分割的片鍵可以使mongodb更容易的均衡各分片的資料量，不容易發生過大的分片，基數越大的走容易分割資料。   基數是指系統將資料分成chunk的能力，例如性別欄位就是個低基數的例子，只有男與女。
+  高隨機性的片鍵 : 具有越高隨機性的片鍵，他所分割出來的資料越容易均衡，也代表可避免任何一個分片承受過多的壓力。 可以指向單個分片的片鍵 : 越可指向單個分片的片鍵，越能降低搜尋效能壓力，像是隨機型的片鍵就無法做到。  這世界沒有著麼美好的事情，基本上幾乎找不到完全符合上述的條件，所以相對的咱們只能選擇盡可能符合你需要的片鍵，而這時就只能根據你專案的需求來決定，例如說這專案是讀吃比較重還是寫吃比較重，比較最大的搜尋條件，或搜尋時間過久的搜尋，這時都是要考量的。
+~ 一些片鍵的種類 ~ 這邊開始我們就要來說明一些片鍵的種類。
+升序片鍵 這種類型的片鍵，大部份都是欄位為Date類型或是ObjectId，是種會根據時間來增加欄位，或是根據先後順序進來的欄位。
+假如我們使用這種欄位做為片鍵，會發生什麼事情 ? 一開始建立片鍵時你不會看到什麼問題，而是再於你新增時會發生，假設我們有下面的分片cluster。
+   shard001 shard002 shard003     {min~2000} {2007~2008} {2014~2016}   {2001~2003} {2009~2010} {2017~max}   {2004~2006} {2011~2013}     然後這時我們要問個問題，我們進行新增時，它會加到那個chunk?|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +55,20 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-25之MongoDB分片Sharding(3)---片鍵的選擇 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修|Describe what your web page is about">
+    <meta name="twitter:description" content="上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~
+ 完美的片鍵定義(這鬼不存在的) 片鍵的種類  ~ 完美的片鍵定義(這鬼不存在) ~ 在我們開始學習片鍵的選擇前，我們要先知道，什麼樣的片鍵是最好的，最理想的，但想也知道最好的東西是不存在的，但我們還是要知道，才能給我們的選擇給個基準。
+整體來說完美的片鍵有下面特性
+ 所有的新增、刪除、更新等寫的操作，都可以平均分配到所有的分片。 所有的搜尋等讀的操作，都可以平均分配到所有的分片。 所有的操作都只會發到相關的分片，例如更新時不會跑去分片內是空的進行更新。  我們先來說說第一個特性，如果沒有該項特性會發生什麼事情，假設我們的cluster有四個分片，我們當然是希望每個分片可以處理25%的事情，但是假設我們做那些寫的操作時(ex.新增)全部都集中在其中一個分片，那你會發覺那個分片會越來越大~越來越大~ ，而且別忘了我們上章節說的chunk分配，它是根據數量來進行分配，不是用大小，因此你的那個分片內的chunk不會分配到其它分片，這樣也就失去你用分片的意義了。
+而至於第二點特性，mongos在處理搜尋請求時主要會分成下述兩種的處理方式。
+ 搜尋時不包含片鍵，則會將搜尋分配到發有的分片，然後合并搜尋結果，再返回給client。 搜尋時包含片鍵，則直接根據片鍵，然後找出要尋找的chunk，向相對的分片發送搜尋請求。  根據上面的說明，我們知道mongos的讀操作過程，然後我們這時在回來思考，如果這時搜尋時都集中在一個分片上，會發生什麼事，首先搜尋時不包含片鍵這種類型影響不大，但另一種就會影響到，因為原本該分散的壓力，反而都集中在一個分片，運氣不好搜尋請求過多，就爆掉了。
+而至於第三點，就只是浪費資源囉~
+這邊我們大概來整理一下，根據以上三點大概可以拆分成幾個良好片鍵的特性。
+ 容易分割片鍵 : 容易分割的片鍵可以使mongodb更容易的均衡各分片的資料量，不容易發生過大的分片，基數越大的走容易分割資料。   基數是指系統將資料分成chunk的能力，例如性別欄位就是個低基數的例子，只有男與女。
+  高隨機性的片鍵 : 具有越高隨機性的片鍵，他所分割出來的資料越容易均衡，也代表可避免任何一個分片承受過多的壓力。 可以指向單個分片的片鍵 : 越可指向單個分片的片鍵，越能降低搜尋效能壓力，像是隨機型的片鍵就無法做到。  這世界沒有著麼美好的事情，基本上幾乎找不到完全符合上述的條件，所以相對的咱們只能選擇盡可能符合你需要的片鍵，而這時就只能根據你專案的需求來決定，例如說這專案是讀吃比較重還是寫吃比較重，比較最大的搜尋條件，或搜尋時間過久的搜尋，這時都是要考量的。
+~ 一些片鍵的種類 ~ 這邊開始我們就要來說明一些片鍵的種類。
+升序片鍵 這種類型的片鍵，大部份都是欄位為Date類型或是ObjectId，是種會根據時間來增加欄位，或是根據先後順序進來的欄位。
+假如我們使用這種欄位做為片鍵，會發生什麼事情 ? 一開始建立片鍵時你不會看到什麼問題，而是再於你新增時會發生，假設我們有下面的分片cluster。
+   shard001 shard002 shard003     {min~2000} {2007~2008} {2014~2016}   {2001~2003} {2009~2010} {2017~max}   {2004~2006} {2011~2013}     然後這時我們要問個問題，我們進行新增時，它會加到那個chunk?|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +80,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -207,15 +236,15 @@
 <h3 id="hashed-">Hashed 片鍵</h3>
 <p>這種類型的片鍵讀與寫的操作能平均的分配，但缺點也是隨機分配片鍵的缺點，尋找大量資料時效率不高。</p>
 <p>我們做個簡單的範例，假設我們有如下資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">100000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">objs</span> <span style="color:#f92672">=</span> [];
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">100000</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">push</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">i</span>});
+}
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">objs</span>);
 </code></pre></div><p>然後我們指行下面指令來建立<code>hash</code>索引，事實上我現在才知道有這種索引……。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;hashed&#34;</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">ensureIndex</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;hashed&#34;</span>})
 </code></pre></div><p>然後進行分片。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">sh</span><span class="p">.</span><span class="nx">shardCollection</span><span class="p">(</span><span class="s2">&#34;test.users&#34;</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;hashed&#34;</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">sh</span>.<span style="color:#a6e22e">shardCollection</span>(<span style="color:#e6db74">&#34;test.users&#34;</span>,{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;hashed&#34;</span>})
 </code></pre></div><p>咱們來執行<code>sh.status()</code>看看結果，它會將<code>name</code>欄位的值進行<code>hash</code>然後等出<code>hash值</code>後在進行分片，其中這個<code>NumberLong(&quot;-6854066565760758296&quot;)</code>就是<code>hash值</code>，基本上都有唯一性，但是只一種情況下會有相同的值，那就數值型，例如<code>1.9999</code>和<code>1</code>這兩種<code>hash值</code>會相等，因為<code>1.9999</code>會取整數。</p>
 <p><img src="http://yixiang8780.com/outImg/20161225-1.png" alt=""></p>
 <h3 id="heading3">複合型片鍵</h3>

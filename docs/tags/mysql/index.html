@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -49,7 +52,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -97,7 +100,7 @@
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190929/">
@@ -126,15 +129,28 @@
   </div>
   <div>
     
-    正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文
-    <a class="muted-link" href="/posts/20190929/">…</a>
+    <div class="summary">
+    正文開始 前面幾篇文章中，咱們提到了如何擴展資料庫層級服務，讓它可以接更多的客，但是這些擴展方法中，都有提到一個『 中間件 』來使用，接下後本篇文章中，咱們將介紹其中一種比較常見的中間件 :
+ MyCAT
+ 本篇文章分為以下幾個章節 :
+ MyCAT 基本概念 MyCAT 的各種架構實現配置 使用 Docker 來實現 MyCAT 讀寫分離  MyCAT 基本概念 在資料庫中間件中，事實上分為兩種類型 :
+ proxy smart-client  它們兩個的基本差別如下圖 1 所示，proxy 是一個外部的服務，所有的應用都會透過這個 proxy 服務來操作資料庫。
+而 smart-client 概念就是包在應用層中，當成一個 sdk 概念的程式碼。
+圖 1 : proxy vs smart-client
+而其中 mycat 就是屬於 proxy 的其中一種應用。
+~ 小知識 ~
+現在幾個比較可以說的出名字的中間件有 :
+proxy : cobar、mycat、mysql-router、atlas、vitess smart-client : 大部份語言有實現簡單版的，而如果是支援比較多功能的有 sharding-jdbc、tddl。
+有興趣的友人可以自已查查來比較看看。
+這裡問一下，那一種比較好呢 ? 首先咱們先說說 smart-client 的優點 :
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190928/">
@@ -163,15 +179,27 @@
   </div>
   <div>
     
-    正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。 本篇分為以下幾個章節 : 分散式
-    <a class="muted-link" href="/posts/20190928/">…</a>
+    <div class="summary">
+    正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。
+本篇分為以下幾個章節 :
+ 分散式事務難題 分散式事務的處理方案 : 2 PC 二階段提交（ Two-phase Commit ） MySQL XA 事務實現與使用 MySQL XA 問題 - 性能  分散式事務難題 首先咱們都知道資料庫有所謂的『 事務 』機制，比較準備的說是事務這個『 單位 』，它當初建立出來是為了解決所謂的 :
+ 確保『 同一組資料庫業務操作 』可以有正確的結果
+ 它們不會因為某項業務的其中一項操作錯誤了，導致整個資料庫的資料不正確 ( A )。
+它們不會因為系統固障而導致原本成功修改的資料消失 ( D )。
+它們不會因為並行操作，導致資料產生產生無法預期的結果 ( I )。
+總而言之，事務在固障與並行的情況下，不會產生所謂的『 資料不一致性 』 ( C )
+如果事務可以確保上述事情，那就可以說 :
+ 這個事務有 ACID 的特性
+ 然後咱們在以下三篇文章中，咱們有談到，在 mysql 單機事務的情況下，它們用了以下的機制來確保這些機制 :
+ 原子性 A : undo log 持久性 D : redo log 隔離性 I : 鎖 + mvcc  30-15 之資料庫層的難題 - 單機『 故障 』一致性難題
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190927/">
@@ -200,15 +228,24 @@
   </div>
   <div>
     
-    正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的
-    <a class="muted-link" href="/posts/20190927/">…</a>
+    <div class="summary">
+    正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
+ 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
+ 分區表
+ 本篇文章分以下幾個章節 :
+ 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
+ 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
+ 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
+ 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
+user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = 'mark'; 而如果是『 分區表 』的話為 :
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190926/">
@@ -237,15 +274,27 @@
   </div>
   <div>
     
-    正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用
-    <a class="muted-link" href="/posts/20190926/">…</a>
+    <div class="summary">
+    正文開始 上一篇文章中，咱們介紹了資料庫層的分散的第一個起手式『 讀寫分離 』，這個方案是將寫與讀分散在不同的機器上，正常情況下，大部份的系統使用這種方案就已經可以處理很好了。
+但 !
+如果你已經將資料庫層與緩存層的架構都已經建立好，但還是發現有性能貧頸，那接下來才會建議使用幾個方案，因為這些方案沒用好，會衍生出非常多的問題。
+本篇文章分為以下幾個章節，這些就是接下來咱們要來學的擴展法。
+ 分庫 分表 分庫與分表的問題  重要 : 使用前注意事項 要使用以下的擴展方法時，先確認你的資料庫是否以下的問題是否有發生。
+ 問題 1 : 單庫太大，導致硬碟空間不夠囉。 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊，感覺隨時都會上天堂。 問題 3 : 單表資料量太太，導致每一次操作時都非常的慢。  有以上事情發生才開始往接下來的擴展走。
+ 沒事真的別用它們
+ 分庫  它可以解決 問題 1 : 單庫太大，導致硬碟空間不夠囉 與 問題 2 : 單庫寫入量太大，導致每一次新增或更新性能非常的吃緊
+ 首先第一個要介紹的就是分庫，它的基本定義如下 :
+ 將一個大大的資料庫，依據『 規則 』拆分成小的資料庫
+ 其中上述說的規則，在傳統上可以分為以下幾種 :
+ 垂直切分 : 根據『 業務 』來拆分成多個小資料庫 ( 圖 1 所示 )。 水平切分 : 根據『 特性 』來拆分成多個小資料庫，例如地區 ( 圖 2 所示 )。  圖 1 : 垂直切分範例
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190925/">
@@ -274,15 +323,32 @@
   </div>
   <div>
     
-    正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。 在正式開始章節之前，我們先來想想看一件
-    <a class="muted-link" href="/posts/20190925/">…</a>
+    <div class="summary">
+    正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。
+在正式開始章節之前，我們先來想想看一件事情。
+ 資料庫層可以向應用層一樣加機器，就可以做更多的事情嗎 ?
+ 答案為是或不是，這個就取決於使用者的能力，因為假設你沒處理好，不但有可能性能下降，而且導致錯誤百出，它不像應用層那麼簡單的主要原因在於 :
+ 它有狀態的，因為它有儲資料，所有會有一致性問題。
+ 應用層在進行分散式時，基本上都是處於無狀態狀況，所以在進行多台機器時，事實上我們不太需要考慮什麼資料一致的問題，而資料庫則否，當多台時，就要面臨到所謂的資料一致性問題。
+接下來的文章與章節我們將要來細說，資料庫層如何的使用分散式架構來讓它做更多的事情，並且有更高的可用性，以及它接下來要面對的種種問題。
+本篇文章中，咱們將要先來談談，第一種資料庫層的分散式架構方案『 讀寫分離架構 』:
+ 它適用於讀多寫少情況
+ 本篇文章共分為以下幾個章節 :
+ 讀寫分離架構概念 MySQL 的讀寫分離架構實現 可能面臨問題探討  這個分散技術基本上應該是資料庫層分散的第一個起手式，單完成這個架構就已經可以處理不少的事情囉。
+資料庫層的讀寫分離架構 基本架構 讀寫分離最簡單的就是所有寫入的都寫入到一台服務，讀取時讀取一台服務，然後你們之間會進行資料同步。
+然後在實務上，咱們通常都是會搭配主從架構 ( master-slave ) 來進行讀寫分離。主從架構本來存在的目的是為了可用，就也是如果 master 壞掉了，咱們還有 slave 有資料。
+ master : 主要用寫的服務，會與 slave 進行資料同步。 slave : 主要用來讀的服務  圖 2 : master-slave 實現讀寫概念圖
+讀進化型架構 之前咱們有提過，現在大部份的系統基本上應該是讀大於寫入，所以如果這時只有一台讀，也是有可能會讓它壓力很大，所以這時會變成如圖 3 所示，加個幾台讀機，這種架構被稱為『 一主多從 』。
+然後這裡有幾個重點，那就是要如何實現圖 3 的『 分配器 』。
+圖 3 : 讀進化型架構圖
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190917/">
@@ -311,15 +377,26 @@
   </div>
   <div>
     
-    正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上
-    <a class="muted-link" href="/posts/20190917/">…</a>
+    <div class="summary">
+    正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。
+雖然 innodb 已經儘可能的解決上述這些問題，但是如果要完全解決，性能代價太大，因此後來有了一些折衷方案，這個東西就叫做 :
+ 事務隔離級別
+ 接下來本篇文章將要談談這東西，並且整理一下 innodb 預設的一些鎖的設定。
+ MySQL 的折衷解法 - 事務隔離級別 預設 RR 級別 - 鎖的操作總結 死鎖的小分析  MySQL 的折衷解法 - 事務隔離級別 資料庫在並行運行時，通常會發生以下幾種問題，並且也探討過這幾種問題的解法 :
+ 更新不一致 : 鎖 髒讀、不可重複讀 : mvcc 幻讀 : mvcc + next-key locking ( 有一些幻讀情境無解 )  而在 innodb 事實上可以『 完全簡單 』的處理上面幾種現象，解決方法如下圖 5 所示，也就是同一個時間，只能執行同一個事務，如下圖所示。也就是把發生問題的根本原因『 並行 』給移除。
+圖 1 : 一致性的根本解法
+但這會嚴重的影響到效能的問題，因此才有了『 隔離層級 』這東西。
+ 隔離層級可以讓你決定需要處理到什麼層級的一致性問題
+ 也就是說上面四個問題，它可以讓你根據性能的要求，來決定你要處理幾個問題，處理的越多代表性能越差，處理越少個則代表性能越好，但反之不一致性機率更高。
+事務隔離級別 mysql 總共提供以下四個層級，不過比較準確的說，這是所有資料庫共有的層級，性能從高至低排序，而反之資料一致性性由低至高。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190916/">
@@ -348,15 +425,25 @@
   </div>
   <div>
     
-    正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾
-    <a class="muted-link" href="/posts/20190916/">…</a>
+    <div class="summary">
+    正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 :
+ 『 並行 』產生的不一致性難題
+ 基本上並行所產生的不一致性難題，可以分為以下幾種類型 :
+ 更新不一致 髒讀 不可重讀 幻讀  本篇將會分為以下幾個章節來談談這幾個難題 :
+ 更新不一致難題與解法 - 鎖 髒讀與不可重讀難題與解法 - MVCC 幻讀難題與解法 - MVCC + Next-Lock 鎖  更新不一致難題與解法 - 鎖 這種情境如下圖 1 所示，a 與 b 兩個事務進行更新操作後，事務 a 再看看自已操作的結果，發現自已的更新消失了。這種情境被稱為『 更新不一致問題 』
+圖 1 : 更新不一致問題
+那這種情境 innodb 它是如何處理呢 ?
+ 它使用鎖來處理
+ 在 innodb 的預設，它會對要『 update、delete 』的『 行加鎖排他鎖 』，不過比較嚴格定義應該是說 :
+ 它會對有用到『 索引 』的『 行 』加『 排他鎖 』，不然會退化成『 表 』鎖
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190915/">
@@ -385,15 +472,25 @@
   </div>
   <div>
     
-    正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性
-    <a class="muted-link" href="/posts/20190915/">…</a>
+    <div class="summary">
+    正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性能後腿的東西。
+這個會性能後腿的東西就是 :
+ 一致性難題
+ 在追求高性能的路上，通常一定會面臨到資料一致性問題，而產生的原因通常可簡單的分為以下來個來源 :
+ 故障 併發  接下來本篇文章，咱們來看看 mysql 它是如何處理『 故障 』所引發的一致性問題。
+ 不一致資料產生原因。 MySQL 的解法。 ACID 的小關連。  不一致資料產生原因 原因 1 : 某項操作故障 假設咱們要將 a 帳戶的 1000 元轉到 b 帳戶去，但這時如果在處理 b 帳戶加錢時出錯了，那整個結果就錯誤了，如下圖 1 所示。
+圖 1 : 故障導致資料不一致性
+在圖 1 中正確的 b 帳戶應該是 1000 元，但是因為加錢失敗了，所以 b 帳戶變成 0 元，這就是產生了『 資料不一致性 』。
+原因 2 : 單機故障 第二個產生的原因要先來理解一下，所謂的『 通常 』寫入硬碟的原理。
+假設咱們有一個 insert 的指令，要將資料寫入到資料庫中，然後資料庫要將它寫到硬碟中，那它的運行過程如下。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190914/">
@@ -422,15 +519,21 @@
   </div>
   <div>
     
-    正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時
-    <a class="muted-link" href="/posts/20190914/">…</a>
+    <div class="summary">
+    正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。
+ 表設計的幾個小建議 正規與非正規的小戰爭  表設計的幾個小建議 這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。
+建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 + ) 基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :
+ char varchar text blob  char vs varchar char 的特點 :
+ 最大 255 byte 不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。 用 char 需要處理空白。  varchar 特色 :
+ 存幾個字就是需花費 n+1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 + 1 = 2 byte。 65535 為最大，實際為 65532。 當 varchar 大於一定字數時，會自動轉成 text。  varchar (255+) 轉成 tinytext varchar (500+) 轉成 text varchar (20000+) 轉成 mediumtext 下表為 char 與 varchar 的實際存儲空間比較。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190913/">
@@ -459,15 +562,23 @@
   </div>
   <div>
     
-    正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。 30-11 之資料庫層的核心 - 索引結構演
-    <a class="muted-link" href="/posts/20190913/">…</a>
+    <div class="summary">
+    正文開始 前面兩篇文章中，咱們已經學習完索引的核心觀念以後，接下來咱們學學在使用時有那些的優質的方法與注意事項。
+ 30-11 之資料庫層的核心 - 索引結構演化論 B+樹 30-12 之資料庫層的核心 - MySQL 的索引實現  本篇文章分為以下幾個章節 :
+ 索引的重要小觀念 索引的設計流程 索引的使用注意事項 SQL 地雷區  索引的重要小觀念 觀念 1 : 不是索引越多越好 索引不是聖杯，它是雙刃刀，用的好上天堂，用不好下地獄。基本上資料庫的索引幾乎可以影響一個系統的 50% 以上的性能。
+索引可以加快查詢速度，但注意它是以空間換取時間。
+基本上它使用的資源如下 :
+ 每個索引都會建立一顆 b+ 樹。 每次新增、更新資料時都會改變 b+ 樹。  所以當你索引越多時，你所需要的記憶體與維護索引的 cpu 運算就需要越多。
+觀念 2. 懂的使用 Explain 來分析你的 SQL 索引性能解析 explain 這個指令可以讓你知道你下的 sql 語句是否有命中索引。
+EXPLAIN SELECT * FROM user_no WHERE name = 'mark'; ===================================================== id: 1 select_type: SIMPLE table: user partitions: NULL type: const possible_keys: PRIMARY key: PRIMARY key_len: 8 ref: const rows: 1 filtered: 100.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190912/">
@@ -496,15 +607,19 @@
   </div>
   <div>
     
-    正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使
-    <a class="muted-link" href="/posts/20190912/">…</a>
+    <div class="summary">
+    正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b+ 樹來建立索引機制 ?
+本篇文章分為以下幾個章節 :
+ 一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index ) InnoDB 所提供的索引類型  一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?
+   Id ( PK ) Name age     1 Mark 18   2 Jack 10   3 Ian 36   4 Jiro 30   5 Fucc 27   &hellip; &hellip; &hellip;   10 Fukk 46   表 1 : 範例      首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190911/">
@@ -533,8 +648,19 @@
   </div>
   <div>
     
-    正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何
-    <a class="muted-link" href="/posts/20190911/">…</a>
+    <div class="summary">
+    正文開始 接下來咱們要來理解資料庫系統中最核心的問題 :
+ 要如何儲放資料，才能更快速的找到資料呢 ?
+ 而這個東西的技術就是所謂的 :
+ 索引
+ 而在 mysql 中決定如何儲放的是資料庫儲存引擎來決定，而這裡咱們將要從 mysql 預設引擎 innodb 來深入的理解一下。
+在 InnoDB 中預設是使用『 B+樹 』來當資料儲放格式，而為什麼要選擇它呢 ?
+這就是我們這篇文章的重點。
+ InnoDB 為什麼選擇 B+ 樹 ?
+ 本篇文章分為以下幾個章節，這也就是 B+ 樹的誕生原由。
+ 二分搜尋 Binary Search 二元搜尋樹 Binary Search Tree 平衡二元搜尋樹 Balanced Binary Search Tree B 樹 B+樹 ( InnoDB 的選擇 )  二分搜尋 Binary Search 首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。
+那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。
+    </div>
   </div>
 </div>
 

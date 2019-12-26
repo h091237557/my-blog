@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,22 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環境呢 ? GG 囉可不是啊一聲就可以解決的，你可能就被老闆不要不要的，很慘的~ 而副本集就是用來解決這問題，事實上也就只是被備份。
+ 副本集原理 副本集建立(單機版給你好測試)  ~副本集原理~ 首先我們先看看mongodb官網所提供的圖。
+上面這張圖，你可以想成這個系統它有三個mongodb，其中primary節點接受所有client端的讀或寫，整個副本集只有一個primary，並且每當有資料新增時，primary會同步到其它兩個secondary。
+然後當primary節點GG的話，會變成下面這張圖的結果(一樣來至官網)。
+在這裡面，各節點都是通過一個叫心跳請求(heartbeat request)的機制來通信，如果當primary節點如果在10秒內無法和其它節點進行通信，這系統會自動從secondary節點中選取一個當主節點。
+~副本集建立~ 在上面大概簡單的了解完它的原理後，我們就實際上的來操作看看，首先我們執行下面指令， 來進行到沒有db的mongodb shell環境。
+mongo --nodb 然後通過下面的指令，就可以建立一個副本集，其中nodes : 3代表三個節點，一個primary其它兩個為secondary。
+replicaSet = new ReplSetTest({&amp;quot;nodes&amp;quot;:3}) 不過執行完上面這行指令它還沒啟動喔還需要執行下面兩行，startSet為啟動那三個節點的進程，而initiate為設定複制功能。
+replicaSet.startSet() replicaSet.initiate() 當執行完上面兩行後，我們就要跳到另一個Shell，然後連接到primary的節點，喲~?那它的port是啥?雖然有些文章中說預設是31000、31001、31002但我的電腦卻不是，所以建議還是在執行startSet時看一下，它應該會輸出下面這張圖的資訊。
+嗯看到了吧，通常第一個就是primary，不是的話就試試其它的，然後我們這時就可以執行下面指令進入到它的裡面了。
+conn1 = new Mongo(&amp;#34;127.0.0.1:20000&amp;#34;) 接下來我們就可以執行一些指令來看看這個副本集的狀態。
+primaryDB = conn1.getDB(&amp;#34;test&amp;#34;) primaryDB.isMaster() 結果如下，其中isMaster這欄位就是說明這節點是primary節點。
+~驗證一下有沒有備份到 secondary 節點~ 首先我們先新增一些資料。
+var objs = []; for (var i=0;i&amp;lt;10;i&#43;&#43;){ objs.push({&amp;#34;name&amp;#34;:&amp;#34;user&amp;#34;&#43;i}); } primaryDB.users.insert(objs); 然後我們這時連到secondary。
+conn2 = new Mongo(&amp;#34;127.0.0.1:20001&amp;#34;) 進去後在輸入。
+secondaryDB = conn2.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +57,22 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-21之MongoDB的副本集 replica set(1) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明， mongodb 的副本集。嗯~想想一個情況，現在咱們只使用一台 server 來存放資料，我們現在只是測試和開發， GG 囉也只是啊一聲，但如果是正式上線環境呢 ? GG 囉可不是啊一聲就可以解決的，你可能就被老闆不要不要的，很慘的~ 而副本集就是用來解決這問題，事實上也就只是被備份。
+ 副本集原理 副本集建立(單機版給你好測試)  ~副本集原理~ 首先我們先看看mongodb官網所提供的圖。
+上面這張圖，你可以想成這個系統它有三個mongodb，其中primary節點接受所有client端的讀或寫，整個副本集只有一個primary，並且每當有資料新增時，primary會同步到其它兩個secondary。
+然後當primary節點GG的話，會變成下面這張圖的結果(一樣來至官網)。
+在這裡面，各節點都是通過一個叫心跳請求(heartbeat request)的機制來通信，如果當primary節點如果在10秒內無法和其它節點進行通信，這系統會自動從secondary節點中選取一個當主節點。
+~副本集建立~ 在上面大概簡單的了解完它的原理後，我們就實際上的來操作看看，首先我們執行下面指令， 來進行到沒有db的mongodb shell環境。
+mongo --nodb 然後通過下面的指令，就可以建立一個副本集，其中nodes : 3代表三個節點，一個primary其它兩個為secondary。
+replicaSet = new ReplSetTest({&quot;nodes&quot;:3}) 不過執行完上面這行指令它還沒啟動喔還需要執行下面兩行，startSet為啟動那三個節點的進程，而initiate為設定複制功能。
+replicaSet.startSet() replicaSet.initiate() 當執行完上面兩行後，我們就要跳到另一個Shell，然後連接到primary的節點，喲~?那它的port是啥?雖然有些文章中說預設是31000、31001、31002但我的電腦卻不是，所以建議還是在執行startSet時看一下，它應該會輸出下面這張圖的資訊。
+嗯看到了吧，通常第一個就是primary，不是的話就試試其它的，然後我們這時就可以執行下面指令進入到它的裡面了。
+conn1 = new Mongo(&#34;127.0.0.1:20000&#34;) 接下來我們就可以執行一些指令來看看這個副本集的狀態。
+primaryDB = conn1.getDB(&#34;test&#34;) primaryDB.isMaster() 結果如下，其中isMaster這欄位就是說明這節點是primary節點。
+~驗證一下有沒有備份到 secondary 節點~ 首先我們先新增一些資料。
+var objs = []; for (var i=0;i&lt;10;i&#43;&#43;){ objs.push({&#34;name&#34;:&#34;user&#34;&#43;i}); } primaryDB.users.insert(objs); 然後我們這時連到secondary。
+conn2 = new Mongo(&#34;127.0.0.1:20001&#34;) 進去後在輸入。
+secondaryDB = conn2.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +84,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -152,28 +185,28 @@ replicaSet.initiate()
 </code></pre><p>當執行完上面兩行後，我們就要跳到另一個<code>Shell</code>，然後連接到<code>primary</code>的節點，喲~?那它的<code>port</code>是啥?雖然有些文章中說預設是<code>31000</code>、<code>31001</code>、<code>31002</code>但我的電腦卻不是，所以建議還是在執行<code>startSet</code>時看一下，它應該會輸出下面這張圖的資訊。</p>
 <p><img src="http://yixiang8780.com/outImg/20161221-3.png" alt=""></p>
 <p>嗯看到了吧，通常第一個就是<code>primary</code>，不是的話就試試其它的，然後我們這時就可以執行下面指令進入到它的裡面了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">conn1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20000&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">conn1</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Mongo</span>(<span style="color:#e6db74">&#34;127.0.0.1:20000&#34;</span>)
 </code></pre></div><p>接下來我們就可以執行一些指令來看看這個副本集的狀態。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">primaryDB</span> <span class="o">=</span> <span class="nx">conn1</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
-<span class="nx">primaryDB</span><span class="p">.</span><span class="nx">isMaster</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">primaryDB</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">conn1</span>.<span style="color:#a6e22e">getDB</span>(<span style="color:#e6db74">&#34;test&#34;</span>)
+<span style="color:#a6e22e">primaryDB</span>.<span style="color:#a6e22e">isMaster</span>()
 </code></pre></div><p>結果如下，其中<code>isMaster</code>這欄位就是說明這節點是<code>primary</code>節點。</p>
 <p><img src="http://yixiang8780.com/outImg/20161221-4.png" alt=""></p>
 <h2 id="-secondary-">~驗證一下有沒有備份到 secondary 節點~</h2>
 <p>首先我們先新增一些資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">objs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">10</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">objs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;user&#34;</span><span class="o">+</span><span class="nx">i</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">primaryDB</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">objs</span> <span style="color:#f92672">=</span> [];
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">10</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">push</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;user&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">i</span>});
+}
+<span style="color:#a6e22e">primaryDB</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">insert</span>(<span style="color:#a6e22e">objs</span>);
 </code></pre></div><p>然後我們這時連到<code>secondary</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">conn2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Mongo</span><span class="p">(</span><span class="s2">&#34;127.0.0.1:20001&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">conn2</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Mongo</span>(<span style="color:#e6db74">&#34;127.0.0.1:20001&#34;</span>)
 </code></pre></div><p>進去後在輸入。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">secondaryDB</span> <span class="o">=</span> <span class="nx">conn2</span><span class="p">.</span><span class="nx">getDB</span><span class="p">(</span><span class="s2">&#34;test&#34;</span><span class="p">)</span>
-<span class="nx">secondaryDB</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">secondaryDB</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">conn2</span>.<span style="color:#a6e22e">getDB</span>(<span style="color:#e6db74">&#34;test&#34;</span>)
+<span style="color:#a6e22e">secondaryDB</span>.<span style="color:#a6e22e">find</span>()
 </code></pre></div><p>然後你會看到下面的錯誤訊息。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">error</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;$err&#34;</span> <span class="o">:</span> <span class="s2">&#34;not master and slaveok=false&#34;</span><span class="p">,</span><span class="s2">&#34;code&#34;</span> <span class="o">:</span><span class="mi">13435</span> <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">error</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;$err&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;not master and slaveok=false&#34;</span>,<span style="color:#e6db74">&#34;code&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">13435</span> }
 </code></pre></div><p>這時要要再執行這行指令才能在<code>seoncdary</code>才能開啟。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">coon2</span><span class="p">.</span><span class="nx">setSlaveOk</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">coon2</span>.<span style="color:#a6e22e">setSlaveOk</span>()
 </code></pre></div><p>這時你在執行一次搜尋應該就可以看到結果囉~如下。</p>
 <p><img src="http://yixiang8780.com/outImg/20161221-5.png" alt=""></p>
 <h2 id="heading2">~結語~</h2>

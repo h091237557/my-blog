@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,19 @@
     <meta content="data structure, array, stack, queue" name="keywords">
     
     
-    <meta name="description" property="og:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說|Describe what your web page is about">
+    <meta name="description" property="og:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢?
+根據 wiki 的解答。
+ 資料結構是電腦中儲存、組織資料的方式。
+ 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。
+那選擇正確的資料結構可以做啥 ? 答案就是可以提供你的演算法效率。接下來我們將在本篇文章說明三種資料結構陣列(Array)、堆疊(Stack)、佇列(Queue)。
+本篇文章目錄如下。
+ 陣列 堆疊 佇列  陣列 ( Array ) 陣列應該算是我們寫程式時，最常使用到的一種資料結構，它就長的下面這樣，上面那行代表我們的資料陣列，下面那行只是表示每個資料對應到的Index，例如array[0]的值為a。
+不過有幾點要注意，當初陣列設計之初是在形式上依賴內存分配而成，也就是說必須預先設定陣列的大小。這使得陣列有以下特性。
+ 設定陣列大小後，不能在改變(資料溢位問題)。 在內存中有該陣列專用的連續空間，不會存在其中程式要調用的資料空間。  由於陣列實在太常使用了，這邊就不多說囉。
+時間複雜度  indexing : O(1) find : O(n)  堆疊 ( Stack ) 它事實上與陣列很相似，只是它有幾個特殊的方，它只能允許在陣列的一端進行操作，而且按照『後進先出』 LIFO, Last In First Out 的原理運作。如下圖表示。
+然後我們簡單的使用javascript來建立stack的資料結構，由於我們是要練習用，所以我們不使用Js的陣列內本來就有提供的stack方法。
+首先我們先建立Stack的類別，事實上在js中不該說類別，_size存放該stack的大小，而_container則存放資料。
+/** * Stack * this is stack data structure; * @returns {undefined} */ function Stack(){ this._size =0; this._container = {}; } 接下來我們要建立的方法有兩個push與pop，其中push就是將資料丟到stack內，而pop就是取出資料，由於stack遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以pop，是要取該stack內最後被丟進去的資料。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +54,19 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---陣列(Array)、堆疊(Stack)、佇列(Queue) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說|Describe what your web page is about">
+    <meta name="twitter:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢?
+根據 wiki 的解答。
+ 資料結構是電腦中儲存、組織資料的方式。
+ 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。
+那選擇正確的資料結構可以做啥 ? 答案就是可以提供你的演算法效率。接下來我們將在本篇文章說明三種資料結構陣列(Array)、堆疊(Stack)、佇列(Queue)。
+本篇文章目錄如下。
+ 陣列 堆疊 佇列  陣列 ( Array ) 陣列應該算是我們寫程式時，最常使用到的一種資料結構，它就長的下面這樣，上面那行代表我們的資料陣列，下面那行只是表示每個資料對應到的Index，例如array[0]的值為a。
+不過有幾點要注意，當初陣列設計之初是在形式上依賴內存分配而成，也就是說必須預先設定陣列的大小。這使得陣列有以下特性。
+ 設定陣列大小後，不能在改變(資料溢位問題)。 在內存中有該陣列專用的連續空間，不會存在其中程式要調用的資料空間。  由於陣列實在太常使用了，這邊就不多說囉。
+時間複雜度  indexing : O(1) find : O(n)  堆疊 ( Stack ) 它事實上與陣列很相似，只是它有幾個特殊的方，它只能允許在陣列的一端進行操作，而且按照『後進先出』 LIFO, Last In First Out 的原理運作。如下圖表示。
+然後我們簡單的使用javascript來建立stack的資料結構，由於我們是要練習用，所以我們不使用Js的陣列內本來就有提供的stack方法。
+首先我們先建立Stack的類別，事實上在js中不該說類別，_size存放該stack的大小，而_container則存放資料。
+/** * Stack * this is stack data structure; * @returns {undefined} */ function Stack(){ this._size =0; this._container = {}; } 接下來我們要建立的方法有兩個push與pop，其中push就是將資料丟到stack內，而pop就是取出資料，由於stack遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以pop，是要取該stack內最後被丟進去的資料。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +78,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -156,63 +183,63 @@
 <p><img src="http://yixiang8780.com/outImg/20170211-2.png" alt=""></p>
 <p>然後我們簡單的使用<code>javascript</code>來建立<code>stack</code>的資料結構，由於我們是要練習用，所以我們不使用<code>Js</code>的陣列內本來就有提供的<code>stack</code>方法。</p>
 <p>首先我們先建立<code>Stack</code>的類別，事實上在<code>js</code>中不該說類別，<code>_size</code>存放該<code>stack</code>的大小，而<code>_container</code>則存放資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Stack
-</span><span class="cm"> * this is stack data structure;
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">Stack</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_size</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_container</span> <span class="o">=</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Stack
+</span><span style="color:#75715e"> * this is stack data structure;
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Stack</span>(){
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_size</span> <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span> <span style="color:#f92672">=</span> {};
+}
 </code></pre></div><p>接下來我們要建立的方法有兩個<code>push</code>與<code>pop</code>，其中<code>push</code>就是將資料丟到<code>stack</code>內，而<code>pop</code>就是取出資料，由於<code>stack</code>遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以<code>pop</code>，是要取該<code>stack</code>內最後被丟進去的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * push
-</span><span class="cm"> * It method can add data to stack
-</span><span class="cm"> * @param data
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">Stack</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">push</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">size</span> <span class="o">=</span> <span class="o">++</span><span class="k">this</span><span class="p">.</span><span class="nx">_size</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">[</span><span class="nx">size</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * push
+</span><span style="color:#75715e"> * It method can add data to stack
+</span><span style="color:#75715e"> * @param data
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">Stack</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">push</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> <span style="color:#f92672">++</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_size</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>[<span style="color:#a6e22e">size</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>;
+}
 
-<span class="cm">/**
-</span><span class="cm"> * pop
-</span><span class="cm"> * It method can remove data from stack
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">Stack</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">pop</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_size</span><span class="p">;</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * pop
+</span><span style="color:#75715e"> * It method can remove data from stack
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">Stack</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">pop</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_size</span>;
 
-	<span class="k">if</span><span class="p">(</span><span class="nx">size</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">[</span><span class="nx">size</span><span class="p">]</span><span class="p">;</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">_size</span><span class="o">--</span><span class="p">;</span>
+	<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">size</span>){
+		<span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>[<span style="color:#a6e22e">size</span>];
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_size</span><span style="color:#f92672">--</span>;
 
-	<span class="p">}</span>
-<span class="p">}</span>
+	}
+}
 </code></pre></div><p>然後我們接下來要來測試一下，而為了測試方便，我們會多建立一個方法<code>view</code>，可以讓我們看到<code>stack</code>內的內容。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * view
-</span><span class="cm"> * view stack content
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">Stack</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">view</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * view
+</span><span style="color:#75715e"> * view stack content
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">Stack</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">view</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>;
+}
 </code></pre></div><p>最後我們來測試一下，首先我們使用<code>push</code>將<code>ABC</code>三筆資料丟進<code>stack</code>內。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">stack</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Stack</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">stack</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">stack</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Stack</span>();
+<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#e6db74">&#34;A&#34;</span>);
+<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">push</span>(<span style="color:#e6db74">&#34;C&#34;</span>);
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">view</span>());
 
 </code></pre></div><p>結果如下，可以看到有三筆資料。</p>
 <pre><code>{ '1': 'A', '2': 'B', '3': 'C' }
 </code></pre><p>然後我們使用<code>pop</code>來取出資料，根據它的規則『後進先出』，我們應該取出最後丟進去的資料<code>C</code>，所以我們執行<code>view</code>的結果應該是看不到<code>C</code>才對。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">stack</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">pop</span>();
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">stack</span>.<span style="color:#a6e22e">view</span>());
 </code></pre></div><p>結果如下。</p>
 <pre><code>{ '1': 'A', '2': 'B' }
 </code></pre><h3 id="heading1">時間複雜度</h3>
@@ -226,52 +253,52 @@
 <p>在說明完<code>堆疊(Stack)</code>後，我們接下來要來說明<code>佇列</code>，它上堆疊非常的相似，只是規則不同，佇列，又稱為隊列，從字面上就可以知道，它就是排隊的概念，先到先贏，也就是先進先出法<code>( FIFO, First-In-First-Out )</code>的概念。如下圖所示。</p>
 <p><img src="http://yixiang8780.com/outImg/20170211-3.png" alt=""></p>
 <p>然後我們接下來實做一下程式碼。首先我們會建立個<code>queue</code>的類別。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * Queue
-</span><span class="cm"> *
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="kd">function</span> <span class="nx">Queue</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_startIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_endIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_container</span> <span class="o">=</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Queue
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Queue</span>() {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_startIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_endIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span> <span style="color:#f92672">=</span> {};
+}
 </code></pre></div><p>然後我們要實作兩個方法<code>enqueue</code>與<code>dequeue</code>，一個是丟資料到<code>queue</code>內，裡一個是從<code>queue</code>內將資料取出。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="cm">/**
-</span><span class="cm"> * enqueue
-</span><span class="cm"> * Add data to queue
-</span><span class="cm"> * @param data
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">enqueue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_endIndex</span><span class="o">++</span><span class="p">]</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * enqueue
+</span><span style="color:#75715e"> * Add data to queue
+</span><span style="color:#75715e"> * @param data
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">Queue</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">enqueue</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>) {
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_endIndex</span><span style="color:#f92672">++</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">data</span>;
+}
 
-<span class="cm">/**
-</span><span class="cm"> * dequeue
-</span><span class="cm"> * Remove data from queue
-</span><span class="cm"> * @returns {undefined}
-</span><span class="cm"> */</span>
-<span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">dequeue</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-<span class="kd">var</span> <span class="nx">deleteData</span><span class="p">;</span>
-  <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_startIndex</span> <span class="o">!==</span> <span class="k">this</span><span class="p">.</span><span class="nx">_endIndex</span><span class="p">)</span> <span class="p">{</span>
-  	 <span class="nx">deleteData</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_startIndex</span><span class="p">]</span><span class="p">;</span>
-     <span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">_startIndex</span><span class="o">++</span><span class="p">]</span><span class="p">;</span>
-  <span class="p">}</span>
- <span class="k">return</span> <span class="nx">deleteData</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * dequeue
+</span><span style="color:#75715e"> * Remove data from queue
+</span><span style="color:#75715e"> * @returns {undefined}
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">Queue</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">dequeue</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">deleteData</span>;
+  <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_startIndex</span> <span style="color:#f92672">!==</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_endIndex</span>) {
+  	 <span style="color:#a6e22e">deleteData</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_startIndex</span>];
+     <span style="color:#66d9ef">delete</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>[<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_startIndex</span><span style="color:#f92672">++</span>];
+  }
+ <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deleteData</span>;
+}
 </code></pre></div><p>最後來測試一下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Queue</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">view</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_container</span><span class="p">;</span>
-<span class="p">}</span> 
-<span class="kd">var</span> <span class="nx">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Queue</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">queue</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="s2">&#34;A&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">queue</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="s2">&#34;B&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">queue</span><span class="p">.</span><span class="nx">enqueue</span><span class="p">(</span><span class="s2">&#34;C&#34;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Queue</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">view</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(){
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_container</span>;
+} 
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">queue</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Queue</span>();
+<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">enqueue</span>(<span style="color:#e6db74">&#34;A&#34;</span>);
+<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">enqueue</span>(<span style="color:#e6db74">&#34;B&#34;</span>);
+<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">enqueue</span>(<span style="color:#e6db74">&#34;C&#34;</span>);
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">view</span>());
 
-<span class="nx">queue</span><span class="p">.</span><span class="nx">dequeue</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">queue</span><span class="p">.</span><span class="nx">view</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">dequeue</span>();
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">queue</span>.<span style="color:#a6e22e">view</span>());
 </code></pre></div><p>結果如下。</p>
 <pre><code>{ '1': 'A', '2': 'B', '3': 'C' }
 

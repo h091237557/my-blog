@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
+ 聚合 (aggregate) 是啥 ? 有啥用。 Mongodb 聚合工具 Aggregate Framework。 管道 pipeline 操作符號。  ~ 聚合(aggregate)是啥?有啥用? ~ 在前面幾篇文章中，我們學會了mongodb的CRUD，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是『分析』，是的，我們將資料存放進mongodb最終的目的就是要使用分析，而聚合就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
+~ MongoDb 聚合工具之 Aggregate Framework ~ 在mongodb中提供了aggregate framework的聚合工具，使用方法如下，其中AGGREGATE_OPERATION就是指你每一次的處理過程。
+db.collection.aggregate(AGGREGATE_OPERATION) 先不考慮mongodb的語言，下面就是一個聚合的範例，mongodb的aggregate framework主要是建立在聚合管道(pipeline)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節[依作者進行分類]，直到最後產生結果。
+db.collection.aggregate( [將每篇文章作者與like數抓取出來], [依作者進行分類], [將like數進行加總] [返like數前五多的結果] ) ~ 管道 pipeline 操作符號 ~ Aggregate framework提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆document，並對這些document做些操作，然後再將結果傳至下一個pipeline直到最後結果出現。
+project 使用$project可以用來選取document中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。 下面寫個簡單的使用範例。
+首先我們有下列的資料。
+{ &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;age&amp;#34; : 20, &amp;#34;assets&amp;#34; : 100000000 } 然後我們可以用$project來決定要那個欄位，我們選取id與name欄位。
+db.user.aggregate({ &amp;#34;$project&amp;#34; : { &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : 1 }}) 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-14之MongoDB聚合(1)---Aggregate Framework的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明|Describe what your web page is about">
+    <meta name="twitter:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
+ 聚合 (aggregate) 是啥 ? 有啥用。 Mongodb 聚合工具 Aggregate Framework。 管道 pipeline 操作符號。  ~ 聚合(aggregate)是啥?有啥用? ~ 在前面幾篇文章中，我們學會了mongodb的CRUD，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是『分析』，是的，我們將資料存放進mongodb最終的目的就是要使用分析，而聚合就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
+~ MongoDb 聚合工具之 Aggregate Framework ~ 在mongodb中提供了aggregate framework的聚合工具，使用方法如下，其中AGGREGATE_OPERATION就是指你每一次的處理過程。
+db.collection.aggregate(AGGREGATE_OPERATION) 先不考慮mongodb的語言，下面就是一個聚合的範例，mongodb的aggregate framework主要是建立在聚合管道(pipeline)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節[依作者進行分類]，直到最後產生結果。
+db.collection.aggregate( [將每篇文章作者與like數抓取出來], [依作者進行分類], [將like數進行加總] [返like數前五多的結果] ) ~ 管道 pipeline 操作符號 ~ Aggregate framework提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆document，並對這些document做些操作，然後再將結果傳至下一個pipeline直到最後結果出現。
+project 使用$project可以用來選取document中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。 下面寫個簡單的使用範例。
+首先我們有下列的資料。
+{ &#34;id&#34; : 1, &#34;name&#34; : &#34;mark&#34;, &#34;age&#34; : 20, &#34;assets&#34; : 100000000 } 然後我們可以用$project來決定要那個欄位，我們選取id與name欄位。
+db.user.aggregate({ &#34;$project&#34; : { &#34;id&#34; : 1, &#34;name&#34; : 1 }}) 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -138,130 +157,130 @@
 <p>在前面幾篇文章中，我們學會了<code>mongodb</code>的<code>CRUD</code>，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是<code>『分析』</code>，是的，我們將資料存放進<code>mongodb</code>最終的目的就是要使用分析，而<code>聚合</code>就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。</p>
 <h2 id="-mongodb--aggregate-framework-">~ MongoDb 聚合工具之 Aggregate Framework ~</h2>
 <p>在<code>mongodb</code>中提供了<code>aggregate framework</code>的聚合工具，使用方法如下，其中<code>AGGREGATE_OPERATION</code>就是指你每一次的處理過程。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="nx">AGGREGATE_OPERATION</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">aggregate</span>(<span style="color:#a6e22e">AGGREGATE_OPERATION</span>)
 </code></pre></div><p>先不考慮<code>mongodb</code>的語言，下面就是一個聚合的範例，<code>mongodb</code>的<code>aggregate framework</code>主要是建立在聚合管道(<code>pipeline</code>)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節<code>[依作者進行分類]</code>，直到最後產生結果。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
-	<span class="p">[</span><span class="nx">將每篇文章作者與like數抓取出來</span><span class="p">]</span><span class="p">,</span>
-	<span class="p">[</span><span class="nx">依作者進行分類</span><span class="p">]</span><span class="p">,</span>
-	<span class="p">[</span><span class="nx">將like數進行加總</span><span class="p">]</span>
-	<span class="err"></span><span class="p">[</span><span class="nx">返like數前五多的結果</span><span class="p">]</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">aggregate</span>(
+	[<span style="color:#a6e22e">將每篇文章作者與like數抓取出來</span>],
+	[<span style="color:#a6e22e">依作者進行分類</span>],
+	[<span style="color:#a6e22e">將like數進行加總</span>]
+	<span style="color:#960050;background-color:#1e0010"></span>[<span style="color:#a6e22e">返like數前五多的結果</span>]
+)
 </code></pre></div><h2 id="--pipeline--">~ 管道 pipeline 操作符號 ~</h2>
 <p><code>Aggregate framework</code>提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆<code>document</code>，並對這些<code>document</code>做些操作，然後再將結果傳至下一個<code>pipeline</code>直到最後結果出現。</p>
 <h3 id="project">project</h3>
 <p>使用<code>$project</code>可以用來選取<code>document</code>中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。
 下面寫個簡單的使用範例。</p>
 <p>首先我們有下列的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-   <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-   <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-   <span class="s2">&#34;assets&#34;</span> <span class="o">:</span> <span class="mi">100000000</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+   <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+   <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>,
+   <span style="color:#e6db74">&#34;assets&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">100000000</span>
+}
 </code></pre></div><p>然後我們可以用<code>$project</code>來決定要那個欄位，我們選取<code>id</code>與<code>name</code>欄位。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({ <span style="color:#e6db74">&#34;$project&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> }})
 </code></pre></div><p>結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> 
-  <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e73bd6f4811e2ad965055&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span> 
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ 
+  <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e73bd6f4811e2ad965055&#34;</span>), 
+  <span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>, <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span> 
+}
 </code></pre></div><h3 id="match">match</h3>
 <p><code>$match</code>主要用於對<code>document</code>的篩選，用個簡單的範例來看看。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span>
-   <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-   <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-   <span class="s2">&#34;assets&#34;</span> <span class="o">:</span> <span class="mi">100000000</span>
-<span class="p">}</span><span class="p">,</span><span class="p">{</span>
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span>
-   <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span>
-   <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
-   <span class="s2">&#34;assets&#34;</span> <span class="o">:</span> <span class="mi">1000000</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>
+   <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+   <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>,
+   <span style="color:#e6db74">&#34;assets&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">100000000</span>
+},{
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>
+   <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>,
+   <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">40</span>,
+   <span style="color:#e6db74">&#34;assets&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1000000</span>
+}
 </code></pre></div><p>然後我們要只選出<code>age</code>為<code>10至30</code>歲的人。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;$match&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">age</span> <span class="o">:</span> <span class="p">{</span> <span class="nx">$gt</span> <span class="o">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">$lte</span> <span class="o">:</span> <span class="mi">30</span> <span class="p">}</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({ <span style="color:#e6db74">&#34;$match&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#a6e22e">age</span> <span style="color:#f92672">:</span> { <span style="color:#a6e22e">$gt</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>, <span style="color:#a6e22e">$lte</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span> } }})
 </code></pre></div><p>結果</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> 
-  <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e2c486f4811e2ad965043&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> 
-  <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span> 
-  <span class="s2">&#34;assets&#34;</span> <span class="o">:</span> <span class="mi">100000000</span> 
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ 
+  <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e2c486f4811e2ad965043&#34;</span>), 
+  <span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>, 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, 
+  <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>, 
+  <span style="color:#e6db74">&#34;assets&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">100000000</span> 
+}
 </code></pre></div><h3 id="group">group</h3>
 <p><code>$group</code>它的功能就是用來分組，你可以決定要依照什麼來分組。</p>
 <p>假設我們資料如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">1</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;o&#34;</span> <span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">5</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">2</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;o&#34;</span><span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">5</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">3</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;o&#34;</span><span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">5</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">4</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;x&#34;</span><span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">5</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;x&#34;</span><span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">}</span><span class="p">,</span>
-<span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span><span class="mi">6</span> <span class="p">,</span> <span class="s2">&#34;status&#34;</span> <span class="o">:</span> <span class="s2">&#34;x&#34;</span><span class="p">,</span> <span class="s2">&#34;count&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">1</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;o&#34;</span> , <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>},
+{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">2</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;o&#34;</span>, <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>},
+{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">3</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;o&#34;</span>, <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>},
+{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">4</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>},
+{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">5</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>},
+{<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span><span style="color:#ae81ff">6</span> , <span style="color:#e6db74">&#34;status&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;count&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>}
 </code></pre></div><p>然後我們希望根據<code>status</code>來分成兩組。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;$group&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;$status&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({<span style="color:#e6db74">&#34;$group&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;$status&#34;</span>}})
 </code></pre></div><p>當然我自也可以在分組時進行一些統計，例如兩組的<code>count</code>總計。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
-	<span class="p">{</span><span class="s2">&#34;$group&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;$status&#34;</span><span class="p">,</span><span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$sum&#34;</span> <span class="o">:</span> <span class="s2">&#34;$count&#34;</span><span class="p">}</span><span class="p">}</span>
-<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>(
+	{<span style="color:#e6db74">&#34;$group&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;$status&#34;</span>,<span style="color:#e6db74">&#34;total&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;$sum&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;$count&#34;</span>}}
+})
 </code></pre></div><p>結果如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;x&#34;</span><span class="p">,</span> <span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="mi">30</span> <span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="s2">&#34;o&#34;</span><span class="p">,</span> <span class="s2">&#34;total&#34;</span> <span class="o">:</span> <span class="mi">15</span> <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#e6db74">&#34;total&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span> }
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;o&#34;</span>, <span style="color:#e6db74">&#34;total&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">15</span> }
 </code></pre></div><h3 id="unwind">unwind</h3>
 <p><code>$unwind</code>英文解釋就是『拆分』，他可以將陣列欄位的每一個值拆分為單獨的<code>document</code>，
 來看看下面的範例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span>
-		<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">20</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">60</span><span class="p">}</span><span class="p">,</span>
-		<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;stanly&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">30</span><span class="p">}</span>
-	<span class="p">]</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+	<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [
+		{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">20</span>},
+		{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">60</span>},
+		{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;stanly&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">30</span>}
+	]
+}
 </code></pre></div><p>然後我們希望將<code>fans</code>內的資料拆分成三個<code>document</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;$unwind&#34;</span> <span class="o">:</span> <span class="s2">&#34;$fans&#34;</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({<span style="color:#e6db74">&#34;$unwind&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;$fans&#34;</span>})
 </code></pre></div><p>結果如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e53246f4811e2ad96504a&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> 
-  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span> <span class="p">}</span> 
-<span class="p">}</span><span class="p">,</span>  
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e53246f4811e2ad96504a&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> 
-  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">60</span> <span class="p">}</span> 
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e53246f4811e2ad96504a&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> 
-  <span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;stanly&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">30</span> <span class="p">}</span> 
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e53246f4811e2ad96504a&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, 
+  <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span> } 
+},  
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e53246f4811e2ad96504a&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, 
+  <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">60</span> } 
+},
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e53246f4811e2ad96504a&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, 
+  <span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;stanly&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span> } 
+}
 </code></pre></div><h3 id="sort">sort</h3>
 <p><code>$sort</code>它可以根據任何欄位進行排序，是的與搜尋時的用法一樣，但是有件事要注意。</p>
 <blockquote>
 <p>如果大量的資料要進行排序，建議在管道的第一節進行排序，因為可以用索引。</p>
 </blockquote>
 <p>假設我們有下列資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">18</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">38</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">10</span><span class="p">}</span>
-<span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;stanlly&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">28</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">38</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>}
+{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;stanlly&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">28</span>}
 </code></pre></div><p>然後我們要根據<code>age</code>進行排序。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({<span style="color:#e6db74">&#34;$sort&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> }})
 </code></pre></div><p>結果如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e71856f4811e2ad96504d&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">10</span> <span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e71856f4811e2ad96504b&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">18</span> <span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e71866f4811e2ad96504e&#34;</span><span class="p">)</span><span class="p">,</span>
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;stanlly&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">28</span> <span class="p">}</span>
-<span class="p">{</span> <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e71856f4811e2ad96504c&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">38</span> <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e71856f4811e2ad96504d&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span> }
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e71856f4811e2ad96504b&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span> }
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e71866f4811e2ad96504e&#34;</span>),
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;stanlly&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">28</span> }
+{ <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e71856f4811e2ad96504c&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>, <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">38</span> }
 </code></pre></div><h3 id="limit">limit</h3>
 <p>就是可以限制回傳<code>document</code>的數量，大致使用法式如下，懶的講太多了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;$limit&#34;</span> <span class="o">:</span> <span class="mi">5</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({<span style="color:#e6db74">&#34;$limit&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>})
 </code></pre></div><h3 id="skip">skip</h3>
 <p><code>$skip</code>就是可以捨棄前<code>n</code>然後在開始回傳結果，以下有點要注意。</p>
 <blockquote>
 <p>就如同在<code>find</code>時一樣，大量數據下他的效能會非常的差。</p>
 </blockquote>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;$skip&#34;</span> <span class="o">:</span> <span class="mi">5</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>({<span style="color:#e6db74">&#34;$skip&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">5</span>})
 </code></pre></div><h2 id="heading">~操作符號的實際應用~</h2>
 <p>上面將了不少的管道操作符號，不過也只是一個一個分開來使用，接下來我們組合起來一起使用，這才是聚合的真正用法，再開始之前我們複習一下，我們用個表個整理上述的操作符號功用。</p>
 <table>
@@ -304,38 +323,38 @@
 </table>
 <h3 id="heading1">實際應用模擬</h3>
 <p>先看看我們有的資料，它是一堆使用者的基本資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> 
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-	<span class="s2">&#34;sex&#34;</span> <span class="o">:</span> <span class="s2">&#34;M&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">}</span><span class="p">]</span><span class="p">,</span>
-	<span class="s2">&#34;phone&#34;</span> <span class="o">:</span> <span class="s2">&#34;xxxxx&#34;</span>
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> 
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">40</span><span class="p">,</span>
-	<span class="s2">&#34;sex&#34;</span> <span class="o">:</span> <span class="s2">&#34;M&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">}</span><span class="p">]</span><span class="p">,</span>
-	<span class="s2">&#34;phone&#34;</span> <span class="o">:</span> <span class="s2">&#34;xxxxx&#34;</span>
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> 
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;marry&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">30</span><span class="p">,</span>
-	<span class="s2">&#34;sex&#34;</span> <span class="o">:</span> <span class="s2">&#34;S&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;max&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">}</span><span class="p">]</span><span class="p">,</span>
-	<span class="s2">&#34;phone&#34;</span> <span class="o">:</span> <span class="s2">&#34;xxxxx&#34;</span>
-<span class="p">}</span><span class="p">,</span>
-<span class="p">{</span> 
-	<span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">4</span><span class="p">,</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">21</span><span class="p">,</span>
-	<span class="s2">&#34;sex&#34;</span> <span class="o">:</span> <span class="s2">&#34;M&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;fans&#34;</span> <span class="o">:</span> <span class="p">[</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">]</span><span class="p">,</span>
-	<span class="s2">&#34;phone&#34;</span> <span class="o">:</span> <span class="s2">&#34;xxxxx&#34;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ 
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>,
+	<span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;M&#34;</span>,
+	<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>},{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>}],
+	<span style="color:#e6db74">&#34;phone&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;xxxxx&#34;</span>
+},
+{ 
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>,
+	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">40</span>,
+	<span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;M&#34;</span>,
+	<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>},{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>}],
+	<span style="color:#e6db74">&#34;phone&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;xxxxx&#34;</span>
+},
+{ 
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span>,
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;marry&#34;</span>,
+	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span>,
+	<span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;S&#34;</span>,
+	<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>},{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;max&#34;</span>},{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jack&#34;</span>}],
+	<span style="color:#e6db74">&#34;phone&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;xxxxx&#34;</span>
+},
+{ 
+	<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">4</span>,
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jack&#34;</span>,
+	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">21</span>,
+	<span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;M&#34;</span>,
+	<span style="color:#e6db74">&#34;fans&#34;</span> <span style="color:#f92672">:</span> [{<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>}],
+	<span style="color:#e6db74">&#34;phone&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;xxxxx&#34;</span>
+}
 </code></pre></div><h4 id="heading2">我們希望可以找出男性中第二年輕的人</h4>
 <p>我們可以按照下面的步驟建立管道，來找出第二年輕的男性。</p>
 <ol>
@@ -346,19 +365,19 @@
 <li>限制輸出結果為<code>1</code>。</li>
 </ol>
 <p>根據以上的步驟我們建立出來的聚合如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">(</span>
-	<span class="p">{</span> <span class="s2">&#34;$match&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;sex&#34;</span> <span class="o">:</span> <span class="s2">&#34;M&#34;</span><span class="p">}</span><span class="p">}</span><span class="p">,</span>
-	<span class="p">{</span> <span class="s2">&#34;$project&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">}</span><span class="p">,</span>
-	<span class="p">{</span> <span class="s2">&#34;$sort&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">}</span><span class="p">,</span>
-	<span class="p">{</span> <span class="s2">&#34;$skip&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">,</span>
-	<span class="p">{</span> <span class="s2">&#34;$limit&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">aggregate</span>(
+	{ <span style="color:#e6db74">&#34;$match&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;sex&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;M&#34;</span>}},
+	{ <span style="color:#e6db74">&#34;$project&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> , <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> }},
+	{ <span style="color:#e6db74">&#34;$sort&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> }},
+	{ <span style="color:#e6db74">&#34;$skip&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> },
+	{ <span style="color:#e6db74">&#34;$limit&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> }
+)
 </code></pre></div><p>然後執行結果正確，<code>jack</code>的確是第二年輕的男性。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="p">{</span> 
-  <span class="s2">&#34;_id&#34;</span> <span class="o">:</span> <span class="nx">ObjectId</span><span class="p">(</span><span class="s2">&#34;584e98109ea01650ca1f5617&#34;</span><span class="p">)</span><span class="p">,</span> 
-  <span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jack&#34;</span><span class="p">,</span> 
-  <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">21</span> 
- <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{ 
+  <span style="color:#e6db74">&#34;_id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">ObjectId</span>(<span style="color:#e6db74">&#34;584e98109ea01650ca1f5617&#34;</span>), 
+  <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jack&#34;</span>, 
+  <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">21</span> 
+ }
 </code></pre></div><h2 id="heading3">~結語~</h2>
 <p>今天簡單的說明了聚合工具<code>Aggregate framework</code>的用法，以及管理的操作符號，不過還缺了一些東西，事實上每個管道內還可以在做更多的事情，這些下一篇文章將會說明到。</p>
 <h2 id="heading4">~參考資料~</h2>

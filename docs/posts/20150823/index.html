@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告|Describe what your web page is about">
+    <meta name="description" property="og:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東東)
+public class Car { //這個就是欄位(Field)  private int PeopleNumber; } 而屬性呢?，屬性(Properties)是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。
+public class Car { //這個就是屬性  public int PeopleNumber { get; set;} }  存取子 ( accessor ) 屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。
+Get存取子 get存取子可以用於傳回欄位值或計算它並且回傳。
+下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。
+class Test { public int PeopleNumber { get ;} } 要改成下列程式碼，才正確。
+class Test { //設定唯時一定要給它值。不然會出錯。  public int PeopleNumber { get {return 10 ;} } } 試試看寫入值的話，則有人會打斷你的腿。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 8-『 屬性 ( Properties ) 與欄位 ( Field ) 和存取子 ( accessor ) 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告|Describe what your web page is about">
+    <meta name="twitter:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東東)
+public class Car { //這個就是欄位(Field)  private int PeopleNumber; } 而屬性呢?，屬性(Properties)是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。
+public class Car { //這個就是屬性  public int PeopleNumber { get; set;} }  存取子 ( accessor ) 屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。
+Get存取子 get存取子可以用於傳回欄位值或計算它並且回傳。
+下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。
+class Test { public int PeopleNumber { get ;} } 要改成下列程式碼，才正確。
+class Test { //設定唯時一定要給它值。不然會出錯。  public int PeopleNumber { get {return 10 ;} } } 試試看寫入值的話，則有人會打斷你的腿。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -130,157 +145,157 @@
   <section class="pb-6 mb-3 border-bottom">
     <h2 id="heading">區別何謂屬性與何謂欄位</h2>
 <p>先來說說欄位，<code>欄位(Field)</code>是一個<code>任意型別(Type)</code>的變數，直接在類別(Class)與結構(struct)中宣告。<code>(註: 型別(Type)就是Int 、bool這些在變數前的東東)</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
-    <span class="p">{</span>
-        <span class="c1">//這個就是欄位(Field)
-</span><span class="c1"></span>        <span class="k">private</span> <span class="kt">int</span> <span class="n">PeopleNumber</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>
+    {
+        <span style="color:#75715e">//這個就是欄位(Field)
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> PeopleNumber;
 
-    <span class="p">}</span>
+    }
 </code></pre></div><p>而屬性呢?，<code>屬性(Properties)</code>是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="k">public</span> <span class="k">class</span> <span class="nc">Car</span>
-    <span class="p">{</span>
-          <span class="c1">//這個就是屬性
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">int</span> <span class="n">PeopleNumber</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span><span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Car</span>
+    {
+          <span style="color:#75715e">//這個就是屬性
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> PeopleNumber { <span style="color:#66d9ef">get</span>; <span style="color:#66d9ef">set</span>;}
 
-    <span class="p">}</span>
+    }
 </code></pre></div><hr>
 <h2 id="--accessor-">存取子 ( accessor )</h2>
 <p>屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。</p>
 <h2 id="get">Get存取子</h2>
 <p><code>get存取子</code>可以用於傳回欄位值或計算它並且回傳。</p>
 <p>下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="k">class</span> <span class="nc">Test</span>
-    <span class="p">{</span>
-       <span class="k">public</span> <span class="kt">int</span> <span class="n">PeopleNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">;</span><span class="p">}</span>
-    <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span>
+    {
+       <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> PeopleNumber { <span style="color:#66d9ef">get</span> ;}
+    }
 </code></pre></div><p>要改成下列程式碼，才正確。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	<span class="k">class</span> <span class="nc">Test</span>
-    <span class="p">{</span>
-        <span class="c1">//設定唯時一定要給它值。不然會出錯。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">int</span> <span class="n">PeopleNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span><span class="k">return</span> <span class="m">1</span><span class="m">0</span> <span class="p">;</span><span class="p">}</span> <span class="p">}</span>
-    <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span>
+    {
+        <span style="color:#75715e">//設定唯時一定要給它值。不然會出錯。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> PeopleNumber { <span style="color:#66d9ef">get</span> {<span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span> ;} }
+    }
 </code></pre></div><p>試試看寫入值的話，則有人會打斷你的腿。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">  	<span class="k">public</span> <span class="n">Form1</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">InitializeComponent</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="c1">//實體化Test類別成test物件。
-</span><span class="c1"></span>            <span class="n">Test</span> <span class="n">test</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Test</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">  	<span style="color:#66d9ef">public</span> Form1()
+        {
+            InitializeComponent();
+            <span style="color:#75715e">//實體化Test類別成test物件。
+</span><span style="color:#75715e"></span>            Test test = <span style="color:#66d9ef">new</span> Test();
            
-            <span class="c1">//將10寫入PeopleNumber，會出錯喔
-</span><span class="c1"></span>            <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="p">;</span>
-        <span class="p">}</span>
+            <span style="color:#75715e">//將10寫入PeopleNumber，會出錯喔
+</span><span style="color:#75715e"></span>            test.PeopleNumber = <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>;
+        }
 </code></pre></div><p>它只能讀而以 ~</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="k">public</span> <span class="n">Form1</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">InitializeComponent</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="c1">//實體化Test類別成test物件。
-</span><span class="c1"></span>            <span class="n">Test</span> <span class="n">test</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Test</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	 <span style="color:#66d9ef">public</span> Form1()
+        {
+            InitializeComponent();
+            <span style="color:#75715e">//實體化Test類別成test物件。
+</span><span style="color:#75715e"></span>            Test test = <span style="color:#66d9ef">new</span> Test();
            
-            <span class="c1">//將10寫入PeopleNumber，會出錯喔
-</span><span class="c1"></span>            <span class="c1">//test.PeopleNumber = 10;
-</span><span class="c1"></span>
-            <span class="c1">//它只能給我們讀取。
-</span><span class="c1"></span>            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;PeopleNumber屬性為:&#34;</span> <span class="p">+</span> <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+            <span style="color:#75715e">//將10寫入PeopleNumber，會出錯喔
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//test.PeopleNumber = 10;
+</span><span style="color:#75715e"></span>
+            <span style="color:#75715e">//它只能給我們讀取。
+</span><span style="color:#75715e"></span>            Console.WriteLine(<span style="color:#e6db74">&#34;PeopleNumber屬性為:&#34;</span> + test.PeopleNumber);
+        }
 
-<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
 
-	<span class="n">PeopleNumber屬性為</span><span class="p">:</span><span class="m">1</span><span class="m">0</span>
+	PeopleNumber屬性為:<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>
 </code></pre></div><h3 id="set">Set存取子</h3>
 <p>可以用於將某欄位設定值。</p>
 <p>在下列程式碼Test類別，有一屬性PeopleNumber，設為『只能寫入』，和peopleNumber欄位。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="k">class</span> <span class="nc">Test</span>
-    <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span>
+    {
        
-        <span class="k">private</span> <span class="kt">int</span> <span class="n">peopleNumber</span><span class="p">;</span>
-     <span class="c1">//設定只能寫。
-</span><span class="c1"></span>        <span class="k">public</span> <span class="kt">int</span> <span class="n">PeopleNumber</span> <span class="p">{</span>
-           <span class="k">set</span> <span class="p">{</span>
-               <span class="c1">//將peopleNumber欄位設定值。
-</span><span class="c1"></span>               <span class="n">peopleNumber</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> peopleNumber;
+     <span style="color:#75715e">//設定只能寫。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> PeopleNumber {
+           <span style="color:#66d9ef">set</span> {
+               <span style="color:#75715e">//將peopleNumber欄位設定值。
+</span><span style="color:#75715e"></span>               peopleNumber = <span style="color:#66d9ef">value</span>;
 
-               <span class="c1">//只是輸出給你看people欄位值為多少。
-</span><span class="c1"></span>               <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;peopleNumber欄位值為&#34;</span> <span class="p">+</span> <span class="n">peopleNumber</span><span class="p">)</span><span class="p">;</span>
-           <span class="p">}</span>
+               <span style="color:#75715e">//只是輸出給你看people欄位值為多少。
+</span><span style="color:#75715e"></span>               Console.WriteLine(<span style="color:#e6db74">&#34;peopleNumber欄位值為&#34;</span> + peopleNumber);
+           }
        
-        <span class="p">}</span>
+        }
 
-    <span class="p">}</span>
+    }
 
- 	<span class="k">public</span> <span class="n">Form1</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">InitializeComponent</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="c1">//實體化Test類別成test物件。
-</span><span class="c1"></span>            <span class="n">Test</span> <span class="n">test</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Test</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+ 	<span style="color:#66d9ef">public</span> Form1()
+        {
+            InitializeComponent();
+            <span style="color:#75715e">//實體化Test類別成test物件。
+</span><span style="color:#75715e"></span>            Test test = <span style="color:#66d9ef">new</span> Test();
            
-            <span class="c1">//將10寫入PeopleNumber。
-</span><span class="c1"></span>            <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="p">;</span>
+            <span style="color:#75715e">//將10寫入PeopleNumber。
+</span><span style="color:#75715e"></span>            test.PeopleNumber = <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>;
           
-            <span class="c1">//它只能給我們寫入所以這會出錯。
-</span><span class="c1"></span>           <span class="c1">// Console.WriteLine(&#34;PeopleNumber屬性為:&#34; + test.PeopleNumber);
-</span><span class="c1"></span>        <span class="p">}</span>
+            <span style="color:#75715e">//它只能給我們寫入所以這會出錯。
+</span><span style="color:#75715e"></span>           <span style="color:#75715e">// Console.WriteLine(&#34;PeopleNumber屬性為:&#34; + test.PeopleNumber);
+</span><span style="color:#75715e"></span>        }
 
-<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
 
-	<span class="n">PeopleNumber屬性為</span><span class="p">:</span><span class="m">1</span><span class="m">0</span>
+	PeopleNumber屬性為:<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>
 </code></pre></div><p>嘗試讀取看看，會出錯喔。所以要把寫的那行刪掉才可以執行。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#">	 <span class="k">public</span> <span class="n">Form1</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">InitializeComponent</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="c1">//實體化Test類別成test物件。
-</span><span class="c1"></span>            <span class="n">Test</span> <span class="n">test</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Test</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#">	 <span style="color:#66d9ef">public</span> Form1()
+        {
+            InitializeComponent();
+            <span style="color:#75715e">//實體化Test類別成test物件。
+</span><span style="color:#75715e"></span>            Test test = <span style="color:#66d9ef">new</span> Test();
            
-            <span class="c1">//將10寫入PeopleNumber。
-</span><span class="c1"></span>            <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="p">;</span>
+            <span style="color:#75715e">//將10寫入PeopleNumber。
+</span><span style="color:#75715e"></span>            test.PeopleNumber = <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>;
           
-            <span class="c1">//它只能給我們寫入所以這會出錯。
-</span><span class="c1"></span>            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;PeopleNumber屬性為:&#34;</span> <span class="p">+</span> <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+            <span style="color:#75715e">//它只能給我們寫入所以這會出錯。
+</span><span style="color:#75715e"></span>            Console.WriteLine(<span style="color:#e6db74">&#34;PeopleNumber屬性為:&#34;</span> + test.PeopleNumber);
+        }
 </code></pre></div><h2 id="get--set-">Get 與 Set 一起使用</h2>
 <p>在封裝概念中，通常私有欄位會與公開屬性塔配使用，原因在下篇封裝文章中說明。</p>
-<div class="highlight"><pre class="chroma"><code class="language-c#" data-lang="c#"> 	<span class="k">class</span> <span class="nc">Test</span>
-    <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c#" data-lang="c#"> 	<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Test</span>
+    {
        
-        <span class="c1">//宣告私有peopleNumber欄位
-</span><span class="c1"></span>        <span class="k">private</span> <span class="kt">int</span> <span class="n">peopleNumber</span><span class="p">;</span>
-        <span class="k">public</span> <span class="kt">int</span> <span class="n">PeopleNumber</span> <span class="p">{</span>
-           <span class="k">set</span> <span class="p">{</span>
-               <span class="c1">//將peopleNumber欄位設定值。
-</span><span class="c1"></span>               <span class="c1">//在這裡peopleNumber叫『支援欄位(Backing Field)』
-</span><span class="c1"></span>               <span class="n">peopleNumber</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+        <span style="color:#75715e">//宣告私有peopleNumber欄位
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> peopleNumber;
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> PeopleNumber {
+           <span style="color:#66d9ef">set</span> {
+               <span style="color:#75715e">//將peopleNumber欄位設定值。
+</span><span style="color:#75715e"></span>               <span style="color:#75715e">//在這裡peopleNumber叫『支援欄位(Backing Field)』
+</span><span style="color:#75715e"></span>               peopleNumber = <span style="color:#66d9ef">value</span>;
 
-               <span class="c1">//只是輸出給你看people欄位值為多少。
-</span><span class="c1"></span>               <span class="c1">//這裡就不需要輸出給你看了，因為有Get了。
-</span><span class="c1"></span>               <span class="c1">//Console.WriteLine(&#34;peopleNumber欄位值為&#34; + peopleNumber);
-</span><span class="c1"></span>           <span class="p">}</span>
+               <span style="color:#75715e">//只是輸出給你看people欄位值為多少。
+</span><span style="color:#75715e"></span>               <span style="color:#75715e">//這裡就不需要輸出給你看了，因為有Get了。
+</span><span style="color:#75715e"></span>               <span style="color:#75715e">//Console.WriteLine(&#34;peopleNumber欄位值為&#34; + peopleNumber);
+</span><span style="color:#75715e"></span>           }
 
-            <span class="k">get</span>
-            <span class="p">{</span>
-                <span class="c1">//回傳peopleNumber欄位值，你也可以在這進行計算 例如乘10或打折之類的。
-</span><span class="c1"></span>                <span class="k">return</span> <span class="n">peopleNumber</span><span class="p">;</span>
-            <span class="p">}</span>
+            <span style="color:#66d9ef">get</span>
+            {
+                <span style="color:#75715e">//回傳peopleNumber欄位值，你也可以在這進行計算 例如乘10或打折之類的。
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> peopleNumber;
+            }
        
-        <span class="p">}</span>
+        }
 
-    <span class="p">}</span>
+    }
 
 
-	 <span class="k">public</span> <span class="n">Form1</span><span class="p">(</span><span class="p">)</span>
-        <span class="p">{</span>
-            <span class="n">InitializeComponent</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-            <span class="c1">//實體化Test類別成test物件。
-</span><span class="c1"></span>            <span class="n">Test</span> <span class="n">test</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Test</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+	 <span style="color:#66d9ef">public</span> Form1()
+        {
+            InitializeComponent();
+            <span style="color:#75715e">//實體化Test類別成test物件。
+</span><span style="color:#75715e"></span>            Test test = <span style="color:#66d9ef">new</span> Test();
            
-            <span class="c1">//將10寫入PeopleNumber。
-</span><span class="c1"></span>            <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span> <span class="p">=</span> <span class="m">1</span><span class="m">0</span><span class="p">;</span>
+            <span style="color:#75715e">//將10寫入PeopleNumber。
+</span><span style="color:#75715e"></span>            test.PeopleNumber = <span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>;
           
-            <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;PeopleNumber屬性為:&#34;</span> <span class="p">+</span> <span class="n">test</span><span class="p">.</span><span class="n">PeopleNumber</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span>
+            Console.WriteLine(<span style="color:#e6db74">&#34;PeopleNumber屬性為:&#34;</span> + test.PeopleNumber);
+        }
 
 
-<span class="err">執</span><span class="err">行</span><span class="err">結</span><span class="err">果</span>
+<span style="color:#960050;background-color:#1e0010">執</span><span style="color:#960050;background-color:#1e0010">行</span><span style="color:#960050;background-color:#1e0010">結</span><span style="color:#960050;background-color:#1e0010">果</span>
 
-	<span class="n">PeopleNumber屬性為</span><span class="p">:</span><span class="m">1</span><span class="m">0</span>
+	PeopleNumber屬性為:<span style="color:#ae81ff">1</span><span style="color:#ae81ff">0</span>
 </code></pre></div><h2 id="heading1">參考資料</h2>
 <ul>
 <li><a href="http://msdn.microsoft.com/zh-tw/library/ms173118.aspx">http://msdn.microsoft.com/zh-tw/library/ms173118.aspx</a></li>

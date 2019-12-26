@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :
+ CDN ( Content Delivery Network ) HTTP 緩存  本篇文章分為以下幾個章節 :
+ CDN 與運行流程 HTTP 緩存與運行流程 CDN 與 HTTP 緩存搞在一起用  這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。
+30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )
+CDN 與運行流程 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
+首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
+圖 1 : 一個台灣用戶連到台灣網站的時間
+然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 : CDN ( Content Delivery Network ) HTTP 緩存 本篇文章分為以下幾個章節 : CDN 與運行|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :
+ CDN ( Content Delivery Network ) HTTP 緩存  本篇文章分為以下幾個章節 :
+ CDN 與運行流程 HTTP 緩存與運行流程 CDN 與 HTTP 緩存搞在一起用  這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。
+30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )
+CDN 與運行流程 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
+首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
+圖 1 : 一個台灣用戶連到台灣網站的時間
+然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

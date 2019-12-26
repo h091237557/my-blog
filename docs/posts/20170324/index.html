@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="algorithm, divid" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
+分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
+ 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
+ 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
+實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
+最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
+ 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
+ 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
+這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
+function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start&#43;end)/2); console.log(&amp;#34;startM:&amp;#34; &#43; start &#43; &amp;#34; middleM:&amp;#34;&#43;middle &#43; &amp;#34; end :&amp;#34; &#43; end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle&#43;1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle&#43;1;i&amp;lt;=end;i&#43;&#43;){ currentRightSum &#43;= datas[i]; if(currentRightSum &amp;gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&amp;gt;=start;k--){ currentLeftSum &#43;= datas[k]; if(currentLeftSum &amp;gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum&#43;leftSum; console.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="演算法策略---分治法 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小|Describe what your web page is about">
+    <meta name="twitter:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
+分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
+ 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
+ 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
+實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
+最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
+ 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
+ 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
+這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
+function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start&#43;end)/2); console.log(&#34;startM:&#34; &#43; start &#43; &#34; middleM:&#34;&#43;middle &#43; &#34; end :&#34; &#43; end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle&#43;1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle&#43;1;i&lt;=end;i&#43;&#43;){ currentRightSum &#43;= datas[i]; if(currentRightSum &gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&gt;=start;k--){ currentLeftSum &#43;= datas[k]; if(currentLeftSum &gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum&#43;leftSum; console.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -151,42 +172,42 @@
 <p>例如假設我們有陣列<code>[1,5,-8,7,4,1,-9,6]</code>，所以這時我們的最大子序列就為<code>7、4、1</code>。</p>
 <p>這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。<code>maxCrossover</code>是用來尋找中間那塊的最大子區塊值。</p>
 <p><img src="http://yixiang8780.com/outImg/20170324-1.png" alt=""></p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">start</span><span class="p">,</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">start</span> <span class="o">==</span> <span class="nx">end</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">start</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="kd">let</span> <span class="nx">middle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="p">(</span><span class="nx">start</span><span class="o">+</span><span class="nx">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;startM:&#34;</span> <span class="o">+</span> <span class="nx">start</span> <span class="o">+</span> <span class="s2">&#34; middleM:&#34;</span><span class="o">+</span><span class="nx">middle</span> <span class="o">+</span> <span class="s2">&#34; end :&#34;</span> <span class="o">+</span> <span class="nx">end</span><span class="p">)</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">)</span><span class="p">,</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">,</span><span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>		
-	<span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>, <span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span>) {
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">start</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">end</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">start</span>];
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">middle</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>((<span style="color:#a6e22e">start</span><span style="color:#f92672">+</span><span style="color:#a6e22e">end</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>);
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;startM:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; middleM:&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">middle</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; end :&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">end</span>);
+		<span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">start</span>,<span style="color:#a6e22e">middle</span>),<span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">middle</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">end</span>),<span style="color:#a6e22e">maxCrossover</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">start</span>,<span style="color:#a6e22e">middle</span>,<span style="color:#a6e22e">end</span>));		
+	}
+}
 
-<span class="kd">function</span> <span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">currentLeftSum</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">leftSum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">currentRightSum</span> <span class="o">=</span><span class="mi">0</span><span class="p">;</span>
-	<span class="kd">var</span> <span class="nx">rightSum</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">maxCrossover</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">start</span>,<span style="color:#a6e22e">middle</span>,<span style="color:#a6e22e">end</span>){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentLeftSum</span> <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">leftSum</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">currentRightSum</span> <span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">rightSum</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;
 
-	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;=</span><span class="nx">end</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">currentRightSum</span> <span class="o">+=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">currentRightSum</span> <span class="o">&gt;</span> <span class="nx">rightSum</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">rightSum</span> <span class="o">=</span> <span class="nx">currentRightSum</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-	<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">k</span><span class="o">=</span><span class="nx">middle</span><span class="p">;</span><span class="nx">k</span><span class="o">&gt;=</span><span class="nx">start</span><span class="p">;</span><span class="nx">k</span><span class="o">--</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">currentLeftSum</span> <span class="o">+=</span> <span class="nx">datas</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span><span class="p">;</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">currentLeftSum</span> <span class="o">&gt;</span> <span class="nx">leftSum</span><span class="p">)</span><span class="p">{</span>
-			<span class="nx">leftSum</span> <span class="o">=</span> <span class="nx">currentLeftSum</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-	<span class="kd">let</span> <span class="nx">test</span> <span class="o">=</span> <span class="nx">rightSum</span><span class="o">+</span><span class="nx">leftSum</span><span class="p">;</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;!!!! start:&#34;</span> <span class="o">+</span> <span class="nx">start</span> <span class="o">+</span> <span class="s2">&#34; end:&#34;</span> <span class="o">+</span> <span class="nx">end</span> <span class="o">+</span> <span class="s2">&#34; middle&#34;</span><span class="o">+</span><span class="nx">middle</span><span class="o">+</span><span class="s2">&#34; : &#34;</span><span class="o">+</span> <span class="nx">test</span><span class="p">)</span><span class="p">;</span>
-	<span class="k">return</span> <span class="nx">rightSum</span> <span class="o">+</span> <span class="nx">leftSum</span><span class="p">;</span>
-<span class="p">}</span>
+	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#a6e22e">middle</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;=</span><span style="color:#a6e22e">end</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+		<span style="color:#a6e22e">currentRightSum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">i</span>];
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">currentRightSum</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">rightSum</span>){
+			<span style="color:#a6e22e">rightSum</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentRightSum</span>;
+		}
+	}
+	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">k</span><span style="color:#f92672">=</span><span style="color:#a6e22e">middle</span>;<span style="color:#a6e22e">k</span><span style="color:#f92672">&gt;=</span><span style="color:#a6e22e">start</span>;<span style="color:#a6e22e">k</span><span style="color:#f92672">--</span>){
+		<span style="color:#a6e22e">currentLeftSum</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">k</span>];
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">currentLeftSum</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">leftSum</span>){
+			<span style="color:#a6e22e">leftSum</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentLeftSum</span>;
+		}
+	}
+	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">test</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">rightSum</span><span style="color:#f92672">+</span><span style="color:#a6e22e">leftSum</span>;
+	<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;!!!! start:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; end:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">end</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; middle&#34;</span><span style="color:#f92672">+</span><span style="color:#a6e22e">middle</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34; : &#34;</span><span style="color:#f92672">+</span> <span style="color:#a6e22e">test</span>);
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">rightSum</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">leftSum</span>;
+}
 
 
-<span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span><span class="p">;</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">5</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">1</span>,<span style="color:#f92672">-</span><span style="color:#ae81ff">9</span>,<span style="color:#ae81ff">6</span>];
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#ae81ff">0</span>,<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>));
 
 </code></pre></div><p>然後我們來研究看看輸出的結果和他的過程。</p>
 <pre><code>startM:0 middleM:3 end :7
@@ -204,8 +225,8 @@ startM:6 middleM:6 end :7
 !!!! start:4 end:7 middle5 : 5
 !!!! start:0 end:7 middle3 : 12
 </code></pre><p>前三行就是說明程式碼會先將左半邊的<code>1、5、-8、7</code>一直進行切割，也就是下面這段程式碼的第一個<code>maxSubarrary(datas,start,middle)</code>，它會一直遞回進去，然後直到切分到<code>1、5</code>時，會執行到<code>maxCrossover</code>，它會輸出最大交互子區塊<code>6</code>，也就是第四行的結果。所以在<code>1、5</code>這兩個陣列的最大子區間為<code>1、5</code>，因為相加為<code>6</code>大於個別的<code>1</code>與<code>5</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">middle</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="p">(</span><span class="nx">start</span><span class="o">+</span><span class="nx">end</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
-<span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">)</span><span class="p">,</span><span class="nx">maxSubarrary</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">middle</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">,</span><span class="nx">maxCrossover</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">start</span><span class="p">,</span><span class="nx">middle</span><span class="p">,</span><span class="nx">end</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">middle</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>((<span style="color:#a6e22e">start</span><span style="color:#f92672">+</span><span style="color:#a6e22e">end</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>);
+Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">start</span>,<span style="color:#a6e22e">middle</span>),<span style="color:#a6e22e">maxSubarrary</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">middle</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>,<span style="color:#a6e22e">end</span>),<span style="color:#a6e22e">maxCrossover</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">start</span>,<span style="color:#a6e22e">middle</span>,<span style="color:#a6e22e">end</span>));
 </code></pre></div><p>然後處理完<code>1、5</code>後，就來處理<code>-8、7</code>，根據上述的流程，它會取得最大子取間為<code>7</code>，因為它比<code>-8</code>和<code>-8、7</code>這兩個還大。</p>
 <p>在來處理<code>1、5、-8、7</code>，由於上述流程，我們已經計算出兩邊<code>1、5</code>與<code>-8、7</code>的最大子區間分別為<code>1、5</code>與<code>7</code>，這時我們還要計算誇兩邊的子區間，這邊我們計算出的結果為<code>1、5</code>，這時我們可以根據這三個區間<code>[1,5]、[7]、[1,5]</code>，取這三個中最大值的那個，來當做<code>1,5,-8,7</code>區間的最大子區間，因為我們取了<code>[7]</code>。</p>
 <p>右邊區塊的<code>[4,1,-9,6]</code>也可以用上述方法，一樣求出最大子區塊為<code>[6]</code>，最後我們左邊最大子區間為<code>[7]</code>，右邊最大子區間為<code>[6]</code>，而我們這邊還要計算交互區間的最大子區間，我們取出<code>[7,4,1]</code>，然後再將這三個區間進行比較，因為我們這個陣列的最大子區間為<code>[7,4,1]</code>。</p>

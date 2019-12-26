@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="nodejs, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的|Describe what your web page is about">
+    <meta name="description" property="og:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
+而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
+ 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
+ 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
+本篇文章架構如下 :
+ 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
+這裡我們就要先從 socket.io 建立連線的流程開始說啟。
+Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
+var socket = require(&amp;#39;socket.io-client&amp;#39;)(&amp;#39;http://localhost&amp;#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 使用 AWS ALB 建立 Load Balance 問題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的|Describe what your web page is about">
+    <meta name="twitter:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
+而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
+ 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
+ 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
+本篇文章架構如下 :
+ 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
+這裡我們就要先從 socket.io 建立連線的流程開始說啟。
+Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
+var socket = require(&#39;socket.io-client&#39;)(&#39;http://localhost&#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -140,7 +159,7 @@
 <p>這裡我們就要先從 socket.io 建立連線的流程開始說啟。</p>
 <h3 id="socketio-">Socket.io 建立連線原理</h3>
 <p>假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用<code>socket.io client</code>來建立連線。</p>
-<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JS" data-lang="JS"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io-client&#39;</span>)(<span style="color:#e6db74">&#39;http://localhost&#39;</span>);
 </code></pre></div><p>而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :</p>
 <ul>
 <li>polling</li>
@@ -160,7 +179,7 @@
 <p><img src="http://yixiang8780.com/outImg/20190325-2.png" alt=""></p>
 <h4 id="heading1">然後接下來你會發現這連線有很高的機率連線無法建立。</h4>
 <p>當你使用下面的 client 來建立連線時，會發現很高的機率無法建立。</p>
-<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JS" data-lang="JS"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io-client&#39;</span>)(<span style="color:#e6db74">&#39;http://localhost&#39;</span>);
 </code></pre></div><blockquote>
 <p>問題就在於 sid</p>
 </blockquote>
@@ -198,9 +217,9 @@
 <h3 id="--">第一類 : 還沒有用戶在開始使用時</h3>
 <h4 id="1--client--websocket-">1. 強制讓 Client 端使用 Websocket 連線</h4>
 <p>首先第一個方法，就是直接指定 client 端直接強制使用 websocket 連線，socket.io client 強制使用的方法如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-JS" data-lang="JS"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">,</span><span class="p">{</span>
-  <span class="s1">&#39;transports&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;websocket&#39;</span><span class="p">]</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-JS" data-lang="JS"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io-client&#39;</span>)(<span style="color:#e6db74">&#39;http://localhost&#39;</span>,{
+  <span style="color:#e6db74">&#39;transports&#39;</span><span style="color:#f92672">:</span> [<span style="color:#e6db74">&#39;websocket&#39;</span>]
+});
 </code></pre></div><p>這樣在建立連線時它就直接使用 websocket 來建立，而由於 websocket 屬於永久連線，也就是說一但你在 server A 建立完連線後，你接下來傳送的請求，都是一定是透過那台 server 來進行處理，因此就不會有上述的問題。</p>
 <h4 id="2--client--cookie">2. 讓 Client 處理 Cookie</h4>
 <p>假設如果你的 client 或 server 其中一方沒有辦法提供 websocket 協議，而你真的只能使用 polling 來處理，那你就需要想辦法讓 client 處理 cookie。</p>

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="mysql, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。
+雖然 innodb 已經儘可能的解決上述這些問題，但是如果要完全解決，性能代價太大，因此後來有了一些折衷方案，這個東西就叫做 :
+ 事務隔離級別
+ 接下來本篇文章將要談談這東西，並且整理一下 innodb 預設的一些鎖的設定。
+ MySQL 的折衷解法 - 事務隔離級別 預設 RR 級別 - 鎖的操作總結 死鎖的小分析  MySQL 的折衷解法 - 事務隔離級別 資料庫在並行運行時，通常會發生以下幾種問題，並且也探討過這幾種問題的解法 :
+ 更新不一致 : 鎖 髒讀、不可重複讀 : mvcc 幻讀 : mvcc &#43; next-key locking ( 有一些幻讀情境無解 )  而在 innodb 事實上可以『 完全簡單 』的處理上面幾種現象，解決方法如下圖 5 所示，也就是同一個時間，只能執行同一個事務，如下圖所示。也就是把發生問題的根本原因『 並行 』給移除。
+圖 1 : 一致性的根本解法
+但這會嚴重的影響到效能的問題，因此才有了『 隔離層級 』這東西。
+ 隔離層級可以讓你決定需要處理到什麼層級的一致性問題
+ 也就是說上面四個問題，它可以讓你根據性能的要求，來決定你要處理幾個問題，處理的越多代表性能越差，處理越少個則代表性能越好，但反之不一致性機率更高。
+事務隔離級別 mysql 總共提供以下四個層級，不過比較準確的說，這是所有資料庫共有的層級，性能從高至低排序，而反之資料一致性性由低至高。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-17 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 2 ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。 雖然 innodb 已經儘可能的解決上|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一章節咱們學習到了，在並行情況下 mysql 可能會發生什麼樣的資料不一致問題，並且也學習到了這些問題它又是如何解決。
+雖然 innodb 已經儘可能的解決上述這些問題，但是如果要完全解決，性能代價太大，因此後來有了一些折衷方案，這個東西就叫做 :
+ 事務隔離級別
+ 接下來本篇文章將要談談這東西，並且整理一下 innodb 預設的一些鎖的設定。
+ MySQL 的折衷解法 - 事務隔離級別 預設 RR 級別 - 鎖的操作總結 死鎖的小分析  MySQL 的折衷解法 - 事務隔離級別 資料庫在並行運行時，通常會發生以下幾種問題，並且也探討過這幾種問題的解法 :
+ 更新不一致 : 鎖 髒讀、不可重複讀 : mvcc 幻讀 : mvcc &#43; next-key locking ( 有一些幻讀情境無解 )  而在 innodb 事實上可以『 完全簡單 』的處理上面幾種現象，解決方法如下圖 5 所示，也就是同一個時間，只能執行同一個事務，如下圖所示。也就是把發生問題的根本原因『 並行 』給移除。
+圖 1 : 一致性的根本解法
+但這會嚴重的影響到效能的問題，因此才有了『 隔離層級 』這東西。
+ 隔離層級可以讓你決定需要處理到什麼層級的一致性問題
+ 也就是說上面四個問題，它可以讓你根據性能的要求，來決定你要處理幾個問題，處理的越多代表性能越差，處理越少個則代表性能越好，但反之不一致性機率更高。
+事務隔離級別 mysql 總共提供以下四個層級，不過比較準確的說，這是所有資料庫共有的層級，性能從高至低排序，而反之資料一致性性由低至高。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

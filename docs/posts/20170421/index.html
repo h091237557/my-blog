@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,11 @@
     <meta content="algorithm, binary search" name="keywords">
     
     
-    <meta name="description" property="og:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如|Describe what your web page is about">
+    <meta name="description" property="og:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
+ 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
+我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
+接下來我們簡單的使用js來實現二分搜尋法。
+效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +46,11 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="搜尋之二元搜尋法 Binary search | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如|Describe what your web page is about">
+    <meta name="twitter:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
+ 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
+我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
+接下來我們簡單的使用js來實現二分搜尋法。
+效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +62,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -141,68 +152,68 @@
 <h3 id="--o-log-n1">最差時間複雜度 : O (log n)</h3>
 <h3 id="--o-11">空間複雜度 : O (1)</h3>
 <h2 id="heading2">程式碼實作(資料結構:陣列)</h2>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">binarySearch</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="nx">low</span><span class="p">,</span> <span class="nx">heigh</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
-	<span class="kd">let</span> <span class="nx">mid</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span><span class="p">(</span><span class="p">(</span><span class="nx">low</span> <span class="o">+</span> <span class="nx">heigh</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="p">;</span>
-	<span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span> <span class="o">==</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span>	<span class="nx">datas</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">binarySearch</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">mid</span><span class="p">,</span> <span class="nx">target</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">datas</span><span class="p">[</span><span class="nx">mid</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">target</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">binarySearch</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="nx">mid</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="p">,</span><span class="nx">target</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">binarySearch</span>(<span style="color:#a6e22e">datas</span>, <span style="color:#a6e22e">low</span>, <span style="color:#a6e22e">heigh</span>, <span style="color:#a6e22e">target</span>) {
+	<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">mid</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">ceil</span>((<span style="color:#a6e22e">low</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">heigh</span>) <span style="color:#f92672">/</span> <span style="color:#ae81ff">2</span>) ;
+	<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">target</span>) {
+		<span style="color:#66d9ef">return</span>	<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">mid</span>];
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">target</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">binarySearch</span>(<span style="color:#a6e22e">datas</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">mid</span>, <span style="color:#a6e22e">target</span>);
+	} <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">datas</span>[<span style="color:#a6e22e">mid</span>] <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">target</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">binarySearch</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#a6e22e">mid</span>,<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span>,<span style="color:#a6e22e">target</span>);
+	}
+}
 
-<span class="kd">var</span> <span class="nx">datas</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">datas</span> <span style="color:#f92672">=</span> [<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">4</span>,<span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">6</span>,<span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">8</span>,<span style="color:#ae81ff">9</span>];
 
-<span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">binarySearch</span><span class="p">(</span><span class="nx">datas</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="nx">datas</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">binarySearch</span>(<span style="color:#a6e22e">datas</span>,<span style="color:#ae81ff">0</span>,<span style="color:#a6e22e">datas</span>.<span style="color:#a6e22e">length</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>);
 
 </code></pre></div><h2 id="heading3">二元搜尋樹實作</h2>
 <p>二元搜尋樹是一種資料結構，假設你的資料本來就存儲成二元搜尋樹而不是陣列，那這樣你要使用二元搜尋法來尋找元素會更方便。下列筆者的文章中，有簡單的說明二元搜尋樹的概念。<a href="http://marklin-blog.logdown.com/posts/1526463">傳送門-樹與二元樹資料結構</a></p>
 <p>二元搜尋樹的基本條件就是<code>左邊的子樹一定小於右邊的子樹</code>，我們這邊來簡單的建立<code>binary search tree</code>。</p>
 <p>首先我們要先建立節點類別與二元樹類別。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">Node</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">Node</span>(){
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+}
 
-<span class="kd">function</span> <span class="nx">BinaryTree</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">BinaryTree</span>(){
+	<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+}
 </code></pre></div><p>然後我們要建立一個<code>add</code>方法，它可以新增節點至二元樹裡，它的撰寫邏輯為，首先每次要新增節點時，你要先判斷它是放在左邊子陣列，還是右邊子陣列，接下來在判斷是否有空，如果為空則新增，而有貨的話則往下到孫節點建立。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">add</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">node</span>) {
 
-	<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">this</span><span class="p">.</span><span class="nx">root</span> <span class="o">=</span> <span class="nx">node</span><span class="p">;</span>
-	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-		<span class="nx">insertNode</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span> <span class="nx">node</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span>
+	<span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+		<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">node</span>;
+	} <span style="color:#66d9ef">else</span> {
+		<span style="color:#a6e22e">insertNode</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>, <span style="color:#a6e22e">node</span>);
+	}
 
-	<span class="kd">function</span> <span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">newNode</span><span class="p">.</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">node</span><span class="p">.</span><span class="nx">left</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
-			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-			<span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">node</span><span class="p">.</span><span class="nx">right</span> <span class="o">=</span> <span class="nx">newNode</span><span class="p">;</span>
-			<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-				<span class="nx">insertNode</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span> <span class="nx">newNode</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>, <span style="color:#a6e22e">newNode</span>) {
+		<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">newNode</span>.<span style="color:#a6e22e">data</span>) {
+			<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+				<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newNode</span>;
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>, <span style="color:#a6e22e">newNode</span>);
+			}
+		} <span style="color:#66d9ef">else</span> {
+			<span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+				<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newNode</span>;
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">insertNode</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>, <span style="color:#a6e22e">newNode</span>);
+			}
+		}
+	}
+};
 </code></pre></div><p>然後我們就可以建立二元搜尋樹了。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">let</span> <span class="nx">tree</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BinarySearchTree</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">tree</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="k">new</span> <span class="nx">Node</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tree</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">BinarySearchTree</span>();
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">5</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">2</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">9</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">10</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">1</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">8</span>));
+<span style="color:#a6e22e">tree</span>.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Node</span>(<span style="color:#ae81ff">4</span>));
 </code></pre></div><p>產生出來的二元搜尋樹長這樣。</p>
 <pre><code>	    	5
 	     /   \
@@ -210,19 +221,19 @@
 	   / \   /  \
   1   4  8   10
 </code></pre><p>然後接下來我們來寫<code>search</code>，它的基本觀念就是二元搜尋法，更確切的說，在二元搜尋樹裡做搜尋，本身就是二元搜尋法，我們只要判斷目標值是在左子樹還右子樹，然後在往下去找就夠了。程式碼非常的簡單。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">BinarySearchTree</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-	<span class="k">return</span> <span class="nx">_search</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">root</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">BinarySearchTree</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">search</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">value</span>){
+	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_search</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">root</span>,<span style="color:#a6e22e">value</span>);
 	
-	<span class="kd">function</span> <span class="nx">_search</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-		<span class="k">if</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span> <span class="o">==</span> <span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-			<span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
-		<span class="p">}</span><span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">data</span> <span class="o">&gt;</span> <span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-			<span class="k">return</span> <span class="nx">_search</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">left</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="k">else</span><span class="p">{</span>
-			<span class="k">return</span> <span class="nx">_search</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">right</span><span class="p">,</span><span class="nx">value</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">_search</span>(<span style="color:#a6e22e">node</span>,<span style="color:#a6e22e">value</span>){
+		<span style="color:#66d9ef">if</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">value</span>){
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">node</span>;
+		}<span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">data</span> <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">value</span>){
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_search</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">left</span>,<span style="color:#a6e22e">value</span>);
+		}<span style="color:#66d9ef">else</span>{
+			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">_search</span>(<span style="color:#a6e22e">node</span>.<span style="color:#a6e22e">right</span>,<span style="color:#a6e22e">value</span>);
+		}
+	}
+};
 </code></pre></div><h2 id="heading4">參考資料</h2>
 <ul>
 <li><a href="https://en.wikipedia.org/wiki/Binary_search_algorithm"><a href="https://en.wikipedia.org/wiki/Binary_search_algorithm">https://en.wikipedia.org/wiki/Binary_search_algorithm</a></a></li>

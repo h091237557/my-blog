@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,23 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。 在正式開始章節之前，我們先來想想看一件|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。
+在正式開始章節之前，我們先來想想看一件事情。
+ 資料庫層可以向應用層一樣加機器，就可以做更多的事情嗎 ?
+ 答案為是或不是，這個就取決於使用者的能力，因為假設你沒處理好，不但有可能性能下降，而且導致錯誤百出，它不像應用層那麼簡單的主要原因在於 :
+ 它有狀態的，因為它有儲資料，所有會有一致性問題。
+ 應用層在進行分散式時，基本上都是處於無狀態狀況，所以在進行多台機器時，事實上我們不太需要考慮什麼資料一致的問題，而資料庫則否，當多台時，就要面臨到所謂的資料一致性問題。
+接下來的文章與章節我們將要來細說，資料庫層如何的使用分散式架構來讓它做更多的事情，並且有更高的可用性，以及它接下來要面對的種種問題。
+本篇文章中，咱們將要先來談談，第一種資料庫層的分散式架構方案『 讀寫分離架構 』:
+ 它適用於讀多寫少情況
+ 本篇文章共分為以下幾個章節 :
+ 讀寫分離架構概念 MySQL 的讀寫分離架構實現 可能面臨問題探討  這個分散技術基本上應該是資料庫層分散的第一個起手式，單完成這個架構就已經可以處理不少的事情囉。
+資料庫層的讀寫分離架構 基本架構 讀寫分離最簡單的就是所有寫入的都寫入到一台服務，讀取時讀取一台服務，然後你們之間會進行資料同步。
+然後在實務上，咱們通常都是會搭配主從架構 ( master-slave ) 來進行讀寫分離。主從架構本來存在的目的是為了可用，就也是如果 master 壞掉了，咱們還有 slave 有資料。
+ master : 主要用寫的服務，會與 slave 進行資料同步。 slave : 主要用來讀的服務  圖 2 : master-slave 實現讀寫概念圖
+讀進化型架構 之前咱們有提過，現在大部份的系統基本上應該是讀大於寫入，所以如果這時只有一台讀，也是有可能會讓它壓力很大，所以這時會變成如圖 3 所示，加個幾台讀機，這種架構被稱為『 一主多從 』。
+然後這裡有幾個重點，那就是要如何實現圖 3 的『 分配器 』。
+圖 3 : 讀進化型架構圖|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +58,23 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-25之資料庫層的擴展 - 讀寫分離架構 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。 在正式開始章節之前，我們先來想想看一件|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面的文章我們說明完應用層的分散式架構以後，接下來我們要來思考如果讓『 資料庫層 』做更多的事情。
+在正式開始章節之前，我們先來想想看一件事情。
+ 資料庫層可以向應用層一樣加機器，就可以做更多的事情嗎 ?
+ 答案為是或不是，這個就取決於使用者的能力，因為假設你沒處理好，不但有可能性能下降，而且導致錯誤百出，它不像應用層那麼簡單的主要原因在於 :
+ 它有狀態的，因為它有儲資料，所有會有一致性問題。
+ 應用層在進行分散式時，基本上都是處於無狀態狀況，所以在進行多台機器時，事實上我們不太需要考慮什麼資料一致的問題，而資料庫則否，當多台時，就要面臨到所謂的資料一致性問題。
+接下來的文章與章節我們將要來細說，資料庫層如何的使用分散式架構來讓它做更多的事情，並且有更高的可用性，以及它接下來要面對的種種問題。
+本篇文章中，咱們將要先來談談，第一種資料庫層的分散式架構方案『 讀寫分離架構 』:
+ 它適用於讀多寫少情況
+ 本篇文章共分為以下幾個章節 :
+ 讀寫分離架構概念 MySQL 的讀寫分離架構實現 可能面臨問題探討  這個分散技術基本上應該是資料庫層分散的第一個起手式，單完成這個架構就已經可以處理不少的事情囉。
+資料庫層的讀寫分離架構 基本架構 讀寫分離最簡單的就是所有寫入的都寫入到一台服務，讀取時讀取一台服務，然後你們之間會進行資料同步。
+然後在實務上，咱們通常都是會搭配主從架構 ( master-slave ) 來進行讀寫分離。主從架構本來存在的目的是為了可用，就也是如果 master 壞掉了，咱們還有 slave 有資料。
+ master : 主要用寫的服務，會與 slave 進行資料同步。 slave : 主要用來讀的服務  圖 2 : master-slave 實現讀寫概念圖
+讀進化型架構 之前咱們有提過，現在大部份的系統基本上應該是讀大於寫入，所以如果這時只有一台讀，也是有可能會讓它壓力很大，所以這時會變成如圖 3 所示，加個幾台讀機，這種架構被稱為『 一主多從 』。
+然後這裡有幾個重點，那就是要如何實現圖 3 的『 分配器 』。
+圖 3 : 讀進化型架構圖|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +86,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -186,21 +221,21 @@
 <p>通常大部份所使用的操作套件都有資源</p>
 </blockquote>
 <p>以 nodejs 來常使用 mysql orm 套件 sequelize，它可以給你進行如下官方範例的設定，當 read 時可以指定讀 slave 那台，當 write 的可以指定寫入那台。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">sequelize</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sequelize</span><span class="p">(</span><span class="s1">&#39;database&#39;</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">dialect</span><span class="o">:</span> <span class="s1">&#39;mysql&#39;</span><span class="p">,</span>
-  <span class="nx">port</span><span class="o">:</span> <span class="mi">3306</span>
-  <span class="nx">replication</span><span class="o">:</span> <span class="p">{</span>
-    <span class="nx">read</span><span class="o">:</span> <span class="p">[</span>
-      <span class="p">{</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;8.8.8.8&#39;</span><span class="p">,</span> <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;read-username&#39;</span><span class="p">,</span> <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;some-password&#39;</span> <span class="p">}</span><span class="p">,</span>
-      <span class="p">{</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;9.9.9.9&#39;</span><span class="p">,</span> <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;another-username&#39;</span><span class="p">,</span> <span class="nx">password</span><span class="o">:</span> <span class="kc">null</span> <span class="p">}</span>
-    <span class="p">]</span><span class="p">,</span>
-    <span class="nx">write</span><span class="o">:</span> <span class="p">{</span> <span class="nx">host</span><span class="o">:</span> <span class="s1">&#39;1.1.1.1&#39;</span><span class="p">,</span> <span class="nx">username</span><span class="o">:</span> <span class="s1">&#39;write-username&#39;</span><span class="p">,</span> <span class="nx">password</span><span class="o">:</span> <span class="s1">&#39;any-password&#39;</span> <span class="p">}</span>
-  <span class="p">}</span><span class="p">,</span>
-  <span class="nx">pool</span><span class="o">:</span> <span class="p">{</span> <span class="c1">// If you want to override the options used for the read/write pool you can do so here
-</span><span class="c1"></span>    <span class="nx">max</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="nx">idle</span><span class="o">:</span> <span class="mi">30000</span>
-  <span class="p">}</span><span class="p">,</span>
-<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">sequelize</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Sequelize</span>(<span style="color:#e6db74">&#39;database&#39;</span>, <span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">null</span>, {
+  <span style="color:#a6e22e">dialect</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;mysql&#39;</span>,
+  <span style="color:#a6e22e">port</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">3306</span>
+  <span style="color:#a6e22e">replication</span><span style="color:#f92672">:</span> {
+    <span style="color:#a6e22e">read</span><span style="color:#f92672">:</span> [
+      { <span style="color:#a6e22e">host</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;8.8.8.8&#39;</span>, <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;read-username&#39;</span>, <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;some-password&#39;</span> },
+      { <span style="color:#a6e22e">host</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;9.9.9.9&#39;</span>, <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;another-username&#39;</span>, <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span> }
+    ],
+    <span style="color:#a6e22e">write</span><span style="color:#f92672">:</span> { <span style="color:#a6e22e">host</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;1.1.1.1&#39;</span>, <span style="color:#a6e22e">username</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;write-username&#39;</span>, <span style="color:#a6e22e">password</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;any-password&#39;</span> }
+  },
+  <span style="color:#a6e22e">pool</span><span style="color:#f92672">:</span> { <span style="color:#75715e">// If you want to override the options used for the read/write pool you can do so here
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">max</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>,
+    <span style="color:#a6e22e">idle</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">30000</span>
+  },
+})
 </code></pre></div><p>而如果是使用 php laravel 的友人它也有提供相關的設定。</p>
 <p><a href="https://laravel.com/docs/5.5/database#read-and-write-connections">Laravel-Read &amp; Write Connections</a></p>
 <pre><code>'mysql' =&gt; [
@@ -229,7 +264,7 @@ mysql 本身沒有支援所謂的 failover 機制，failover 就是當發現 mas
 <p>它記錄了所有 mysql 資料上的改變，也就是說你只要 insert 或 update 都會記錄在 binlog 中。</p>
 <p>但是要注意 binlog 是屬於 mysql 服務層的東西，也就是說不管底層儲存引擎是 inoodb 或 mysiam 啥的，binlog 都是有儲的。</p>
 <p>你可以在 mysql 中指令以下指令，來看到 binlog 的事件。</p>
-<div class="highlight"><pre class="chroma"><code class="language-sql" data-lang="sql"><span class="k">SHOW</span> <span class="n">binlog</span> <span class="n">events</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql"><span style="color:#66d9ef">SHOW</span> binlog events;
 </code></pre></div><p>那 binlog 可以做什麼用呢 ?</p>
 <ul>
 <li>主從複製</li>

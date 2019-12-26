@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="socket" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。
+差別在那呢 ? 假設我們開一個todolist功能，事實上大部份的工作就是crud的事情，每當要新增一個 todo 時，只要發送 http 到後端新增資料到資料庫裡去，然後在回傳結果就好了，但聊天群這種，如果你每發送一個訊息都使用 http 那一定爆掉的。
+像聊天群這樣類型的，我們稱為InstantMessaging IM中文為即時通訊，本篇文章我們將會說明要建立這種IM應用所需要的基本知識。
+開始吧 ~
+從 Web 到 IM 的通信過程轉變 在最開始時瀏覽器它沒有辦法直接連接到另一個瀏覽器的通信功能，也就是說你不能從 A client 直接傳送訊息到 B client 去，我們只能在它們的中間，建立一個 server ，來將 A 要傳送的訊息儲放起來，然後 B 在自已去 server 取得資料，如下圖 :
+這種做不行嗎 ? 說實話，功能是有做出來 ~ 但浪費太多的資源，你想想，根據上面的說法，當 A 發送訊息到 server 後，你 B 要如何知道 server 有你的訊息 ? 記好 http 只能從client發送到server，不能反之，所以這也代表這你 B 只能定時的去 server 問問看，說有沒有我的資料啊 ~
+很明顯的，你可能問了十次，只有一次才有你要的訊息，那其它九次，不就都浪費掉了，這也代表你的 IM 系統有 90 % 的效能在處理沒用的事情。
+當然中間處理的其它方法先不說，後來 html5 提出了一個應用層的協議websocket，來解決這事兒 ~
+Hello WebSocket 這個協議可以幫助我們可以實現，從 server 端推送資料到 client 端，而且從建立的通道是持久連接，在 http 1.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="一個像 Line 的聊天群設計 ~ 安安你好 ~ | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。
+差別在那呢 ? 假設我們開一個todolist功能，事實上大部份的工作就是crud的事情，每當要新增一個 todo 時，只要發送 http 到後端新增資料到資料庫裡去，然後在回傳結果就好了，但聊天群這種，如果你每發送一個訊息都使用 http 那一定爆掉的。
+像聊天群這樣類型的，我們稱為InstantMessaging IM中文為即時通訊，本篇文章我們將會說明要建立這種IM應用所需要的基本知識。
+開始吧 ~
+從 Web 到 IM 的通信過程轉變 在最開始時瀏覽器它沒有辦法直接連接到另一個瀏覽器的通信功能，也就是說你不能從 A client 直接傳送訊息到 B client 去，我們只能在它們的中間，建立一個 server ，來將 A 要傳送的訊息儲放起來，然後 B 在自已去 server 取得資料，如下圖 :
+這種做不行嗎 ? 說實話，功能是有做出來 ~ 但浪費太多的資源，你想想，根據上面的說法，當 A 發送訊息到 server 後，你 B 要如何知道 server 有你的訊息 ? 記好 http 只能從client發送到server，不能反之，所以這也代表這你 B 只能定時的去 server 問問看，說有沒有我的資料啊 ~
+很明顯的，你可能問了十次，只有一次才有你要的訊息，那其它九次，不就都浪費掉了，這也代表你的 IM 系統有 90 % 的效能在處理沒用的事情。
+當然中間處理的其它方法先不說，後來 html5 提出了一個應用層的協議websocket，來解決這事兒 ~
+Hello WebSocket 這個協議可以幫助我們可以實現，從 server 端推送資料到 client 端，而且從建立的通道是持久連接，在 http 1.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

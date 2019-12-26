@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="mysql, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性能後腿的東西。
+這個會性能後腿的東西就是 :
+ 一致性難題
+ 在追求高性能的路上，通常一定會面臨到資料一致性問題，而產生的原因通常可簡單的分為以下來個來源 :
+ 故障 併發  接下來本篇文章，咱們來看看 mysql 它是如何處理『 故障 』所引發的一致性問題。
+ 不一致資料產生原因。 MySQL 的解法。 ACID 的小關連。  不一致資料產生原因 原因 1 : 某項操作故障 假設咱們要將 a 帳戶的 1000 元轉到 b 帳戶去，但這時如果在處理 b 帳戶加錢時出錯了，那整個結果就錯誤了，如下圖 1 所示。
+圖 1 : 故障導致資料不一致性
+在圖 1 中正確的 b 帳戶應該是 1000 元，但是因為加錢失敗了，所以 b 帳戶變成 0 元，這就是產生了『 資料不一致性 』。
+原因 2 : 單機故障 第二個產生的原因要先來理解一下，所謂的『 通常 』寫入硬碟的原理。
+假設咱們有一個 insert 的指令，要將資料寫入到資料庫中，然後資料庫要將它寫到硬碟中，那它的運行過程如下。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-15 之資料庫層的難題 - 單機『 故障 』一致性難題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們理解完了 mysql 的索引概念與原理，並且理解了在 mysql 中一個查詢的速度與否取決於索引與表的設計。接下來咱們要來理解一些會拖性能後腿的東西。
+這個會性能後腿的東西就是 :
+ 一致性難題
+ 在追求高性能的路上，通常一定會面臨到資料一致性問題，而產生的原因通常可簡單的分為以下來個來源 :
+ 故障 併發  接下來本篇文章，咱們來看看 mysql 它是如何處理『 故障 』所引發的一致性問題。
+ 不一致資料產生原因。 MySQL 的解法。 ACID 的小關連。  不一致資料產生原因 原因 1 : 某項操作故障 假設咱們要將 a 帳戶的 1000 元轉到 b 帳戶去，但這時如果在處理 b 帳戶加錢時出錯了，那整個結果就錯誤了，如下圖 1 所示。
+圖 1 : 故障導致資料不一致性
+在圖 1 中正確的 b 帳戶應該是 1000 元，但是因為加錢失敗了，所以 b 帳戶變成 0 元，這就是產生了『 資料不一致性 』。
+原因 2 : 單機故障 第二個產生的原因要先來理解一下，所謂的『 通常 』寫入硬碟的原理。
+假設咱們有一個 insert 的指令，要將資料寫入到資料庫中，然後資料庫要將它寫到硬碟中，那它的運行過程如下。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -208,7 +229,7 @@ transaction commit
 <h4 id="php-">PHP 的使用小範例</h4>
 <p>這裡簡單的拿個程式碼小範例來給一些初學者看看，應該會比較有感覺。</p>
 <p>下面為 php 範例，從 laravel 官網直接拿來的小範例，簡單一個 transaction 就是一個操作單位，這個單位裡面的指令，要嘛全部完成，要嘛全部不做，不二價。</p>
-<div class="highlight"><pre class="chroma"><code class="language-php" data-lang="php">DB::beginTransaction();
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-php" data-lang="php">DB::beginTransaction();
 DB::table(&#39;users&#39;)-&gt;update([&#39;votes&#39; =&gt; 1]);
 DB::table(&#39;posts&#39;)-&gt;delete();
 DB::commit();

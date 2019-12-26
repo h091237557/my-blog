@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,17 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。 在這裡先說一下一個重點|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。
+在這裡先說一下一個重點 :
+ 資料庫絕對是一個系統的性能核心，請把優質的 DBA 們當寶來餵食
+ 接下來幾篇資料庫層文章將會以『 MySQL 』來進行說明，雖然不同的資料庫可能實作上會有些不同，但是大致上原理不會差距太大。
+開始第一篇文章，咱們將要先理解一些 MySQL 的基本架構，接下來才能理解那些地方可能可以進行性能優化，又是那一些地方可能是會拖後腿，但是又是必要存在的地方，這篇也算是資料庫篇的小目錄。
+本篇文章分成以下幾個章節 :
+ MySQL 基本架構。 資料庫層的優化方向。 資料庫層會拖性能後腿，但是又必須處理的地方。  MySQL 基本架構與運行 圖 1 : mysql 的基本架構
+基本上分為以下幾個部份 :
+ 應用層 ( 紅色 ) 服務層 ( 綠色 ) 存儲引擎層 ( 藍色 )  應用層 應用層主要處理兩個工作 :
+ 連接處理任務 權限管理  其中連接處理任務就是每當一個 client 端發送一個請求到 mysql 時，它會在從 thread poll 中分配一個 thread 來處理此請求，然後之後從此 client 來的任務，都會由此 thread 來處理。
+mysql 並沒有使用之前說的非阻塞 I/O 模型 ( reactor ) 來處理請求的，原因可能在於，mysql 的任務是屬於 cpu 運算密集與磁碟 I/O 密集任務，因此比較不適合使用 reactor 這種使用 epoll 的模型。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +52,17 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-10 之資料庫層架構與優化方向 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。 在這裡先說一下一個重點|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面幾篇文章中，咱們大致上學習完了應用層的一些性能優化的基本知識，接下來咱們要來學學資料庫層的高性能優化方向。
+在這裡先說一下一個重點 :
+ 資料庫絕對是一個系統的性能核心，請把優質的 DBA 們當寶來餵食
+ 接下來幾篇資料庫層文章將會以『 MySQL 』來進行說明，雖然不同的資料庫可能實作上會有些不同，但是大致上原理不會差距太大。
+開始第一篇文章，咱們將要先理解一些 MySQL 的基本架構，接下來才能理解那些地方可能可以進行性能優化，又是那一些地方可能是會拖後腿，但是又是必要存在的地方，這篇也算是資料庫篇的小目錄。
+本篇文章分成以下幾個章節 :
+ MySQL 基本架構。 資料庫層的優化方向。 資料庫層會拖性能後腿，但是又必須處理的地方。  MySQL 基本架構與運行 圖 1 : mysql 的基本架構
+基本上分為以下幾個部份 :
+ 應用層 ( 紅色 ) 服務層 ( 綠色 ) 存儲引擎層 ( 藍色 )  應用層 應用層主要處理兩個工作 :
+ 連接處理任務 權限管理  其中連接處理任務就是每當一個 client 端發送一個請求到 mysql 時，它會在從 thread poll 中分配一個 thread 來處理此請求，然後之後從此 client 來的任務，都會由此 thread 來處理。
+mysql 並沒有使用之前說的非阻塞 I/O 模型 ( reactor ) 來處理請求的，原因可能在於，mysql 的任務是屬於 cpu 運算密集與磁碟 I/O 密集任務，因此比較不適合使用 reactor 這種使用 epoll 的模型。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +74,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

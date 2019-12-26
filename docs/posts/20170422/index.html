@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,21 @@
     <meta content="algorithm, insertion sort" name="keywords">
     
     
-    <meta name="description" property="og:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作|Describe what your web page is about">
+    <meta name="description" property="og:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。
+ 插入排序法的原理 插入排序法的執行效能 javascript演算法實作  插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序，該圖來源為此interactivepython。
+首先，我們會將資料分成兩部份，已排序與未排序，然後我們會進行以下作業
+ 將已排序資料與後一個資料進行比較，如果已排序資料大於它，則進行位移
+ 我們下面將以前四行來進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為54，然後我們與後一個26進行比較，54大於26因此我們會將26的位置替換成54，並將26插入至54的原位，結果為第二行。 第二行 : 已排序資料為26、54，然後我們與後一個93進行比較，54小於93因此不用進行位移，因為26、54為已排序資料，因此只需要比較54就好，結果為第三行。 第三行 : 已排序資料為26、54、93，然後與17進行比較，首先93大於17因此將93位移置A[3]，則時還沒插入喔，還要繼續比較，接下來54大於17因此將54位移至A[2]，然後26大於17，因此將26位移至A[1]，最後在將17插入剩餘的空間A[0]，結果為第四行。 第四行 : 已排序資料為17、26、54、93，開始與77進行比較，93大於77因此將93位移至A[4]的位置，然後54小於77，因此54不需要位移，最後將77插入至空缺的位置A[3]，當果為第五行。  插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好狀況 O(n)
+該演算法最好的情況是時間複雜度為O(n)，假設我們有下列陣列要排序。
+[ 1 , 2 , 3 , 4 ] 我們一看就知道，他不用進行排序，但演算法還不知道，所以它至少還是要跑個for迴圈，跑個4次，才知道它不用排序，因為我們這時最好的狀況就是只要跑4次，也就是陣列的大小。
+最壞狀況 O(n^2)
+假設我們要下列陣列要排序。
+[ 4 , 3 , 2 , 1 ] 對就是完全相反的，我們首先要跑for迴圈，然後裡面還要一個while比較，而且因為我們的陣列是完全相反的。
+平均狀況 O(n^2)
+我也不知道為啥平均是O(n^2)，真的。
+建議使用情況  要排序的資料數量不大 : 平均是時間複雜度是O(n^2)，如果來個1百萬個 n，你看看會如何。 大部份的資料已排序 : 上面有說過，該演算法會將資料分成已排序與未排序的來進行比較，也就是說如果已排序的資料越多，你就可以少做越少的比較。  javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +56,21 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="排序之插入排序法 ( Insertion Sort ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作|Describe what your web page is about">
+    <meta name="twitter:description" content="插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。
+ 插入排序法的原理 插入排序法的執行效能 javascript演算法實作  插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序，該圖來源為此interactivepython。
+首先，我們會將資料分成兩部份，已排序與未排序，然後我們會進行以下作業
+ 將已排序資料與後一個資料進行比較，如果已排序資料大於它，則進行位移
+ 我們下面將以前四行來進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為54，然後我們與後一個26進行比較，54大於26因此我們會將26的位置替換成54，並將26插入至54的原位，結果為第二行。 第二行 : 已排序資料為26、54，然後我們與後一個93進行比較，54小於93因此不用進行位移，因為26、54為已排序資料，因此只需要比較54就好，結果為第三行。 第三行 : 已排序資料為26、54、93，然後與17進行比較，首先93大於17因此將93位移置A[3]，則時還沒插入喔，還要繼續比較，接下來54大於17因此將54位移至A[2]，然後26大於17，因此將26位移至A[1]，最後在將17插入剩餘的空間A[0]，結果為第四行。 第四行 : 已排序資料為17、26、54、93，開始與77進行比較，93大於77因此將93位移至A[4]的位置，然後54小於77，因此54不需要位移，最後將77插入至空缺的位置A[3]，當果為第五行。  插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好狀況 O(n)
+該演算法最好的情況是時間複雜度為O(n)，假設我們有下列陣列要排序。
+[ 1 , 2 , 3 , 4 ] 我們一看就知道，他不用進行排序，但演算法還不知道，所以它至少還是要跑個for迴圈，跑個4次，才知道它不用排序，因為我們這時最好的狀況就是只要跑4次，也就是陣列的大小。
+最壞狀況 O(n^2)
+假設我們要下列陣列要排序。
+[ 4 , 3 , 2 , 1 ] 對就是完全相反的，我們首先要跑for迴圈，然後裡面還要一個while比較，而且因為我們的陣列是完全相反的。
+平均狀況 O(n^2)
+我也不知道為啥平均是O(n^2)，真的。
+建議使用情況  要排序的資料數量不大 : 平均是時間複雜度是O(n^2)，如果來個1百萬個 n，你看看會如何。 大部份的資料已排序 : 上面有說過，該演算法會將資料分成已排序與未排序的來進行比較，也就是說如果已排序的資料越多，你就可以少做越少的比較。  javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +82,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -166,32 +197,32 @@
 </ul>
 <h2 id="javascript">javascript演算法實作</h2>
 <p>我們來看看它的演算法，我們採用<code>javascript</code>來進行撰寫。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">insertionSort</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">Array</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">)</span>
-    <span class="k">throw</span> <span class="s1">&#39;elements is not array&#39;</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">insertionSort</span>(<span style="color:#a6e22e">arr</span>) {
+  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>Array.<span style="color:#a6e22e">isArray</span>(<span style="color:#a6e22e">arr</span>))
+    <span style="color:#66d9ef">throw</span> <span style="color:#e6db74">&#39;elements is not array&#39;</span>;
 
-  <span class="kd">var</span> <span class="nx">len</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
-  <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="nx">value</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">len</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">arr</span>.<span style="color:#a6e22e">length</span>;
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>,
+    <span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
     
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">pos</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">pos</span> <span class="o">&lt;</span> <span class="nx">len</span><span class="p">;</span> <span class="nx">pos</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">i</span> <span class="o">=</span> <span class="nx">pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
-		<span class="nx">value</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">pos</span><span class="p">]</span><span class="p">;</span>  <span class="c1">//正在處理的值
-</span><span class="c1"></span>		
-	<span class="c1">//判斷是否移位
-</span><span class="c1"></span>    <span class="k">while</span> <span class="p">(</span><span class="nx">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span> 
-      <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">;</span>
-      <span class="nx">i</span><span class="o">--</span><span class="p">;</span>
-    <span class="p">}</span>
+  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">pos</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">pos</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">len</span>; <span style="color:#a6e22e">pos</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">pos</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>;
+		<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">pos</span>];  <span style="color:#75715e">//正在處理的值
+</span><span style="color:#75715e"></span>		
+	<span style="color:#75715e">//判斷是否移位
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">value</span>) { 
+      <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span>];
+      <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span>;
+    }
     
-    <span class="c1">// 插入新值
-</span><span class="c1"></span>    <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+    <span style="color:#75715e">// 插入新值
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">arr</span>[<span style="color:#a6e22e">i</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>] <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>;
     
-      <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">arr</span>);
+  }
+}
 </code></pre></div><p>簡單的測試一下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">insertionSort</span><span class="p">(</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">54</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">33</span><span class="p">,</span><span class="mi">22</span><span class="p">,</span><span class="mi">58</span><span class="p">,</span><span class="mi">95</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">31</span><span class="p">]</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">insertionSort</span>([<span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">54</span>,<span style="color:#ae81ff">24</span>,<span style="color:#ae81ff">33</span>,<span style="color:#ae81ff">22</span>,<span style="color:#ae81ff">58</span>,<span style="color:#ae81ff">95</span>,<span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">2</span>,<span style="color:#ae81ff">31</span>])
 </code></pre></div><p><img src="http://yixiang8780.com/outImg/20170123-2.png" alt=""></p>
 <h2 id="heading6">參考資料</h2>
 <ul>

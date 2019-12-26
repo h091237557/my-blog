@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為：
+ 這兩篇文章實際上應用會有什麼問題 ?
+ 30-20之如何建立像 KKTV 一樣的點播功能呢 ? 30-21之如何建立的像 17 一樣的直播功能呢 ?
+點播可動版架構 直播可動版架構 本篇文章分根據問題分成以下幾個章節：
+ 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。  人多時連線數限制問題 咱們都知道，每當 Client 要和 Server 要資料時，如果是以 TCP 傳輸為基礎的，那就一定要建立一條連線，那對 Server 而言連線是啥了 ?
+在 unix 中每一個 TCP 連線都要占用一個 file descriptor，而它有一定的限制數量，當使用完後，新的 TCP 連線到來就會發生錯誤以下的錯誤訊息 :
+Socket/File: Can&#39;t open so many files。 那一個 process 我們可以開啟幾個檔案呢 ? 我們可以用以下的指令來看看 :
+ulimit -n 那這個最大值為多少呢 ? 這個我不確定，像我家用的 Aws Elasticsearch 就有 128000。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-22之點播與直播可動版問題探討 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為：
+ 這兩篇文章實際上應用會有什麼問題 ?
+ 30-20之如何建立像 KKTV 一樣的點播功能呢 ? 30-21之如何建立的像 17 一樣的直播功能呢 ?
+點播可動版架構 直播可動版架構 本篇文章分根據問題分成以下幾個章節：
+ 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。  人多時連線數限制問題 咱們都知道，每當 Client 要和 Server 要資料時，如果是以 TCP 傳輸為基礎的，那就一定要建立一條連線，那對 Server 而言連線是啥了 ?
+在 unix 中每一個 TCP 連線都要占用一個 file descriptor，而它有一定的限制數量，當使用完後，新的 TCP 連線到來就會發生錯誤以下的錯誤訊息 :
+Socket/File: Can&#39;t open so many files。 那一個 process 我們可以開啟幾個檔案呢 ? 我們可以用以下的指令來看看 :
+ulimit -n 那這個最大值為多少呢 ? 這個我不確定，像我家用的 Aws Elasticsearch 就有 128000。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

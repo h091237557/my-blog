@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,22 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="圖片來源:馬克 正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明: 要如何採集聲音到電腦中呢 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="圖片來源:馬克
+正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明:
+ 要如何採集聲音到電腦中呢 ?
+ 要理解這個問題，咱們就需要從最源頭開始說起，什麼是聲音呢 ? 知道以後，咱們還要思考那電腦又是如何知道聲音是啥呢 ? 最後咱們會理一理當你採集了一段聲音，它需要花費多少的空間來儲放它呢 ?
+本篇文章將分成以下三段如下:
+ 聲音是啥呢 ? 要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM ) PCM 所採集到的聲音有多大呢 ?  聲音是啥呢 ?  它是一種震動所產生的聲波。
+ 聲波就是當一個人在說話時，它發出的聲音震動到空氣中，使得聲音周圍的空氣產生了變化，然後產生的一種波，這個就是所謂的聲波。
+然後說到了振動，就該說到頻率，通常咱們用來描述它振動的多快的單位就是赫茲(Hz)它的定義如下:
+赫茲(Hz)代表單位時間內周期性事件發生的事件
+ex. 1Hz = 1/s (就是一秒動一次的意思)
+咱們人耳可以聽到的範例約為 20 ~ 2萬赫茲，高於它的就被稱為超音波。
+要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM )  就是使用麥克風，然後將聲音轉成數位訊號，也就是 0 與 1。
+ 這裡我們就要提到一個叫PCM 脈波編碼調變的東東，它是一種將類比訊號數位化的方法。
+類比訊號是啥 ? 它就是一種連續的訊號，像聲音與電壓都是屬於這類型，而數位訊號就是將連續的訊號進行加工，讓它只有 0 與 1 的非連續的訊息。
+回來到 PCM 來看它的處理過程如下圖，總共有三個流程分別為抽樣、量化、編碼。
+PCM 過程進行中，首先會先將聲音進行定期性的採樣，來看看當時的頻率是多少，那我們的採樣的頻率要多高呢 ? 像咱們人類能聽到的聲音最大為 20kHz(2萬赫茲)，也就是代表 1 秒振動 2 萬次，那這樣的話通常會進行 4 萬次的採樣(By 採樣定理)，才能確保有採集到人類可以聽到的聲音樣本數。而採樣率就會用 40kHz 來表達。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +57,22 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-02之聲音的採集與原理 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="圖片來源:馬克 正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明: 要如何採集聲音到電腦中呢 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="圖片來源:馬克
+正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明:
+ 要如何採集聲音到電腦中呢 ?
+ 要理解這個問題，咱們就需要從最源頭開始說起，什麼是聲音呢 ? 知道以後，咱們還要思考那電腦又是如何知道聲音是啥呢 ? 最後咱們會理一理當你採集了一段聲音，它需要花費多少的空間來儲放它呢 ?
+本篇文章將分成以下三段如下:
+ 聲音是啥呢 ? 要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM ) PCM 所採集到的聲音有多大呢 ?  聲音是啥呢 ?  它是一種震動所產生的聲波。
+ 聲波就是當一個人在說話時，它發出的聲音震動到空氣中，使得聲音周圍的空氣產生了變化，然後產生的一種波，這個就是所謂的聲波。
+然後說到了振動，就該說到頻率，通常咱們用來描述它振動的多快的單位就是赫茲(Hz)它的定義如下:
+赫茲(Hz)代表單位時間內周期性事件發生的事件
+ex. 1Hz = 1/s (就是一秒動一次的意思)
+咱們人耳可以聽到的範例約為 20 ~ 2萬赫茲，高於它的就被稱為超音波。
+要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM )  就是使用麥克風，然後將聲音轉成數位訊號，也就是 0 與 1。
+ 這裡我們就要提到一個叫PCM 脈波編碼調變的東東，它是一種將類比訊號數位化的方法。
+類比訊號是啥 ? 它就是一種連續的訊號，像聲音與電壓都是屬於這類型，而數位訊號就是將連續的訊號進行加工，讓它只有 0 與 1 的非連續的訊息。
+回來到 PCM 來看它的處理過程如下圖，總共有三個流程分別為抽樣、量化、編碼。
+PCM 過程進行中，首先會先將聲音進行定期性的採樣，來看看當時的頻率是多少，那我們的採樣的頻率要多高呢 ? 像咱們人類能聽到的聲音最大為 20kHz(2萬赫茲)，也就是代表 1 秒振動 2 萬次，那這樣的話通常會進行 4 萬次的採樣(By 採樣定理)，才能確保有採集到人類可以聽到的聲音樣本數。而採樣率就會用 40kHz 來表達。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +84,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

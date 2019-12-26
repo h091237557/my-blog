@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,11 @@
     <meta content="nodejs, design pattern" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本文中我們將會知道兩件事件
+為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
+ 加 減 乘 除  然後實際上執行大概會長這樣 :
+add(5) =&amp;gt; current = 5 sub(3) =&amp;gt; current = 2 mul(3) =&amp;gt; current = 6 div(3) =&amp;gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
+class Calculator { constructor(){ this.current = 0; } add(value){ this.current &#43;= value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +46,11 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node設計模式之命令模式 ( Command ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能|Describe what your web page is about">
+    <meta name="twitter:description" content="本文中我們將會知道兩件事件
+為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
+ 加 減 乘 除  然後實際上執行大概會長這樣 :
+add(5) =&gt; current = 5 sub(3) =&gt; current = 2 mul(3) =&gt; current = 6 div(3) =&gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
+class Calculator { constructor(){ this.current = 0; } add(value){ this.current &#43;= value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +62,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -145,35 +156,35 @@ sub(3) =&gt; current = 2
 mul(3) =&gt; current = 6
 div(3) =&gt; current = 2
 </code></pre><p>這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">
-<span class="kr">class</span> <span class="nx">Calculator</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">add</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">+=</span> <span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">sub</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">-=</span> <span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">mul</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">*=</span> <span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">div</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">/=</span> <span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">getCurrent</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Calculator</span> {
+    <span style="color:#a6e22e">constructor</span>(){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    }
+    <span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">value</span>){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">value</span>;
+    }
+    <span style="color:#a6e22e">sub</span>(<span style="color:#a6e22e">value</span>){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">-=</span> <span style="color:#a6e22e">value</span>;
+    }
+    <span style="color:#a6e22e">mul</span>(<span style="color:#a6e22e">value</span>){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">*=</span> <span style="color:#a6e22e">value</span>;
+    }
+    <span style="color:#a6e22e">div</span>(<span style="color:#a6e22e">value</span>){
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">/=</span> <span style="color:#a6e22e">value</span>;
+    }
+    <span style="color:#a6e22e">getCurrent</span>(){
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span>;
+    }
+}
 
-<span class="kr">const</span> <span class="nx">client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Calculator</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">client</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">client</span><span class="p">.</span><span class="nx">sub</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">client</span><span class="p">.</span><span class="nx">mul</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">client</span><span class="p">.</span><span class="nx">div</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">client</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Calculator</span>();
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">add</span>(<span style="color:#ae81ff">5</span>);
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">sub</span>(<span style="color:#ae81ff">3</span>);
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">mul</span>(<span style="color:#ae81ff">3</span>);
+<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">div</span>(<span style="color:#ae81ff">3</span>);
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">client</span><span class="p">.</span><span class="nx">getCurrent</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">client</span>.<span style="color:#a6e22e">getCurrent</span>());
 </code></pre></div><h3 id="-1">這有啥問題呢 ?</h3>
 <p>如果我們這時要增加一個<code>undo</code>的功能呢 ? 上面的程式碼的結構就無法做這種功能了，因為它的<code>緊偶合</code>了。</p>
 <blockquote>
@@ -196,97 +207,97 @@ div(3) =&gt; current = 2
 <h3 id="heading1">程式碼實作</h3>
 <p>接下來我們要將上面的程式碼來進行修改，首先我們會多增加上面那張圖中的<code>Invoker</code>類別，記好他就是服務生，用來叫廚師做飯的。</p>
 <p>這段程式碼中，<code>execute</code>就是用來實際叫廚師做飯的方法，而<code>undo</code>就是用來執行取消這命令的方法。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">Invoker</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">commands</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Invoker</span> {
+    <span style="color:#a6e22e">constructor</span>() {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">commands</span> <span style="color:#f92672">=</span> [];
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    }
 
-    <span class="nx">execute</span><span class="p">(</span><span class="nx">command</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">command</span><span class="p">)</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">command</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">command</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">commands</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">command</span>);
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span>);
 
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Execute command : </span><span class="si">${</span><span class="nx">command</span><span class="p">.</span><span class="nx">name</span><span class="si">}</span><span class="sb"> , and result : </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">undo</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kr">const</span> <span class="nx">command</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">commands</span><span class="p">.</span><span class="nx">pop</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">current</span> <span class="o">=</span> <span class="nx">command</span><span class="p">.</span><span class="nx">undo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">)</span><span class="p">;</span>
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">Execute command : </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> , and result : </span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+    }
+    <span style="color:#a6e22e">undo</span>() {
+        <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">command</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">commands</span>.<span style="color:#a6e22e">pop</span>();
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">command</span>.<span style="color:#a6e22e">undo</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span>);
 
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`</span><span class="sb">Execute undo and result : </span><span class="si">${</span><span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="si">}</span><span class="sb">`</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-    <span class="nx">getCurrent</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">current</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`</span><span style="color:#e6db74">Execute undo and result : </span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+    }
+    <span style="color:#a6e22e">getCurrent</span>() {
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">current</span>;
+    }
+}
 </code></pre></div><p>然後下面是我們每一個命令，這裡每一個都是廚師，然後裡面都有定義好這個命令實際要做的事情與取消時要做的事情，由於我是用 JS 這種語言來撰寫範例，所以沒有個抽象類別或 介面，不然每一個命令應該都會繼承一個叫 Command 的類別或介面。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">class</span> <span class="nx">AddCommand</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Add&#34;</span><span class="p">;</span>
-    <span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AddCommand</span> {
+    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>;
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Add&#34;</span>;
+    }
 
-    <span class="nx">execute</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
 
-    <span class="nx">undo</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#a6e22e">undo</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
+}
 
-<span class="kr">class</span> <span class="nx">SubCommand</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Sub&#34;</span><span class="p">;</span>
-    <span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SubCommand</span> {
+    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>;
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Sub&#34;</span>;
+    }
 
-    <span class="nx">execute</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">-</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
 
-    <span class="nx">undo</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#a6e22e">undo</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
+}
 
-<span class="kr">class</span> <span class="nx">MulCommand</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Mul&#34;</span><span class="p">;</span>
-    <span class="p">}</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MulCommand</span> {
+    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>;
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Mul&#34;</span>;
+    }
 
-    <span class="nx">execute</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
 
-    <span class="nx">undo</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">/</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-<span class="kr">class</span> <span class="nx">DivCommand</span> <span class="p">{</span>
-    <span class="nx">constructor</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s2">&#34;Div&#34;</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#a6e22e">undo</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">/</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DivCommand</span> {
+    <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">value</span>) {
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">value</span>;
+        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Div&#34;</span>;
+    }
 
-    <span class="nx">execute</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">/</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
+    <span style="color:#a6e22e">execute</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">/</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
 
-    <span class="nx">undo</span><span class="p">(</span><span class="nx">current</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">current</span> <span class="o">*</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+    <span style="color:#a6e22e">undo</span>(<span style="color:#a6e22e">current</span>) {
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">current</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">value</span>;
+    }
+}
 </code></pre></div><p>最後執行時，我們會麻煩 invoker (服務生)，叫實際執行者 (廚師) 進行工作，並且服務生那裡都有記住我們要點的菜，如果臨時想取消，就很簡單囉。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">const</span> <span class="nx">invoker</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Invoker</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">invoker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">new</span> <span class="nx">AddCommand</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// current =&gt; 5
-</span><span class="c1"></span><span class="nx">invoker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">new</span> <span class="nx">SubCommand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// current =&gt; 2
-</span><span class="c1"></span><span class="nx">invoker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">new</span> <span class="nx">MulCommand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// current =&gt; 6
-</span><span class="c1"></span><span class="nx">invoker</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="k">new</span> <span class="nx">DivCommand</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// current =&gt; 2
-</span><span class="c1"></span>
-<span class="nx">invoker</span><span class="p">.</span><span class="nx">undo</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">// current =&gt; 6
-</span><span class="c1"></span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">invoker</span><span class="p">.</span><span class="nx">getCurrent</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">const</span> <span style="color:#a6e22e">invoker</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Invoker</span>();
+<span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">AddCommand</span>(<span style="color:#ae81ff">5</span>)); <span style="color:#75715e">// current =&gt; 5
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">SubCommand</span>(<span style="color:#ae81ff">3</span>)); <span style="color:#75715e">// current =&gt; 2
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">MulCommand</span>(<span style="color:#ae81ff">3</span>)); <span style="color:#75715e">// current =&gt; 6
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">DivCommand</span>(<span style="color:#ae81ff">3</span>)); <span style="color:#75715e">// current =&gt; 2
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">undo</span>(); <span style="color:#75715e">// current =&gt; 6
+</span><span style="color:#75715e"></span>
+<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">invoker</span>.<span style="color:#a6e22e">getCurrent</span>());
 </code></pre></div><h2 id="heading2">結論</h2>
 <p>今天我們學習了『命令模式』，它主要的功能與目的如下 :</p>
 <blockquote>

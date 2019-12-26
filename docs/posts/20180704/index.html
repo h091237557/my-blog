@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,12 @@
     <meta content="aws athena" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:
+ 如何時用 AWS Athena 來尋找 S3 中的資料
+ 另外本篇另一個外傳也要順到說一下，這外傳的主題為:
+ 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !
+ 接下來下面為本篇章節:
+ AWS Athena 的簡單介紹 使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table 使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量) 坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !  AWS Athena 的簡單介紹 簡單的白話文說一下 AWS Athena 是啥:|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +47,12 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="如何使用 AWS Athena 去尋找 S3 的資料 (plus kinesis 丟到 S3 的坑) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我|Describe what your web page is about">
+    <meta name="twitter:description" content="在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:
+ 如何時用 AWS Athena 來尋找 S3 中的資料
+ 另外本篇另一個外傳也要順到說一下，這外傳的主題為:
+ 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !
+ 接下來下面為本篇章節:
+ AWS Athena 的簡單介紹 使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table 使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量) 坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !  AWS Athena 的簡單介紹 簡單的白話文說一下 AWS Athena 是啥:|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +64,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。
+ 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。 該選用那個方法呢 ?  ~ 正規化 ~ 在開始討論mongodb架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
+首先什麼是正規化呢 ? 根據wiki的定義。
+ Database normalization is the process of organizing the fields and tables of a relational database to minimize redundancy and dependency.
+ 中文意思為。
+ 資料庫正規化就是指將關聯式資料庫的欄位與表單進行讓『資料重複性與相依性』能夠降到最低的組織過程。
+ 是的，真的很文鄒鄒，不過我們只要知道正規化的目的是解決資料的『重複性』與『相依性』這兩個點就夠囉，資料庫正規化有一些規則，每條規則都稱為『正規形式』，符合第一條規則就稱為『第一正規形式』，總共有不少條，但通常到『第三正規形式』就被視為最高級的正規形式， 下面來簡單的說明一下這幾條規則。
+第一正規形式 以下條列為第一正規形式的規則，事實上重點還是在說『不要有重複群組』。
+ 刪除各個資料表中的重複群組。 為每一組關聯的資料建立不同的資料表。 使用主索引鍵識別每一組關聯的資料。  我們假設資料為每個人的交易資料，下表為違反正規化的資料結構，因為它有重複的群組Volume，並且也缺少主索引鍵來識別每一組關聯的資料。
+   Name Date Volume     Mark 20160101 10 , -20   Jiro 20160102 -20 , 30   Ian 20160103 34 , -10    如果要符合第一正規形式大概要長的像降。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-17之MongoDB的設計---正規與反正規化的戰爭 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。
+ 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。 該選用那個方法呢 ?  ~ 正規化 ~ 在開始討論mongodb架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
+首先什麼是正規化呢 ? 根據wiki的定義。
+ Database normalization is the process of organizing the fields and tables of a relational database to minimize redundancy and dependency.
+ 中文意思為。
+ 資料庫正規化就是指將關聯式資料庫的欄位與表單進行讓『資料重複性與相依性』能夠降到最低的組織過程。
+ 是的，真的很文鄒鄒，不過我們只要知道正規化的目的是解決資料的『重複性』與『相依性』這兩個點就夠囉，資料庫正規化有一些規則，每條規則都稱為『正規形式』，符合第一條規則就稱為『第一正規形式』，總共有不少條，但通常到『第三正規形式』就被視為最高級的正規形式， 下面來簡單的說明一下這幾條規則。
+第一正規形式 以下條列為第一正規形式的規則，事實上重點還是在說『不要有重複群組』。
+ 刪除各個資料表中的重複群組。 為每一組關聯的資料建立不同的資料表。 使用主索引鍵識別每一組關聯的資料。  我們假設資料為每個人的交易資料，下表為違反正規化的資料結構，因為它有重複的群組Volume，並且也缺少主索引鍵來識別每一組關聯的資料。
+   Name Date Volume     Mark 20160101 10 , -20   Jiro 20160102 -20 , 30   Ian 20160103 34 , -10    如果要符合第一正規形式大概要長的像降。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -466,43 +487,43 @@
 { &quot;userId&quot; : &quot;002&quot; , &quot;name&quot; : &quot;jiro&quot; ,&quot;age&quot; : 35}
 { &quot;userId&quot; : &quot;003&quot; , &quot;name&quot; : &quot;ian&quot; ,&quot;age&quot; : 25}
 </code></pre><p>但這種有什麼缺點呢 ? 上面有提到搜尋時，需要搜尋兩次才能找到全部的資料，假設我們要尋找交易單號為<code>1</code>的交易者資訊，就需要搜尋兩次才能找到，如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">trades</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;tradeId&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">trade</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">userId</span> <span class="o">=</span> <span class="nx">trade</span><span class="p">.</span><span class="nx">userId</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">trades</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;tradeId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> },<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>,<span style="color:#a6e22e">trade</span>){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">userId</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">trade</span>.<span style="color:#a6e22e">userId</span>;
 	
-	<span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;userId&#34;</span> <span class="o">:</span> <span class="nx">userId</span><span class="p">}</span><span class="p">,</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span><span class="nx">user</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">XXXXXXX</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span>
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">users</span>.<span style="color:#a6e22e">find</span>({<span style="color:#e6db74">&#34;userId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">userId</span>},<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>,<span style="color:#a6e22e">user</span>){
+		<span style="color:#a6e22e">XXXXXXX</span>
+	});
+})
 </code></pre></div><p>那優點是啥 ? 就是更新時很方便，如果<code>mark</code>這位交易者的年齡打錯了，要修改只要針對<code>user collection</code>的進行修改。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">udpate</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;$set&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">18</span><span class="p">}</span> <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">udpate</span>({<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>},{<span style="color:#e6db74">&#34;$set&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span>} })
 </code></pre></div><h3 id="mongodb-2">MongoDB 反正規化範例</h3>
 <p>而反正規化則相反，將每個<code>document</code>中所需要資料都建立成子文件形式，如果有資料要更新，那麼所有的<code>document</code>都需要進行更新，但在搜尋時，只需要尋找一次，就可以得到所有數據，理論上來說應該是比正規化速度還快。</p>
 <p>以下將以交易資料來說明<code>mongodb</code>的反正規化資料結構。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">交易資料的</span> <span class="nx">collection</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">交易資料的</span> <span style="color:#a6e22e">collection</span>
 
-<span class="p">{</span> 
-  <span class="s2">&#34;tradeId&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="mi">20160101</span> <span class="p">,</span> <span class="s2">&#34;volume&#34;</span> <span class="o">:</span> <span class="mi">10</span> <span class="p">,</span>
-  <span class="s2">&#34;user&#34;</span> <span class="o">:</span> <span class="p">{</span>
-  	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-  	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">20</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">{</span> 
-  <span class="s2">&#34;tradeId&#34;</span> <span class="o">:</span> <span class="mi">2</span> <span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="mi">20160102</span> <span class="p">,</span> <span class="s2">&#34;volume&#34;</span> <span class="o">:</span> <span class="mi">20</span> <span class="p">,</span>
-  <span class="s2">&#34;user&#34;</span> <span class="o">:</span> <span class="p">{</span>
-	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;jiro&#34;</span><span class="p">,</span>
-	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">35</span>  
-  <span class="p">}</span>
-<span class="p">}</span>
-<span class="p">{</span> 
-  <span class="s2">&#34;tradeId&#34;</span> <span class="o">:</span> <span class="mi">3</span> <span class="p">,</span> <span class="s2">&#34;date&#34;</span> <span class="o">:</span> <span class="mi">20160103</span> <span class="p">,</span> <span class="s2">&#34;volume&#34;</span> <span class="o">:</span> <span class="mi">30</span> <span class="p">,</span> 
-  <span class="s2">&#34;user&#34;</span> <span class="o">:</span> <span class="p">{</span>
-  	<span class="s2">&#34;name&#34;</span> <span class="o">:</span> <span class="s2">&#34;Ian&#34;</span><span class="p">,</span>
-  	<span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">25</span>
-  <span class="p">}</span>
-<span class="p">}</span>
+{ 
+  <span style="color:#e6db74">&#34;tradeId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> , <span style="color:#e6db74">&#34;date&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20160101</span> , <span style="color:#e6db74">&#34;volume&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span> ,
+  <span style="color:#e6db74">&#34;user&#34;</span> <span style="color:#f92672">:</span> {
+  	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+  	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span>
+  }
+}
+{ 
+  <span style="color:#e6db74">&#34;tradeId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span> , <span style="color:#e6db74">&#34;date&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20160102</span> , <span style="color:#e6db74">&#34;volume&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20</span> ,
+  <span style="color:#e6db74">&#34;user&#34;</span> <span style="color:#f92672">:</span> {
+	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;jiro&#34;</span>,
+	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">35</span>  
+  }
+}
+{ 
+  <span style="color:#e6db74">&#34;tradeId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">3</span> , <span style="color:#e6db74">&#34;date&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">20160103</span> , <span style="color:#e6db74">&#34;volume&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">30</span> , 
+  <span style="color:#e6db74">&#34;user&#34;</span> <span style="color:#f92672">:</span> {
+  	<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;Ian&#34;</span>,
+  	<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">25</span>
+  }
+}
 </code></pre></div><p>這樣要尋找交易單為<code>1</code>的交易人資訊非常的簡單，如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">trades</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;tradeId&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">trades</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;tradeId&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>})
 </code></pre></div><p>但如果要更新交易人的資訊，那就比較麻煩了，因為它就要尋找所有交易單裡的交易人進行修改囉，這樣當然比<code>正規化</code>的慢多囉。</p>
 <h3 id="--1">何時使用正規化 ? 何時使用反正規化</h3>
 <p>我們根據<code>MongoDB</code>權威指南所列出的原則來看看。</p>

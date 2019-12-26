@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,16 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。 基本更新方法Update。 更|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。
+ 基本更新方法Update。 更新修改器 ($set、$inc)。 更新修改器效能比較。  ~ 基本更新方法Update ~ Update函數主要的功用就如同字面所說，更新~，而使用方法如下，query就是指你要先尋找更新的目標條件，update就是你要更新的值。而另外三個參考請考下列。
+ upsert : 這個參數如果是true，代表如果沒有找到該更新的對像，則新增，反之則否，默認是false。 multi : 如果是false，則代表你query出多筆，他就只會更新第一筆，反之則都更新，默認是false( !注意multi只能在有修改器時才能用 )。 writeConcern : 拋出異常的級別。  db.collection.update( &amp;lt;query&amp;gt;, &amp;lt;update&amp;gt;, { upsert: &amp;lt;boolean&amp;gt;, multi: &amp;lt;boolean&amp;gt;, writeConcern: &amp;lt;document&amp;gt; } ) 下面來簡單示範一下用法。首先我們先新增三筆資料。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); 然後我們將名字為mark這人的age改為18，指令如下，query為{&amp;quot;name&amp;quot;:&amp;quot;mark&amp;quot;}，query的詳細用法會在find那邊詳詳細細的說明。
+db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:18}) 執行結果如下，不過誒……我只要更新age也，為啥要全部換掉?
+~ 更新修改器 ( set、inc ) ~ 修改器 $set $set修改器主要的功用就是用來指定一個字段的值，不用像上面一樣整個替換掉。
+所以如我們如果要將mark這位仁兄的age改為18只要下達下面的指令。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;$set&amp;#34; : { &amp;#34;age&amp;#34; : 18} }) 執行結果如下，成功更新為age為18
+修改器 $inc 假設一下情景，假如有個投票網站、或是要存放訪客數的功能，每次更新時都是要&#43;1，這種時後就可以用$inc來更新你的document，理論上來說速度應該會優於$set，等會兒會來測試一下。
+注意$inc只能用在數值類型，否則就會提示Modifier $inc allowed for numbers only。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +51,16 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-5之MongoDB新手村CRUD---更新 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。 基本更新方法Update。 更|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。
+ 基本更新方法Update。 更新修改器 ($set、$inc)。 更新修改器效能比較。  ~ 基本更新方法Update ~ Update函數主要的功用就如同字面所說，更新~，而使用方法如下，query就是指你要先尋找更新的目標條件，update就是你要更新的值。而另外三個參考請考下列。
+ upsert : 這個參數如果是true，代表如果沒有找到該更新的對像，則新增，反之則否，默認是false。 multi : 如果是false，則代表你query出多筆，他就只會更新第一筆，反之則都更新，默認是false( !注意multi只能在有修改器時才能用 )。 writeConcern : 拋出異常的級別。  db.collection.update( &lt;query&gt;, &lt;update&gt;, { upsert: &lt;boolean&gt;, multi: &lt;boolean&gt;, writeConcern: &lt;document&gt; } ) 下面來簡單示範一下用法。首先我們先新增三筆資料。
+db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); 然後我們將名字為mark這人的age改為18，指令如下，query為{&quot;name&quot;:&quot;mark&quot;}，query的詳細用法會在find那邊詳詳細細的說明。
+db.user.update({&#34;name&#34;:&#34;mark&#34;},{&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:18}) 執行結果如下，不過誒……我只要更新age也，為啥要全部換掉?
+~ 更新修改器 ( set、inc ) ~ 修改器 $set $set修改器主要的功用就是用來指定一個字段的值，不用像上面一樣整個替換掉。
+所以如我們如果要將mark這位仁兄的age改為18只要下達下面的指令。
+db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); db.user.update({&#34;name&#34;:&#34;mark&#34;},{&#34;$set&#34; : { &#34;age&#34; : 18} }) 執行結果如下，成功更新為age為18
+修改器 $inc 假設一下情景，假如有個投票網站、或是要存放訪客數的功能，每次更新時都是要&#43;1，這種時後就可以用$inc來更新你的document，理論上來說速度應該會優於$set，等會兒會來測試一下。
+注意$inc只能用在數值類型，否則就會提示Modifier $inc allowed for numbers only。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +72,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -141,43 +162,43 @@
 <li>multi : 如果是<code>false</code>，則代表你<code>query</code>出多筆，他就只會更新第一筆，反之則都更新，默認是<code>false</code>( !注意<code>multi</code>只能在有<code>修改器</code>時才能用 )。</li>
 <li>writeConcern : 拋出異常的級別。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span>
-   <span class="o">&lt;</span><span class="nx">query</span><span class="o">&gt;</span><span class="p">,</span>
-   <span class="o">&lt;</span><span class="nx">update</span><span class="o">&gt;</span><span class="p">,</span>
-   <span class="p">{</span>
-     <span class="nx">upsert</span><span class="o">:</span> <span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
-     <span class="nx">multi</span><span class="o">:</span> <span class="o">&lt;</span><span class="kr">boolean</span><span class="o">&gt;</span><span class="p">,</span>
-     <span class="nx">writeConcern</span><span class="o">:</span> <span class="o">&lt;</span><span class="nb">document</span><span class="o">&gt;</span>
-   <span class="p">}</span>
-<span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">update</span>(
+   <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">query</span><span style="color:#f92672">&gt;</span>,
+   <span style="color:#f92672">&lt;</span><span style="color:#a6e22e">update</span><span style="color:#f92672">&gt;</span>,
+   {
+     <span style="color:#a6e22e">upsert</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">boolean</span><span style="color:#f92672">&gt;</span>,
+     <span style="color:#a6e22e">multi</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">boolean</span><span style="color:#f92672">&gt;</span>,
+     <span style="color:#a6e22e">writeConcern</span><span style="color:#f92672">:</span> <span style="color:#f92672">&lt;</span>document<span style="color:#f92672">&gt;</span>
+   }
+)
 </code></pre></div><p>下面來簡單示範一下用法。首先我們先新增三筆資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;jj&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
 </code></pre></div><p>然後我們將名字為<code>mark</code>這人的<code>age</code>改為<code>18</code>，指令如下，<code>query</code>為<code>{&quot;name&quot;:&quot;mark&quot;}</code>，<code>query</code>的詳細用法會在<code>find</code>那邊詳詳細細的說明。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">18</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},{<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">18</span>})
 </code></pre></div><p>執行結果如下，不過誒……我只要更新<code>age</code>也，為啥要全部換掉?</p>
 <p><img src="http://yixiang8780.com/outImg/20161202-1.png" alt=""></p>
 <h2 id="---setinc--">~ 更新修改器 ( set、inc ) ~</h2>
 <h3 id="-set">修改器 $set</h3>
 <p><code>$set</code>修改器主要的功用就是用來指定一個字段的值，不用像上面一樣整個替換掉。</p>
 <p>所以如我們如果要將<code>mark</code>這位仁兄的<code>age</code>改為<code>18</code>只要下達下面的指令。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;steven&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;jj&#34;</span><span class="p">,</span><span class="s2">&#34;age&#34;</span><span class="o">:</span><span class="mi">23</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;steven&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;jj&#34;</span>,<span style="color:#e6db74">&#34;age&#34;</span><span style="color:#f92672">:</span><span style="color:#ae81ff">23</span>});
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;name&#34;</span><span class="o">:</span><span class="s2">&#34;mark&#34;</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;$set&#34;</span> <span class="o">:</span> <span class="p">{</span> <span class="s2">&#34;age&#34;</span> <span class="o">:</span> <span class="mi">18</span><span class="p">}</span> <span class="p">}</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">user</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;mark&#34;</span>},{<span style="color:#e6db74">&#34;$set&#34;</span> <span style="color:#f92672">:</span> { <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">18</span>} })
 </code></pre></div><p>執行結果如下，成功更新為<code>age為18</code></p>
 <p><img src="http://yixiang8780.com/outImg/20161202-2.png" alt=""></p>
 <h3 id="-inc">修改器 $inc</h3>
 <p>假設一下情景，假如有個投票網站、或是要存放訪客數的功能，每次更新時都是要<code>+1</code>，這種時後就可以用<code>$inc</code>來更新你的<code>document</code>，理論上來說速度應該會優於<code>$set</code>，等會兒會來測試一下。</p>
 <p>注意<code>$inc</code>只能用在數值類型，否則就會提示<code>Modifier $inc allowed for numbers only</code>。</p>
 <p>我們寫段程式碼來看看他的使用方法，下面範例我們先新增一筆資料，然後我們每次更新時，<code>like</code>都會加<code>1</code>，所以我們更新<code>3</code>次，理論上<code>like</code>會變為<code>3</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">home</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">,</span><span class="s2">&#34;like&#34;</span> <span class="o">:</span> <span class="mi">0</span><span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">home</span>.<span style="color:#a6e22e">insert</span>({<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> ,<span style="color:#e6db74">&#34;like&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>})
 
-<span class="nx">db</span><span class="p">.</span><span class="nx">home</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;$inc&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;like&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">home</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;$inc&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;like&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">home</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;id&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">,</span><span class="p">{</span><span class="s2">&#34;$inc&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;like&#34;</span> <span class="o">:</span> <span class="mi">1</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">home</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>},{<span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;like&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>}})
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">home</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>},{<span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;like&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>}})
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">home</span>.<span style="color:#a6e22e">update</span>({<span style="color:#e6db74">&#34;id&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>},{<span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;like&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>}})
 </code></pre></div><p>執行結果如下，可以看到<code>like</code>增加到<code>3</code>了。</p>
 <p><img src="http://yixiang8780.com/outImg/20161202-3.png" alt=""></p>
 <h2 id="-set--inc-">~ set 與 inc效能測試 ~</h2>
@@ -186,92 +207,92 @@
 <p><img src="http://yixiang8780.com/outImg/20161202-4.png" alt=""></p>
 <p>以下為程式碼，程式碼會放在此<a href="https://github.com/h091237557/30-MongoDB/tree/master/Test/30-5">MyGithub</a>。</p>
 <p>程式碼簡單的說一下，首先會先用<code>bulk insert</code>來建立一筆資料，然後接下來在產生<code>n</code>個更新的<code>promise</code>，最後用<code>promise all</code>等所以<code>promise</code>都更新完後，再結束計時。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kr">debugger</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">mongodb</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongodb&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">debugger</span>;
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodb</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;mongodb&#39;</span>);
 
-<span class="kd">var</span> <span class="nx">mongodbServer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">,</span> <span class="mi">27017</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">auto_reconnect</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-  <span class="nx">poolSize</span><span class="o">:</span> <span class="mi">10</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">mongodbServer</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Server</span>(<span style="color:#e6db74">&#39;localhost&#39;</span>, <span style="color:#ae81ff">27017</span>, {
+  <span style="color:#a6e22e">auto_reconnect</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">true</span>,
+  <span style="color:#a6e22e">poolSize</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">10</span>
+});
 
-<span class="kd">var</span> <span class="nx">db</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">mongodb</span><span class="p">.</span><span class="nx">Db</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">,</span> <span class="nx">mongodbServer</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">count</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">db</span><span class="p">.</span><span class="nx">collection</span><span class="p">(</span><span class="s1">&#39;home&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">collection</span><span class="p">)</span> <span class="p">{</span>
-    <span class="cm">/*
-</span><span class="cm">     * Update use $set 測試 
-</span><span class="cm">     */</span>
-    <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-      <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
-      <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="mi">0</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;update use $set&#34;</span><span class="p">)</span><span class="p">;</span>
-		<span class="kd">var</span> <span class="nx">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">funcs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">updateUseSet</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-		<span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">funcs</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-         <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;update use $set&#34;</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">db</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">mongodb</span>.<span style="color:#a6e22e">Db</span>(<span style="color:#e6db74">&#39;test&#39;</span>, <span style="color:#a6e22e">mongodbServer</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">open</span>(<span style="color:#66d9ef">function</span>() {
+  <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">collection</span>(<span style="color:#e6db74">&#39;home&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">collection</span>) {
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Update use $set 測試 
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>({
+      <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span>,
+      <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>,
+      <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+    });
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+      <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;update use $set&#34;</span>);
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">funcs</span> <span style="color:#f92672">=</span> [];
+      <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+			<span style="color:#a6e22e">funcs</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">updateUseSet</span>(<span style="color:#a6e22e">i</span>));
+      }
+		Promise.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">funcs</span>).<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">res</span>) =&gt; {
+         <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;update use $set&#34;</span>);
+		});
+    });
 
-	<span class="kd">function</span> <span class="nx">updateUseSet</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">updateUseSet</span>(<span style="color:#a6e22e">i</span>) {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>,<span style="color:#a6e22e">reject</span>) =&gt; {
 					
-			<span class="nx">collection</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span>
-         	 <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;mark&#34;</span>
-       		 <span class="p">}</span><span class="p">,</span> <span class="p">{</span>
-        	  <span class="s2">&#34;$set&#34;</span><span class="o">:</span> <span class="p">{</span>
-           	 <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="nx">i</span>
-        	  <span class="p">}</span>
-        		<span class="p">}</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-					<span class="nx">resolve</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span><span class="p">;</span>
-        		<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">)</span><span class="p">;</span>	
-		<span class="p">}</span>
+			<span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">update</span>({
+         	 <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;mark&#34;</span>
+       		 }, {
+        	  <span style="color:#e6db74">&#34;$set&#34;</span><span style="color:#f92672">:</span> {
+           	 <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+        	  }
+        		}, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+					<span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">i</span>);
+        		});
+		});	
+		}
 
-    <span class="cm">/*
-</span><span class="cm">     * Update use $inc 測試 
-</span><span class="cm">     */</span>
-    <span class="kd">var</span> <span class="nx">bulk</span> <span class="o">=</span> <span class="nx">collection</span><span class="p">.</span><span class="nx">initializeUnorderedBulkOp</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-      <span class="s2">&#34;id&#34;</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
-      <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;steven&#34;</span><span class="p">,</span>
-      <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="mi">0</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">bulk</span><span class="p">.</span><span class="nx">execute</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Update use $inc 測試 
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">bulk</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">initializeUnorderedBulkOp</span>();
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">insert</span>({
+      <span style="color:#e6db74">&#34;id&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>,
+      <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>,
+      <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>
+    });
+    <span style="color:#a6e22e">bulk</span>.<span style="color:#a6e22e">execute</span>(<span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
             
-		<span class="kd">var</span> <span class="nx">funcs</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-		<span class="nx">udpateUseInc</span><span class="p">(</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">time</span><span class="p">(</span><span class="s2">&#34;update use $inc&#34;</span><span class="p">)</span><span class="p">;</span>
-		  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">count</span><span class="o">+</span><span class="mi">1</span><span class="p">;</span><span class="nx">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-			 <span class="nx">funcs</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">updateUseInc</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>	
-      	  <span class="p">}</span>
-		  <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">funcs</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-           <span class="nx">console</span><span class="p">.</span><span class="nx">timeEnd</span><span class="p">(</span><span class="s2">&#34;update use $inc&#34;</span><span class="p">)</span><span class="p">;</span>
-		  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-		<span class="p">}</span><span class="p">)</span>
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">funcs</span> <span style="color:#f92672">=</span> [];
+		<span style="color:#a6e22e">udpateUseInc</span>().<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">res</span>) =&gt; {
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">time</span>(<span style="color:#e6db74">&#34;update use $inc&#34;</span>);
+		  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">j</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>;<span style="color:#a6e22e">j</span><span style="color:#f92672">++</span>) {
+			 <span style="color:#a6e22e">funcs</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">updateUseInc</span>(<span style="color:#ae81ff">1</span>));	
+      	  }
+		  Promise.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">funcs</span>).<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">res</span>) =&gt; {
+           <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">timeEnd</span>(<span style="color:#e6db74">&#34;update use $inc&#34;</span>);
+		  });
+		})
 
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-	<span class="kd">function</span> <span class="nx">updateUseInc</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span><span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    });
+	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">updateUseInc</span>() {
+		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>,<span style="color:#a6e22e">reject</span>) =&gt; {
 			
-         <span class="nx">collection</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="p">{</span>
-         		 <span class="s2">&#34;name&#34;</span><span class="o">:</span> <span class="s2">&#34;steven&#34;</span>
-       	 <span class="p">}</span><span class="p">,</span> <span class="p">{</span>
-       	   <span class="s2">&#34;$inc&#34;</span><span class="o">:</span> <span class="p">{</span>
-        		  <span class="s2">&#34;Like&#34;</span><span class="o">:</span> <span class="mi">1</span> 
-       	 <span class="p">}</span>
-       	 <span class="p">}</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-				<span class="nx">resolve</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-         <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-	   <span class="p">}</span><span class="p">)</span><span class="p">;</span>	
-	<span class="p">}</span>
-  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+         <span style="color:#a6e22e">collection</span>.<span style="color:#a6e22e">update</span>({
+         		 <span style="color:#e6db74">&#34;name&#34;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;steven&#34;</span>
+       	 }, {
+       	   <span style="color:#e6db74">&#34;$inc&#34;</span><span style="color:#f92672">:</span> {
+        		  <span style="color:#e6db74">&#34;Like&#34;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> 
+       	 }
+       	 }, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">res</span>) {
+				<span style="color:#a6e22e">resolve</span>();
+         });
+	   });	
+	}
+  });
+});
 </code></pre></div><p>測試結果，<code>$inc</code>在更新數據時，完全贏過<code>$set</code>。</p>
 <table>
 <thead>

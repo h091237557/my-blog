@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,14 @@
     <meta content="js, javascript, promise" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
+Promise/A&#43; 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
+規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
+ pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
+promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
+hpromises-spec
+Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
+versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&amp;#39;/getData&amp;#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +49,14 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Javascript非同步編程的方法 - Promise | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
+Promise/A&#43; 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
+規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
+ pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
+promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
+hpromises-spec
+Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
+versin 1.4 $.get(&#39;/getData&#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&#39;/getData&#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +68,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -136,89 +153,89 @@
 </ul>
 <h3 id="-2--promise-then">規範 2 : Promise必須要 Then</h3>
 <p>一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數<code>onFulfilled</code>為<code>fulfilled</code>執行後調用，而<code>onRejected</code>為<code>rejected</code>後調用。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="nx">promise</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">onFulfilled</span><span class="p">,</span> <span class="nx">onRejected</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">then</span>(<span style="color:#a6e22e">onFulfilled</span>, <span style="color:#a6e22e">onRejected</span>)
 </code></pre></div><p>其它詳細的規範其參考下面的連結。。</p>
 <p><a href="https://github.com/promises-aplus/promises-spec">hpromises-spec</a></p>
 <h2 id="jquery--promise-">Jquery 的 Promise 實現</h2>
 <p><code>Jquery</code>在<code>1.5</code>之後，我們常用的<code>$.ajax</code>、<code>$.get</code>、<code>$.getJson</code>等這些<code>ajax</code>函數全部都會返回<code>promise</code>，下面給個例子來看看差別。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">versin</span> <span class="mf">1.4</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">versin</span> <span style="color:#ae81ff">1.4</span>
 
-	<span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">,</span> <span class="p">{</span> 
-	   <span class="nx">success</span><span class="o">:</span> <span class="nx">onSuccess</span><span class="p">,</span> 
-	   <span class="nx">failure</span><span class="o">:</span> <span class="nx">onFailure</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">version</span> <span class="mf">1.5</span>
+	<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/getData&#39;</span>, { 
+	   <span style="color:#a6e22e">success</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">onSuccess</span>, 
+	   <span style="color:#a6e22e">failure</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">onFailure</span>
+	});
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">version</span> <span style="color:#ae81ff">1.5</span>
 
-	<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/getData&#39;</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">promise</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">onSuccess</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">onFailure</span><span class="p">)</span><span class="p">;</span>
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">get</span>(<span style="color:#e6db74">&#39;/getData&#39;</span>);
+	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">done</span>(<span style="color:#a6e22e">onSuccess</span>);
+	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">fail</span>(<span style="color:#a6e22e">onFailure</span>);
 </code></pre></div><p>這種改變的好處在於<code>封裝</code>，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用<code>promise</code>來解決。</p>
 <h3 id="jquery-promise--deferred">Jquery的 Promise 與 Deferred</h3>
 <p>我們要如何把一個函數變成<code>Promise</code>對象？首先我們需要產生<code>Deferred</code>，什麼是<code>Deferred</code>？<code>Deferred</code>嚴格來說為<code>Promise</code>的超集合，它比<code>Promise</code>多了一項關鍵特性，那就是他可以直接的觸發，單純的<code>Promise</code>實例只能允許增加<code>callBack　function</code>，必須由其它東西來觸發這些<code>callback function</code>。</p>
 <p>如下程式碼，如果我們要將<code>deferredTest</code>變成<code>Promise</code>，我們需要一個<code>deferred</code>，然後在執行成功時，執行<code>deferred.resolve()</code>，並且失敗時執行<code>deferred.reject()</code>，然後它們就會觸發相對應的<code>callback function</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">function</span> <span class="nx">deferredTest</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">(</span><span class="s1">&#39;.getData&#39;</span><span class="p">,</span><span class="p">{</span>
-			<span class="nx">success</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-				<span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span><span class="p">,</span>
-			<span class="nx">fail</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-				<span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>	
-		<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nx">deferred</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">deferredTest</span>(){
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">deferred</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">Deferred</span>();
+		<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>(<span style="color:#e6db74">&#39;.getData&#39;</span>,{
+			<span style="color:#a6e22e">success</span><span style="color:#f92672">:</span><span style="color:#66d9ef">function</span>(){
+				<span style="color:#a6e22e">deferred</span>.<span style="color:#a6e22e">resolve</span>();
+			},
+			<span style="color:#a6e22e">fail</span><span style="color:#f92672">:</span><span style="color:#66d9ef">function</span>(){
+				<span style="color:#a6e22e">deferred</span>.<span style="color:#a6e22e">reject</span>();
+			}	
+		});
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deferred</span>;
+	}
 </code></pre></div><p>根據範例<code>deferred.resolve()</code>就會觸發<code>onSuccess</code>，而<code>deferred.reject()</code>則會觸發<code>onFailure</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">deferredTest</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">promise</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="nx">onSuccess</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">promise</span><span class="p">.</span><span class="nx">fail</span><span class="p">(</span><span class="nx">onFailure</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">deferredTest</span>();
+	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">done</span>(<span style="color:#a6e22e">onSuccess</span>);
+	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">fail</span>(<span style="color:#a6e22e">onFailure</span>);
 </code></pre></div><h3 id="-callback-function-">向 callback function 傳遞參數</h3>
 <p>通常在實務上，<code>ajax</code>很常去後端取得資料，因此通常都有回傳資料，這時可以提供資料給<code>callback function</code>，如下程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">function</span> <span class="nx">getData</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">deferred</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">$</span><span class="p">.</span><span class="nx">Deferred</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-		<span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">(</span><span class="s1">&#39;.getData&#39;</span><span class="p">,</span><span class="p">{</span>
-			<span class="nx">success</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span>
-				<span class="nx">deferred</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span><span class="p">,</span>
-			<span class="nx">fail</span><span class="o">:</span><span class="kd">function</span><span class="p">(</span><span class="nx">errorMessage</span><span class="p">)</span><span class="p">{</span>
-				<span class="nx">deferred</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="nx">errorMessage</span><span class="p">)</span><span class="p">;</span>
-			<span class="p">}</span>	
-		<span class="p">}</span><span class="p">)</span><span class="p">;</span>
-		<span class="k">return</span> <span class="nx">deferred</span><span class="p">;</span>
-	<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">getData</span>(){
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">deferred</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">Deferred</span>();
+		<span style="color:#a6e22e">$</span>.<span style="color:#a6e22e">ajax</span>(<span style="color:#e6db74">&#39;.getData&#39;</span>,{
+			<span style="color:#a6e22e">success</span><span style="color:#f92672">:</span><span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){
+				<span style="color:#a6e22e">deferred</span>.<span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">data</span>);
+			},
+			<span style="color:#a6e22e">fail</span><span style="color:#f92672">:</span><span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">errorMessage</span>){
+				<span style="color:#a6e22e">deferred</span>.<span style="color:#a6e22e">reject</span>(<span style="color:#a6e22e">errorMessage</span>);
+			}	
+		});
+		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deferred</span>;
+	}
 </code></pre></div><p>下面程式碼的<code>data</code>就是<code>ajax</code>回傳的資料。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js">	<span class="kd">var</span> <span class="nx">promise</span> <span class="o">=</span> <span class="nx">getData</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-	<span class="nx">promise</span><span class="p">.</span><span class="nx">done</span><span class="p">(</span><span class="kd">function</span> <span class="nx">onSuccess</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span>
-		<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-	<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">promise</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">getData</span>();
+	<span style="color:#a6e22e">promise</span>.<span style="color:#a6e22e">done</span>(<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">onSuccess</span>(<span style="color:#a6e22e">data</span>){
+		<span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+	});
 </code></pre></div><h2 id="es6--promise">ES6 的 Promise</h2>
 <p>在 es6 時它有提供內建的 promise ，它有提供以下幾種方法 :</p>
 <h3 id="promiseall">Promise.all</h3>
 <p><code>回傳一個 promise</code></p>
 <p>這種用方法，可以指定一系列的 promise 任務，不依照順序來執行，當其中一個任務失敗時，它就會 rejects ，而當所以任務都完成後，它就會 resolve。</p>
 <p>下面程式碼中，為我們使用<code>promise.all</code>的結果，我們傳入的任務順序是<code>3 (3秒) -&gt; 2 (2秒) -&gt; 1(1秒)</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">setTimeout</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">url</span>, <span style="color:#a6e22e">time</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+        <span style="color:#a6e22e">setTimeout</span>(() =&gt; {
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">url</span>);
+            <span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">url</span>);
+        } , <span style="color:#a6e22e">time</span>)
+    });
+};
 
-<span class="kd">function</span> <span class="nx">process</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="nx">objs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">tasks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="nx">obj</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">objs</span>){
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tasks</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">obj</span>) =&gt; {
+        <span style="color:#a6e22e">tasks</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">obj</span>,<span style="color:#a6e22e">obj</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1000</span>));
+    });
+    <span style="color:#66d9ef">return</span> Promise.<span style="color:#a6e22e">all</span>(<span style="color:#a6e22e">tasks</span>);
+}
 
 
-<span class="kd">var</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="p">;</span>
-<span class="nx">process</span><span class="p">(</span><span class="nx">test</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;All success&#34;</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">test</span> <span style="color:#f92672">=</span> [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>];
+<span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">test</span>).<span style="color:#a6e22e">then</span>(() =&gt; {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;All success&#34;</span>)
+});
 </code></pre></div><p>然後我們執行的結果如預期，不會依順序來執行，輸入的結果是依時間花時的順序。</p>
 <pre><code>1
 2
@@ -227,28 +244,28 @@ All success.
 </code></pre><h3 id="promiserace">Promise.race</h3>
 <p><code>回傳一個 promise</code></p>
 <p>它是傳入一系列的 promise 任務，只要其中一個任務失敗或成都，就會直接 resolve 或 reject。但其它的任務還是會繼續執行。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">setTimeout</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">url</span>, <span style="color:#a6e22e">time</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+        <span style="color:#a6e22e">setTimeout</span>(() =&gt; {
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">url</span>);
+            <span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">url</span>);
+        } , <span style="color:#a6e22e">time</span>)
+    });
+};
 
-<span class="kd">function</span> <span class="nx">process</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span><span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="p">[</span><span class="p">]</span><span class="p">;</span>
-    <span class="nx">objs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">tasks</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="nx">obj</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">race</span><span class="p">(</span><span class="nx">tasks</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">objs</span>){
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">tasks</span> <span style="color:#f92672">=</span> [];
+    <span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">obj</span>) =&gt; {
+        <span style="color:#a6e22e">tasks</span>.<span style="color:#a6e22e">push</span>(<span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">obj</span>,<span style="color:#a6e22e">obj</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1000</span>));
+    });
+    <span style="color:#66d9ef">return</span> Promise.<span style="color:#a6e22e">race</span>(<span style="color:#a6e22e">tasks</span>);
+}
 
-<span class="kd">var</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">test</span> <span style="color:#f92672">=</span> [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>];
 
-<span class="nx">process</span><span class="p">(</span><span class="nx">test</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;All success&#34;</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">test</span>).<span style="color:#a6e22e">then</span>(() =&gt; {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;All success&#34;</span>)
+});
 </code></pre></div><p>執行結果。</p>
 <pre><code>1 
 All success
@@ -257,43 +274,43 @@ All success
 </code></pre><h3 id="promiseresolve--promisereject">Promise.resolve 與 Promise.reject</h3>
 <p><code>回傳一個 promise</code></p>
 <p>這兩個方法都會回傳一個 promise ，差別在於，一個已經<code>resolve</code>，另一個已<code>reject</code>，簡單的使用範例如下。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">Promise.<span style="color:#a6e22e">resolve</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">then</span>((<span style="color:#a6e22e">data</span>) =&gt; {
+   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+})
 
-<span class="c1">// console.log 結果為 2
+<span style="color:#75715e">// console.log 結果為 2
 </span></code></pre></div><p>而 reject 的用法如下 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="s2">&#34;error message&#34;</span><span class="p">)</span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">Promise.<span style="color:#a6e22e">reject</span>(<span style="color:#e6db74">&#34;error message&#34;</span>).<span style="color:#66d9ef">catch</span>((<span style="color:#a6e22e">err</span>) =&gt; {
+   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">err</span>);
+})
 
-<span class="c1">// console.log 結果為 &#34;error message&#34;
+<span style="color:#75715e">// console.log 結果為 &#34;error message&#34;
 </span></code></pre></div><h3 id="-">我們如果要依序執行要如何做 ?</h3>
 <p>我們這邊直接寫個最簡單的方法，這邊我們需要一個 promise.resolve 來產生一個已經 resolve 後的 promise ，然後在每一次的 result.then 裡面回傳 handler 回傳結的 promise ，這樣就能產生像 promise chain 的東西。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">function</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">time</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="p">(</span><span class="nx">resolve</span><span class="p">,</span> <span class="nx">reject</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">setTimeout</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-            <span class="nx">resolve</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span> <span class="p">,</span> <span class="nx">time</span><span class="p">)</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">url</span>, <span style="color:#a6e22e">time</span>) {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> Promise((<span style="color:#a6e22e">resolve</span>, <span style="color:#a6e22e">reject</span>) =&gt; {
+        <span style="color:#a6e22e">setTimeout</span>(() =&gt; {
+            <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">url</span>);
+            <span style="color:#a6e22e">resolve</span>(<span style="color:#a6e22e">url</span>);
+        } , <span style="color:#a6e22e">time</span>)
+    });
+};
 
-<span class="kd">function</span> <span class="nx">process</span><span class="p">(</span><span class="nx">objs</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">objs</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-        <span class="nx">result</span> <span class="o">=</span> <span class="nx">result</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span><span class="p">{</span>
-        <span class="k">return</span> <span class="nx">handler</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span><span class="nx">obj</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
-        <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
-<span class="p">}</span>
+<span style="color:#66d9ef">function</span> <span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">objs</span>) {
+    <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> Promise.<span style="color:#a6e22e">resolve</span>();
+    <span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">forEach</span>((<span style="color:#a6e22e">obj</span>) =&gt; {
+        <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">then</span>(() =&gt;{
+        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">handler</span>(<span style="color:#a6e22e">obj</span>,<span style="color:#a6e22e">obj</span><span style="color:#f92672">*</span><span style="color:#ae81ff">1000</span>);
+        });
+    })
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
+}
 
-<span class="kd">var</span> <span class="nx">test</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span><span class="p">;</span>
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">test</span> <span style="color:#f92672">=</span> [<span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">1</span>];
 
-<span class="nx">process</span><span class="p">(</span><span class="nx">test</span><span class="p">)</span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="p">(</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;All success&#34;</span><span class="p">)</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">process</span>(<span style="color:#a6e22e">test</span>).<span style="color:#a6e22e">then</span>(() =&gt; {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;All success&#34;</span>)
+});
 </code></pre></div><p>執行結果</p>
 <pre><code>3
 2

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="socket, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成|Describe what your web page is about">
+    <meta name="description" property="og:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
+socket.io 主要由以下幾個東東構成的 :
+ engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
+engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
+目前 engine.io 所提供的溝通方式有以下幾種 :
+ polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
+var engine = require(&amp;#39;engine.io&amp;#39;); var server = engine.listen(80); server.on(&amp;#39;connection&amp;#39;, function(socket){ socket.send(&amp;#39;utf 8 string&amp;#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 的架構 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成|Describe what your web page is about">
+    <meta name="twitter:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
+socket.io 主要由以下幾個東東構成的 :
+ engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
+engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
+目前 engine.io 所提供的溝通方式有以下幾種 :
+ polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
+var engine = require(&#39;engine.io&#39;); var server = engine.listen(80); server.on(&#39;connection&#39;, function(socket){ socket.send(&#39;utf 8 string&#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -148,53 +163,53 @@
 <li>websocket</li>
 </ul>
 <p>上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">engine</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;engine.io&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">server</span> <span class="o">=</span> <span class="nx">engine</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">engine</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;engine.io&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">server</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">engine</span>.<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">80</span>);
 
-<span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">socket</span><span class="p">)</span><span class="p">{</span>
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;utf 8 string&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span><span class="p">)</span><span class="p">)</span><span class="p">;</span> <span class="c1">// binary data
-</span><span class="c1"></span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;connection&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">socket</span>){
+  <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">send</span>(<span style="color:#e6db74">&#39;utf 8 string&#39;</span>);
+  <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">send</span>(<span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Buffer</span>([<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span>, <span style="color:#ae81ff">5</span>])); <span style="color:#75715e">// binary data
+</span><span style="color:#75715e"></span>});
 </code></pre></div><h2 id="enginoioclient">engino.io-client</h2>
 <p><code>engine.io-client</code>是<code>socket.io-client</code>的核心，所有關鍵的連線、選擇傳輸方式，都是在這裡面執行。</p>
 <p>我們這裡來看看，它是從那決定要用那種的<code>傳輸方式</code>(websocket、polling)。</p>
 <p>在<code>engine.io-client</code>下面這段程式碼(<a href="https://github.com/socketio/engine.io-client/blob/master/lib/socket.js#L405">程式碼傳送門</a>)中 ，這段<code>onOpen</code>是在 socket 要與 server 進行連線時，會先執行的事件，其中，就是由<code>this.probe(this.upgrades[i])</code>這個方法來決定要用什麼方式(websocket、polling)來進行傳輸。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">Socket</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">onOpen</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;socket open&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">=</span> <span class="s1">&#39;open&#39;</span><span class="p">;</span>
-  <span class="nx">Socket</span><span class="p">.</span><span class="nx">priorWebsocketSuccess</span> <span class="o">=</span> <span class="s1">&#39;websocket&#39;</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">transport</span><span class="p">.</span><span class="nx">name</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;open&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="k">this</span><span class="p">.</span><span class="nx">flush</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">Socket</span>.<span style="color:#a6e22e">prototype</span>.<span style="color:#a6e22e">onOpen</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span> () {
+  <span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#39;socket open&#39;</span>);
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">readyState</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;open&#39;</span>;
+  <span style="color:#a6e22e">Socket</span>.<span style="color:#a6e22e">priorWebsocketSuccess</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;websocket&#39;</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">name</span>;
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">emit</span>(<span style="color:#e6db74">&#39;open&#39;</span>);
+  <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">flush</span>();
 
-  <span class="c1">// we check for `readyState` in case an `open`
-</span><span class="c1"></span>  <span class="c1">// listener already closed the socket
-</span><span class="c1"></span>  <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;open&#39;</span> <span class="o">===</span> <span class="k">this</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">upgrade</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">transport</span><span class="p">.</span><span class="nx">pause</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">debug</span><span class="p">(</span><span class="s1">&#39;starting upgrade probes&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">upgrades</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">probe</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">upgrades</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span><span class="p">;</span>
+  <span style="color:#75715e">// we check for `readyState` in case an `open`
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// listener already closed the socket
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (<span style="color:#e6db74">&#39;open&#39;</span> <span style="color:#f92672">===</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">readyState</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">upgrade</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">transport</span>.<span style="color:#a6e22e">pause</span>) {
+    <span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#39;starting upgrade probes&#39;</span>);
+    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">l</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">upgrades</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">l</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+      <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">probe</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">upgrades</span>[<span style="color:#a6e22e">i</span>]);
+    }
+  }
+};
 </code></pre></div><p>然後在後端 server ，也就是<code>engine.io</code>裡根據前端傳送回來的<code>url</code>參數的<code>Transport</code>來決定要用什麼來進行傳輸 :</p>
 <pre><code>url 範例 : 
 
 /engine.io/default/?transport=polling
 </code></pre><p><code>engine.io</code>的下面這段程式碼裡，<code>check</code>用來驗證傳進來的參數是否合法，來決定這個<code>transport</code>參數是否合法，然後再來將 http 升級為 websocket 協義。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">server</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;upgrade&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">socket</span><span class="p">,</span> <span class="nx">head</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">check</span><span class="p">(</span><span class="nx">req</span><span class="p">)</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">handleUpgrade</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">socket</span><span class="p">,</span> <span class="nx">head</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="kc">false</span> <span class="o">!==</span> <span class="nx">options</span><span class="p">.</span><span class="nx">destroyUpgrade</span><span class="p">)</span> <span class="p">{</span>
-        <span class="c1">// default node behavior is to disconnect when no handlers
-</span><span class="c1"></span>        <span class="c1">// but by adding a handler, we prevent that
-</span><span class="c1"></span>        <span class="c1">// and if no eio thing handles the upgrade
-</span><span class="c1"></span>        <span class="c1">// then the socket needs to die!
-</span><span class="c1"></span>        <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">socket</span><span class="p">.</span><span class="nx">writable</span> <span class="o">&amp;&amp;</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">bytesWritten</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-          <span class="p">}</span>
-        <span class="p">}</span><span class="p">,</span> <span class="nx">destroyUpgradeTimeout</span><span class="p">)</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">server</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;upgrade&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">socket</span>, <span style="color:#a6e22e">head</span>) {
+      <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">check</span>(<span style="color:#a6e22e">req</span>)) {
+        <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">handleUpgrade</span>(<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">socket</span>, <span style="color:#a6e22e">head</span>);
+      } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">false</span> <span style="color:#f92672">!==</span> <span style="color:#a6e22e">options</span>.<span style="color:#a6e22e">destroyUpgrade</span>) {
+        <span style="color:#75715e">// default node behavior is to disconnect when no handlers
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// but by adding a handler, we prevent that
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// and if no eio thing handles the upgrade
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// then the socket needs to die!
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">setTimeout</span>(<span style="color:#66d9ef">function</span> () {
+          <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">writable</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">bytesWritten</span> <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">0</span>) {
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">end</span>();
+          }
+        }, <span style="color:#a6e22e">destroyUpgradeTimeout</span>);
+      }
+    });
 </code></pre></div><h2 id="socketioparser">socket.io-parser</h2>
 <p>在 socket.io 的世界中，有一個東西叫做 <code>packet</code>，它是所有溝通的基礎包，事實上它也就是 socket.io 的協議，有一個東西叫<code>socket.io-protocol</code>(<a href="https://github.com/socketio/socket.io-protocol">傳送門</a>)，它裡面有定議好，你這個 packet 要長什麼樣子。</p>
 <p>下面為最簡單的 packet 包 :</p>
@@ -225,19 +240,19 @@
 <p>基本上你要進行任何 socket.io 提供的 emit、broadcast、join room 這些功能，都一定會到這一層來做處理。</p>
 <h2 id="socketioclient">socket.io-client</h2>
 <p>這個東東就是讓我們在前端使用的東西，假設我們在後端 server 建立好喔，我們就可以如下面這樣，連建立連線 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/socket.io/socket.io.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span>
-  <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;disconnect&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/socket.io/socket.io.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span>&gt;
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">io</span>(<span style="color:#e6db74">&#39;http://localhost&#39;</span>);
+  <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;connect&#39;</span>, <span style="color:#66d9ef">function</span>(){});
+  <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;event&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){});
+  <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;disconnect&#39;</span>, <span style="color:#66d9ef">function</span>(){});
+&lt;/<span style="color:#f92672">script</span>&gt;
 
 </code></pre></div><p>然後如果你在後端要寫整合測試時，想要模擬前端，也可以如下使用 :</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-client&#39;</span><span class="p">)</span><span class="p">(</span><span class="s1">&#39;http://localhost&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connect&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;event&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;disconnect&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="p">)</span><span class="p">{</span><span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io-client&#39;</span>)(<span style="color:#e6db74">&#39;http://localhost&#39;</span>);
+<span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;connect&#39;</span>, <span style="color:#66d9ef">function</span>(){});
+<span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;event&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">data</span>){});
+<span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;disconnect&#39;</span>, <span style="color:#66d9ef">function</span>(){});
 </code></pre></div><p>這邊還有一個重點，它與 socket.io 一樣核心都是<code>engine.io-client</code>並且也是由它來決定我們要用什麼傳輸方式(polling、websocket)。</p>
 <h2 id="socketioprotocol">socket.io-protocol</h2>
 <p>最後是<code>socket.io-protocol</code>，這個事實上上面有說明過了，我們在來複習一次。</p>
@@ -252,25 +267,25 @@
 <p><code>Encoder</code>就是用來進行 encode 的類別，然後它需要提供<code>encode</code>方法，並且有兩個參數分別為<code>packet 和 callback</code>。</p>
 <p>而<code>Decoder</code>就是要將 packet 進行 decod 會類別，並且需要有個<code>add</code>方法，來進行處理。</p>
 <p>像我們上面提到的<code>socket.io-parser</code>就是根據<code>socket.io-protocol</code>所定義的<code>parser api</code>實作出的程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">parser</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io-parser&#39;</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">encoder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">Encoder</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-<span class="kd">var</span> <span class="nx">packet</span> <span class="o">=</span> <span class="p">{</span>
-  <span class="nx">type</span><span class="o">:</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">EVENT</span><span class="p">,</span>
-  <span class="nx">data</span><span class="o">:</span> <span class="s1">&#39;test-packet&#39;</span><span class="p">,</span>
-  <span class="nx">id</span><span class="o">:</span> <span class="mi">13</span>
-<span class="p">}</span><span class="p">;</span>
-<span class="nx">encoder</span><span class="p">.</span><span class="nx">encode</span><span class="p">(</span><span class="nx">packet</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">encodedPackets</span><span class="p">)</span> <span class="p">{</span>
-  <span class="kd">var</span> <span class="nx">decoder</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">parser</span><span class="p">.</span><span class="nx">Decoder</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
-  <span class="nx">decoder</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;decoded&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">decodedPacket</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// decodedPacket.type == parser.EVENT
-</span><span class="c1"></span>    <span class="c1">// decodedPacket.data == &#39;test-packet&#39;
-</span><span class="c1"></span>    <span class="c1">// decodedPacket.id == 13
-</span><span class="c1"></span>  <span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">parser</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io-parser&#39;</span>);
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">encoder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">Encoder</span>();
+<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">packet</span> <span style="color:#f92672">=</span> {
+  <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">EVENT</span>,
+  <span style="color:#a6e22e">data</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;test-packet&#39;</span>,
+  <span style="color:#a6e22e">id</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">13</span>
+};
+<span style="color:#a6e22e">encoder</span>.<span style="color:#a6e22e">encode</span>(<span style="color:#a6e22e">packet</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">encodedPackets</span>) {
+  <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">decoder</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">parser</span>.<span style="color:#a6e22e">Decoder</span>();
+  <span style="color:#a6e22e">decoder</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;decoded&#39;</span>, <span style="color:#66d9ef">function</span>(<span style="color:#a6e22e">decodedPacket</span>) {
+    <span style="color:#75715e">// decodedPacket.type == parser.EVENT
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// decodedPacket.data == &#39;test-packet&#39;
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// decodedPacket.id == 13
+</span><span style="color:#75715e"></span>  });
 
-  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">encodedPackets</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">decoder</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">encodedPackets</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span><span class="p">)</span><span class="p">;</span>
-  <span class="p">}</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;</span> <span style="color:#a6e22e">encodedPackets</span>.<span style="color:#a6e22e">length</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>) {
+    <span style="color:#a6e22e">decoder</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">encodedPackets</span>[<span style="color:#a6e22e">i</span>]);
+  }
+});
 </code></pre></div><h3 id="packet">Packet</h3>
 <p><code>Packet</code>是<code>socket.io</code>世界裡的溝通包包，像你如果要放送訊息或是進行 connect 時，它們都是傳送的都是<code>packet</code>。</p>
 <p>在 protocol 中，它定義好了，一個 packet 要長什麼樣子 :</p>

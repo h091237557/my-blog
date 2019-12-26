@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -49,7 +52,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -97,7 +100,7 @@
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20190903/">
@@ -126,15 +129,28 @@
   </div>
   <div>
     
-    正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能
-    <a class="muted-link" href="/posts/20190903/">…</a>
+    <div class="summary">
+    正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?
+這首先第一部份，我們要探討以下主題 :
+ 在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?
+ 而這一題的主要的答案就是不少人面試很排斥的『演算法』。
+本篇文章會分為以下幾段 :
+ 一個好與不好的演算法性能差距多大呢 ? 演算法運算時間的分類 演算法優化建議  接下來正文開始。
+一個好與不好的演算法性能差距多大呢 ? 一個演算法的效能基本上有兩個東東 :
+ 時間複雜度: 你可以把它想成演算法的運行時間。 空間複雜度: 這個可以想成你這個演算法需要花多少的空間來處理。  上面只是簡單說明它的代表概念，比較實際的運算方法直接去 wiki 看就夠囉。
+那麼拉回拉，一個好與不好的演算法性能差距有多大呢 ?
+呵 !
+我們以一個最簡單的演算法『費波那契數列』來看看。
+首先這是好的程式碼。
+// good  console.time(&#39;time&#39;); function fib (n) { if ( n === 0 || n === 1) { return n; } let a = 0; let res = 1; let temp = 0; for (let i=2; i &lt;= n; i++) { temp = res; res = a + res; a = temp; } return res; } fib(45); console.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170427/">
@@ -159,15 +175,30 @@
   </div>
   <div>
     
-    比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸
-    <a class="muted-link" href="/posts/20170427/">…</a>
+    <div class="summary">
+    比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作  比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Bucket Sort就是屬於該歸類。
+我們這邊簡單的說一下比較排序法與非比較排序法的差別，首先比較排序法是透過資料兩兩比較進行排序，而且它在效能上有根本的限制，在最差的情況下，任何一種比較排序法至少需要O(nlogn)比較操作。
+網上有個簡單的證明，就設我們有3個資料要進行排序，1,4,5，那們它有幾種排序組合 ?
+答案是 3! = 3 * 2 * 1 = 6，六種排序法，也就是說它六較次數至少為 Log(N!) = O ( N log N )。
+而非比較排序法就沒有效能上的限制，通過非比較操作能在``O(n)`完成，但它缺少了靈活性，比較排序法能對各種數據型態進行排序，而非比較排序則不能，這種靈活性也導致了比較排序被更多的應用在大多數實際工作中。
+像在Mozilla的javascript的sort預設是Merge Sort，而WebKit則是Selection Sort，都是選用比較排序法。
+桶子排序法原理 桶子排序法，它的原理是將陣列，分散到有限數量的桶子中，然後每個桶子再個別進行排序，其中每個桶子的個別排序可以運用其它的演算法來進行排序。
+桶子排序法有三個特點
+ 桶子排序法是穩定的。 它是常見的排序法中最快的一種，大多數的情況下。 它非常快，但缺點是非常的耗空間。   上面有說到穩定，但穩定是什麼意思呢?例子，假設我們有個數列為3,5,19,3*,10，其中3*只是為了識別它和前面的3是不一樣的。
+穩定排序結果 =&gt; 1,3,3*,5,10,19
+不穩定排序結果 =&gt; 1,3*,3,5,10,19
+從上面結果可知穩定的它的順序會與原資料一樣3在3*前面，而不穩定則會有不同結果。
+ 桶子排序法基本的流程如下。
+ 建立桶子群。 將資料丟到對應的桶子裡。 個別桶子進行排序。 然後在依順序取出結果。  我們來看看下面的圖片說明，假設我們要排序的資料如下。
+[ 7 , 5 , 9 , 2 , 10 , 1 , 8 ]
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170426/">
@@ -192,15 +223,26 @@
   </div>
   <div>
     
-    合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法
-    <a class="muted-link" href="/posts/20170426/">…</a>
+    <div class="summary">
+    合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
+大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
+合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
+首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
+然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
+合併排序法的速度效能 平均 O(nlogn)
+最好 O(n)
+最壞 O(nlogn)
+合併排序法的空間效能 O(n)
+javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
+ Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &lt; len; i++) { if (i &lt; mid) { left.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170425/">
@@ -225,15 +267,26 @@
   </div>
   <div>
     
-    快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi
-    <a class="muted-link" href="/posts/20170425/">…</a>
+    <div class="summary">
+    快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作  快速排序法的原理 快速排序法，又稱為分割排序法(partioion exchange sort)，是一種最快的排序法之一，它使用分治法的概念，將問題拆分成兩個獨立的問題來進行解決，再將兩個結果合成原問題的答案，這就是說所謂的分治法(傳送門)。
+快速排序的過程有四個步驟。
+ 注意以下皆以由小排到大的流程來進行說明。
+ 假設我們總共要排序的資料有n個，D1,D2,D3,...,Dn。
+ 選定一個基準值(privot)，並假設為D。 由左至右尋找 i=2,3,4,..,n，一直到Di &gt; D。 由右至左尋找 j=n,n-1,n-2,...，一直到Dj &lt; D。 當i&lt;j時，Di與Dj互換，而當i&gt;j時D與Dj互換。  範例 我們下面來看看這個範例。
+假設我們的基準值設為最左邊的值，也就是陣列的初始值。
+ 基準值的選擇後面會說明
+ 而我們要排序的陣列如下。
+[ 39 , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]
+然後我們開始進行快速排序法，首先我們選定的基準值為39。
+[ 39 , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170424/">
@@ -258,15 +311,33 @@
   </div>
   <div>
     
-    本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，
-    <a class="muted-link" href="/posts/20170424/">…</a>
+    <div class="summary">
+    本篇文章分成以下幾個章節 :
+ 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。  堆積樹 Heap Tree 再說明堆積排序排序前，我們需要先知道一個東西，那就是Heap Tree，它是二元樹(不知道的可以看筆者的這篇文章，不過我們在這篇中還是會簡單的複習)的一種， 那二元樹是啥 ? 就是長的和下圖一樣的東西，而二元樹有兩個比較嚴謹的定義如下。
+ 1 . 每個節點最多有兩個子節點 2 . 子節點有左右之分
+ 而其中，我們在這邊需要用的是完全二元樹Complete Binary Tree，它就是Heap Tree，它除了上面的定義外，還有第三個定義。
+ 3 . 除了最後一階層之外的階層，都必預完全有左與右節點
+ 它的樣子如下圖。
+最大堆積 Max Heap 在了解完Heap Tree後，我們就要來知道，Max Heap是啥，它也是種堆積樹一種，不過它有個條件。
+ 1 . 父節點的值大於子節點 2 . 樹根(root)一定是所有節點的最大值
+ 根據以上的條件畫出的圖，大概如下。
+我們這邊來看看下面幾張Max Heap產生過程的圖解。
+首先我們會先將陣列轉換成Heap Tree。
+然後我們會從最後的父節點，開始進行Max Heap判斷，然後再往前遞回。我們會先從09該節點進行判斷，由於09小於16，因此進行互換，結果如下圖。
+接下來，我們在往回前一個父節點，11來進行判斷，因為該父節點值都大於子節點02與10因此不需要進行互換。結果如下圖。
+最後再來判斷root，也就是最後一個父節點08，它下面兩個子節點11與16都比它大，因此，它選擇最大值16進行交換，然後08再於09進行比較，再進行交換，結果如下。
+最後產生出的Max Heap結果如下。
+堆積排序法的原理 在了解完上面的預備知識後，我們就可以開始了解堆積排序法的做法囉，它的流程如下。
+前置作業
+ 將陣列轉換成Heap Tree。 在將Heap Tree轉換成Max Heap  重複作業
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170423/">
@@ -291,15 +362,27 @@
   </div>
   <div>
     
-    選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後
-    <a class="muted-link" href="/posts/20170423/">…</a>
+    <div class="summary">
+    選擇排序法的原理 插入排序法的執行效能 javascript演算法實作  選擇排序法的原理 選擇排序法，它基本的觀念為 :
+ 將資料分成已排序與未排序，然後在未排序的資料中尋找最小(大)值，並將它移置已排序資料的右邊。
+ 我們以下圖來簡單的進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為空，然後尋找未排序資料中最小值8，並將它移至已排序資料的右邊，也就是A[0]，結果如第二行。 第二行 : 已排序資料為8，尋找未排序資料中最小值23，並將它移至已排序資料的尾端A[1]，結果如第三行。 以此類推，最後可得到從小到大的排序資料。  圖片來源
+插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好、最壞、平均狀況 O(n^2)
+對都是一樣的，就算是排序好的，也是O(n^2)的時間複雜度，我們來看個例子。
+[1,2,3,4,5] 我們有上面的陣列，它需要進行排序，我們知道它排序好了，但演算法不知，所以還是要跑。
+ 第一行 : 已排序資料為空，然後尋找未排序資料最小值，因為演算法不知道最小值是啥，所以還是要從頭找到尾，然後找出1，並將它放到A[0]位置。 然後接下來，每一行還是要從未排序資料中，從頭掃到尾來尋找資料，不管你有沒有排序好。  建議使用情況 根據Wiki的說法，嗯……。
+ 原地操作幾乎是選擇排序的唯一優點，當空間複雜度要求較高時，可以考慮選擇排序；實際適用的場合非常罕見。
+ javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。
+/** * selectionSort * Selection Sort Algorithmic * @param arr * @returns {Array} , Thie return&#39;s array has been Sorted. */ function selectionSort(arr){ var len = arr.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170422/">
@@ -324,15 +407,30 @@
   </div>
   <div>
     
-    插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作
-    <a class="muted-link" href="/posts/20170422/">…</a>
+    <div class="summary">
+    插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。
+ 插入排序法的原理 插入排序法的執行效能 javascript演算法實作  插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序，該圖來源為此interactivepython。
+首先，我們會將資料分成兩部份，已排序與未排序，然後我們會進行以下作業
+ 將已排序資料與後一個資料進行比較，如果已排序資料大於它，則進行位移
+ 我們下面將以前四行來進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為54，然後我們與後一個26進行比較，54大於26因此我們會將26的位置替換成54，並將26插入至54的原位，結果為第二行。 第二行 : 已排序資料為26、54，然後我們與後一個93進行比較，54小於93因此不用進行位移，因為26、54為已排序資料，因此只需要比較54就好，結果為第三行。 第三行 : 已排序資料為26、54、93，然後與17進行比較，首先93大於17因此將93位移置A[3]，則時還沒插入喔，還要繼續比較，接下來54大於17因此將54位移至A[2]，然後26大於17，因此將26位移至A[1]，最後在將17插入剩餘的空間A[0]，結果為第四行。 第四行 : 已排序資料為17、26、54、93，開始與77進行比較，93大於77因此將93位移至A[4]的位置，然後54小於77，因此54不需要位移，最後將77插入至空缺的位置A[3]，當果為第五行。  插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好狀況 O(n)
+該演算法最好的情況是時間複雜度為O(n)，假設我們有下列陣列要排序。
+[ 1 , 2 , 3 , 4 ] 我們一看就知道，他不用進行排序，但演算法還不知道，所以它至少還是要跑個for迴圈，跑個4次，才知道它不用排序，因為我們這時最好的狀況就是只要跑4次，也就是陣列的大小。
+最壞狀況 O(n^2)
+假設我們要下列陣列要排序。
+[ 4 , 3 , 2 , 1 ] 對就是完全相反的，我們首先要跑for迴圈，然後裡面還要一個while比較，而且因為我們的陣列是完全相反的。
+平均狀況 O(n^2)
+我也不知道為啥平均是O(n^2)，真的。
+建議使用情況  要排序的資料數量不大 : 平均是時間複雜度是O(n^2)，如果來個1百萬個 n，你看看會如何。 大部份的資料已排序 : 上面有說過，該演算法會將資料分成已排序與未排序的來進行比較，也就是說如果已排序的資料越多，你就可以少做越少的比較。  javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170421/">
@@ -357,15 +455,20 @@
   </div>
   <div>
     
-    基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如
-    <a class="muted-link" href="/posts/20170421/">…</a>
+    <div class="summary">
+    基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
+ 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
+我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
+接下來我們簡單的使用js來實現二分搜尋法。
+效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170325/">
@@ -390,15 +493,26 @@
   </div>
   <div>
     
-    動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免
-    <a class="muted-link" href="/posts/20170325/">…</a>
+    <div class="summary">
+    動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。
+費波那西數列 最簡單說明動態規畫法的問題就是費波那西數列，它的定義如下。
+ F0 = 0
+F1 = 1
+Fn = Fn-1 + Fn-2
+ 也就是說F2所代表的意思為F2 = F1 + F0，也就等於F2 = 1 + 0。
+我們直接來看程式碼，首先先看沒有用cache的費波那西數列。非常的簡單就只用遞迴來計算每個數列的值。
+function fib (n){ if(n&lt;=1){ return n; } return fib(n-1)+fib(n-2); } 我們這邊使用個例子，來說明它的計算流程，我們執行fib(5)，然後我們直接看下面這張圖來了解它的過程，首先是項點fib(5)，它就是由fib(4)、fib(3)組成，然後再將之分解，就會如下圖的結果。其中我們有用綠色底來上色的地方，它就代表我們有重複的數字，像fib(2)就被計算了3次，所以上面這個演算法事實上做了很多重複的事情。
+而接下來，我們就將它改良一下，也就是用動態規畫法的概念下修改而成，它每次計算過一個數字後，就會先存起來，然後有需要時，就在將它拿出來。
+程式碼如下，它會將每個有計算過的數列儲放在記憶體內，有用到它時，就將它拿出來用。 下面就是簡單的使用動態規畫法概念實作的費波南西數列。
+//有用Cache var memo = []; var count = 0; var fib_cache = function(n){ if(n &lt;=1){ return n; } if( typeof memo[n] !== &#39;undefined&#39;){ return memo[n]; }else{ memo[n] = fib_cache(n-1) + fib_cache(n-2); return memo[n]; } } 背包問題（Knapsack Problem） 這個問題的定義如下。
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170324/">
@@ -423,15 +537,25 @@
   </div>
   <div>
     
-    在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小
-    <a class="muted-link" href="/posts/20170324/">…</a>
+    <div class="summary">
+    在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
+分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
+ 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
+ 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
+實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
+最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
+ 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
+ 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
+這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
+function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start+end)/2); console.log(&#34;startM:&#34; + start + &#34; middleM:&#34;+middle + &#34; end :&#34; + end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle+1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle+1;i&lt;=end;i++){ currentRightSum += datas[i]; if(currentRightSum &gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&gt;=start;k--){ currentLeftSum += datas[k]; if(currentLeftSum &gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum+leftSum; console.
+    </div>
   </div>
 </div>
 
   
     
     
-<div class="rounded-2 box-shadow-medium px-3 pb-2 pt-2 mb-3">
+<div class="rounded-2 box-shadow-medium px-3 pt-2">
   <div class="Subhead mb-2">
     <div class="Subhead-heading">
       <a href="/posts/20170323/">
@@ -456,8 +580,20 @@
   </div>
   <div>
     
-    通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題
-    <a class="muted-link" href="/posts/20170323/">…</a>
+    <div class="summary">
+    通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。
+ 基本概念 實作問題  基本概念 貪心法在解決問題時，基本上它只會根據當前最好的資料，就做出選擇，如果以心理學的忍耐實驗來說明 ; 這個實驗會給一堆小孩 1 塊巧克力，然後和小孩說，如果 15 分鐘後沒有吃掉這巧克力，那你就會有 3 塊巧克力，而貪心演算法它就只會考慮當下最佳解，也就是說它會吃掉巧克力。
+簡單用一句話說明貪心法的要義那就是
+ 只選擇『當時最佳的選擇』
+ 但是對於一個問題時，我們要著麼知道它是否可用貪心法來解決，以及是否得到問題的最佳解 ? 針對第一個問題『我們著麼知道是否可用貪心法』，我們可以看看問題的性質，如果一個問題，我們可以簡單的猜測，這問題是一個簡單的計算方法，並且答案正確，那這種類型的問題就適合它 ; 那第二個問題『 是否得到最佳解 』，這就不一定了，我們很難判斷我們用貪心法得出的答案是否是最佳解。
+那貪心法適合什麼樣的問題呢 ? 這和上面的問題是不同的喔 ? 上面是問可用，這邊是問適合。貪心法在最優子結構的問題中特別有用，最優子結構的意思就是局部最優解能決定全局最優解。
+根據wiki，我們可以將使用貪心法的過程分解成以下幾個部份。
+ 建立數學模型來描述問題。 把求解的問題分成若干個子問題。 對每一個子問題求解，得到子問題的局部最優解。 把子問題的解，合成原來解問題的一個解。  實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡，但我們這邊的都會使用JS來進行實作。
+硬幣問題  一元、五元、十元、五十元、一百元、五百元硬幣。我們想要儘可能少的硬幣支付 A 元。到底需要幾枚硬幣呢 ? 假設這種付款方式至少會存在一種。
+ 這個問題基本上是貪心法的基本問題，而且也是日常常見的問題。這個問題的重點是『盡可能少的硬幣』，所以很自然的我們直覺會想盡量多付五百，再來是一百，然後已此類推，就可以得到最小的硬幣數量。
+程式碼如下，非常的簡單。
+var coins = [1,5,10,50,100,500]; var pay = 2430; function greedSol(coins,pay){ var result = {}; for (var i=coins.length-1;i&gt;=0;i--){ var coinNum = Math.
+    </div>
   </div>
 </div>
 

@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,18 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將會說明以下幾點。 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機 P.S &#43;u^11鐵人們 ~ 事實上我已快gg了|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將會說明以下幾點。
+ 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機  P.S &#43;u^11鐵人們 ~ 事實上我已快gg了
+~ 什麼是索引? ~ 索引是什麼?最常見的說法是，一本字典中，你要找單字，會先去前面的索引找他在第幾頁，是的這就是索引，可以幫助我們更快速的尋找到document，下面畫張圖來比較一下不使用索引和使用索引的搜尋概念圖。
+~ 索引的優缺點 ~ 索引竟然可以幫助我們著麼快的找到目標，那是不是以後都用索引就好??著麼可能!~ 索引好歸好，但他就像雙刃刀，用的不好會gg的。
+優點  搜尋速度更(飛)快 ~ 在使用分組或排度時更快 ~  缺點  每次進行操作(新增、更新、刪除)時，都會更費時，因為也要修改索引。 索引需要佔據空間。  使用時機 所以根據以上的優缺點可知，不是什麼都要建立索引的，通常只有下列時機才會使用。
+ 搜尋結果佔原collection越小，才越適合(下面會說明更清楚)。 常用的搜尋。 該搜尋造成性能瓶頸。 在經常需要排序的搜尋。 當索引性能大於操作性能時。  ~ 索引的建立 ~ 我們簡單建立個索引使用範例。
+db.tests.insert( {&amp;#34;x&amp;#34; : &amp;#34;hello&amp;#34;} ) 然後這時我們建立x欄位的索引。
+db.tests.ensureIndex({ &amp;#34;x&amp;#34; : 1 }) 然後我們可以達行下列指令，來查看有沒有建立成功。
+db.tests.getIndexs() 結果如下，建立成功x的索引，其中_id那個是預設的，mongodb會自動幫objectId建立索引。
+~ 索引與非索引搜尋比較 ~ 在mongodb中排序是非常的耗費內存資源，如果排序時內存耗費到32mb(這裡)，mongodb就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
+我們這裡建立些資料，來比較看看兩者的資源耗費不同點。
+for (var i=0;i&amp;lt;100000;i&#43;&#43;){ db.test.insert({ &amp;#34;x&amp;#34; : i }) } 然後建立x的索引。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +53,18 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-11之MongoDB索引(1)的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將會說明以下幾點。 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機 P.S &#43;u^11鐵人們 ~ 事實上我已快gg了|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將會說明以下幾點。
+ 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機  P.S &#43;u^11鐵人們 ~ 事實上我已快gg了
+~ 什麼是索引? ~ 索引是什麼?最常見的說法是，一本字典中，你要找單字，會先去前面的索引找他在第幾頁，是的這就是索引，可以幫助我們更快速的尋找到document，下面畫張圖來比較一下不使用索引和使用索引的搜尋概念圖。
+~ 索引的優缺點 ~ 索引竟然可以幫助我們著麼快的找到目標，那是不是以後都用索引就好??著麼可能!~ 索引好歸好，但他就像雙刃刀，用的不好會gg的。
+優點  搜尋速度更(飛)快 ~ 在使用分組或排度時更快 ~  缺點  每次進行操作(新增、更新、刪除)時，都會更費時，因為也要修改索引。 索引需要佔據空間。  使用時機 所以根據以上的優缺點可知，不是什麼都要建立索引的，通常只有下列時機才會使用。
+ 搜尋結果佔原collection越小，才越適合(下面會說明更清楚)。 常用的搜尋。 該搜尋造成性能瓶頸。 在經常需要排序的搜尋。 當索引性能大於操作性能時。  ~ 索引的建立 ~ 我們簡單建立個索引使用範例。
+db.tests.insert( {&#34;x&#34; : &#34;hello&#34;} ) 然後這時我們建立x欄位的索引。
+db.tests.ensureIndex({ &#34;x&#34; : 1 }) 然後我們可以達行下列指令，來查看有沒有建立成功。
+db.tests.getIndexs() 結果如下，建立成功x的索引，其中_id那個是預設的，mongodb會自動幫objectId建立索引。
+~ 索引與非索引搜尋比較 ~ 在mongodb中排序是非常的耗費內存資源，如果排序時內存耗費到32mb(這裡)，mongodb就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
+我們這裡建立些資料，來比較看看兩者的資源耗費不同點。
+for (var i=0;i&lt;100000;i&#43;&#43;){ db.test.insert({ &#34;x&#34; : i }) } 然後建立x的索引。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +76,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -164,27 +189,27 @@
 </ul>
 <h2 id="--2">~ 索引的建立 ~</h2>
 <p>我們簡單建立個索引使用範例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">tests</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span> <span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="s2">&#34;hello&#34;</span><span class="p">}</span> <span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">tests</span>.<span style="color:#a6e22e">insert</span>( {<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;hello&#34;</span>} )
 </code></pre></div><p>然後這時我們建立<code>x</code>欄位的索引。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">tests</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">tests</span>.<span style="color:#a6e22e">ensureIndex</span>({ <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> })
 </code></pre></div><p>然後我們可以達行下列指令，來查看有沒有建立成功。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">tests</span><span class="p">.</span><span class="nx">getIndexs</span><span class="p">(</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">tests</span>.<span style="color:#a6e22e">getIndexs</span>()
 </code></pre></div><p>結果如下，建立成功<code>x</code>的索引，其中<code>_id</code>那個是預設的，<code>mongodb</code>會自動幫<code>objectId</code>建立索引。</p>
 <p><img src="http://yixiang8780.com/outImg/20161209-2.png" alt=""></p>
 <h2 id="--3">~ 索引與非索引搜尋比較 ~</h2>
 <p>在<code>mongodb</code>中排序是非常的耗費內存資源，如果排序時內存耗費到<code>32mb</code>(<a href="https://docs.mongodb.com/v3.0/tutorial/sort-results-with-indexes/">這裡</a>)，<code>mongodb</code>就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。</p>
 <p>我們這裡建立些資料，來比較看看兩者的資源耗費不同點。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">100000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-		<span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="nx">i</span>
-	<span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">100000</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">insert</span>({
+		<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">i</span>
+	})
+}
 </code></pre></div><p>然後建立<code>x</code>的索引。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">ensureIndex</span>({ <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> })
 </code></pre></div><p>然後我們在有索引與無索引的情況下指行下列指令。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="p">{</span><span class="s2">&#34;$gt&#34;</span> <span class="o">:</span> <span class="mi">50000</span><span class="p">}</span><span class="p">}</span><span class="p">)</span>
-		<span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="p">{</span><span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">}</span><span class="p">)</span>
-		<span class="p">.</span><span class="nx">explain</span><span class="p">(</span><span class="s2">&#34;executionStats&#34;</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">find</span>({ <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> {<span style="color:#e6db74">&#34;$gt&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">50000</span>}})
+		.<span style="color:#a6e22e">sort</span>({<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>})
+		.<span style="color:#a6e22e">explain</span>(<span style="color:#e6db74">&#34;executionStats&#34;</span>)
 </code></pre></div><p>首先來看看<code>無索引</code>的，可知它耗用了不少的內存，並且速度也比較慢。</p>
 <p><img src="http://yixiang8780.com/outImg/20161209-3.png" alt=""></p>
 <p>在來看看<code>有索引</code>的，由於有使用到索引進行排序，所以不需要在內存中進行排序。</p>
@@ -197,14 +222,14 @@
 <h3 id="collection60">我們來試試結果佔原<code>collection</code>比大於60%會如何</h3>
 <p>我們這邊將要來驗證一下，在這種情況下，索引搜尋和全文搜尋(未使用索引)那個比較快。</p>
 <p>首先來建立資料一百萬筆，然後有<code>60%</code>的<code>x</code>都為<code>1</code>。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">1000000</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span><span class="p">{</span>
-	<span class="kd">var</span> <span class="nx">value</span> <span class="o">=</span> <span class="p">(</span><span class="nx">i</span><span class="o">&lt;</span><span class="mi">600000</span><span class="p">)</span><span class="o">?</span><span class="s2">&#34;1&#34;</span><span class="o">:</span><span class="s2">&#34;2&#34;</span> <span class="p">;</span>
-	<span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">insert</span><span class="p">(</span><span class="p">{</span>
-	  <span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="nx">value</span>
-	<span class="p">}</span><span class="p">)</span>
-<span class="p">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">i</span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">1000000</span>;<span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>){
+	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> (<span style="color:#a6e22e">i</span><span style="color:#f92672">&lt;</span><span style="color:#ae81ff">600000</span>)<span style="color:#f92672">?</span><span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">:</span><span style="color:#e6db74">&#34;2&#34;</span> ;
+	<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">insert</span>({
+	  <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">value</span>
+	})
+}
 </code></pre></div><p>然後建立<code>x</code>的索引。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="nx">db</span><span class="p">.</span><span class="nx">test</span><span class="p">.</span><span class="nx">ensureIndex</span><span class="p">(</span><span class="p">{</span> <span class="s2">&#34;x&#34;</span> <span class="o">:</span> <span class="mi">1</span> <span class="p">}</span><span class="p">)</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">test</span>.<span style="color:#a6e22e">ensureIndex</span>({ <span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> })
 </code></pre></div><p>然後我們來比較看看兩者的搜尋速度，我們要尋找<code>x</code>為<code>1</code>的。</p>
 <p>首先看看沒有用索引的速度，嗯…<code>418ms</code></p>
 <p><img src="http://yixiang8780.com/outImg/20161209-5.png" alt=""></p>

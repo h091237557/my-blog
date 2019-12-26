@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,22 @@
     <meta content="nodejs, nginx" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。
+而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 :
+ 反向代理器
+ 這種擴展的方法為，在不同的 port 或不同的機器上，我們會啟動多個應用程式，然後使用反向代理器來存取這些機器，用來分散流量。
+他不會像 cluster 上有一個master process然後將工作分配給多個worker，而是有更多個獨立的程式執行在同一個機器不同 port上或是分散在相同的網路中的不同機器上，然後會以反向代理器為入口，由他處理請求並與後端的伺服器做處理，然後在由他回傳給客戶端。
+下圖為該結構的圖示 :
+那他這樣做有什麼優點呢 ? 事實上他就是 proxy 的用法，也就是說 :
+ 他可以保護伺服器
+ 反向代理器可以和我們上一章所說的cluster一起使用，例如單一機器使用 cluster 進行垂直擴展，再使用反向代理器來做水平性擴展。
+本篇文章中我們將使用最常用來做反向代理器的Nginx 。
+Nginx 做反向代理器，並配置負載平衡 nginx是一個網頁伺服器，它的設計架構和 nodejs 非常的相似，都是單一執行緒架構，並且還有豐富的模組庫和第三方工具可以使用，非常的方便啊。
+這邊我們將要使用nginx來作為反向代理器，並且進行負載平衡的功能，它要做的工作就是 :
+ 我們有多台伺服器，然後請求進來要將請求分給其它台伺服器。
+ 首先我們先安裝 nginx
+// ubuntu apt-get install nginx // mac brew install nginx 然後我們簡單的建立一個 server，它每一次收到請求時，都會回傳這個工作是那個port來進行處理。
+// app.js  const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.log(&amp;#34;master:&amp;#34; &#43; process.pid); res.writeHead(200); res.write(&amp;#34;port:&amp;#34; &#43; this.|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +57,22 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之可擴展性 --- Nginx反向代理建立 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。
+而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 :
+ 反向代理器
+ 這種擴展的方法為，在不同的 port 或不同的機器上，我們會啟動多個應用程式，然後使用反向代理器來存取這些機器，用來分散流量。
+他不會像 cluster 上有一個master process然後將工作分配給多個worker，而是有更多個獨立的程式執行在同一個機器不同 port上或是分散在相同的網路中的不同機器上，然後會以反向代理器為入口，由他處理請求並與後端的伺服器做處理，然後在由他回傳給客戶端。
+下圖為該結構的圖示 :
+那他這樣做有什麼優點呢 ? 事實上他就是 proxy 的用法，也就是說 :
+ 他可以保護伺服器
+ 反向代理器可以和我們上一章所說的cluster一起使用，例如單一機器使用 cluster 進行垂直擴展，再使用反向代理器來做水平性擴展。
+本篇文章中我們將使用最常用來做反向代理器的Nginx 。
+Nginx 做反向代理器，並配置負載平衡 nginx是一個網頁伺服器，它的設計架構和 nodejs 非常的相似，都是單一執行緒架構，並且還有豐富的模組庫和第三方工具可以使用，非常的方便啊。
+這邊我們將要使用nginx來作為反向代理器，並且進行負載平衡的功能，它要做的工作就是 :
+ 我們有多台伺服器，然後請求進來要將請求分給其它台伺服器。
+ 首先我們先安裝 nginx
+// ubuntu apt-get install nginx // mac brew install nginx 然後我們簡單的建立一個 server，它每一次收到請求時，都會回傳這個工作是那個port來進行處理。
+// app.js  const http = require(&#39;http&#39;); http.createServer(function (req, res) { console.log(&#34;master:&#34; &#43; process.pid); res.writeHead(200); res.write(&#34;port:&#34; &#43; this.|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +84,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -152,20 +185,20 @@ apt-get install nginx
 // mac
 brew install nginx
 </code></pre><p>然後我們簡單的建立一個 server，它每一次收到請求時，都會回傳這個工作是那個<code>port</code>來進行處理。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="c1">// app.js
-</span><span class="c1"></span>
-<span class="kr">const</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#75715e">// app.js
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">http</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;http&#39;</span>);
 
-<span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&#34;master:&#34;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">createServer</span>(<span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">req</span>, <span style="color:#a6e22e">res</span>) {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;master:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">pid</span>);
 
-    <span class="nx">res</span><span class="p">.</span><span class="nx">writeHead</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&#34;port:&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">_connectionKey</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">res</span><span class="p">.</span><span class="nx">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">writeHead</span>(<span style="color:#ae81ff">200</span>);
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">write</span>(<span style="color:#e6db74">&#34;port:&#34;</span> <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_connectionKey</span>.<span style="color:#a6e22e">toString</span>());
+    <span style="color:#a6e22e">res</span>.<span style="color:#a6e22e">end</span>();
 
-<span class="p">}</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="nx">process</span><span class="p">.</span><span class="nx">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="mi">8080</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;started:&#39;</span> <span class="o">+</span> <span class="nx">process</span><span class="p">.</span><span class="nx">pid</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+}).<span style="color:#a6e22e">listen</span>(<span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">env</span>.<span style="color:#a6e22e">PORT</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">argv</span>[<span style="color:#ae81ff">2</span>] <span style="color:#f92672">||</span> <span style="color:#ae81ff">8080</span>, <span style="color:#66d9ef">function</span> () {
+    <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#39;started:&#39;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">process</span>.<span style="color:#a6e22e">pid</span>);
+});
 
 </code></pre></div><p>接下來我們直接使用上一篇有說到的<code>forever</code>來開啟四個應用程式，並且每一個都給予指定的<code>port</code>。</p>
 <pre><code>forever start app.js 8081 

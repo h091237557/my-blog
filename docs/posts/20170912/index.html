@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,13 @@
     <meta content="socket" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ?
+通常聊天群是會由用戶提出申請，然後管理者來加入到該群裡，而聊天室則不相同，它是用戶可以自由自在的加入或退出，這也代表這，通常聊天群會限制人數，像 line 好像就限制 500 人，而聊天室則否，他通常不會限制人數。
+那這也代表我們要面對什麼問題呢 ? 我目前想想主要有兩個 :
+ 由於沒有限制人數，所以通常我們的架構要考慮擴展性。 訊息的即時性非常的要求，如果一個訊息傳輸慢了，會導致其它人無法理解上下文。  最簡單的聊天室架構 V-1 基本上和聊天群的架構相同，都是一個Business Server和一個Message Server，其中前者做的事情是為所有需要使用 http 協議的工作，更正確的說是 http 短連接的工作，如新增聊天室、登入、登出、註冊這類事情的，都屬於 Business Server ，而所有使用 websocket 協議的都是屬於 Message Server 的工作。
+聊天室 V-2 上面的架構有沒有啥問題呢 ? 有的 ! 請想像一個情境 :
+ 用戶 A 從 business server 登入後，然後再去 message server 建立連線，但問題是 message server 怎麼知道這條連線是用戶 A 呢 ?
+ 在一般的 web 應用中，每當 client 連結 server 時，server 會產生唯一個 sessionId ，並用它來連結 server 內的存放空間，然後會將 sessionId 存放到 cookie 中，這樣每一次 client 進行請求時，server 都會去 cookie 中取得 sessionId 然後再去 session 取得資料。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +48,13 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="聊天『室』的設計 ~ 安安你好，要打龍嗎? ~ | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ?
+通常聊天群是會由用戶提出申請，然後管理者來加入到該群裡，而聊天室則不相同，它是用戶可以自由自在的加入或退出，這也代表這，通常聊天群會限制人數，像 line 好像就限制 500 人，而聊天室則否，他通常不會限制人數。
+那這也代表我們要面對什麼問題呢 ? 我目前想想主要有兩個 :
+ 由於沒有限制人數，所以通常我們的架構要考慮擴展性。 訊息的即時性非常的要求，如果一個訊息傳輸慢了，會導致其它人無法理解上下文。  最簡單的聊天室架構 V-1 基本上和聊天群的架構相同，都是一個Business Server和一個Message Server，其中前者做的事情是為所有需要使用 http 協議的工作，更正確的說是 http 短連接的工作，如新增聊天室、登入、登出、註冊這類事情的，都屬於 Business Server ，而所有使用 websocket 協議的都是屬於 Message Server 的工作。
+聊天室 V-2 上面的架構有沒有啥問題呢 ? 有的 ! 請想像一個情境 :
+ 用戶 A 從 business server 登入後，然後再去 message server 建立連線，但問題是 message server 怎麼知道這條連線是用戶 A 呢 ?
+ 在一般的 web 應用中，每當 client 連結 server 時，server 會產生唯一個 sessionId ，並用它來連結 server 內的存放空間，然後會將 sessionId 存放到 cookie 中，這樣每一次 client 進行請求時，server 都會去 cookie 中取得 sessionId 然後再去 session 取得資料。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +66,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 

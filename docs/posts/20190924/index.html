@@ -10,6 +10,9 @@
   gtag('config', 'UA-154360458-1');
 </script>
   <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
       <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     
     <meta charset="utf-8">
@@ -23,7 +26,15 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。
+本篇文章共分以下幾個章節 :
+ IM 服務的先行知識 IM 服務的擴展方案 1 - 負載均衡 IM 服務的擴展方案 2 : IM 服務分配器  在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。
+簡單的說就是像 line 一樣可以進行即時的溝通。
+傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :
+IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。
+ IM 服務就是像聊天室例如 Line 這種類型的服務
+ 而通常要實現這個功能目前應該只有兩種機制 :
+ long polling websocket  咱們來簡單用下圖 1 來看一下這兩種運行的差別。|Describe what your web page is about">
     
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
@@ -39,7 +50,15 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。
+本篇文章共分以下幾個章節 :
+ IM 服務的先行知識 IM 服務的擴展方案 1 - 負載均衡 IM 服務的擴展方案 2 : IM 服務分配器  在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。
+簡單的說就是像 line 一樣可以進行即時的溝通。
+傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :
+IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。
+ IM 服務就是像聊天室例如 Line 這種類型的服務
+ 而通常要實現這個功能目前應該只有兩種機制 :
+ long polling websocket  咱們來簡單用下圖 1 來看一下這兩種運行的差別。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
@@ -51,7 +70,7 @@
 
     <link rel="stylesheet" href="/assets/syntax-1.1.css">
     <link rel="stylesheet" href="/assets/primer-build.css">
-    <link rel="stylesheet" href="/assets/style-1.6.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
   </head>
 
 
@@ -173,23 +192,23 @@
 <li>socket.io server</li>
 </ul>
 <p>簡單的方例如下使用。首先來看 server 端的程式碼。</p>
-<div class="highlight"><pre class="chroma"><code class="language-js" data-lang="js"><span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;socket.io&#39;</span><span class="p">)</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="mi">8080</span><span class="p">)</span><span class="p">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">io</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">require</span>(<span style="color:#e6db74">&#39;socket.io&#39;</span>).<span style="color:#a6e22e">listen</span>(<span style="color:#ae81ff">8080</span>);
 
-<span class="nx">io</span><span class="p">.</span><span class="nx">sockets</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;connection&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">socket</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">hello</span><span class="o">:</span> <span class="s1">&#39;world&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">}</span><span class="p">)</span><span class="p">;</span>
+<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">sockets</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;connection&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">socket</span>) {
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">emit</span>(<span style="color:#e6db74">&#39;news&#39;</span>, { <span style="color:#a6e22e">hello</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;world&#39;</span> });
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;my other event&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+    });
+});
 </code></pre></div><p>再來是 client 方的程式碼</p>
-<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;/socket.io/socket.io.js&#34;</span><span class="p"></span><span class="p">&gt;</span><span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">script</span><span class="p"></span><span class="p">&gt;</span>
-    <span class="kd">var</span> <span class="nx">socket</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080&#39;</span><span class="p">)</span><span class="p">;</span>
-    <span class="nx">socket</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;news&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span><span class="p">;</span>
-        <span class="nx">socket</span><span class="p">.</span><span class="nx">emit</span><span class="p">(</span><span class="s1">&#39;my other event&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">my</span><span class="o">:</span> <span class="s1">&#39;data&#39;</span> <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-    <span class="p">}</span><span class="p">)</span><span class="p">;</span>
-<span class="p">&lt;</span><span class="p">/</span><span class="nt">script</span><span class="p">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/socket.io/socket.io.js&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;<span style="color:#f92672">script</span>&gt;
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">connect</span>(<span style="color:#e6db74">&#39;http://localhost:8080&#39;</span>);
+    <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">on</span>(<span style="color:#e6db74">&#39;news&#39;</span>, <span style="color:#66d9ef">function</span> (<span style="color:#a6e22e">data</span>) {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#a6e22e">data</span>);
+        <span style="color:#a6e22e">socket</span>.<span style="color:#a6e22e">emit</span>(<span style="color:#e6db74">&#39;my other event&#39;</span>, { <span style="color:#a6e22e">my</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;data&#39;</span> });
+    });
+&lt;/<span style="color:#f92672">script</span>&gt;
 </code></pre></div><p>這樣就可以完成一個即時通訊服務。</p>
 <p><strong>~ 小備註 ~</strong>
 想理解 socket.io 相關知識的，可以參考筆者以下幾篇文章。</p>
