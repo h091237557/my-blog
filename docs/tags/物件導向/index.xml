@@ -12,7 +12,7 @@
         <atom:link href="https://mark-lin.com/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
     
 
-
+    
     <item>
       <title>物件導向系列菜單 11-『 泛型 ( Generics ) 』</title>
       <link>https://mark-lin.com/posts/20150826/</link>
@@ -152,6 +152,18 @@ Interface使用時機
 繼承父類別(基底類別 Base Class)的類別就被稱為子類別(衍生類別 Derived Class)，子類別繼承了父類別的屬性與方法。
 繼承的傳遞 : 你也會繼承到你阿公的東西 繼承是可以傳遞，Class C 繼承至 Class B，而 Class B 繼承至 Class A，則 Class C 會繼承至 Class A、B 白話文就是，你也會繼承到你阿公的東西。
 以下為繼承程式碼 /// &amp;lt;summary&amp;gt;  /// 父類別  /// &amp;lt;/summary&amp;gt;  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &amp;lt;summary&amp;gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &amp;lt;/summary&amp;gt;  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; ; } } /// &amp;lt;summary&amp;gt;  /// 子類別繼承Car  /// &amp;lt;/summary&amp;gt;  public class BMWCar :Car { //BMW的屬性引擎  public string BMWPower; } 以下紅色框框的部份就是從父類別Car繼承而來的屬性與方法</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 1-『 基本概念 』</title>
+      <link>https://mark-lin.com/posts/20150816/</link>
+      <pubDate>Sun, 16 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150816/</guid>
+      <description>物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。
+類別 小弟是把類別想成是『汽車藍圖』，它定義好了汽車的屬性與方法， 但它沒有實體(Instance)，也就是說，你必須實作這張汽車藍圖它才能產生實體(可以開的車~)。
+class Car { //定義車子的速度欄位  public int Speed; //車子的顏色欄位  public string Color; //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed.ToString() + &amp;#34;』在移動&amp;#34;; } } 物件 就是實際做出來的車。以程式術語來說，運用汽車藍圖做出車的過程就是所謂的 『實體化』系統會自動給予物件記憶體。以下為實體化的C#程式碼。
+//實體化Car類別為MyCar物件，並設定欄位Speed為100、Color為Red 	Car MyCar = new Car { Speed = 100, Color = &amp;#34;red&amp;#34; }; TextBox1.Text = MyCar.DriveCar(); 執行結果 正在開『red』的車時速『100』在移動  建構子或建構函式 ( constructor ) 其中Car MyCar = new Car ，即為產生一個名叫MyCar的Car實體。 new Car 除了產生實體，它還會幫你呼叫一個名為Car()的方法。該方法就是所謂的建構子(constructor)。</description>
     </item>
     
   </channel>

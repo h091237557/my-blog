@@ -12,7 +12,7 @@
         <atom:link href="https://mark-lin.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
     
 
-
+    
     <item>
       <title>30-29 之資料庫層擴展中間件 - MyCAT 的淺淺談</title>
       <link>https://mark-lin.com/posts/20190929/</link>
@@ -199,6 +199,37 @@ user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. u
  每個索引都會建立一顆 b+ 樹。 每次新增、更新資料時都會改變 b+ 樹。  所以當你索引越多時，你所需要的記憶體與維護索引的 cpu 運算就需要越多。
 觀念 2. 懂的使用 Explain 來分析你的 SQL 索引性能解析 explain 這個指令可以讓你知道你下的 sql 語句是否有命中索引。
 EXPLAIN SELECT * FROM user_no WHERE name = &#39;mark&#39;; ===================================================== id: 1 select_type: SIMPLE table: user partitions: NULL type: const possible_keys: PRIMARY key: PRIMARY key_len: 8 ref: const rows: 1 filtered: 100.</description>
+    </item>
+    
+    <item>
+      <title>30-12 之資料庫層的核心 - MySQL 的索引實現</title>
+      <link>https://mark-lin.com/posts/20190912/</link>
+      <pubDate>Thu, 12 Sep 2019 20:11:06 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20190912/</guid>
+      <description>正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b+ 樹的，也理解了為什麼 innoDB 要選擇 b+ 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b+ 樹來建立索引機制 ?
+本篇文章分為以下幾個章節 :
+ 一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index ) InnoDB 所提供的索引類型  一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?
+   Id ( PK ) Name age     1 Mark 18   2 Jack 10   3 Ian 36   4 Jiro 30   5 Fucc 27   &amp;hellip; &amp;hellip; &amp;hellip;   10 Fukk 46   表 1 : 範例      首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。</description>
+    </item>
+    
+    <item>
+      <title>30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹</title>
+      <link>https://mark-lin.com/posts/20190911/</link>
+      <pubDate>Wed, 11 Sep 2019 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20190911/</guid>
+      <description>正文開始 接下來咱們要來理解資料庫系統中最核心的問題 :
+ 要如何儲放資料，才能更快速的找到資料呢 ?
+ 而這個東西的技術就是所謂的 :
+ 索引
+ 而在 mysql 中決定如何儲放的是資料庫儲存引擎來決定，而這裡咱們將要從 mysql 預設引擎 innodb 來深入的理解一下。
+在 InnoDB 中預設是使用『 B+樹 』來當資料儲放格式，而為什麼要選擇它呢 ?
+這就是我們這篇文章的重點。
+ InnoDB 為什麼選擇 B+ 樹 ?
+ 本篇文章分為以下幾個章節，這也就是 B+ 樹的誕生原由。
+ 二分搜尋 Binary Search 二元搜尋樹 Binary Search Tree 平衡二元搜尋樹 Balanced Binary Search Tree B 樹 B+樹 ( InnoDB 的選擇 )  二分搜尋 Binary Search 首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。
+那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。</description>
     </item>
     
   </channel>

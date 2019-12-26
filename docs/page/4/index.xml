@@ -1,0 +1,653 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/</link>
+    <description>Recent content on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
+    <webMaster>h091237557@gmail.com (marklin)</webMaster>
+    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    
+        <atom:link href="https://mark-lin.com/index.xml" rel="self" type="application/rss+xml" />
+    
+
+    
+    <item>
+      <title>Node之可擴展性 --- Node的Cluster</title>
+      <link>https://mark-lin.com/posts/20170605/</link>
+      <pubDate>Mon, 05 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170605/</guid>
+      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一定會有界限，因此我們必須將應用程式擴展運用。
+根據The Art of Scalabiltiy的內容來知道，在擴展時，可以用下列三個維度來描述可擴展性。這也是被稱為擴展立方(scale cube)的東東。
+ X 軸 : 複制 Y 軸 : 以服務/功能分解 Z 軸 : 以資料來分解  基本上Y軸擴展的方法是屬於微服務(Microservices)的範圍所以本篇也不詳細說明，而Z 軸則屬於資料庫方法所以也不加以說明。
+我們本篇將要說明X軸 : 複制，它的白話文概念如下 :
+ 將應用程式加以複制 N 個，這也代表每個實體只須處理 N 分之一的工作量。
+ 傳統的系統可以利用多執行緒，來完整使用整台機器的效能，但 node 則否，因為它是單一執行緒，並且在 64 位元下有1.7GB的限制，接下來我們將介紹 node 擴展的基本機制 cluster。
+cluster cluster是在 node 中的內建模組，他讓我們可以建立一個 cluster，可通過父進程來管理一堆子進程，在 cluster 中父進程被稱為master process，而子進程則被稱為worker process。
+每個傳送的連線都會先到master process然後會在將工作分配到worker process中。
+我們根據上一篇的程式碼來進行修改。下面程式碼中，首先請先看if(cluster.isMaster)裡面，當執行時，會使用cluster fork根據 cpu 的數量來新增 process，然後每次fork時都會執行else裡面的程式。
+const http = require(&amp;#39;http&amp;#39;); const child_process = require(&amp;#39;child_process&amp;#39;); const cluster = require(&amp;#39;cluster&amp;#39;); const numCPUs = require(&amp;#39;os&amp;#39;).</description>
+    </item>
+    
+    <item>
+      <title>Node之CPU吃重的任務要如何處理 ? </title>
+      <link>https://mark-lin.com/posts/20170604/</link>
+      <pubDate>Sun, 04 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170604/</guid>
+      <description>這篇文章中，我們希望學習到 :
+ 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ?
+ 首先我們先來複習一下nodejs的機制一下。
+我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當有一個請求進來時，它們都會產生一個執行緒，但nodejs則否，他是用一個執行緒就來處理所有的請求，而他的背後就是有個事件機制設計才能做到這種方法。請參考這篇。
+ 但為什麼要設計成用單一執行序架構呢?
+ 這邊我們要先來說說I/O操作。
+I/O 問題 I/O就是電腦中資料與記憶體、硬碟或網路的輸入和輸出，他基本上是電腦作業裡最慢的事物，I/O操作基本上對 cpu 而言通常負擔很小，但是問題就在於它很耗時。
+傳統的阻塞I/O設計方式如下 :
+data = getData(); print(data); 我們假設getData是要去讀取一個檔案，而這時會等到getData執行完後，就資料傳送給data時我們才可以使用。
+那假設我們這個getData要讀很久，那這樣的話其它的請求著麼辦 ?
+傳統的作法就會像下面這張圖一樣，系統會分別的開啟不同的執行緒來進行處理，如此一來，當有某個執行緒因I/O操作而阻塞時，就不會影響到其它的請求。
+這種作法的缺點就在於 :
+ 開啟執行緒的成本不低，它會消耗記憶體而且引發環境切換
+ 那node他著麼處理呢 ?
+他使用單一執行緒機制，而他的執行緒中有一個機制被稱為事件機制，簡單的說事件機制可以將所有的請求收集起來，並且將需要長時間處理的工作丟出去工作給其它人做(I/O)，然後繼續接收新的請求，就如同下圖一樣，這樣的優點就在於，他可以接受更多的請求，，而不會因為一個長時間的I/O，其它東西就都卡住不能動。
+但他也是有缺點的 :
+ 它無法充分利用多核 cpu 資源
+ 當 Event loop 遇到 CPU 密集型任務會發生什麼事 ? 上面有提到單一執行緒機制有一個缺點，那就是無法統分利用cpu資源，這是什麼意思呢 ?
+傳統的方式，每個請求分配一個執行緒，他都可以得到一個不同於自已的 cpu，在這種情況下多執行緒可以大大的提高資源使用效率。
+而這也代表的單執行緒他就只能占用一個 cpu ，並且如果某個任務是很吃 cpu 的工作時，這執行緒就會被那個任務占用，導致其它的任務、請求都無法執行。
+我們下面簡單的寫一段程式碼來看看會發生什麼事情。
+下面這段程式碼裡，我們將簡單的建立一個server，它一收到請求，就會開始計算費波南西數列，這種運算基本上就是一個很耗 CPU 的工作。
+const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.</description>
+    </item>
+    
+    <item>
+      <title>Node 設計模式之代理器 ( Proxy )</title>
+      <link>https://mark-lin.com/posts/20170603/</link>
+      <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170603/</guid>
+      <description>本篇文章中我們將要解決以下的問答。
+  什麼是代理器模式 ? 我們為什麼要使用它 ?   其中本篇文章還會介紹ES6所提供的Proxy使用方法。
+什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器模式的概念，無論如何，client和Real Object之間一定會由Proxy來進行溝通。
+我們還可以用下面這句非常白話文的文字來表達代理器模式的精華。
+ 我的時間很忙的，除非真的要用到我，不然請直接找我的代理人。
+ 我們簡單來寫個範例來說明一下，代理器的實際上使用，首先我們先寫一個登入的程式。
+Class UserService{ construct () { } GetUser(name,password){ ...... return user; } } 然後通常我們要使用的時後會執行下面程式碼。
+const userService = new UserService(); const user = userService.GetUser(&amp;#34;mark&amp;#34;,&amp;#34;123456789&amp;#34;); 這樣看起來是沒什麼問題，東西是都還可以執行，然後我們來改寫成代理器的模式，我們會先建立一個UserServiceProxy，我們外面要使用UserService時，都只能透過這個Proxy進行溝通 (想找明星，只能想找他的代理人)。
+ 注意 : 這只是其中一種寫法，代理器還有很多的方法可實現。
+ Class UserServiceProxy { construct(real){ this.Real = real; } GetUser(name,passowrd){ const real = new Real(); real.getUser(name,password); } } const userServiceProxy = new UserServiceProxy(UserService); const user = userServiceProxy.</description>
+    </item>
+    
+    <item>
+      <title>Node.js 的串流之旅之雙工串流與管道</title>
+      <link>https://mark-lin.com/posts/20170602/</link>
+      <pubDate>Fri, 02 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170602/</guid>
+      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。
+ Tranform Stream Duplex Stream  那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨立的readable與writable的組成。
+而tranform就是寫出與讀入彼此間的資料存在有轉換關係，我們接下來會直接實作程式碼，更能夠看出它們兩個的差異。
+最後我們還會說到pipe，它的功用就是用來接串流組合起來。
+Tranform Stream 我們這邊會簡單做個替換指定字串的Transform串流，其中這個類別，我們需要實作兩個方法_transform與_flust。
+_transform基本上與readable的_read很像，是將資料寫入水缸中，而不是直接將它寫到資源內，而我們在這個方法中實作了將指定字串連行替換。
+_flush是在串流要結束時，如果還有事實沒有處理，這時就可以在_flush進行處理，像我們這個範例中，想要在最後加個!!!!!時，就是寫在這裡。
+基本上只要前一篇文章中的readable與writable基本概念都了解，那這些雙工串流你會學的很輕鬆的。
+const stream = require(&amp;#39;stream&amp;#39;); class TransofrmStream extends stream.Transform{ constructor(search_string, replace_string){ super({decodeStrings:false}); this.search_string=search_string; this.replace_string = replace_string; } _transform(chunk, encoding, cb){ const result = chunk.toString().replace(this.search_string,this.replace_string); this.push(result); cb(); } _flush(cb){ this.push(&amp;#39;!!!!&amp;#39;) cb(); } } const transofm_stream = new TransofrmStream(&amp;#39;World&amp;#39;, &amp;#39;Mark&amp;#39;); transofm_stream.on(&amp;#39;data&amp;#39;, (chunk) =&amp;gt; { console.log(chunk.toString()); }) transofm_stream.write(&amp;#39;Hello World&amp;#39;); transofm_stream.write(&amp;#39;Mark ! you are my all World&amp;#39;); transofm_stream.</description>
+    </item>
+    
+    <item>
+      <title>Node.js 的串流之旅之基本概念</title>
+      <link>https://mark-lin.com/posts/20170601/</link>
+      <pubDate>Thu, 01 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170601/</guid>
+      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資料，一直傳送給網頁，所以我們可以直接進行觀看，並且在觀看時它還會繼續傳送後面的片段過來。
+串流的優點 在node js中，傳送內容基本上有分兩種形式，一種是緩衝而另一種就是串流，我們先來看看緩衝在處理資料傳送時，它是如何處理。
+緩衝它的基本概念就是將所有的資料先收集到緩衝區裡，當資料已經完整的讀取完，在傳送給接受者，如下圖所示，它會將HELLO MARK這所有的資料先讀取完，然後才能傳送給接受者。
+然後我們來看看串流，它每個時間點一接受到資料就會直接發送給接受者，所以如下圖所示，在時間點t1時，它會接受到HELLO這串資料，然後在t2時會接受到剩下的MARK資料。
+那這樣有什麼好處呢 ? 簡單的說有兩個優點，一個是空間效率，因為如果使用緩衝的方法來進行個10gb以上的資料傳輸，就代表這你需要10gb的緩衝空間，那這樣記憶體一定爆掉。而第二個優點就是時間效率，就如同最上面的影片例子來說明，使用串流，你可以直接看影片，然後再看影片時，它還會繼續傳送剩下的影片片段，節省了等待時間。
+緩衝與串流的程式碼實做比較 我們簡單寫一個檔案下載的伺服器，然後分別以緩衝與串流的程式碼，來進行實作，在nodejs中，有個 module 名為fs，它是專門用來處理檔案傳輸的工具，它也同時繼承了node 中的串流模組stream。
+緩衝讀取檔案實作 這是一個下載aaa.avi檔案的伺服器，但假設該檔案大小如果大於1024mb(舊版本node)的話，它會直接死掉，因為它緩衝爆掉了。
+基本上這種類形的api被稱為Bulk I/O。
+const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.createServer((req, res) =&amp;gt; { fs.readFile(&amp;#39;aaa.avi&amp;#39;, (err, data) =&amp;gt; { if(err) { console.log(err); res.writeHead(500); res.end(err.message); } else{ res.writeHead(200, { &amp;#39;Content-Type&amp;#39;: &amp;#39;video/avi&amp;#39; }); res.end(data); } }); }); server.listen(3000, () =&amp;gt; { console.log(&amp;#39;server up !&amp;#39;); }); 串流讀取檔案實作 下列程式碼就是使用串流來實作的讀取檔案伺服器，這樣如果檔案大小在大，它都可以進行處理，因為它是將大檔案分割成小塊小塊，然後一直傳輸。
+const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.</description>
+    </item>
+    
+    <item>
+      <title>排序之桶子排序法(Bucket Sort)</title>
+      <link>https://mark-lin.com/posts/20170427/</link>
+      <pubDate>Thu, 27 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170427/</guid>
+      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作  比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Bucket Sort就是屬於該歸類。
+我們這邊簡單的說一下比較排序法與非比較排序法的差別，首先比較排序法是透過資料兩兩比較進行排序，而且它在效能上有根本的限制，在最差的情況下，任何一種比較排序法至少需要O(nlogn)比較操作。
+網上有個簡單的證明，就設我們有3個資料要進行排序，1,4,5，那們它有幾種排序組合 ?
+答案是 3! = 3 * 2 * 1 = 6，六種排序法，也就是說它六較次數至少為 Log(N!) = O ( N log N )。
+而非比較排序法就沒有效能上的限制，通過非比較操作能在``O(n)`完成，但它缺少了靈活性，比較排序法能對各種數據型態進行排序，而非比較排序則不能，這種靈活性也導致了比較排序被更多的應用在大多數實際工作中。
+像在Mozilla的javascript的sort預設是Merge Sort，而WebKit則是Selection Sort，都是選用比較排序法。
+桶子排序法原理 桶子排序法，它的原理是將陣列，分散到有限數量的桶子中，然後每個桶子再個別進行排序，其中每個桶子的個別排序可以運用其它的演算法來進行排序。
+桶子排序法有三個特點
+ 桶子排序法是穩定的。 它是常見的排序法中最快的一種，大多數的情況下。 它非常快，但缺點是非常的耗空間。   上面有說到穩定，但穩定是什麼意思呢?例子，假設我們有個數列為3,5,19,3*,10，其中3*只是為了識別它和前面的3是不一樣的。
+穩定排序結果 =&amp;gt; 1,3,3*,5,10,19
+不穩定排序結果 =&amp;gt; 1,3*,3,5,10,19
+從上面結果可知穩定的它的順序會與原資料一樣3在3*前面，而不穩定則會有不同結果。
+ 桶子排序法基本的流程如下。
+ 建立桶子群。 將資料丟到對應的桶子裡。 個別桶子進行排序。 然後在依順序取出結果。  我們來看看下面的圖片說明，假設我們要排序的資料如下。
+[ 7 , 5 , 9 , 2 , 10 , 1 , 8 ]</description>
+    </item>
+    
+    <item>
+      <title>排序之合併排序法(Merge Sort)</title>
+      <link>https://mark-lin.com/posts/20170426/</link>
+      <pubDate>Wed, 26 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170426/</guid>
+      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
+大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
+合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
+首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
+然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
+合併排序法的速度效能 平均 O(nlogn)
+最好 O(n)
+最壞 O(nlogn)
+合併排序法的空間效能 O(n)
+javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
+ Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &amp;gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &amp;lt; len; i++) { if (i &amp;lt; mid) { left.</description>
+    </item>
+    
+    <item>
+      <title>排序之快速排序法(Quick Sort)</title>
+      <link>https://mark-lin.com/posts/20170425/</link>
+      <pubDate>Tue, 25 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170425/</guid>
+      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作  快速排序法的原理 快速排序法，又稱為分割排序法(partioion exchange sort)，是一種最快的排序法之一，它使用分治法的概念，將問題拆分成兩個獨立的問題來進行解決，再將兩個結果合成原問題的答案，這就是說所謂的分治法(傳送門)。
+快速排序的過程有四個步驟。
+ 注意以下皆以由小排到大的流程來進行說明。
+ 假設我們總共要排序的資料有n個，D1,D2,D3,...,Dn。
+ 選定一個基準值(privot)，並假設為D。 由左至右尋找 i=2,3,4,..,n，一直到Di &amp;gt; D。 由右至左尋找 j=n,n-1,n-2,...，一直到Dj &amp;lt; D。 當i&amp;lt;j時，Di與Dj互換，而當i&amp;gt;j時D與Dj互換。  範例 我們下面來看看這個範例。
+假設我們的基準值設為最左邊的值，也就是陣列的初始值。
+ 基準值的選擇後面會說明
+ 而我們要排序的陣列如下。
+[ 39 , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]
+然後我們開始進行快速排序法，首先我們選定的基準值為39。
+[ 39 , 15 , 37 , 89 , 45 , 20 , 32 , 51 ]</description>
+    </item>
+    
+    <item>
+      <title>排序之堆積排序法(Heap Sort)</title>
+      <link>https://mark-lin.com/posts/20170424/</link>
+      <pubDate>Mon, 24 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170424/</guid>
+      <description>本篇文章分成以下幾個章節 :
+ 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。  堆積樹 Heap Tree 再說明堆積排序排序前，我們需要先知道一個東西，那就是Heap Tree，它是二元樹(不知道的可以看筆者的這篇文章，不過我們在這篇中還是會簡單的複習)的一種， 那二元樹是啥 ? 就是長的和下圖一樣的東西，而二元樹有兩個比較嚴謹的定義如下。
+ 1 . 每個節點最多有兩個子節點 2 . 子節點有左右之分
+ 而其中，我們在這邊需要用的是完全二元樹Complete Binary Tree，它就是Heap Tree，它除了上面的定義外，還有第三個定義。
+ 3 . 除了最後一階層之外的階層，都必預完全有左與右節點
+ 它的樣子如下圖。
+最大堆積 Max Heap 在了解完Heap Tree後，我們就要來知道，Max Heap是啥，它也是種堆積樹一種，不過它有個條件。
+ 1 . 父節點的值大於子節點 2 . 樹根(root)一定是所有節點的最大值
+ 根據以上的條件畫出的圖，大概如下。
+我們這邊來看看下面幾張Max Heap產生過程的圖解。
+首先我們會先將陣列轉換成Heap Tree。
+然後我們會從最後的父節點，開始進行Max Heap判斷，然後再往前遞回。我們會先從09該節點進行判斷，由於09小於16，因此進行互換，結果如下圖。
+接下來，我們在往回前一個父節點，11來進行判斷，因為該父節點值都大於子節點02與10因此不需要進行互換。結果如下圖。
+最後再來判斷root，也就是最後一個父節點08，它下面兩個子節點11與16都比它大，因此，它選擇最大值16進行交換，然後08再於09進行比較，再進行交換，結果如下。
+最後產生出的Max Heap結果如下。
+堆積排序法的原理 在了解完上面的預備知識後，我們就可以開始了解堆積排序法的做法囉，它的流程如下。
+前置作業
+ 將陣列轉換成Heap Tree。 在將Heap Tree轉換成Max Heap  重複作業</description>
+    </item>
+    
+    <item>
+      <title>排序之選擇排序法(Selection Sort)</title>
+      <link>https://mark-lin.com/posts/20170423/</link>
+      <pubDate>Sun, 23 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170423/</guid>
+      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作  選擇排序法的原理 選擇排序法，它基本的觀念為 :
+ 將資料分成已排序與未排序，然後在未排序的資料中尋找最小(大)值，並將它移置已排序資料的右邊。
+ 我們以下圖來簡單的進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為空，然後尋找未排序資料中最小值8，並將它移至已排序資料的右邊，也就是A[0]，結果如第二行。 第二行 : 已排序資料為8，尋找未排序資料中最小值23，並將它移至已排序資料的尾端A[1]，結果如第三行。 以此類推，最後可得到從小到大的排序資料。  圖片來源
+插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好、最壞、平均狀況 O(n^2)
+對都是一樣的，就算是排序好的，也是O(n^2)的時間複雜度，我們來看個例子。
+[1,2,3,4,5] 我們有上面的陣列，它需要進行排序，我們知道它排序好了，但演算法不知，所以還是要跑。
+ 第一行 : 已排序資料為空，然後尋找未排序資料最小值，因為演算法不知道最小值是啥，所以還是要從頭找到尾，然後找出1，並將它放到A[0]位置。 然後接下來，每一行還是要從未排序資料中，從頭掃到尾來尋找資料，不管你有沒有排序好。  建議使用情況 根據Wiki的說法，嗯……。
+ 原地操作幾乎是選擇排序的唯一優點，當空間複雜度要求較高時，可以考慮選擇排序；實際適用的場合非常罕見。
+ javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。
+/** * selectionSort * Selection Sort Algorithmic * @param arr * @returns {Array} , Thie return&amp;#39;s array has been Sorted. */ function selectionSort(arr){ var len = arr.</description>
+    </item>
+    
+    <item>
+      <title>排序之插入排序法 ( Insertion Sort )</title>
+      <link>https://mark-lin.com/posts/20170422/</link>
+      <pubDate>Sat, 22 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170422/</guid>
+      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。
+ 插入排序法的原理 插入排序法的執行效能 javascript演算法實作  插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序，該圖來源為此interactivepython。
+首先，我們會將資料分成兩部份，已排序與未排序，然後我們會進行以下作業
+ 將已排序資料與後一個資料進行比較，如果已排序資料大於它，則進行位移
+ 我們下面將以前四行來進行說明。注意，下列的 A[0] 代表陣列的第一個位置。
+ 第一行 : 已排序資料為54，然後我們與後一個26進行比較，54大於26因此我們會將26的位置替換成54，並將26插入至54的原位，結果為第二行。 第二行 : 已排序資料為26、54，然後我們與後一個93進行比較，54小於93因此不用進行位移，因為26、54為已排序資料，因此只需要比較54就好，結果為第三行。 第三行 : 已排序資料為26、54、93，然後與17進行比較，首先93大於17因此將93位移置A[3]，則時還沒插入喔，還要繼續比較，接下來54大於17因此將54位移至A[2]，然後26大於17，因此將26位移至A[1]，最後在將17插入剩餘的空間A[0]，結果為第四行。 第四行 : 已排序資料為17、26、54、93，開始與77進行比較，93大於77因此將93位移至A[4]的位置，然後54小於77，因此54不需要位移，最後將77插入至空缺的位置A[3]，當果為第五行。  插入排序法的執行效能 那這個排序演算法效能如何 ? 我們會分成最好與最壞與平均來看。
+最好狀況 O(n)
+該演算法最好的情況是時間複雜度為O(n)，假設我們有下列陣列要排序。
+[ 1 , 2 , 3 , 4 ] 我們一看就知道，他不用進行排序，但演算法還不知道，所以它至少還是要跑個for迴圈，跑個4次，才知道它不用排序，因為我們這時最好的狀況就是只要跑4次，也就是陣列的大小。
+最壞狀況 O(n^2)
+假設我們要下列陣列要排序。
+[ 4 , 3 , 2 , 1 ] 對就是完全相反的，我們首先要跑for迴圈，然後裡面還要一個while比較，而且因為我們的陣列是完全相反的。
+平均狀況 O(n^2)
+我也不知道為啥平均是O(n^2)，真的。
+建議使用情況  要排序的資料數量不大 : 平均是時間複雜度是O(n^2)，如果來個1百萬個 n，你看看會如何。 大部份的資料已排序 : 上面有說過，該演算法會將資料分成已排序與未排序的來進行比較，也就是說如果已排序的資料越多，你就可以少做越少的比較。  javascript演算法實作 我們來看看它的演算法，我們採用javascript來進行撰寫。</description>
+    </item>
+    
+    <item>
+      <title>搜尋之二元搜尋法 Binary search</title>
+      <link>https://mark-lin.com/posts/20170421/</link>
+      <pubDate>Fri, 21 Apr 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170421/</guid>
+      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
+ 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
+我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
+接下來我們簡單的使用js來實現二分搜尋法。
+效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.</description>
+    </item>
+    
+    <item>
+      <title>演算法策略---動態規畫法</title>
+      <link>https://mark-lin.com/posts/20170325/</link>
+      <pubDate>Sat, 25 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170325/</guid>
+      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。
+費波那西數列 最簡單說明動態規畫法的問題就是費波那西數列，它的定義如下。
+ F0 = 0
+F1 = 1
+Fn = Fn-1 + Fn-2
+ 也就是說F2所代表的意思為F2 = F1 + F0，也就等於F2 = 1 + 0。
+我們直接來看程式碼，首先先看沒有用cache的費波那西數列。非常的簡單就只用遞迴來計算每個數列的值。
+function fib (n){ if(n&amp;lt;=1){ return n; } return fib(n-1)+fib(n-2); } 我們這邊使用個例子，來說明它的計算流程，我們執行fib(5)，然後我們直接看下面這張圖來了解它的過程，首先是項點fib(5)，它就是由fib(4)、fib(3)組成，然後再將之分解，就會如下圖的結果。其中我們有用綠色底來上色的地方，它就代表我們有重複的數字，像fib(2)就被計算了3次，所以上面這個演算法事實上做了很多重複的事情。
+而接下來，我們就將它改良一下，也就是用動態規畫法的概念下修改而成，它每次計算過一個數字後，就會先存起來，然後有需要時，就在將它拿出來。
+程式碼如下，它會將每個有計算過的數列儲放在記憶體內，有用到它時，就將它拿出來用。 下面就是簡單的使用動態規畫法概念實作的費波南西數列。
+//有用Cache var memo = []; var count = 0; var fib_cache = function(n){ if(n &amp;lt;=1){ return n; } if( typeof memo[n] !== &amp;#39;undefined&amp;#39;){ return memo[n]; }else{ memo[n] = fib_cache(n-1) + fib_cache(n-2); return memo[n]; } } 背包問題（Knapsack Problem） 這個問題的定義如下。</description>
+    </item>
+    
+    <item>
+      <title>演算法策略---分治法</title>
+      <link>https://mark-lin.com/posts/20170324/</link>
+      <pubDate>Fri, 24 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170324/</guid>
+      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
+分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
+ 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
+ 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
+實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
+最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
+ 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
+ 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
+這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
+function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start+end)/2); console.log(&amp;#34;startM:&amp;#34; + start + &amp;#34; middleM:&amp;#34;+middle + &amp;#34; end :&amp;#34; + end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle+1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle+1;i&amp;lt;=end;i++){ currentRightSum += datas[i]; if(currentRightSum &amp;gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&amp;gt;=start;k--){ currentLeftSum += datas[k]; if(currentLeftSum &amp;gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum+leftSum; console.</description>
+    </item>
+    
+    <item>
+      <title>演算法之策略---貪心法</title>
+      <link>https://mark-lin.com/posts/20170323/</link>
+      <pubDate>Thu, 23 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170323/</guid>
+      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。
+ 基本概念 實作問題  基本概念 貪心法在解決問題時，基本上它只會根據當前最好的資料，就做出選擇，如果以心理學的忍耐實驗來說明 ; 這個實驗會給一堆小孩 1 塊巧克力，然後和小孩說，如果 15 分鐘後沒有吃掉這巧克力，那你就會有 3 塊巧克力，而貪心演算法它就只會考慮當下最佳解，也就是說它會吃掉巧克力。
+簡單用一句話說明貪心法的要義那就是
+ 只選擇『當時最佳的選擇』
+ 但是對於一個問題時，我們要著麼知道它是否可用貪心法來解決，以及是否得到問題的最佳解 ? 針對第一個問題『我們著麼知道是否可用貪心法』，我們可以看看問題的性質，如果一個問題，我們可以簡單的猜測，這問題是一個簡單的計算方法，並且答案正確，那這種類型的問題就適合它 ; 那第二個問題『 是否得到最佳解 』，這就不一定了，我們很難判斷我們用貪心法得出的答案是否是最佳解。
+那貪心法適合什麼樣的問題呢 ? 這和上面的問題是不同的喔 ? 上面是問可用，這邊是問適合。貪心法在最優子結構的問題中特別有用，最優子結構的意思就是局部最優解能決定全局最優解。
+根據wiki，我們可以將使用貪心法的過程分解成以下幾個部份。
+ 建立數學模型來描述問題。 把求解的問題分成若干個子問題。 對每一個子問題求解，得到子問題的局部最優解。 把子問題的解，合成原來解問題的一個解。  實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡，但我們這邊的都會使用JS來進行實作。
+硬幣問題  一元、五元、十元、五十元、一百元、五百元硬幣。我們想要儘可能少的硬幣支付 A 元。到底需要幾枚硬幣呢 ? 假設這種付款方式至少會存在一種。
+ 這個問題基本上是貪心法的基本問題，而且也是日常常見的問題。這個問題的重點是『盡可能少的硬幣』，所以很自然的我們直覺會想盡量多付五百，再來是一百，然後已此類推，就可以得到最小的硬幣數量。
+程式碼如下，非常的簡單。
+var coins = [1,5,10,50,100,500]; var pay = 2430; function greedSol(coins,pay){ var result = {}; for (var i=coins.length-1;i&amp;gt;=0;i--){ var coinNum = Math.</description>
+    </item>
+    
+    <item>
+      <title>鄂圖曼帝國掰掰後，中東變成什麼樣 ? </title>
+      <link>https://mark-lin.com/posts/20170318/</link>
+      <pubDate>Sat, 18 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170318/</guid>
+      <description>鄂圖曼帝國是一個曾經強到在歐、亞、非都有領士的伊斯蘭帝國(1299~1922)，在世紀帝國二中，有一個國家上到城堡時代就可以建立土耳其火槍兵的國家就是它，它在那個時代，以武器來說幾乎可以說是屌打其它周邊國家，這也是為什麼他可以建立如此強大的帝國。
+圖片來源: 世紀帝國2征服者入侵 - 土耳其Turkey
+但是呢，它到了十九世紀時，就開始慢慢的沒落，至於沒落的原因，本篇文章就不做太多的說明，因為不是這篇的重點，不過我們還是簡單的說一下，就是啊，在二十世紀初，發生了人類史上最大規模的戰爭第一次世界大戰，最後因為它押錯寶，然後鄂圖曼帝國就說掰掰囉 ~ 不過事實它那時本來就很爛了。
+掰掰後的發展 首先我們先來看看鄂圖曼帝國在快掰掰時的領土，是錄色的那邊喔。
+圖片來源: [烏賊哥的部落格](http://yixiang8780.com/ https://sg2plcpnl0195.prod.sin2.secureserver.net:2083/cpsess3888291770/frontend/gl_paper_lantern/filemanager/index.html?dirselect=ftproot&amp;amp;domainselect=yixiang8780.com&amp;amp;dir=%2Fhome%2Fh091237557%2Fpublic_ftp)
+接下來我們在來看看我們現在的地圖。
+圖片來源: google map
+我可以發現蹦出來了以下幾個國家(先說好不是直接產生的)土耳其、沙烏地阿拉伯、敘利亞、伊拉克、約旦、黎巴嫩、以色列、伊朗，一個帝國爆掉後，為什麼可以跑出著麼多國家，這就是我們這篇文章想要知道的東西。
+一戰後的分割 首先我們先來說說鄂圖曼帝國在打完一戰後，它發生啥事情。
+他身為一個戰敗國，很理所當然的襖要求簽一些鬼條約，而這個鬼條約就是所謂的色佛爾條約，它的其本內容，主要為削掉帝國的領土與國力，目的就是防止它再發動戰爭，白話文就是我要你的土地。下圖為根據條約瓜分後的慘況。
+圖片來源: 維基
+土耳其的誕生 （凱末爾） 想當然會有人民當然不爽，然後在土耳其地區，就有一位被後來土耳其人稱為英雄的凱末爾仁兄，就率領一堆人對這項條約表示不爽並否決他，然後更狂的是，他直接與這些佔領國的人打了起來，然後還打贏了，不過也並不是全部用槍來打，主要的原因在於這幾個國家在土耳其的利益並不一致，所以互扯後腿也是常發生的事，然後凱末爾就開始進行挑撥離間這種被稱為來陰的的招式，最後結果就是土耳其建國。而這過程被稱為土耳其獨立戰爭。
+土耳其建國後，我們來說說他的統治，我們都知道土耳其在當時主要的宗教為伊斯蘭教，在過去的中亞國家中，大部份都是執行所謂的政教合一，也就是政治領袖同時也是宗教領袖，而且事實上也可以這樣說，伊斯蘭教就是這個國家，不論是仲裁、規定都是根據伊斯蘭的規則。
+而凱末爾他做了什麼事呢? 他打破了伊斯蘭教在土耳其的定位，他決定政教分離，將伊斯蘭教從土耳其這個國家分離出來，他做了那些事情呢 ?
+ 讓女性進入到公共領域。 禁止頭巾和面紗。 一夫多妻是違法的。 公休日從星期五改為星期日  以上這些事情在我們的國家都覺得是應該的，但從尊循古法可蘭經的人，這可是天大的事情，用句中國用語就是目無王法，古蘭經的教導都跑去那了?
+不過也因為有以上這些改革我們才能看到現在的土耳其，雖然有人會說他是獨裁者，但也因為他當時是獨裁者才能強制的改變土耳其。而土耳其也成為了伊斯蘭世界中，第一個在這伊斯蘭世界中執行世俗主義的代表，對了說一下，我這個說法是從西方觀點來看，但如果是站在伊斯蘭人的角度我就不知道囉。
+伊拉克與約旦的誕生 (哈希姆家族) 在說到這兩個國家誕生前，咱們要先來說說伊斯蘭世界的某個大家族哈希姆家族，這個家族一直以來在伊斯蘭世界裡赫赫有名，因為先知穆罕莫德也屬於這個血脈，而這個家族後來最主要的傳脈者為法蒂瑪也就是先知的女兒，這也使得這個家族上千年來都屬於伊斯蘭世界的望族，你要說是天龍人好像也行。
+時間拉回到一次世界大戰時，戰還在打，前線打的你來我往，想當然兒後方當然也要有一些動作，英國這時想要偷插鄂圖曼帝國一刀，所以英國就和一位哈希姆家族的人海珊。本。阿里達成協議，英國答應幫助他從現今地圖中的敘利亞到伊朗的土地上，建立一個統一的阿拉伯國家，然後他要幫英國插刀在他的老東家鄂圖曼帝國上。他答應了，然後他在老東家的土地上建立了漢志王國。
+但英國人匡他了，因為英國早以和法國私立下說好，敘利亞地區分給法國，而其它的伊拉克、外約旦、巴勒斯坦都為英國的，英國知道哈希姆家族在伊斯蘭世界的影響力，不敢匡他全部，所以就打個折，分給他的兒子成為漢志國王的繼承人，另一個兒子成為外約旦的國王，第三個兒子成了伊拉克國王。
+這時地圖上就多了伊拉克、外約旦、漢志，然後外約旦大約在1946年時就獨立成約旦了，而漢志他的地理位置就是現今的沙烏地阿拉伯，但他在1925年就說掰掰了 ~
+沙烏地阿拉伯的誕生 (沙特家族) 上面有提到一個叫漢志王國的地方，但他在1925年時就說掰掰了 ~ 被誰幹掉呢 ? 伊本。沙特。
+說到這位大哥，又要來說明一個，一直以來都統治被稱為內志地區的家族沙特家族，這個家族和哈希姆家族不同，並沒有高貴的伊斯蘭血統，哈姆姆家族認為他們只是游牧部落首領，不想和他們平起平坐，而這個家族最大的特點就是他們信奉瓦哈卜主義，這個主義主要的主張如下 :
+ 回到古蘭經去，恢復先知穆罕默德時代的正道。
+ 沙特家族與哈希姆家族這對世仇，從西方人的看法，他們比較喜歡哈希姆家族，因為他們代表者伊斯蘭教開明與世俗的一面，而相對的沙特家族的瓦哈卜主義代表回歸傳統和歷史，強調對教義的嚴格尊守，這也是為什麼英國人在找和作對象時，會傾向找哈希姆家族。
+伊本。沙特注意到，如果乖乖看這英國人分配的話，那自已不就被哈希姆家族給包圍，那還得了，所以他決定進攻漢志，然後就把漢志給說掰掰了，最後他就建立了我們現今的沙烏地阿拉伯。
+敘利亞與黎巴嫩的誕生 上面也有說到，一戰過後，敘利亞這個地方一直被法國人統治，然後直到1944年時才從法國手中獨立，而黎巴嫩他也是被法國人統治，直到1943年才宣佈獨立。
+以色列誕生與巴勒斯坦的不爽 (同一個土地的戰爭) 在第一次世界大戰結束後，巴勒斯坦這個地區被割給英國，他當時的地圖如下，有沒有覺得很眼熟? 對，就是現在的以色列，這兩個國家的關係真的只能說，煩 !
+要說明為啥巴勒斯坦這塊土地會慢慢的變成以色列真的可以在寫個五篇，不過這篇文章只簡單的說明一下。
+首先我們先來說說這塊土地的意義，這塊土地中的耶路撒冷是當今三大亞拉伯罕教的聖地。而且對猶太人來說更是他們的故鄉，但在一次世界大戰時，這塊土地的居民大部份是阿拉伯人並且大部份都是穆斯林。
+但是眾所皆知的，在第二次大戰時，納粹德國開始了猶太民族的種族滅絕(genocide)行動，這段其間上百萬的猶太人想盡辦法逃往任何可以去的地方，而其中巴勒斯坦這個地區，因為前面有說到他是猶太人的故鄉，所以很早之前就有移民在那購買土地，所以在那段時間巴勒斯坦湧進了很多的猶太人，當然這也使得住在該地區的阿拉伯人非常不爽。
+然後雙方當然開始對幹起來，在二戰後，美國主導下產生了一個東東，就是聯合國，它這時做出一個提案 :</description>
+    </item>
+    
+    <item>
+      <title>蘇聯的誕生與結束</title>
+      <link>https://mark-lin.com/posts/20170317/</link>
+      <pubDate>Fri, 17 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170317/</guid>
+      <description>蘇聯 (Soviet Union)歷史上的超級強國Hyperpower 之一，在 60 年代時，與美國分庭抗禮，同時是社會主義的代表，但『可惜』這個大國在1991年12月25日這天，它的國旗緩緩的從克里姆林宮上空降下，也代表了一個時代的結束。
+蘇聯象徵鐮刀與鎚子倒在莫斯科街道上。(圖片來源 : 亞歷山大/法新社)
+『可惜』這個字可能很多人會覺得奇怪，因為就算是現在這時代，還是很多人很討厭蘇聯，認為它是應該被消滅的，古拉格群島這禁書更披露了蘇聯強迫勞改營的生活，現在如果有勞改營那個國家應該會被罵到死吧，那為什麼筆者會說『可惜』呢，這兩個字不是筆者的立場，而是獻給喜歡社會主義生活的人的文字，但不代表他們喜歡勞改營，這世界上，不是大部份的人喜歡，就是每個人都喜歡，在二手時代這本書中，有一段話說明了蘇聯解體後那些覺得『可惜』的人們感受。
+ 大家都在痛罵時代，現在的時代卑鄙、下流、空虛，填滿了抹布和錄影機。偉大的國家又在那裡 ? 事情的結果是，我們今天沒有戰勝任何人，加加林並沒有飛上太空。
+(出自 : 二手時代)
+ 想要理解蘇聯解體前與解體後人民的生活，可以去閱讀二手時代這本書，好書。
+(圖片來源 : 誠品網路書店)
+轉回來，本篇文章不是要說明當時人民的生活，而是要了解蘇聯的誕生與結束，接下來我們就開始說這段故事囉。
+俄羅斯帝國的掰掰 1914年至1918年這段時間爆發了人類史上最慘重的戰爭第一次世界大戰，那時蘇聯可還在蛋裡，而北方那塊冰天雪地的大地的主人是俄羅斯帝國的尼古拉二世，在還在打一次世界大戰時，因為戰爭導致大量的食物短缺與通貨膨漲，使人民生活在地獄，人民的對政府的仇恨值不停的上升，當仇恨值暴表時就爆發了二月革命，然後俄羅斯帝國就說掰掰了。
+法國二月革命的圖，同時也影射與俄國二月革命。(圖片來源 : sina新聞中心 )
+一堆人開始搶政權與蘇聯成立 在俄羅斯帝國說掰掰後，有個臨時政府上台想穩住軍心，但心都還是冷的，就有個政黨叫俄國社會民主工黨（布爾什維克)連合其它勢力，將臨時政府踢下台囉，這件事情史稱十月革命，對了這個布爾什維克的老大就是列寧。
+列寧圖 (圖片來源 : 蘋果日報)
+想當然，當有人上台時，自然會有人不爽，也就是所謂的反對黨，後來也組成了個勢力就是歷史上稱為的白軍，而布爾什維克則稱為紅軍。
+在歷史上白軍是支持資本主義制度，當然它的後面有其它資本主義的國家在支持，而紅軍就所支持所謂的社會主義，在這場被稱為俄國內戰的紅白大戰，最後因為白軍內部矛盾激烈、內部各派勢力互相扯後腿，而導至這場內戰由紅軍勝利，也就代表著世界最大的社會主義蘇聯正式成立。
+史達林的狂人時代 在蘇聯創立不久，老大哥列寧就上天堂了，而它的接班人，就是大名鼎鼎的狂人史達林，而這位狂人他做了那些事情呢 ?
+史達林紀念郵票 (圖片來源 : 維基)
+五年計畫 首先登場的是五年計畫，簡單一句話來說明五年計畫是啥，那就是『用最短的時間讓蘇聯實現工業化』，但那來的錢呢 ? 蘇聯是傳統的農業國家，對錢就是從農民那邊挖，從低到不能低的價錢收購農產品，然後拿去賣，結果呢 ?
+在1932至1933時，發生了蘇聯歷史上最大的飢荒，只能用慘一個字形容，尤其是烏克蘭，慘中之冠，可憐的烏克蘭美人們。
+那這五年計畫的成果如何，不能說差，和中國的大躍進?相比，好的多，在那段時間之前剛好發生了1929經濟危機，世界經濟差到不能在差，所以很多的資金與人才都跑到蘇聯，因為它本來就是自已玩自已沒啥影響，所以嚴格來說這個第一個五年計畫還算成功。
+但在當時的蘇聯有個很奇怪的現象，重工業發展而快，但人民的日常生活消費品非常的少，整個社會的食物都是用配給的，而且要找個盤子都很難。
+大清洗 如同字面上的意思，將家裡清洗乾淨 ; 史達林執行大清洗的目的是為了反對分子清除出蘇聯共產黨，讓自已的權力更牢固，在這段時間，人民都陷入互相不信任的狀態，每個人都怕每別人誣告，或是被指控對黨的反叛，這情況咱們台灣人應該也有感覺。
+在這場大清洗期間，有上百萬的人死於非命，許多人不是被送到勞改營勞改到死，就是直接被丟到西伯利亞之類鳥不生蛋的地方法，每個人聽勞改營或古拉格就像聽到佛地魔一樣，那段時間對於當時的人民，真的如同地獄一樣。
+ 古拉格就是管理全國勞改營的地方，全名為勞造營管理總局。
+ 第二次世界大戰 史達林少數幾個比較正面的事蹟是領導蘇聯成為第二次世界大戰的戰勝國，前期蘇聯被打的真的很慘，完全是被德國虐假的，但在後期就依靠天時(冬天)、地利(在老家)、人和(人海)將德軍打回老家去，不過死傷人數蘇聯比德國多上很多，七傷拳。
+建立華沙公約組織 大約在1949年時，美國、法國、英國這三國家立了北大西洋公約組織，而後也有不少歐洲國家加入，這時蘇聯著麼可能看這自由主義陣營組成聯盟，於是輸人不輸陣，蘇聯就建立了華沙公約組織這個組織的主要功用如下，反正主要就是用來對抗北大西洋公約組織。
+ 如果在歐洲發生了任何國家或國家集團對一個或幾個締約國的進攻，每一締約國應根據聯合國憲章第五十一條行使單獨或集體自衛的權利，個別地或通過同其他締約國的協議，以一切它認為必要的方式，包括使用武裝部隊，立即對遭受這種進攻的某一個國家或幾個國家給予援助。	” ——華沙公約 第四條 第一款</description>
+    </item>
+    
+    <item>
+      <title>資料結構---堆積 Heap</title>
+      <link>https://mark-lin.com/posts/20170314/</link>
+      <pubDate>Tue, 14 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170314/</guid>
+      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。
+資料結構&amp;mdash;樹狀結構與二元樹
+不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合每個節點最多有兩個子樹這個特性，才能稱為二元樹。
+在大概知道了二元樹後，我們就可以開始本篇文章的重點堆積heap。
+ 堆積的原理 二元樹轉成堆積 程式碼實作  堆積 Heap 的原理 堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為堆積。
+ 任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。 堆積是種完全樹。   完全樹 : 除了最低層外，其它層的節都都被塞滿。
+ 我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。
+二元樹轉換成堆積 上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。
+傳統上有二種方法，由下而上與由上而下，我們本章節將說明由下而上的方法，不然文章會太長……。
+這個方法的基本流程如下，我們以下說明都以max heap為主，也就是根節點為最大值。
+ 計算出此棵樹的節點數量，假設為n。 在從其n/2節點(事實上也就是最後一個父節點)開始進行比較。 若子節點的值大於父節點，則相互對調。 若有交換，還比較在去子節點進行比較。  我們來舉個例子，假設我們有如下圖的二元素。
+接下來我們開始說明他的轉換成堆積的流程。
+最後下圖就是二元樹轉換成堆積的結果。
+程式碼實作 最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。
+function Node(data, index) { this.data = data; this.index = index; this.left = null; this.right = null; } function BinaryTree() { this.root = null; this.count = 0; } 然後我們將要新增個方法，可以新增節點到二元樹中。
+BinaryTree.prototype.add = function(node) { node.</description>
+    </item>
+    
+    <item>
+      <title>資料結構---圖形結構</title>
+      <link>https://mark-lin.com/posts/20170311/</link>
+      <pubDate>Sat, 11 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170311/</guid>
+      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koenigsberg bridge問題不是我們這篇的重點，但還是簡單介紹一下這個圖論中的著名問題。
+在某個國家內，有條河經過兩個市區，並且在這條河中心上還有兩個小島，小島與河的兩岸有七條橋連接這，下圖就是該環境的模擬圖。
+那麼這個問題是 ~
+ 在所有的橋都只能走一次的前題條件下，如何才能把所有的橋都走過一次。
+ 雖然 LeonHard Euler 並沒有解決這個問題，但卻發現了新的研究領域圖論。
+圖形結構之原理 圖(graph)，是一種用來描述點與點關係的資料結構，也可以說是記錄關聯的結構，它和樹狀結構長的得像，而他們的關係在於
+ 樹是一種圖
+ 那什麼時後，它是圖而不是樹呢?
+ 出現一個環時。 他沒有連通時。  一張圖會由數個節點以及數條邊所構成，節點與節點間使用邊來相接，在數學上通常定義成G = (V,E)來表示，其中V是所有節點所成的集合，而E代表所有的邊所成的集合。圖(graph)畫出來長的如下圖。
+接下來我們來認識一些名詞。
+ 頂點(vertex) : 上圖中的A、B、C就為三個項點。 邊(edge) : 上圖中那個每個項點的連線，就稱為邊。 相鄰(adjacent) : 例如上圖中的A與B就為相鄰的，其它的項點也都如此。 附著(incident) : 上圖中，我們可以說明，邊{A,C}與邊{A,B}『附著』在項點 A 。 路徑(path) : 代表某個項點到某個項點的過程。 簡單路徑(simple path) : 在上圖中 A 到 D 的路徑可能有ACBD和ABD，這時我們可以稱ABD為簡單路徑。 長度(length) : 一條路徑上的長度是指該路徑上所有邊的數量。 分支度(degree) : 例如上圖中，我們可以稱項點 B 的分支度為 3 ，但在有向圖中會分成外分支度與內分支度。 子圖(Subgraph) : 請看下圖。  圖的種類 基本上圖又可以分成下述幾重，要選擇那種來使用取決於你的問題。</description>
+    </item>
+    
+    <item>
+      <title>樹狀結構的遍歷 Traversal ( Iteration )</title>
+      <link>https://mark-lin.com/posts/20170310/</link>
+      <pubDate>Fri, 10 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170310/</guid>
+      <description>在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :
+ 中序追蹤 (in-order) : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG) 前序追蹤 (pre-order) : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG) 後序追蹤 (post-order) : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA) level-order : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)   補充: 這裡我們在補充第四種追蹤level-order，事實上它就是BFS，也就是一層一層的掃
+ 那為什麼我們這裡要在拿來說一次呢 ?
+ 因為我們之前實作的方法是用『 Recursion 』來實作。
+ 有寫過程式的人大概會知道，在使用recursion 實作程式碼，常常有可能會發生memory leak事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。
+中序追蹤 (in-order)  左 =&amp;gt; 根 =&amp;gt; 右
+ iteration  直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。 然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。 接下來在從 pop 出的節點的右子樹開始重複第一個步驟。  /** * Tree inordrTraversal (no recursive) * Tip: 左根右 */ BinarySearchTree.</description>
+    </item>
+    
+    <item>
+      <title>資料結構---樹狀結構與二元樹</title>
+      <link>https://mark-lin.com/posts/20170309/</link>
+      <pubDate>Thu, 09 Mar 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170309/</guid>
+      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們將要好好的研究它，目錄如下。
+ 樹的定義與特性 二元樹 二元樹的實作與方法操作方法實作  樹的定義與特性 在資料結構中，樹這種結構，是用來模擬具有樹狀結構性質的數據集合，它有很明確的層級關係，它長的就像個倒過來的樹，不過你也可以將他想像成祖譜，它真的很像。
+在說它的特性前，我們先簡單的知道它的一些素語。我們會搭配著下圖來進行說明。
+ 節點(node) : 下圖的每一個圈圈都存放資料，稱為節點(node)。 根節點(root) : 就是最上面的節點，如下圖的節點 A 。 邊(edge) : 下圖連節每個節點的線，稱為邊(edge)。 分支度(degree) : 一個節點的分支度是它擁有的子節點數量，如下圖看節點 C 它的分支度為 3 。 階度(level) : 樹中節點的層級數量，一代為一個階度，樹根(A)的階度為 1 ，下圖的樹階度為 3 。 高度(Height)、深度(depth) : 樹中某節點的高度代表此節點至最深階度的子節點距離，也就是邊的數量，例如 A 節點的高度為 2 ，而 B 節點的高度為 1 。  接下來我們來說明樹的特性，它具有以下的特點 ; 只要符合下面特點的，我們就可以稱為樹狀結構。
+ 每個節點有零個或多個子節點 沒有父節點的節點稱為根節點 每一個非根節點有且只有一個父節點 除了根節點外，每個子節點可以分為多個不相交的子樹  二元樹 ( Binary tree ) 這邊我們要來說明二元樹，它是樹的一種，我們常聽到的二元啥演算法，有很大一部份都是運用二元樹這種資料結構來處理，它的定義如下。
+ 二元樹是每個節點最多有兩個子樹的樹狀結構
+ 只要符合上述條件的樹，我們都歸類為二元樹。其中二元樹還是有不同的種類。
+滿二元樹 ( Full Binary tree ) 如果一棵樹的階度為 k 的樹，它的節點樹量為 2^k - 1 ，則稱為滿二元樹，也就是說全部塞滿的意思，如下圖就是個滿二元樹，它階度為 3 ， 所以它的節點樹量應該為 2^3 - 1 = 7 ，下圖的節點數量就為 7 。</description>
+    </item>
+    
+    <item>
+      <title>資料結構---串列 Linked List</title>
+      <link>https://mark-lin.com/posts/20170213/</link>
+      <pubDate>Mon, 13 Feb 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170213/</guid>
+      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。
+ array : 最常用使用到的資料結構，它是一種相同形態(!)的資料集合，並且會分配『連續』的記憶體空間給予陣列存放資料。 stack : 後進先出法原理的資料結構，後進去的資料會先取出，就像是你有個箱子，你最先放進去的東西，要先將上面的東西取出後，才能取得。 queue : 先進先出法原理的資料結構，先進去的東西先取出，就像是排隊一樣，先排先贏，理論上(和平)。   剛剛在陣列那有說到相同形態，但事實上javascript的陣列，可以存放任何形態的資料，但其它的語言就需要先宣告形態了，某些方面來說它的陣列比較算是list。
+ 複習完了上一篇文章後，咱們可以來學習新的資料結構連結串列(linked list)j。
+ 串列(Linked list)原理 串列與陣列的比較 javascript程式實作  串列 ( Linked List ) 原理 在上一篇中，我們有學習到陣列，它在儲放資料時非常的彈性，但在進行新增或刪除時卻沒著麼方便，主要原因為它的記憶體是連續的。
+本篇文章將要說明的連結串列(list)，在新增或刪除時就非常的方便，因為它記憶體不是連續的，而是每個結點分配一段記憶體，然後在結點中記錄下個結點的位置。
+連結串列有分很多種，我們在這篇文章中將說明比較常用到的『單向連結串列』與『雙向連結串列』。
+單向連結串列 單向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與一個『連結欄』組成。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+接下來假如我們要新增節點D至A與B之間，過程會和下圖一樣，會將A節點的Link連至D節點，然後它再連到B結點上。而刪除結果過程也差不多，就只是重新指向節點位置。
+雙向連結串列 (Double Linked List) 雙向連結串列是另一種常用的串列結構，在單向串列中，它只能順著一個方向尋找資料，而且中間不小心有個節點斷掉，那後面串列的資料就會消失且救不回來，而雙向連結就是可以改善『單向』與『節點斷掉』這兩個缺點。
+雙向連結串列，它主要組成的定義如下。
+ 由一組節點(Node)組成的有序串列。 每個節點有『資料欄』與二個『連結欄』組成，一個連結前一個節點，而另一個則連結後一個節點。 『連結欄』指向其它節點的位置。  根據以上的定義，大至上長的如下圖。
+然後我們看下圖，來理解如果要插入與刪除節點時，雙向連結串列會如何處理。事際上原理和單向連結串列差不多，都是重新指向位置，只是它要多指向一個。
+串列和陣列的比較 由於串列和陣列這兩個使用起來很相似，但原理上，很多地方是不一樣的。以下比較表格來源為此，傳送門。
+    連結串列 (List) 陣列 (Array)     記憶體 不需要連續的空間 需要連續的空間   節點型態 各node形態不相同 各node形態相同   操作複雜度 插入、刪除都為O(n) (備註) 插入刪除都為O(1)|   空間配置 不需預留空間 須事先宣告連續空間   資料分割、連結 容易 不容易   存取方式 只能循序存取 可支援隨機與循序存又   存取速度 速度慢 速度快   可靠性 差 佳   額外指標空間 需要額外的指標空間 不需要    備註 這裡所為的插入與刪除是指針對某一個 index 的節點進行插入或刪除，在這種情況下，list 需要走到此 index 在進行對應的操作，因此是 O(n)。</description>
+    </item>
+    
+    <item>
+      <title>資料結構---陣列(Array)、堆疊(Stack)、佇列(Queue)</title>
+      <link>https://mark-lin.com/posts/20170211/</link>
+      <pubDate>Sat, 11 Feb 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170211/</guid>
+      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢?
+根據 wiki 的解答。
+ 資料結構是電腦中儲存、組織資料的方式。
+ 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。
+那選擇正確的資料結構可以做啥 ? 答案就是可以提供你的演算法效率。接下來我們將在本篇文章說明三種資料結構陣列(Array)、堆疊(Stack)、佇列(Queue)。
+本篇文章目錄如下。
+ 陣列 堆疊 佇列  陣列 ( Array ) 陣列應該算是我們寫程式時，最常使用到的一種資料結構，它就長的下面這樣，上面那行代表我們的資料陣列，下面那行只是表示每個資料對應到的Index，例如array[0]的值為a。
+不過有幾點要注意，當初陣列設計之初是在形式上依賴內存分配而成，也就是說必須預先設定陣列的大小。這使得陣列有以下特性。
+ 設定陣列大小後，不能在改變(資料溢位問題)。 在內存中有該陣列專用的連續空間，不會存在其中程式要調用的資料空間。  由於陣列實在太常使用了，這邊就不多說囉。
+時間複雜度  indexing : O(1) find : O(n)  堆疊 ( Stack ) 它事實上與陣列很相似，只是它有幾個特殊的方，它只能允許在陣列的一端進行操作，而且按照『後進先出』 LIFO, Last In First Out 的原理運作。如下圖表示。
+然後我們簡單的使用javascript來建立stack的資料結構，由於我們是要練習用，所以我們不使用Js的陣列內本來就有提供的stack方法。
+首先我們先建立Stack的類別，事實上在js中不該說類別，_size存放該stack的大小，而_container則存放資料。
+/** * Stack * this is stack data structure; * @returns {undefined} */ function Stack(){ this._size =0; this._container = {}; } 接下來我們要建立的方法有兩個push與pop，其中push就是將資料丟到stack內，而pop就是取出資料，由於stack遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以pop，是要取該stack內最後被丟進去的資料。</description>
+    </item>
+    
+    <item>
+      <title>VIM的五四三---vim &#43; syntastic &#43; eslint &#43; react的配置</title>
+      <link>https://mark-lin.com/posts/20170201/</link>
+      <pubDate>Wed, 01 Feb 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170201/</guid>
+      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開發時，可以更快速的進行修正。
+配置完成果會如下圖，你可以看到他會自動顯示什麼地方需要修改，以及修改的原因。
+Step1. 安裝syntastic 首先我們第一步，要先安裝syntastic ，它是一個vim的套件，它的功用就是可以針對程式碼進行檢查，你可以針對不同的程式碼配置不同的檢查器，像我們要檢查javascipt時，就是配置了eslint這個檢查器。
+由於我是使用vundle，所以只要在.vimrc加入下面這行。然後再執行PluginInstall就會自動幫你裝好這套件了。
+ Plugin &#39;scrooloose/syntastic&#39; 接下來我們會在.vimrc檔案內加入以下的配置。
+ set statusline+=%#warningmsg# set statusline+=%{SyntasticStatuslineFlag()} set statusline+=%* let g:syntastic_always_populate_loc_list = 1 let g:syntastic_auto_loc_list = 1 let g:syntastic_check_on_open = 1 let g:syntastic_check_on_wq = 0 let g:syntastic_javascript_checkers = [&#39;standard&#39;] let g:syntastic_javascript_standard_generic = 1 let g:syntastic_javascript_checkers = [&#39;eslint&#39;] let g:syntastic_javascript_eslint_exec = &#39;eslint&#39; Step2. 安裝eslint checker. 上面的步驟我們已經完成了vim的配置，並且已經設置好javascript的檢查器為eslint，但我們實際上還沒安裝好eslint，所以我們這裡將要說明如何安裝eslint。
+首先要安裝全域的eslint。
+npm install -g eslint 然後在有packjson下的專案，執行下列指令，該指令可以進行eslint的規則配置，它會問你是否用es6或react之類的問題，然後根據你的回答產生出配置檔。
+eslint --init 產生出配置檔如下。eslint會根據該配置檔，來檢查javascript檔案。正常來說，這樣就該可以使用，但有時還是會有問題。
+module.exports = { &amp;quot;env&amp;quot;: { &amp;quot;browser&amp;quot;: true, &amp;quot;commonjs&amp;quot;: true, &amp;quot;es6&amp;quot;: true }, &amp;quot;extends&amp;quot;: &amp;quot;eslint:recommended&amp;quot;, &amp;quot;parserOptions&amp;quot;: { &amp;quot;ecmaFeatures&amp;quot;: { &amp;quot;experimentalObjectRestSpread&amp;quot;: true, &amp;quot;jsx&amp;quot;: true }, &amp;quot;sourceType&amp;quot;: &amp;quot;module&amp;quot; }, &amp;quot;plugins&amp;quot;: [ &amp;quot;react&amp;quot; ], &amp;quot;rules&amp;quot;: { &amp;quot;indent&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;tab&amp;quot; ], &amp;quot;linebreak-style&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;unix&amp;quot; ], &amp;quot;quotes&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;double&amp;quot; ], &amp;quot;semi&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;always&amp;quot; ] } }; BUG&amp;mdash;沒有出現錯誤訊息 正常來說，上面的流程有配置好，應該就可以使用，但是呢，我就在這邊debug了很久，它的錯誤提示一直沒有跑出來。我來說明一下我的debug流程。</description>
+    </item>
+    
+    <item>
+      <title>30-30之MongoDB三十天的學習之旅</title>
+      <link>https://mark-lin.com/posts/20160930/</link>
+      <pubDate>Fri, 30 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160930/</guid>
+      <description>不知不覺~漫長的鐵人賽就進入了尾聲，當初會參加鐵人賽也只是因為，沒參加過 ~ 來試試看，而且也剛好我今年的時間比較多點兒，話說回來，為什麼我會選MongoDB來當題目呢?事實上也只是因為我自已無聊在做的專案，有把mongoDB拿來用，所以就想說認真的來研究一下mongoDB ~
+我們簡單的總結一下我們這三十天學了那些東西。
+首先最基本的一定是一個資料庫的CRUD，這階段就像玩天堂時的說話島一樣，你要打打哥布林。
+ 30-3之新手村CRUD&amp;mdash;新增 30-4之新手村CRUD&amp;mdash;新增之Bulk與新增效能測試 30-5之新手村CRUD&amp;mdash;更新 30-6之新手村CRUD&amp;mdash;更新之陣列欄位 30-7之新手村CRUD&amp;mdash;刪除 30-8之新手村CRUD&amp;mdash;搜尋之find與搜尋操作符號 30-9之新手村CRUD&amp;mdash;搜尋之陣列欄位與regex 30-10之新手村CRUD&amp;mdash;搜尋之Cursor運用與搜尋原理  然後在基礎的新手村畢業以後，你就可以坐船前往大陸，不過下船的地方在那我有點忘了。 接下來我們要學習的事情就是，要如何的使我們搜尋速度更快速。
+ 30-11之索引(1)&amp;mdash;索引的哩哩扣扣 30-12之索引(2)&amp;mdash;複合索引的坑 30-13之索引(3)&amp;mdash;比較特別的索引使用  在我們了解了如何將搜尋速度提升更快後，我們就可以來研究如何使用mongodb來進行資料分析，這個階段就像是龍之谷吧……年代有點久遠有點快忘了。
+ 30-14之聚合(1)&amp;mdash;Aggregate Framework的哩哩扣扣 30-15之聚合(2)&amp;mdash;Pipeline武器庫 30-16之聚合(3)&amp;mdash;潮潮的MapReduce  可是分析完後，我們發覺有些地方效能還不是不太好，明明索引那些都處理好囉 ? 這時我們只能往架構方面來尋找問題囉。
+ 30-17之MongoDB的設計&amp;mdash;正規與反正規化的戰爭  在以上的東西都已經學習的差不多時，這時我們就要來驗證一下，我們是否真的有學習進腦袋裡，這時最簡單的驗證方法，就是自已想個題目，然後從0 → 1 自已建立看看。順到一題0 → 1這本書真的不錯看。
+ 30-18之運用研究&amp;mdash;PO文模擬情境(1) 30-19之運用研究&amp;mdash;PO文模擬情境(2) 30-20之運用研究&amp;mdash;PO文情境模擬(3)  在驗證完以上的東西都學習會後，我們可以往分散式的東西進行學習囉，這邊應該就是傲慢之塔的等級囉。
+ 30-21之MongoDB的副本集 replica set(1) 30-22之MongoDB的副本集 replica set(2)&amp;mdash;使用Docker建立MongoDB Cluster 30-23之分片Sharding(1)&amp;mdash;Hello Sharding 30-24之分片Sharding(2)&amp;mdash;Chunk的札事 30-25之分片Sharding(3)&amp;mdash;片鍵的選擇  然後接下來的最後一部份也是驗證你上面的東西有沒有學會。
+ 30-26之運用研究&amp;mdash;股價應用模擬(1) 30-27之運用研究&amp;mdash;股價應用模擬(2) 30-28之運用研究&amp;mdash;股價應用模擬(3)  事實上到這邊應該就可以結束了，但我事實上有忘記一個主題，所以補充在最後面。
+ 30-29之補充&amp;mdash;忘了講的事務操作   最後忘了講幾句感言的話，事實上我很感謝上天，還能給予我可以參加30天鐵人賽的腦袋與體力，2016年應該是我目前的人生轉哲最大的年度，我生了一場重病，我得的病就是你們腦袋中最不想得的病排行板前三名， ~ 啊喲啊喲 ~ 小的才2開頭而以 ~ 啊喲啊喲 ~ 得這病是真的失去不少東西，而且治療過程，有時後我會想，似乎上天堂好像會輕鬆點兒，上一句只是完笑，得這鬼病也只有一條路，面對現實就對囉~</description>
+    </item>
+    
+    <item>
+      <title>30-29之MongoDB--- 事務操作的空虛感</title>
+      <link>https://mark-lin.com/posts/20160929/</link>
+      <pubDate>Thu, 29 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160929/</guid>
+      <description>本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。
+ MongoDB 不支持事務操作
+ 但事實上這段話有很多觀念要來說明說明，不然很難讓人了解事務操作是啥，所以我們這篇要用來補充一下這個主題。
+~ 事務操作是啥鬼 ~ 咱們首先先來了解一下，事務是啥?根據wiki的定義。
+ 資料庫事務是資料庫管理系統執行過程中的一個邏輯單位，由一個有限的資料庫操作序列構成。
+ 這邊用白話文來簡單說明一下，事實操作你可以把他想成一個工作流程，例如煮菜，你首先要先洗菜、切菜、丟到鍋子、加調味料，『煮菜』這名詞就是一個事務，它裡面包含了剛剛說明的流程。
+我們轉回的在資料庫中的事務，假設我們是個證券商，我們收到使用者的下單通知，那我們資料庫會著麼進行? 我們下面來試試列出該事務操作過程。其中我們有兩個資料表accounts為使用者的帳戶資料、第二個為orders下單資料，呃對了先不管交割日這鬼，也就是付錢日。
+ 首先我們會先在orders新增一筆訂單。 再到accounts針對該使用者的帳戶進行扣款。  那如果發生錯誤時，事務會著麼處理?
+根據以上的例子，我們拿來繼續使用，假設我們在第二個步驟，準備要扣款時，系統突然gg了，那要著麼樣?在一些資料庫中，當整個事務提交給資料庫時，它會保證這整個事務要嘛全部完成，要嘛全部沒完成。
+也就是說，如果我們第二個步驟掛掉時，我們一開始在orders新增的一筆訂單會取消，會保持整個事務的完整性，不會只完成一半。
+最後這邊我們來看一下事務操作的四個特性ACID，來腦補一下，以下內容為wiki，並且自已寫寫說明。
+ 原子性（Atomicity） : 要麼全執行、要麼全取消，沒得商量。 一致性（Consistency）: 這個是指在事務開始與結束後，資料庫的完整性約束沒有被破壞。 隔離性（Isolation）: 多個事務執行時，任一個事務不會影響到其它的事務。 持久性（Durability）: 代表即時停電或啥，事務一旦提交後，則持久化保存在資料庫中。  ~ MongoDB 不支援事務 ~ 對mongodb不支援事務，但它還是有支援一些符合各別特性的操作，總共有三個。
+1. 在單個 document 上有提供原子性操作 findAndModify mongodb有提供單個document，操作，也就是說如果你要針對該document進行更新，要麼全部更新完成，不然就全部不更新，我們簡單用個範例來說明如何設計成，符合原子性的功能。
+我們把上面的例子拿下來用。
+ 假設我們是個證券商，我們收到使用者的下單通知，那我們資料庫會著麼進行? 我們下面來試試列出該事務操作過程。其中我們有兩個資料表accounts為使用者的帳戶資料、第二個為orders下單資料，呃對了先不管交割日這鬼，也就是付錢日。
+ 但注意一點，如果我們是建立將accounts與orders分成兩個collection來建立，那我們就沒辦法使用mongodb所提供的原子性操作，因為就變為多document的操作。
+所以我們需要將它修改為都存放在同一個collection，沒錯也就是進行反正規化，資料大概會變成這樣。
+{ &amp;#34;user&amp;#34; : &amp;#34;mark&amp;#34; , balance : 10000 , orders : [ { &amp;#34;id&amp;#34; : 1 , &amp;#34;total&amp;#34; : 1000 , &amp;#34;date&amp;#34; : &amp;#34;20160101&amp;#34; }, { &amp;#34;id&amp;#34; : 2 , &amp;#34;total&amp;#34; : 2000 , &amp;#34;date&amp;#34; : &amp;#34;20160103&amp;#34;} ] } 然後我們進行交易時，我們需要先檢查balance確定是否有足的錢，然後在新增一筆下單到orders欄位中，最後才修改balance，而我們這時需要用到findAndModify ，它可以確保這筆交易的，在確定完balance後，不會有其它線程來更新它的balance。</description>
+    </item>
+    
+    <item>
+      <title>30-28之MongoDB運用研究---股價應用模擬(3)</title>
+      <link>https://mark-lin.com/posts/20160928/</link>
+      <pubDate>Wed, 28 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160928/</guid>
+      <description>上一篇研究簡單的說明完，股價分析的運用操作後，接下來我們這篇文章將要說明一些程式交易的東西，不過雖然說是程式交易，但事實上也只是簡單的計算出技術分析指標然後產生出買賣時間點，要說是程式交易好像也不太算兒……。
+~ 二哈的需求分析 ~ 今天咱們的二哈和我說，啊鳴~ 最近我想搞搞程式交易 ~ 幫我一下，然後我問他你想做啥，他竟然回，我也不知道也 ~ 我只是聽說那很潮、很容易賺錢 ~ 幫我咱 ~咱們是好哥吧，然後我一直在笑他你傻了啊，最後他就用出這種表情。
+雖然很想和他說~你何不食屎忽 ~ 但想到要愛護動物就想是幫他想一下。
+回到正題，說到程式交易我們先看一下智庫的定義。
+ 　程式交易在英文中叫做Program Trading, 就是將自己的金融操作方式，用很明確的方式去定義和描述，且遵守紀律的按照所設定的規則去執行交易。
+ 上面只是定義，不過我簡單的說明一下我的認知，就是『寫個策略計算出買賣點，然後叫電腦乖乖的進行交易』。
+網路上以及論文都有提供一些策略，你可以自已去試試看，不過會不會賺錢小的我就不知道了，順到幫我老師打廣告一下，如果對金融應用感興趣的可以看看他寫的書，傳送門在此。
+好再一次回來正題，那我們在這邊就簡單的講幾個策略……真的很簡單，因為我模擬的資料只有k線別忘囉。
+ 二哈可以利用30天移動平均線與當日開盤價進行買點與賣點的計算。 二哈可以用五天期的平均成交量低於十天前的五天期平均成交量的 75%這策略來進行交易。  就來這兩個吧~
+~ 實作 ~ 二哈可以利用30天移動平均線與當日開盤價進行買點與賣點的計算 首先咱們先來完成這個需求，在投資股票時，有個東西你在看k線時，幾乎所有的開盤軟體都會提供，它就是移動平均線，其中它又有十天線、月線、季線、年線、二年線等，簡單來說，十天線就是用前十天的平均來計算出來的一條件，非常的Easy。
+然後我們來看看我們的月線也就是30天期線的產生，首先先看看最外面有個變數temp，它是一個陣列，用來存放30天的開盤價，為了用來計算平均數用的，但有點注意，如果只是在外面宣告個var temp = []這樣在mongodb的mapreduce函數是無法使用的。
+那要著麼使用呢 ? 拉下面一點會看到有個參數物件，其中的scope就是讓我們可以使用全域變數 temp 。
+temp看完後在來看看我們的主體mapreduce，但在執行mapreduce之前，我們會先進行query，將code為8111的尋找出來，這邊有個金句要注意一下。
+ 盡可能的在進行資料分析時，先將不需要的資料篩選剔除掉，這是個黃金法則。
+ var temp =[]; var result = db.stocks.mapReduce( function(){ if(temp.length &amp;lt; 30){ temp.push(this.open); emit(this.date,0); }else{ temp.splice(0,1); temp.push(this.open) var sum =0, avg =0, tempCount = temp.</description>
+    </item>
+    
+    <item>
+      <title>30-27之MongoDB運用研究---股價應用模擬(2)</title>
+      <link>https://mark-lin.com/posts/20160927/</link>
+      <pubDate>Tue, 27 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160927/</guid>
+      <description>上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就改用 aggreagate framework，然後如果再不能的話則用 mapreduce。
+~ 二哈的分析需求 ~ 這二貨根本沒有想需求，只是想說來分析一下，但分析啥也沒說，然後還要我們幫他想一下，然後還用這種表情看我，一臉用這種事情還用問我的表情。
+然後我們只能乖乖的幫他想幾個。
+ 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  那我們先開始吧。
+~ 索引與片鍵的建立 ~ 呃對了，雖然上一篇文章中，我們已經將索引與片鍵選出來了，分別為
+索引 : { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }
+片鍵 : { &amp;quot;code&amp;quot; : 1 }
+但咱們突然想到一件事，你要建立的片鍵，必須要有索引，當我們的索引是複合索引，這樣我們還可以使用{ &amp;quot;code&amp;quot; : 1 }來建立嗎? 我們來試試。
+db.stocks.ensureIndex({ &amp;#34;date&amp;#34; : 1 , &amp;#34;code&amp;#34; : 1 }) sh.enableSharding(&amp;#34;test&amp;#34;) sh.shardCollection(&amp;#34;test.stocks&amp;#34;,{&amp;#34;code&amp;#34;:1}) 結果如下，看來是不行。
+那要著麼辦呢?這時我們有三個辦法。
+ 再增加一個code索引。 選擇 { &amp;quot;date&amp;quot; : 1 }與{ &amp;quot;code&amp;quot; : 1}當索引。 片鍵修改為{ &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }。  要選那個呢，首先先來說說第一個，增加一個索引，缺點就在於需要更多的空間，而且這索引搜尋時幾乎不太用到，因為幾乎被原本的 { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }可取代。</description>
+    </item>
+    
+    <item>
+      <title>30-26之MongoDB運用研究---股價應用模擬(1)</title>
+      <link>https://mark-lin.com/posts/20160926/</link>
+      <pubDate>Mon, 26 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160926/</guid>
+      <description>前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在Fintech幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。
+~ 情景說明 ~ 二哈是一位二貨，他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二
+回歸主題，二哈的需求只是分析，所以我們再分析前，我們要先建立好資料，通常能分析的資料量是越大越好，所以我們這邊一定會需要用到分片，並且我們先從最基本的股票資料k線與成交量來建立資料，首先我們的資料結構應該如下。
+{ 股價代碼	&amp;quot;code&amp;quot; : 1011, 日期	&amp;quot;date&amp;quot; : 20160101, 開盤價 &amp;quot;open&amp;quot; : 100, 最高價 &amp;quot;height&amp;quot; : 100, 收盤價 &amp;quot;close&amp;quot; : 90, 最低價 &amp;quot;low&amp;quot; : 80, 成交量 &amp;quot;volume&amp;quot; : 1000 } 然後我們來正試開始吧。
+~ Step 1. 架構分析 ~ 索引架構思考 首先我們根據以上的資料結構可知，我們該主題目前不太需要考慮到正規化與反正規化的問題，那接下來我們來思考看看索引的問題，但那蠢二哈只想到分析但不知道分析啥，我們來幫他想想。
+我們來一條一條列出，我們想到的需求。
+ 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  細細想一下，大部份的使用情境都一定需要時間，而且是個範圍，然後有時在搭配某個股票，所以我們基本上會針對date和code來考慮建立索引，那要選用那種索引呢，目前有三種選擇我們先列出。
+第一種 { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 } 第二種 { &amp;quot;code&amp;quot; : 1 , &amp;quot;date&amp;quot; : 1 } 第三種 { &amp;quot;code&amp;quot; :1 },{ &amp;quot;date&amp;quot; :1 } 還記得{ &amp;quot;sortKey&amp;quot; : 1 , &amp;quot;queryKey&amp;quot; : 1 }這個複合索引時有提到的東西麻，很常用來排序的請放前面，日期和股價代碼，理論上來說日期會很常用到排序，所以我們第二種索引可以刪除。</description>
+    </item>
+    
+    <item>
+      <title>30-25之MongoDB分片Sharding(3)---片鍵的選擇</title>
+      <link>https://mark-lin.com/posts/20160925/</link>
+      <pubDate>Sun, 25 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160925/</guid>
+      <description>上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~
+ 完美的片鍵定義(這鬼不存在的) 片鍵的種類  ~ 完美的片鍵定義(這鬼不存在) ~ 在我們開始學習片鍵的選擇前，我們要先知道，什麼樣的片鍵是最好的，最理想的，但想也知道最好的東西是不存在的，但我們還是要知道，才能給我們的選擇給個基準。
+整體來說完美的片鍵有下面特性
+ 所有的新增、刪除、更新等寫的操作，都可以平均分配到所有的分片。 所有的搜尋等讀的操作，都可以平均分配到所有的分片。 所有的操作都只會發到相關的分片，例如更新時不會跑去分片內是空的進行更新。  我們先來說說第一個特性，如果沒有該項特性會發生什麼事情，假設我們的cluster有四個分片，我們當然是希望每個分片可以處理25%的事情，但是假設我們做那些寫的操作時(ex.新增)全部都集中在其中一個分片，那你會發覺那個分片會越來越大~越來越大~ ，而且別忘了我們上章節說的chunk分配，它是根據數量來進行分配，不是用大小，因此你的那個分片內的chunk不會分配到其它分片，這樣也就失去你用分片的意義了。
+而至於第二點特性，mongos在處理搜尋請求時主要會分成下述兩種的處理方式。
+ 搜尋時不包含片鍵，則會將搜尋分配到發有的分片，然後合并搜尋結果，再返回給client。 搜尋時包含片鍵，則直接根據片鍵，然後找出要尋找的chunk，向相對的分片發送搜尋請求。  根據上面的說明，我們知道mongos的讀操作過程，然後我們這時在回來思考，如果這時搜尋時都集中在一個分片上，會發生什麼事，首先搜尋時不包含片鍵這種類型影響不大，但另一種就會影響到，因為原本該分散的壓力，反而都集中在一個分片，運氣不好搜尋請求過多，就爆掉了。
+而至於第三點，就只是浪費資源囉~
+這邊我們大概來整理一下，根據以上三點大概可以拆分成幾個良好片鍵的特性。
+ 容易分割片鍵 : 容易分割的片鍵可以使mongodb更容易的均衡各分片的資料量，不容易發生過大的分片，基數越大的走容易分割資料。   基數是指系統將資料分成chunk的能力，例如性別欄位就是個低基數的例子，只有男與女。
+  高隨機性的片鍵 : 具有越高隨機性的片鍵，他所分割出來的資料越容易均衡，也代表可避免任何一個分片承受過多的壓力。 可以指向單個分片的片鍵 : 越可指向單個分片的片鍵，越能降低搜尋效能壓力，像是隨機型的片鍵就無法做到。  這世界沒有著麼美好的事情，基本上幾乎找不到完全符合上述的條件，所以相對的咱們只能選擇盡可能符合你需要的片鍵，而這時就只能根據你專案的需求來決定，例如說這專案是讀吃比較重還是寫吃比較重，比較最大的搜尋條件，或搜尋時間過久的搜尋，這時都是要考量的。
+~ 一些片鍵的種類 ~ 這邊開始我們就要來說明一些片鍵的種類。
+升序片鍵 這種類型的片鍵，大部份都是欄位為Date類型或是ObjectId，是種會根據時間來增加欄位，或是根據先後順序進來的欄位。
+假如我們使用這種欄位做為片鍵，會發生什麼事情 ? 一開始建立片鍵時你不會看到什麼問題，而是再於你新增時會發生，假設我們有下面的分片cluster。
+   shard001 shard002 shard003     {min~2000} {2007~2008} {2014~2016}   {2001~2003} {2009~2010} {2017~max}   {2004~2006} {2011~2013}     然後這時我們要問個問題，我們進行新增時，它會加到那個chunk?</description>
+    </item>
+    
+  </channel>
+</rss>

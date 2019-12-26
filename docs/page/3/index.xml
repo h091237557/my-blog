@@ -1,0 +1,583 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>拿鐵派的馬克 Blog</title>
+    <link>https://mark-lin.com/</link>
+    <description>Recent content on 拿鐵派的馬克 Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
+    <webMaster>h091237557@gmail.com (marklin)</webMaster>
+    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    
+        <atom:link href="https://mark-lin.com/index.xml" rel="self" type="application/rss+xml" />
+    
+
+    
+    <item>
+      <title>30-09之別人要如何聽到我的聲音呢 ?</title>
+      <link>https://mark-lin.com/posts/20180909/</link>
+      <pubDate>Sun, 09 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180909/</guid>
+      <description>正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這部份最主要探討的主題為：
+ 別人要如何聽的到我的聲音呢 ?
+ 基本上這題的大約有三種思路，而這也是本篇文章的三個章節：
+ 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播一樣即時的將聲音傳送給對方 ( 方法 3 )  備註 讓對方看的到影像的方法也與聲音相同，所以這裡就以聲音為例來進行說明。
+將聲音檔案直接丟給對方 ( 方法 1 ) 這個是最原始的一種方法，它就是將檔案丟給對方，然後等對方全部下載完後，才能聽到聲音，概念圖如下：
+但是實作上的概念圖應該是如下圖，基本上在即時通訊軟體上，不太會是 client 與 client 進行 P2P 連線來直接丟聲音檔案，例如 line 之類的通訊軟體，因為它都要支援離線傳輸，因此架構實際上應該是會選擇將檔案丟到 server 然後再發送個通知給對方說有個檔案你可以下載。
+這種作法基本一小段的聲音檔還行，但如果是要傳送一段很長的聲音或影像檔(ex 電影)，那基本上這個方法的缺點就會被放大，因為它要全部下載完你才可能看或聽，而且占空間，並且如果是音樂或電影，說不定還有版權的問題，因為這也代表你有音樂檔，可以分享給其它人。
+這也是為什麼後來誕生了串流傳輸的技術囉。 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 串流用比較白話文一點的說話就是:
+ 它是一種將資料一段一段的丟給去給你，而不會將所有的資料。
+ 詳細的串流說明可以去筆者之前寫的文章『Node.js 的串流之旅之基本概念』
+那這樣有什麼好處理 ?
+基本上有以下幾個好處：
+ 客戶端可以一邊下載一邊收聽。 不會花費客戶端的儲存空間，它會將一小段一小段的聲音傳送到客戶端的緩衝記憶體中，然後播放器會去記憶體中讀取後並播出，然後再捨棄掉。 由於客戶端沒有實際上儲放檔案，因此不會有一些音樂或影片版權的問題 (有檔案就可以傳來傳去)。  然後咱們這個方法的實作概念圖大概如下。
+上面的簡易架構圖有一些東西咱們要來理解一下。</description>
+    </item>
+    
+    <item>
+      <title>30-08之 WebRTC 採集的詳細說明與聲音的加工</title>
+      <link>https://mark-lin.com/posts/20180908/</link>
+      <pubDate>Sat, 08 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180908/</guid>
+      <description>正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。
+ 採集的詳細說明與聲音的加工。
+ 本篇文章會將之分成以下幾個章節：
+ WebRTC 的 Stream (Media Stream) 組成。 如何對 Media Stream 的聲音進行加工 ？  WebRTC 的 Stream ( Media Stream ) 組成  stream = track A + track B
+ 前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。
+const constraints = { audio: true, video: true } navigator.mediaDevices.getUserMedia(constraints) .then((stream) =&amp;gt; { // stream 就是咱們的聲音與影像 }) .catch((err) =&amp;gt; { // 錯誤處理 }) 然後咱們這裡來問個問題：
+ stream 是由什麼組合的 ?</description>
+    </item>
+    
+    <item>
+      <title>30-07之Web 如何進行語音與影像採集 ?</title>
+      <link>https://mark-lin.com/posts/20180907/</link>
+      <pubDate>Fri, 07 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180907/</guid>
+      <description>正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。
+ 如何在 Web 上進行聲音與影像的採集 ? ( 其它平台的別問我 )
+ 這篇文章中，咱們將會用到一個東東叫做WebRTC，接下來會以它為主，將之分成以下三個章節：
+ WebRTC 是啥 ? 使用 WebRTC 來採集聲音與影像 將採集到的聲音儲放成一個檔案  WebRTC 是啥 ?  讓瀏覽器不需加裝任何套件就可以進行即時文字、語音與影像對話的 API 。
+ WebRTC　全名為　Web Real-Time Communication，中文為網頁即時通訊，這東東用途就是讓咱們的瀏覽器不用裝認何啥套件就可以進行和其它瀏覽器進行即時文字、語音與影像對話。
+它在 2011 年時進入了 W3C 的推薦表準，並且到了現在(2018)，大部份的瀏覽器都有支援 (IE 例外)。
+它主要有三種類型的 API：
+ getUserMedia：用來處理音視串流採集。 (採集聲音或影像)。 RTCPeerConnection：用來建立兩個瀏覽器之間的直接通訊。 (建立與管理 p2p 連線) RTCDataChannel：負責用來傳送資料。(操作那條 p2p 連線)  基本上在這篇文章中只會用到第一個 getUserMedia 其它的 API 在後面文章會詳細的進行說明。
+備註 當前（2018）支援各平台的狀態請參考以下連結：
+WiKI: WebRTC Support
+使用 WebRTC 來採集聲音與影像 事實上就是如此的簡單，下面程式碼中，我們使用 getUserMedia 來採集聲音與影像，而 stream 就是咱們所採集到的聲音與影像，它們都是 raw data，也就是說聲音是 PCM 編碼，而影像就是單純的一堆連續的圖片編碼。</description>
+    </item>
+    
+    <item>
+      <title>30-06之聲音與影像的封裝</title>
+      <link>https://mark-lin.com/posts/20180906/</link>
+      <pubDate>Thu, 06 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180906/</guid>
+      <description>正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時輕鬆些，接下來咱們要學習將這些東東封裝在一個容器中。
+ 聲音與影像的封裝
+ 本篇文章中我們將會分為以下章節，來探討這個主題：
+ 什麼是封裝呢 ? 常見的容器(文件、格式) 容器的實際模樣 ( 以 wav 為範例 )  什麼是封裝呢 ?  封裝就是將聲音與影像編碼丟到一個容器中的過程。
+ 簡而言之如下圖：
+那為啥要封裝到容器呢 ? 基本上有以下幾個理由：
+ 可以讓不同的媒體內容同步變的方便，例如聲音與影像。 可以提供索引內容，讓用戶可以決定想要看或聽什麼地方。 如果沒有容器，只傳送一串影像編碼，那你還要在傳送聲音編碼才會有聲音。 如果只傳送編碼，如果沒有一些編碼資訊，那接受要如何解碼呢 ?  編碼與容器是一對多的關係 有些東西需要先搞個清楚一下，不然我一開始研究時常常在混亂中。
+例如咱們很常說的 MP3 編碼、文件、格式，它到底是指啥 ? 編碼還是容器 ?
+ 咱們常看到的 .mp3 檔是個容器(文件、格式)，然後它裡面放了 MP3 編碼，再外加一些資訊。
+ 那 mp3 編碼可以放到其它容器裡嗎 ? 當然可以 ! 像他就可以放到 .mp4 或 .avi 容器中。
+所以說基本上一種音頻編碼是可以有多種容器選擇的。
+常見的容器(文件、格式) 接下來將介紹一些常見的容器，這也先說一下網路上在說明容器時有很多種名稱，例如音頻文件、音頻格式、音頻檔這些，它們指的都是容器的概念。
+.wav (聲音) WAV (Waveform Audio File Format) 它是微軟開發出來的聲音容器，雖然它是微軟開發出來的，但在其它的平台也廣泛的支持，基本上它就是聲音 raw data 容器，就是用來儲放 PCM 編碼的。</description>
+    </item>
+    
+    <item>
+      <title>30-05之影像的編碼與壓縮</title>
+      <link>https://mark-lin.com/posts/20180905/</link>
+      <pubDate>Wed, 05 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180905/</guid>
+      <description>正文開始 本篇文章中我們將要學習以下的主題:
+ 影像編碼
+ 接下來我們會分以下三個章節來進行學習:
+ 什麼是影像編碼呢 ? 如何進行壓縮呢 ? 常用的編碼  什麼是影像編碼呢 ?  用來描敘影像的有規則二進位。
+ 這個東西事實上就和音頻編碼一樣，都是使用電腦看的懂的東西(二進位)來說明一部影像，並且希望儘可能的在不損失畫質的前提下，將它弄小，可以方便我們傳輸與儲放。
+但是為什麼要弄小呢 ? 它會很大嗎 ?
+嗯超大。
+我們來看看一個例子，假設有一部影像的資訊如下：
+FPS：30 fps 每幀大小：1024 x 768 每個像素所用的 bit：10 bit 影像長度：10 分鐘
+所以我們這部 10 分鐘的影像所需的空間為如下:
+ 30 X 1024 X 768 X 10 X 60 X 10 = 大約等於 18 GB 嗯哼， 10 分鐘的影片如果什麼都沒處理，那就需要 18 GB，你覺得你的小電腦可以儲放幾部迷片呢 ?
+所以才會一堆人研究了各種的編碼。
+如何將影像變小呢 ?  就是用一些奇技淫巧來壓縮。
+ 接下來我們來簡單的看一下壓縮的原理，比較白話文的是說可以去除影像中的什麼。
+主要有以下幾個冗餘點(Redundancy)可以處理:
+ 圖像冗餘：圖像是由像素所組成，但是每個相鄰的像素，相似性非常的高，所以這裡可以動點手腳兒。 時間冗餘：影像是由連續的圖片組成，但每個相鄰的圖片，相似性非常的高，所以這裡也可以動點手腳兒。 視覺冗餘：人的小眼晴事實上不是很敏感的，所以你動點小手腳事實上也看不出來。 編碼冗餘：就是某些時後會不小心用到多餘的編碼來描述某個事物，所以這裡也可動手腳。  這個地方主要是參考智庫百科的數據冗餘</description>
+    </item>
+    
+    <item>
+      <title>30-04之影像的採集與原理</title>
+      <link>https://mark-lin.com/posts/20180904/</link>
+      <pubDate>Tue, 04 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180904/</guid>
+      <description>圖片來源:馬克
+正文開始  影像的產生與採集
+ 在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習對電腦來說影像到底是如何組成的。
+ 對電腦來說圖片是啥呢 ? 那對電腦來說影像又是啥呢 ? 那一個連續的影像有多大呢 ?  對電腦來說圖片是啥呢 ?  它是一堆像素 (Pixel) 的組合體，白話文就是一堆顏色格子的合體。
+ 數位影像(點陣圖)是由一堆方塊所組成，然後每一個方塊中都有一些顏色，這個每一個方塊我們就稱它為像素 (Pixel)。
+然後通常我們說 1024 X 1024 的圖片就是代表這張圖，有 1024 X 1024 個像素。
+對電腦來說，一張圖片就是包含了一塊顏色方塊的資訊，例如方塊位置、顏色、亮度等，這就是一張圖片在電腦中的基本組成。然後當然它和聲音一樣，都是有規則的二進位。
+圖片來源: http://www.52im.net/thread-229-1-1.html
+每一格像素的色彩顏色編碼 基本上可以分為以下兩類 RGB 與 YUV.
+RGB 它就是由紅綠藍(Red、Green、Blue)三原色所組成顏色，然後每一種顏色咱們可以用 8 bit 來表示，也就是 255 種。
+然後咱們常見的色彩類型說明如下：
+ 黑白：只有黑與白，所以只要 1 bit。 灰階：還是黑與白，但最黑到最白有 255 種的選擇，所以只要 8 bit，也就是 1 byte。 全彩：就是每個三原色都有 255 種選擇，然後有三原色，所以要 3 x 8 bit 等於 24 bit，也就是 3 byte。  圖片來源:網路</description>
+    </item>
+    
+    <item>
+      <title>30-03之聲音的編碼與壓縮</title>
+      <link>https://mark-lin.com/posts/20180903/</link>
+      <pubDate>Mon, 03 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180903/</guid>
+      <description>圖片來源 : 馬克
+正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下主題 :
+ 聲音的編碼與壓縮
+ 這篇文章中咱們會先說明一下編碼是什麼東西，然後接下來要理解編碼與壓縮的關係，最後咱們在來介紹一些現在在即時音頻通訊中比較常見的幾個編碼。
+ 什麼是聲音的編碼 ? 那為啥會有這麼多種編碼 ? 要如何將聲音所花費的空間變小呢 ? 各種聲音的編碼。  什麼是聲音的編碼 ?  一段用來描述聲音的有規則二進位
+ 上一篇文章中咱們有提到使用 PCM 來將聲音進行數位化，將聲音變成所為的二進位，也就是大概長的如下面這樣，這個 1 與 0 是有規則的，而正常來說這就咱們所謂的編碼。
+10101010010101010100000000111111 …… 而最開始用 PCM 所產生出來的東西，咱們也稱為 PCM 編碼，順到一提它又被稱為無損編碼，但不是指它能完美無損的描敘真實聲音，而是無限接近真實的聲音。
+那為啥會有這麼多種編碼 ?  因為用 PCM 所產生出來的 raw data 太大囉，所以某些神人就幹了一些壓縮編碼
+ 有點兒年紀的人們 ( ex. 馬克 ) 年輕時應該都有用過 MP3 這東東，它裡面裝的就是用 MP3 編碼後的音樂，然後現在常聽到的 AAC 和 Opus 也都是音頻編碼的東東，那為啥會怎麼多種編碼呢 ? 那是因為 raw data 太大了(如下範例)，不適合所有場景，像以前的 MP3 播放器空間小小的( 128 MB ?</description>
+    </item>
+    
+    <item>
+      <title>30-02之聲音的採集與原理</title>
+      <link>https://mark-lin.com/posts/20180902/</link>
+      <pubDate>Sun, 02 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180902/</guid>
+      <description>圖片來源:馬克
+正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明:
+ 要如何採集聲音到電腦中呢 ?
+ 要理解這個問題，咱們就需要從最源頭開始說起，什麼是聲音呢 ? 知道以後，咱們還要思考那電腦又是如何知道聲音是啥呢 ? 最後咱們會理一理當你採集了一段聲音，它需要花費多少的空間來儲放它呢 ?
+本篇文章將分成以下三段如下:
+ 聲音是啥呢 ? 要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM ) PCM 所採集到的聲音有多大呢 ?  聲音是啥呢 ?  它是一種震動所產生的聲波。
+ 聲波就是當一個人在說話時，它發出的聲音震動到空氣中，使得聲音周圍的空氣產生了變化，然後產生的一種波，這個就是所謂的聲波。
+然後說到了振動，就該說到頻率，通常咱們用來描述它振動的多快的單位就是赫茲(Hz)它的定義如下:
+赫茲(Hz)代表單位時間內周期性事件發生的事件
+ex. 1Hz = 1/s (就是一秒動一次的意思)
+咱們人耳可以聽到的範例約為 20 ~ 2萬赫茲，高於它的就被稱為超音波。
+要如何將聲音採集到電腦裡，而且電腦也看的懂呢 ? ( PCM )  就是使用麥克風，然後將聲音轉成數位訊號，也就是 0 與 1。
+ 這裡我們就要提到一個叫PCM 脈波編碼調變的東東，它是一種將類比訊號數位化的方法。
+類比訊號是啥 ? 它就是一種連續的訊號，像聲音與電壓都是屬於這類型，而數位訊號就是將連續的訊號進行加工，讓它只有 0 與 1 的非連續的訊息。
+回來到 PCM 來看它的處理過程如下圖，總共有三個流程分別為抽樣、量化、編碼。
+PCM 過程進行中，首先會先將聲音進行定期性的採樣，來看看當時的頻率是多少，那我們的採樣的頻率要多高呢 ? 像咱們人類能聽到的聲音最大為 20kHz(2萬赫茲)，也就是代表 1 秒振動 2 萬次，那這樣的話通常會進行 4 萬次的採樣(By 採樣定理)，才能確保有採集到人類可以聽到的聲音樣本數。而採樣率就會用 40kHz 來表達。</description>
+    </item>
+    
+    <item>
+      <title>30-01之開篇的心得感言</title>
+      <link>https://mark-lin.com/posts/20180901/</link>
+      <pubDate>Sat, 01 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180901/</guid>
+      <description>前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內容提供(點播)，接下來這 30 天咱們將要從 0 到 1 的來研究要如何將聲音、影象或音樂傳送給遠在天邊的某位仁兄，並且也看看現今的直播或點播基本是如何建造而成的。
+為什麼會寫這個主題呢 ? 事情的開端是降的。
+忘了是啥時，咱公司的某些人在討論一下關於音視頻開發的東西，說了很多的專有名詞 ~ 例如 HLS、RTMP、AAC、H.264、MP4 啊，然後呢我就表現的像下面這張臉一樣。嗯嗯你們了的。
+圖片來源:網路
+然後我就開始研究這些名詞，一個一個慢慢研究，然後發覺奇怪怎麼都完全無法連成一條線呢 ? 例如 rtmp 我雖然知道它是做啥用的，但它的前身是啥，不知道，然後他傳輸時的有規定要用啥編碼嗎 ? 嗯不知清楚好像是 H.264 ，那 H.264 是語音還是視頻編碼呢? 嗯不知道……，那如果不能用 rtmp 要用啥? 嗯還是不知道……
+圖片來源:網路
+由於以上的種種慘況，所以我希望透過這三十天的文章，希望從 0 到 1 的完全理解即時音視頻開發的種種事情，並且希望可以讓想學習這塊領域的人，能更輕鬆的將這些專有名詞的知識連成一條直線，別謝我。 (BTW 這塊領域真的有點難連成線)
+開端 這 30 天的主題是『30天之即時網路影音開發攻略(小白本)』，事實上我很想將他縮到成直播應用(ex. 如何在30天幹出一個 17 直播)就好，但是這樣很多東西會無法解釋，因為直接研究直播會發生缺了一些東西，因此將題目命名為此，但是這樣事實上還是有點兒抽象，所以一開咱們會從最基本的一個問題來進行探討，問題如下:
+ 馬克的俊臉與美聲要如何給遠在天邊的夢中人呢看到與聽到呢 ?
+ 下圖就是這問題的基本解圖，接下來的 30 天咱們就會根據這張圖的內容，來一步一步的理解裡面每個部份的內容，並且儘可能的將每編文章的知識都連灌起來，並且也順到理一理，現今咱們熱門的直播應用或是語音通話這些應用到底是如何建立起來的，然後最後在介紹 WebRTC 的相關資訊，這 30 天大概就降。
+! 圖片來源:我做的
+最後就開始吧 ~ BTW 這是我的第二次 ~ 好痛啊 </description>
+    </item>
+    
+    <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 ( 加強版 )</title>
+      <link>https://mark-lin.com/posts/20180809/</link>
+      <pubDate>Thu, 09 Aug 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180809/</guid>
+      <description>在之前筆者的這篇文章中：
+一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
+在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
+但是這篇文章中所提到的架構有個問題。
+這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
+ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
+會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
+如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網</description>
+    </item>
+    
+    <item>
+      <title>Elasticearch 與 kibana 之日期的愛恨情仇</title>
+      <link>https://mark-lin.com/posts/20180808/</link>
+      <pubDate>Wed, 08 Aug 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180808/</guid>
+      <description>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
+在開始搞前先說說我的簡單需求:
+ 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
+ 這時通常時間的儲法會有兩種選擇:
+ Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
+其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
+const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&amp;gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
+curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;, &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;, &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;, &amp;quot;_score&amp;quot; : 1.</description>
+    </item>
+    
+    <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立</title>
+      <link>https://mark-lin.com/posts/20180629/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180629/</guid>
+      <description>本篇文章中，我們要說明的主題為 :
+ 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
+ 本篇文章中，我們將分成以下的主題:
+ Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
+其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
+這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
+ 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
+V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
+所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
+這裡我們選擇了AWS kinesis，它的優點如下:
+ 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !</description>
+    </item>
+    
+    <item>
+      <title>如何使用 AWS Athena 去尋找 S3 的資料 (plus kinesis 丟到 S3 的坑)</title>
+      <link>https://mark-lin.com/posts/20180704/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180704/</guid>
+      <description>在筆者的一個基於 AWS Elasticsearch 的用戶行為 log 系統建立中，我們建立了一個使用者行為分析的 log 系統，文章中有提到，我們會將比較舊的 log 放置到 S3 中，所以本篇文章我們將要學習的主題為:
+ 如何時用 AWS Athena 來尋找 S3 中的資料
+ 另外本篇另一個外傳也要順到說一下，這外傳的主題為:
+ 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !
+ 接下來下面為本篇章節:
+ AWS Athena 的簡單介紹 使用 AWS Athena 將 S3 的檔案建立成類似 SQL 的 Table 使用 AWS Athena 來進行 query (日期區間、指定欄位、大小數量) 坑 ! 使用 AWS Kinesis 丟 json 資料到 S3 ，你會總是只能 query 到一行資料 !  AWS Athena 的簡單介紹 簡單的白話文說一下 AWS Athena 是啥:</description>
+    </item>
+    
+    <item>
+      <title>要如何定期的清除 Elasticsearch 文件 ?</title>
+      <link>https://mark-lin.com/posts/20180702/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180702/</guid>
+      <description>上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:
+ 要如何定期的清除 Elasticsearch 文件 ?
+ 然後我們會分成以下幾個章節:
+ 最直覺式的定期刪除方法與缺點。 為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ? 大量文件清除方法 - 時間索引策略。  最直覺式的定期刪除方法與缺點 假設有以下的資料:
+{ data: &#39;Hi Mark ~&#39;, created_at: &#39;20180101&#39; }, { data: &#39;HI Fuc u Mark&#39;, created_at: &#39;20180201&#39; } 那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:
+ 搜尋所有 created_at 為 1 月的 doc。 再將所有搜尋出的 doc 給清除。   上面這方法在小量資料時，是沒問題的，問題是出在大量資料。
+ 那為什麼大量資料刪除會有問題呢 ?</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch 的 Document 建立原理</title>
+      <link>https://mark-lin.com/posts/20180411/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180411/</guid>
+      <description>在這一篇文章中，我們將要理解兩個問題 :
+ 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ?  在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。
+Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。
+所以假設我們要新增一筆 document 應該是會長的像下面這樣。
+ POST /markcorp/employee (/(index)/(type))
+上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別 (type)
+ { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
+ GET 127.0.0.1:9200/markcorp/employee/123
+ 在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。
+新增一個 document 時資料會存放到那 ?? 像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。</description>
+    </item>
+    
+    <item>
+      <title>Elasticserach 的操作新手村</title>
+      <link>https://mark-lin.com/posts/20180401/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180401/</guid>
+      <description>本篇文章中，我們將要很快速的學習以下幾個重點:
+ elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 document。 搜尋 document。  elasticsearch 的基本觀念 Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。
+Elasticserach 有這和關聯式資料庫相似的結構，如下圖。
+所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:
+index: markcorp type: employee { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
+ GET 127.0.0.1:9200/markcorp/employee/123
+ 使用 docker 建立 elastisearch 服務 接下來的教學可以直接用這個專案來直接執行:
+git clone https://github.com/h091237557/docker-composer-tools.git cd elasticsearch/ docker-compose up 下面為官網所直接使用的docker compose的檔案。(官網傳送門)
+version: &amp;#39;2.</description>
+    </item>
+    
+    <item>
+      <title>為什麼伊斯蘭教會分裂呢 ?</title>
+      <link>https://mark-lin.com/posts/20171231/</link>
+      <pubDate>Sun, 31 Dec 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20171231/</guid>
+      <description>在現今伊斯蘭的世界中，我們常常會聽到遜尼派與什葉派這兩個派別，那這兩個派別有什麼不同嗎 ? 而且為什麼會又分這兩個派別呢 ? 這兩個派別又對現在的世界有什麼影響呢 ? 在這篇文章中，我們會來慢慢的理解這些事情。
+伊斯蘭的起源 首先呢我們要將時間拉回到先知穆罕默德創立伊斯蘭教前的時代，在當時，先知還只是默默無名的路人甲，在西元 610 年時，它在麥加的某個山洞沉思，突然間他聽到大天使加百列的聲音，並且叫先知Iqra (誦讀)，而這時它讀出來的東西就是影響了人類世界的古蘭經。
+然後先知聽到這聲音後，就把發生的這段事情告訴它的第一任妻子哈蒂嘉，她相信這個聲音是神的使者而非邪靈，也因為哈蒂嘉的這段話，穆罕默德就決定成立伊斯蘭教，並把古蘭經的教義宣楊到全世界。
+在這裡我們要介紹另外兩位人士，這兩位都是改變伊斯蘭的人，或許也可以這樣說，因為這兩人，才使得伊斯蘭分裂成遜尼派與什葉派。
+真主之獅 - 阿里 阿里最初的先知男追隨者，又被人稱為真主之獅，並且是真主的女婿，可以說是什葉派起源之人。
+上面有提到先知決定成立伊斯蘭教時，先知首先做的事情就是先去將親朋好友聚集在一起，其中當然包含先知的堂弟阿里，它這時才 13 歲喔，然後先知說了以下這段話 :
+ 你們之中誰願意輔助我成就此業 ?
+ 想當然而，你和親朋好友說，你聽到神的聲音，要將這理念宣楊出去，你看看有誰會輔助你 ? 當然沒有人會支持，但唯獨阿里說了這段話 :
+ 他們所有人都退縮，而我雖然是這裡最年輕的，我眼晴看不清、肚子最肥大、雙腿最瘦弱，但我會說我，真主的先知，讓我成為您的助手。
+ 在這時後，伊斯蘭的最初三個信士就誕生了 : 穆罕默德、哈蒂嘉與阿里。
+任何人都沒有想到，這個動作改變了全世界。
+題外話，阿里他有一把劍，它比亞瑟王的『 Excalibur 』還有名，要不是亞瑟王的傳說太有名並且有很多小說或影集來宣傳，不然在基督教世界中，最有名的劍是阿里的配劍『 Dhu&#39;l Fikar 』中文為『分割者』，而也因為阿里手持這把神兵，奮勇殺敵無數的戰役，而贏得先智賜予『真主之獅』(Assad Allah)之名。
+信士之母 - 阿伊夏 阿伊夏先知最年輕的一位妻子，這個人年輕、漂亮、又有才智，更是先知最寵愛的一位，但也是最有爭議的，她幾乎可以說是讓遜尼派產生的導火者。
+在咱們現今的社會裡，對伊斯蘭女性的第一印象應該是壓迫，在伊斯國家裡，女性不能一個人 出門，並且出門時必須帶頭巾，伊斯蘭女性在婚姻、離婚以及繼承權等各個層面權利都低於男性。
+但阿伊夏不同，她是公認的女權主義先行者，她是頂尖的伊斯蘭學者 又是負責發布伊斯蘭教令的法官，又是能在駱駝背上指揮戰場的指揮官，現今有很多為了伊斯蘭女性發聲的人，很多都會以阿伊夏來當做反駁的論點。
+阿伊夏生平最有名的軼事就是項鍊事件，簡單的說阿伊夏和部隊走失了，結果有一名年輕男子恰巧路過，將她帶回麥地那，但回到城裏流言四起，那名年輕男子非常的俊美，阿伊夏則是活潑亮麗，不知道在那段時間，沒有沒發生啥迷不可告人之事 ?
+先知那時也有懷疑，而且阿里也有桶一刀，但是最後結果就是先知或得啟示，就是古蘭經的下面這篇經文 :
+當你們聽見謠言時候，信士和信女對自已的教胞，為何不作善意的猜想，並且說 『這是明顯的謠言呢?』 他們為何不找四個見證者來證明這件事呢 ? 他們沒有找來四個見證者，所以在真主看來他們是說謊的 二十四章: 十二至十三節 因為找不到四個人看到阿伊夏與那位年輕男子做些不好的事情，所以阿伊夏就降無罪 !
+不過說來諷刺，阿伊夏為女權先行者，但也因為這段經文，導致不少穆斯林女性被強爆，而找不到四位見證者，因此施暴者被無罪釋放。
+阿里與阿伊夏 阿里是先知的堂弟，也就代表這他和先知有相同的血源，而且他也將先知第一任妻子當成母親，那個時對阿里來說，阿伊夏就是另一位繼母的感覺，這或許也是阿里與阿伊夏相處不好的關係。
+那阿伊夏呢 ? 他是先知最愛的最愛的妻子，但可惜的事，她沒有和先知生下孩子，在後宮的電視劇中也很常看出，沒兒子沒權力，這也是母憑子貴的成語由來。阿伊夏沒有孩子，所以他對擁有血源與兒子的阿里，自然而然的也就沒什麼好感。</description>
+    </item>
+    
+    <item>
+      <title>如何使用 Prometheus 來優雅的監控 Node Http Server 呢</title>
+      <link>https://mark-lin.com/posts/20171001/</link>
+      <pubDate>Sun, 01 Oct 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20171001/</guid>
+      <description>本篇文章中我們將會學習到以下幾個重點
+ 什麼是 Prometheus 呢 ? 要如何監控 node http server 呢 ? 我想從 Prometheus 監控自訂的資訊，要如何做呢 ?  什麼是 Prometheus 呢 ? 在我們平常開發完系統時，我們常常會有個需求，那就是要如何監控我們的系統呢 ? 以確保它 cpu 往上衝時，我們會知道呢。
+當然我們可以很簡單的寫個小程式，定期的去呼叫系統取他的 cpu，這是很淺的東東 ~ 那如果是還要一個 api 的請求次數呢 ? 或是平均的某個 api 的請求次數或圖表呢 ? 這時如果還要自幹一個，那就太麻煩囉，所以這時我們就可以使用Prometheus ~
+Prometheus 官網上面寫了下面這段話 :
+ Power your metrics and alerting with a leading open-source monitoring solution.
+ 這句話就是 Prometheus 存在的目的。
+Prometheus 的架構 太細節的不說囉 ~ 這裡大概列出這個架構的三個重點:
+ Prometheus 是用 pull 去取得目標資訊，下面的 pull metrics 就是這個意思，而這裡你只先去記一點，如果你有個 http server ，然後你要用 Prometheus 去監控 server ，那 Prometheus 就會去 xxxx_host/metrics 取得資訊。 PromQL 是 Prometheus 所提供的查詢語言，利用它可以快速的找到我們想要的資訊 (大概)。 AlertManager 是一個警告系統，你只要配置好 Prometheus 在某個東東到了報警線時，就自動發送警告到 AlertManager 然後它會使用某些方法通知你，例如 email or slack。  安裝 Prometheus 請直接到官網直接下載下來。</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 原始碼分析之建立連線</title>
+      <link>https://mark-lin.com/posts/20170915/</link>
+      <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170915/</guid>
+      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
+var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
+Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
+前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io(&#39;xxxx&#39;)時，他就會去後端建立連線。
+&amp;lt;script src=&amp;#34;/socket.io/socket.io.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script&amp;gt; var socket = io(&amp;#39;http://localhost&amp;#39;); socket.on(&amp;#39;connect&amp;#39;, function(){}); &amp;lt;/script&amp;gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
+lookup 原始碼
+function lookup (uri, opts) { .... if (newConnection) { debug(&amp;#39;ignoring socket cache for %s&amp;#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&amp;#39;new io instance for %s&amp;#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的說話島</title>
+      <link>https://mark-lin.com/posts/20170914/</link>
+      <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170914/</guid>
+      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
+你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
+但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
+websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
+那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
+Socket.io 的組成 請參考筆者的這篇文章。
+Socketio 的架構
+簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &amp;quot;world&amp;quot;}訊息。
+var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.</description>
+    </item>
+    
+    <item>
+      <title>Socket.io 的架構</title>
+      <link>https://mark-lin.com/posts/20170913/</link>
+      <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170913/</guid>
+      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
+socket.io 主要由以下幾個東東構成的 :
+ engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
+engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
+目前 engine.io 所提供的溝通方式有以下幾種 :
+ polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
+var engine = require(&amp;#39;engine.io&amp;#39;); var server = engine.listen(80); server.on(&amp;#39;connection&amp;#39;, function(socket){ socket.send(&amp;#39;utf 8 string&amp;#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.</description>
+    </item>
+    
+    <item>
+      <title>聊天『室』的設計 ~ 安安你好，要打龍嗎? ~</title>
+      <link>https://mark-lin.com/posts/20170912/</link>
+      <pubDate>Tue, 12 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170912/</guid>
+      <description>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ?
+通常聊天群是會由用戶提出申請，然後管理者來加入到該群裡，而聊天室則不相同，它是用戶可以自由自在的加入或退出，這也代表這，通常聊天群會限制人數，像 line 好像就限制 500 人，而聊天室則否，他通常不會限制人數。
+那這也代表我們要面對什麼問題呢 ? 我目前想想主要有兩個 :
+ 由於沒有限制人數，所以通常我們的架構要考慮擴展性。 訊息的即時性非常的要求，如果一個訊息傳輸慢了，會導致其它人無法理解上下文。  最簡單的聊天室架構 V-1 基本上和聊天群的架構相同，都是一個Business Server和一個Message Server，其中前者做的事情是為所有需要使用 http 協議的工作，更正確的說是 http 短連接的工作，如新增聊天室、登入、登出、註冊這類事情的，都屬於 Business Server ，而所有使用 websocket 協議的都是屬於 Message Server 的工作。
+聊天室 V-2 上面的架構有沒有啥問題呢 ? 有的 ! 請想像一個情境 :
+ 用戶 A 從 business server 登入後，然後再去 message server 建立連線，但問題是 message server 怎麼知道這條連線是用戶 A 呢 ?
+ 在一般的 web 應用中，每當 client 連結 server 時，server 會產生唯一個 sessionId ，並用它來連結 server 內的存放空間，然後會將 sessionId 存放到 cookie 中，這樣每一次 client 進行請求時，server 都會去 cookie 中取得 sessionId 然後再去 session 取得資料。</description>
+    </item>
+    
+    <item>
+      <title>一個像 Line 的聊天群設計 ~ 安安你好 ~</title>
+      <link>https://mark-lin.com/posts/20170911/</link>
+      <pubDate>Mon, 11 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170911/</guid>
+      <description>本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。
+差別在那呢 ? 假設我們開一個todolist功能，事實上大部份的工作就是crud的事情，每當要新增一個 todo 時，只要發送 http 到後端新增資料到資料庫裡去，然後在回傳結果就好了，但聊天群這種，如果你每發送一個訊息都使用 http 那一定爆掉的。
+像聊天群這樣類型的，我們稱為InstantMessaging IM中文為即時通訊，本篇文章我們將會說明要建立這種IM應用所需要的基本知識。
+開始吧 ~
+從 Web 到 IM 的通信過程轉變 在最開始時瀏覽器它沒有辦法直接連接到另一個瀏覽器的通信功能，也就是說你不能從 A client 直接傳送訊息到 B client 去，我們只能在它們的中間，建立一個 server ，來將 A 要傳送的訊息儲放起來，然後 B 在自已去 server 取得資料，如下圖 :
+這種做不行嗎 ? 說實話，功能是有做出來 ~ 但浪費太多的資源，你想想，根據上面的說法，當 A 發送訊息到 server 後，你 B 要如何知道 server 有你的訊息 ? 記好 http 只能從client發送到server，不能反之，所以這也代表這你 B 只能定時的去 server 問問看，說有沒有我的資料啊 ~
+很明顯的，你可能問了十次，只有一次才有你要的訊息，那其它九次，不就都浪費掉了，這也代表你的 IM 系統有 90 % 的效能在處理沒用的事情。
+當然中間處理的其它方法先不說，後來 html5 提出了一個應用層的協議websocket，來解決這事兒 ~
+Hello WebSocket 這個協議可以幫助我們可以實現，從 server 端推送資料到 client 端，而且從建立的通道是持久連接，在 http 1.</description>
+    </item>
+    
+    <item>
+      <title>Socket 的哩哩扣扣</title>
+      <link>https://mark-lin.com/posts/20170910/</link>
+      <pubDate>Sun, 10 Sep 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170910/</guid>
+      <description>在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。
+在開始說明 socket 前，我們需要先準備一些基本知識，那就是常聽到的 tcp/ip。
+TCP/IP 通訊模型 tcp/ip 它是一種網路協定，它定義了點對點如何的傳輸，如何將資料封裝、定址、傳輸、路由以及在目的地如何接受，全部都加以標準化，它基本上可以分為四層應用層、傳輸層、網路互連層與網路介面層，它常被視為簡化的七層 OSI 模型。
+圖片來源:鳥哥
+在了解 socket 前，我們需要了解應用層與傳輸層的基本概念。
+應用層 這個層級主要是定義 :
+ 應用程式的溝通協定，也可以理解為不同應用程式如何協同工作。
+ 在這個層級的協定，大部份都會使用到兩個傳輸協定tcp與udp，至於何時使用 tcp 或 udp 取決於，該協定是否保證資料完整的傳送到另一端，這邊我們只要記得tcp可靠而udp不可靠這兩件事情就夠了。
+我們常用的 http 就是屬於這一層協定，smtp 也屬於這層，我們簡單的來說明一下 http 的概念。
+HTTP (超文字傳輸協定) 它是一種應用層的傳輸協定，它主要定義了下面的事情 :
+ 它是一個用戶端與伺服器端請求和應答的標準
+ 通常 http 用戶端的發出一個請求，它會建立一個到伺服器端的 TCP 連線 。
+傳輸層 這個層級主要是定義 :
+ 定義點到點如何傳輸
+ 其中tcp、udp就是這一層，我們簡單的來說明一下 tcp 的工作，就會知道這個層級主要是做啥事情。
+TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，這個協定宗旨在於 :
+ 提供一個可靠(不會掉資料)的資料流傳送服務</description>
+    </item>
+    
+    <item>
+      <title>Node設計模式之命令模式 ( Command )</title>
+      <link>https://mark-lin.com/posts/20170611/</link>
+      <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170611/</guid>
+      <description>本文中我們將會知道兩件事件
+為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
+ 加 減 乘 除  然後實際上執行大概會長這樣 :
+add(5) =&amp;gt; current = 5 sub(3) =&amp;gt; current = 2 mul(3) =&amp;gt; current = 6 div(3) =&amp;gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
+class Calculator { constructor(){ this.current = 0; } add(value){ this.current += value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.</description>
+    </item>
+    
+    <item>
+      <title>Node設計模式之策略模式 ( Stratgey )</title>
+      <link>https://mark-lin.com/posts/20170610/</link>
+      <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170610/</guid>
+      <description>本篇文章中，我們想要知道以下兩件事情 :
+  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
+var user = { login: function (type) { if (type == &amp;#34;google&amp;#34;) { doGoogleLoginSomething(); console.log(&amp;#34;google login process&amp;#34;); } else if (type == &amp;#34;facebook&amp;#34;) { doFbLoginSomething(); console.log(&amp;#34;facebook login process&amp;#34;); } else { doSomething(); console.log(&amp;#34;custom login process&amp;#34;); } } } user.login(&amp;#34;google&amp;#34;); 那上面這段程式碼中，有那些缺點呢 ?
+首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
+第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
+ 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
+好處 : 較好維護、較好測試、可重複使用
+ 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
+策略模式簡單的來說，就是為了處理以下的情況 :</description>
+    </item>
+    
+    <item>
+      <title>Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ)</title>
+      <link>https://mark-lin.com/posts/20170607/</link>
+      <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170607/</guid>
+      <description>在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
+訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
+ 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
+ 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
+至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
+使用訊息佇列的十個理由&amp;mdash;簡中
+然後我們先簡單的說明一下訊息系統的基礎。
+訊息系統架構 基本上分為以下兩種 :
+對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
+ 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
+ zeroMQ 他可以幫助我們建立對等式架構。
+ 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
+以下為中介者架構的圖示 :
+ RabbitMQ 就是專門用來建立這個架構的東東。
+ 接下來的文章中，我們將要先來實作一些rabbitmq。
+Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
+如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
+那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
+根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
+它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
+佇列它還有以下三種特性 :
+ 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?</description>
+    </item>
+    
+    <item>
+      <title>Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ)</title>
+      <link>https://mark-lin.com/posts/20170608/</link>
+      <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170608/</guid>
+      <description>上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。
+所以後來就有人提出使用對等式架構來解決這個問題，這個架構就是會將broker給移除掉，每一個用戶端同時也是伺服器端，像比特幣這種應用就是用該結構來處理。
+但相對的，它也有缺點，那就是要建置起來較為複雜，用在大規模的網路上，管理較難、安全性較低。
+使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作 zeromq它是一套網路通訊函式庫，記得他不是一個伺服器，而是一個lib，它在socket api之上做了一層封裝，將網路、通訊、進程等抽象化為統一的 API 接口，它和 socket 的區別是 :
+ socket : 點對對的關係(一對一) zeromq : 多點對多點的關係(多對多)  那 zeromq 有什麼特點呢 ? 它有以下四個特點 :
+ 去中心化 (無 broker) 強調訊息收發模式 以統一的接口支持多種底層通信方式 異步 速度飛快 (請參考這篇比較)  不過有一點要注意一下，zeromq 它不是一個獨立的伺服器進程 (rabbitmq 是)，所以嚴格來說它不是 mq ，它沒有 mq 這種在中間解耦合的能力，事實上他的名命也說了 zero mq 。
+zeromq 主要提供三種類型的通訊模式分別如下 :
+REQ (request) / REP (reply) 模式 這模式就是傳統的一個 reuest 配一個 response 的模式，非常的簡單。
+下面這段程式碼是發送請求(request)的程式碼。
+var zmq = require(&amp;#39;zeromq&amp;#39;); var requester = zmq.</description>
+    </item>
+    
+    <item>
+      <title>Passport.js 之 Hello 你好嗎 ~ </title>
+      <link>https://mark-lin.com/posts/20170609/</link>
+      <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170609/</guid>
+      <description>本篇文章中，我們想要知道以下的重點 :
+  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
+ passort.js 活著的目的就是為了驗證 request
+ 要使用 passport 來進行驗證，需要設定三個東西 :
+ 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
+ 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
+ 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
+而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
+而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
+var users = { zack: { username: &amp;#39;zack&amp;#39;, password: &amp;#39;1234&amp;#39;, id: 1, }, node: { username: &amp;#39;node&amp;#39;, password: &amp;#39;5678&amp;#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &amp;#39;username&amp;#39;, passwordField: &amp;#39;password&amp;#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &amp;#39;Invalid user&amp;#39; }); }; if (user.</description>
+    </item>
+    
+    <item>
+      <title>Node之可擴展性 --- Nginx反向代理建立</title>
+      <link>https://mark-lin.com/posts/20170606/</link>
+      <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170606/</guid>
+      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。
+而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 :
+ 反向代理器
+ 這種擴展的方法為，在不同的 port 或不同的機器上，我們會啟動多個應用程式，然後使用反向代理器來存取這些機器，用來分散流量。
+他不會像 cluster 上有一個master process然後將工作分配給多個worker，而是有更多個獨立的程式執行在同一個機器不同 port上或是分散在相同的網路中的不同機器上，然後會以反向代理器為入口，由他處理請求並與後端的伺服器做處理，然後在由他回傳給客戶端。
+下圖為該結構的圖示 :
+那他這樣做有什麼優點呢 ? 事實上他就是 proxy 的用法，也就是說 :
+ 他可以保護伺服器
+ 反向代理器可以和我們上一章所說的cluster一起使用，例如單一機器使用 cluster 進行垂直擴展，再使用反向代理器來做水平性擴展。
+本篇文章中我們將使用最常用來做反向代理器的Nginx 。
+Nginx 做反向代理器，並配置負載平衡 nginx是一個網頁伺服器，它的設計架構和 nodejs 非常的相似，都是單一執行緒架構，並且還有豐富的模組庫和第三方工具可以使用，非常的方便啊。
+這邊我們將要使用nginx來作為反向代理器，並且進行負載平衡的功能，它要做的工作就是 :
+ 我們有多台伺服器，然後請求進來要將請求分給其它台伺服器。
+ 首先我們先安裝 nginx
+// ubuntu apt-get install nginx // mac brew install nginx 然後我們簡單的建立一個 server，它每一次收到請求時，都會回傳這個工作是那個port來進行處理。
+// app.js  const http = require(&amp;#39;http&amp;#39;); http.createServer(function (req, res) { console.log(&amp;#34;master:&amp;#34; + process.pid); res.writeHead(200); res.write(&amp;#34;port:&amp;#34; + this.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -12,7 +12,7 @@
         <atom:link href="https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2016/index.xml" rel="self" type="application/rss+xml" />
     
 
-
+    
     <item>
       <title>30-30之MongoDB三十天的學習之旅</title>
       <link>https://mark-lin.com/posts/20160930/</link>
@@ -220,6 +220,353 @@ primaryDB = conn1.getDB(&amp;#34;test&amp;#34;) primaryDB.isMaster() 結果如�
 var objs = []; for (var i=0;i&amp;lt;10;i++){ objs.push({&amp;#34;name&amp;#34;:&amp;#34;user&amp;#34;+i}); } primaryDB.users.insert(objs); 然後我們這時連到secondary。
 conn2 = new Mongo(&amp;#34;127.0.0.1:20001&amp;#34;) 進去後在輸入。
 secondaryDB = conn2.</description>
+    </item>
+    
+    <item>
+      <title>30-20之MongoDB運用研究---PO文情境模擬(3)</title>
+      <link>https://mark-lin.com/posts/20160920/</link>
+      <pubDate>Tue, 20 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160920/</guid>
+      <description>上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分析者的角度，使用聚合工作Aggregate framework與MapReduce來進行一些分析案例，一樣為了怕使用者忘記需求，我們還是再再貼一次~~
+~需求說明~ 我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，所以我們簡單的先列出我們可以用的功能。
+ 使用者可以簡單的新增發文，並且會存放Text、Date、Author、likes、Message。(完成) 建立100萬筆模擬po文。(完成) 使用者可以刪除發文。(完成) 使用者可以對自已的po文進行更新。(完成) 使用者可以進行留言和刪除留言。(完成) 使用者可以like發文。(完成) 使用者可以根據Text、Author、likes、Date進行搜尋。(完成) 管理者可以速行分析個案(已經想到囉如下)  ~分析個案 (需求8)~  Boss希望可以知道最多人留言的貼文，並且該貼文中前三位留言最熱絡的使用者，並計算留言次數。 Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~  嗯……才兩個好像有點少，但你往下來就知道可以寫很多了，都是要動腦想三下著麼做的啊……
+1. Boss希望可以知道最多人留言的貼文，並且知道該貼文中，前三位留言最熱絡的使用者，並計算留言次數。 首先先來解決這需求，仔細看看不太難，將需求拆解成如下步驟就好。
+ 將每筆貼文的留言數量計算出來，並存放在messagesCount這變數中。 根據messagesCount進行排序。 將排序好的資料取第一個。 在將messages中的author來進行分組統計，並將結果存放在count中。 在針對count進行排序，取前三名。 交給Boss看……  根據以上的步驟我們使用mongodb的aggreagate framework來寫出下列程式碼，啊咧啊咧…… 著麼只寫到步驟2的排序…… ?
+db.posts.aggregate( { &amp;#34;$project&amp;#34; : { &amp;#34;messagesCount&amp;#34; : { &amp;#34;$size&amp;#34; : &amp;#34;$messages&amp;#34; } } }, { &amp;#34;$sort&amp;#34; : { &amp;#34;messagesCount&amp;#34; : 1} } ) 因為GG了，咱們的排序所耗用的記憶體超過mongodb的限制囉，請看下圖~
+網路上有人推薦說，在建立document時就多建立一個欄位，來存放它的數量，然後直接建立索引，但在我們這邊是會GG掉的，因為我們的留言隨時都在變，而且沒新增或刪除個留言都還要去對那個存放欄位進行更新，而且還有索引，這樣會讓咱們的效能大大的下降，所以在這應用中否定這選項~
+那要著麼辦呢 ? 後來又查到一個方法，那就是allowDiskUse 參數，mongodb有個限制在Pipeline的階段中，規定記憶體只能用100mb，不然就會跳出上圖的錯誤，但如果將allowDiskUse設定為true，則它多出來的資料暫存寫入到臨時的collection，只是會不會有什麼問題或壞處，官網上都沒特別提到……
+繼續正題，然後解決完這個sort的問題後，我們就可以使取得貼文的留言數最多的貼文。
+db.posts.aggregate( [ { &amp;#34;$project&amp;#34; : { &amp;#34;messagesCount&amp;#34; : { &amp;#34;$size&amp;#34; : &amp;#34;$messages&amp;#34; },&amp;#34;messages&amp;#34; : 1 } }, { &amp;#34;$sort&amp;#34; : { &amp;#34;messagesCount&amp;#34; : -1}}, { &amp;#34;$limit&amp;#34; : 1} ], { allowDiskUse: true } ) 咱們再繼續往下寫，取得了最多留言數的貼文後，我們要繼續來尋找留言最多的人是那位，我們先使用$unwind將messages的陣列欄位，拆分成多個document，以方便我們用來group，再下來我們就可以根據messages的author來進行分組，並且計算每一組的數量存放至count來欄位。</description>
+    </item>
+    
+    <item>
+      <title>30-19之MongoDB運用研究---PO文模擬情境(2)</title>
+      <link>https://mark-lin.com/posts/20160919/</link>
+      <pubDate>Mon, 19 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160919/</guid>
+      <description>上篇文章中，咱們已經將資料都建立好了，也完成了第一個需求，使用者可以進行PO文，並且我們建立出了模擬資料共一百萬筆，大約1gb的大小，接下來我們這篇文章將繼續完成需求，為了怕讀者們忘了需求，所以還是在貼一次。 
+~需求說明~ 我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，所以我們簡單的先列出我們可以用的功能。
+ 使用者可以簡單的新增發文，並且會存放Text、Date、Author、likes、Message。 (完成) 建立100萬筆模擬po文。(完成) 使用者可以刪除發文。 使用者可以對自已的po文進行更新。 使用者可以進行留言和刪除留言。 使用者可以like發文。 使用者可以根據Text、Author、likes、Date進行搜尋。 管理者可以進行分析個案(那些個案之後再想)  以下的步驟不代表上述列表的序號，而只是我們完成這需求的過程。
+Step5 (需求3) 使用者可以刪除發文 這個刪除的方法事實上不太難，使用者只要輸入該po文的objectId就可以進行刪除，當然如果是實際有畫面的當然是直接給你選你要刪除的發文，不會還叫你輸入objectId，程式碼如下。
+db.posts.remove ({&amp;quot;_id&amp;quot; : &amp;quot;xxxxxxx&amp;quot;}) 不過在使用刪除時有些事情也要想一下，如果是指定objectId來刪除，理論上來說只會刪除一個，並且速度很快，因為objectId系統會自動的幫我們建立索引，但如果是其它的query則可能要根據情況來考慮要不要建立索引，來幫助刪除的更快速，並且如果要刪除多筆資料別忘了使用bulk。
+var bulk = db.posts.initializeUnorderedBulkOp(); bulk.find( { &amp;quot;name&amp;quot;: &amp;quot;mark&amp;quot; } ).remove(); bulk.execute();  刪除方面可以看看這篇文章來複習複習 ~
+ Step6 (需求4) 使用者可以對自已的po文進行更新 這個也很easy~，就只是針對它的objectId進行搜尋然後更新就好，在做的過程中我們需要使用修改器$set，它的功能就是只針對指定的欄位進行修改~別忘囉~ ,
+db.posts.update({&amp;quot;_id&amp;quot;:&amp;quot;XXXXX&amp;quot;}, {&amp;quot;$set&amp;quot; : { &amp;quot;text&amp;quot; : &amp;quot;Hello World&amp;quot; } )  更新複習請看這篇~
+ Step7 (需求5) 使用者可以針對po文進行留言和刪除 先來回想一下我們的posts結構長啥樣子，如下~
+{ &amp;quot;id&amp;quot; : 1, &amp;quot;text&amp;quot; : &amp;quot;XXXXXX&amp;quot;, &amp;quot;date&amp;quot; : &amp;quot;20160101&amp;quot;, &amp;quot;author&amp;quot; : &amp;quot;mark&amp;quot; , &amp;quot;likes&amp;quot; : 1, &amp;quot;messages&amp;quot; : [ {&amp;quot;author&amp;quot; : &amp;quot;steven&amp;quot; , &amp;quot;msg&amp;quot; : &amp;quot;what fuc.</description>
+    </item>
+    
+    <item>
+      <title>30-18之MongoDB運用研究---PO文模擬情境(1)</title>
+      <link>https://mark-lin.com/posts/20160918/</link>
+      <pubDate>Sun, 18 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160918/</guid>
+      <description>咱們來細數一下，我們在前面的幾篇學了那些東西~
+ mongodb 的新增、刪除、更新、搜尋。 mongodb 的索引運用。 mongodb 的資料分析工具 Aggregate 聚合。 mongodb 的設計。  是的~雖然看起來很少，但基本上基礎都差不多學會了，接下幾篇我們將要實際上的寫寫程式，來將我們之前學習到的東西都複習一次。
+~需求說明~ 我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，我們簡單的先列出我們要做的需求。
+ 使用者可以簡單的新增發文，並且會存放Text、Date、Author、likes、Message。 建立100萬筆模擬po文。 使用者可以刪除發文。 使用者可以對自已的po文進行更新。 使用者可以進行留言。 使用者可以like發文。 使用者可以根據Text、Author、likes、Date進行搜尋。 管理者可以速行分析個案(那些個案之後再想)  以下的步驟不代表上述列表的序號，而只是我們完成這需求的過程。
+Step1 . 先想想 MongoDB 的架構 首先咱們先來想想，我們應該會有一個collection是會存放貼文資料，我們就取名為posts，然後再想想他裡面大概會長成啥樣，應該是如下的json。
+{ &amp;quot;id&amp;quot; : 1, &amp;quot;text&amp;quot; : &amp;quot;XXXXXX&amp;quot;, &amp;quot;date&amp;quot; : &amp;quot;20160101&amp;quot;, &amp;quot;author&amp;quot; : ?? , &amp;quot;likes&amp;quot; : 1, &amp;quot;message&amp;quot; : ?? } 這時應該遇到兩個問題，author與message的格式如何，author應該是比較簡單，應該只要建立者的name，但這時你要考慮一件事，要不要為使用者建立個users的collection，首先回答幾個以下幾個問題。
+ 使用者資料在其它地方會不會使用到 ? Ans:會的，在留言時會需要用到。 使用者是否會高的頻率修改name ? Ans:不會，頻率很低。  根據上述回答，第一點是建議正規化，而第二點則是建議反正規化，那麼要選擇那個呢? 因為我們這case比較注重搜尋的速度，所以建議選用『反正規化』，也就是如下的結構，而不另外建立users的collection。
+{ &amp;quot;id&amp;quot; : 1, &amp;quot;text&amp;quot; : &amp;quot;XXXXXX&amp;quot;, &amp;quot;date&amp;quot; : &amp;quot;20160101&amp;quot;, &amp;quot;author&amp;quot; : &amp;quot;mark&amp;quot; , &amp;quot;likes&amp;quot; : 1, &amp;quot;messages&amp;quot; : ?</description>
+    </item>
+    
+    <item>
+      <title>30-17之MongoDB的設計---正規與反正規化的戰爭</title>
+      <link>https://mark-lin.com/posts/20160917/</link>
+      <pubDate>Sat, 17 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160917/</guid>
+      <description>本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。
+ 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。 該選用那個方法呢 ?  ~ 正規化 ~ 在開始討論mongodb架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
+首先什麼是正規化呢 ? 根據wiki的定義。
+ Database normalization is the process of organizing the fields and tables of a relational database to minimize redundancy and dependency.
+ 中文意思為。
+ 資料庫正規化就是指將關聯式資料庫的欄位與表單進行讓『資料重複性與相依性』能夠降到最低的組織過程。
+ 是的，真的很文鄒鄒，不過我們只要知道正規化的目的是解決資料的『重複性』與『相依性』這兩個點就夠囉，資料庫正規化有一些規則，每條規則都稱為『正規形式』，符合第一條規則就稱為『第一正規形式』，總共有不少條，但通常到『第三正規形式』就被視為最高級的正規形式， 下面來簡單的說明一下這幾條規則。
+第一正規形式 以下條列為第一正規形式的規則，事實上重點還是在說『不要有重複群組』。
+ 刪除各個資料表中的重複群組。 為每一組關聯的資料建立不同的資料表。 使用主索引鍵識別每一組關聯的資料。  我們假設資料為每個人的交易資料，下表為違反正規化的資料結構，因為它有重複的群組Volume，並且也缺少主索引鍵來識別每一組關聯的資料。
+   Name Date Volume     Mark 20160101 10 , -20   Jiro 20160102 -20 , 30   Ian 20160103 34 , -10    如果要符合第一正規形式大概要長的像降。</description>
+    </item>
+    
+    <item>
+      <title>30-16之MongoDB聚合(3)---潮潮的MapReduce</title>
+      <link>https://mark-lin.com/posts/20160916/</link>
+      <pubDate>Fri, 16 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160916/</guid>
+      <description>前兩篇說明完 mongodb 所提供的第一種聚合工作 aggregate framework ，本篇文章將要說明 mongodb 所提供的第二種聚合工作， MapReduce` 嗯…只要有微微研究過大數據，應該都有聽個這個潮潮的名詞，尤其應該有不少人有看過這篇『我是如何向老婆解释MapReduce的？』，不過它原文版好像消失了，扣惜。
+~MapReduce~ MapReduce是google所提出的軟體架構，主要用來處理大量的數據，而mongodb根據它的架構建構出可以在mongodb中使用的聚合工作，MapReduce它可以將一個複雜的問題拆分為多個小問題(map)，然後發送到不同的機器上，完成時再合併為一個解決方案(reduce)，簡單的畫張圖來看看。
+但這個方法和aggregate framework有什麼差別 ?
+ aggregate framework 提供較優透的性能。
+MapReduce性能較差，但可提供更複雜的聚合功能。
+ ~ Mongodb 的 MapReduce 使用~ mongodb中的MapReduce使用的方法如下。
+db.collection.mapReduce( map, reduce, { &amp;lt;out&amp;gt;, &amp;lt;query&amp;gt;, &amp;lt;sort&amp;gt;, &amp;lt;limit&amp;gt;, &amp;lt;finalize&amp;gt;, &amp;lt;scope&amp;gt; } ) 其中參數的說明如下。
+   參數 說明     map map函數，主要功能為產生key給reduce。   reduce reduce函數。   out 輸出結果集合的名稱。   query 在map前，可用query先進行篩選。   sort 在map前，可用sort進行排序。   limit 在map前，可限制數量。   finalize 可以將reduce的結果，丟給某個key。   scope 可以在js中使用變數。    實際應用1 ~ 根據 class 分組計算每組訂單收入 是的，這個例子我們在aggregate framework時有用過，事實上這種簡單的例子用MapReduce來解決，有點用到牛刀了，不過我們只是要看看如何使用，所以就不用在意太多囉。</description>
+    </item>
+    
+    <item>
+      <title>30-15之MongoDB聚合(2)---Pipeline武器庫</title>
+      <link>https://mark-lin.com/posts/20160915/</link>
+      <pubDate>Thu, 15 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160915/</guid>
+      <description>在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分析方法。
+ 數學表達式(mathematical expression) 日期表達式(date expression) 字串表達式(string expression) 邏輯表達式(logical expression)  ~ 數學表達式 ~ 以下列表為比較常用的數學表達式(全部在這)。
+   表達式 說明     $add 接受多個表達式，然後相加。   $subtract 接受兩個表達式，用第一個減去第二個作為結果。   $multiply| 接受多個表達式，然後相乘。    $divide 接受兩個表達式，然後相除。   $mod 接受個表達式，然後相除取餘。    實際運用 ~ 我們想要知道訂單總收入是多少。 我們來看看實際上是如何運用，假設我們有下列資料，該資料為訂單資料。
+{ &amp;#34;id&amp;#34; : 1 , &amp;#34;price&amp;#34; : 100 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 0 }, { &amp;#34;id&amp;#34; : 2 , &amp;#34;price&amp;#34; : 200 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 100 }, { &amp;#34;id&amp;#34; : 3 , &amp;#34;price&amp;#34; : 50 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 100 }, { &amp;#34;id&amp;#34; : 4 , &amp;#34;price&amp;#34; : 10 , &amp;#34;count&amp;#34; : 210, &amp;#34;discount&amp;#34; : 200 }, { &amp;#34;id&amp;#34; : 5 , &amp;#34;price&amp;#34; : 100 , &amp;#34;count&amp;#34; : 30, &amp;#34;discount&amp;#34; : 20 } 這個應用中，我們希望知道總收入是多少，以下為收入公式。</description>
+    </item>
+    
+    <item>
+      <title>30-14之MongoDB聚合(1)---Aggregate Framework的哩哩扣扣</title>
+      <link>https://mark-lin.com/posts/20160914/</link>
+      <pubDate>Wed, 14 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160914/</guid>
+      <description>在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
+ 聚合 (aggregate) 是啥 ? 有啥用。 Mongodb 聚合工具 Aggregate Framework。 管道 pipeline 操作符號。  ~ 聚合(aggregate)是啥?有啥用? ~ 在前面幾篇文章中，我們學會了mongodb的CRUD，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是『分析』，是的，我們將資料存放進mongodb最終的目的就是要使用分析，而聚合就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
+~ MongoDb 聚合工具之 Aggregate Framework ~ 在mongodb中提供了aggregate framework的聚合工具，使用方法如下，其中AGGREGATE_OPERATION就是指你每一次的處理過程。
+db.collection.aggregate(AGGREGATE_OPERATION) 先不考慮mongodb的語言，下面就是一個聚合的範例，mongodb的aggregate framework主要是建立在聚合管道(pipeline)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節[依作者進行分類]，直到最後產生結果。
+db.collection.aggregate( [將每篇文章作者與like數抓取出來], [依作者進行分類], [將like數進行加總] [返like數前五多的結果] ) ~ 管道 pipeline 操作符號 ~ Aggregate framework提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆document，並對這些document做些操作，然後再將結果傳至下一個pipeline直到最後結果出現。
+project 使用$project可以用來選取document中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。 下面寫個簡單的使用範例。
+首先我們有下列的資料。
+{ &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;age&amp;#34; : 20, &amp;#34;assets&amp;#34; : 100000000 } 然後我們可以用$project來決定要那個欄位，我們選取id與name欄位。
+db.user.aggregate({ &amp;#34;$project&amp;#34; : { &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : 1 }}) 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。</description>
+    </item>
+    
+    <item>
+      <title>30-13之MongoDB索引(3)---比較特別的索引使用</title>
+      <link>https://mark-lin.com/posts/20160913/</link>
+      <pubDate>Tue, 13 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160913/</guid>
+      <description>本篇文章將要說明幾個比較特別索引使用的方法。
+ 索引陣列欄位 索引子欄位 全文索引  P.S 快要一半囉~~+u^13
+~ 索引陣列欄位 ~ 假設你有下列資料，但發現搜尋fans裡的值很慢，你想要建立索引，要著麼建呢?
+{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;max&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;jack&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;hello&amp;#34;,&amp;#34;mmark&amp;#34;]} 事實上就和之前幾篇建立索引一樣。
+db.user.ensureIndex({&amp;#34;fans&amp;#34;:1}) 那我們在再假設資料如下。
+{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;a&amp;#34; , &amp;#34;age&amp;#34; :11}, {&amp;#34;name&amp;#34; : &amp;#34;b&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] }, { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;e&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;f&amp;#34; , &amp;#34;age&amp;#34; :20}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] } 這時如果我們建立fans裡的name為索引，指令會如下。</description>
+    </item>
+    
+    <item>
+      <title>30-12之MongoDB索引(2)---複合索引的坑</title>
+      <link>https://mark-lin.com/posts/20160912/</link>
+      <pubDate>Mon, 12 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160912/</guid>
+      <description>本文將會說明以下幾點。
+ 複合索引是啥~ 複合索引的運用與坑坑坑~  ~ 複合索引是啥 ~ 假設有下列資料。
+{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;age&amp;#34; : 20} { &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;age&amp;#34; : 25} { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;age&amp;#34; : 30} { &amp;#34;name&amp;#34; : &amp;#34;max&amp;#34; , &amp;#34;age&amp;#34; : 15} 在上一篇文章中說到，如果要建立name的索引，是像下面這樣。
+db.user.ensureIndex({&amp;#34;name&amp;#34; : 1}) 這時mongodb就會大致上~將索引建成如下。
+索引目錄 存放位置 [&amp;quot;mark&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;mark&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;max&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;steven&amp;quot;] -&amp;gt; xxxxxxxx 而所謂的複合索引事實上就是只是針對多個欄位建立索引，如下。
+db.user.ensureIndex({&amp;#34;name&amp;#34; : 1 , &amp;#34;age&amp;#34; : 1}) 而mongodb就會建立索引如下。
+索引目錄 存放位置 [&amp;quot;mark&amp;quot;,20] -&amp;gt; xxxxxxxx [&amp;quot;mark&amp;quot;,25] -&amp;gt; xxxxxxxx [&amp;quot;max&amp;quot;,15] -&amp;gt; xxxxxxxx [&amp;quot;steven&amp;quot;,30] -&amp;gt; xxxxxxxx ~ 複合索引的運用與坑坑坑 ~ 在前一篇文章中有說過，索引是把雙刃刀，建立的不好反而會浪費更多資源，而複合索引更是雙刃刀中連握把可能都有刀刃，以下舉個例子來說明~說明~</description>
+    </item>
+    
+    <item>
+      <title>30-11之MongoDB索引(1)的哩哩扣扣</title>
+      <link>https://mark-lin.com/posts/20160911/</link>
+      <pubDate>Sun, 11 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160911/</guid>
+      <description>本篇文章將會說明以下幾點。
+ 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機  P.S +u^11鐵人們 ~ 事實上我已快gg了
+~ 什麼是索引? ~ 索引是什麼?最常見的說法是，一本字典中，你要找單字，會先去前面的索引找他在第幾頁，是的這就是索引，可以幫助我們更快速的尋找到document，下面畫張圖來比較一下不使用索引和使用索引的搜尋概念圖。
+~ 索引的優缺點 ~ 索引竟然可以幫助我們著麼快的找到目標，那是不是以後都用索引就好??著麼可能!~ 索引好歸好，但他就像雙刃刀，用的不好會gg的。
+優點  搜尋速度更(飛)快 ~ 在使用分組或排度時更快 ~  缺點  每次進行操作(新增、更新、刪除)時，都會更費時，因為也要修改索引。 索引需要佔據空間。  使用時機 所以根據以上的優缺點可知，不是什麼都要建立索引的，通常只有下列時機才會使用。
+ 搜尋結果佔原collection越小，才越適合(下面會說明更清楚)。 常用的搜尋。 該搜尋造成性能瓶頸。 在經常需要排序的搜尋。 當索引性能大於操作性能時。  ~ 索引的建立 ~ 我們簡單建立個索引使用範例。
+db.tests.insert( {&amp;#34;x&amp;#34; : &amp;#34;hello&amp;#34;} ) 然後這時我們建立x欄位的索引。
+db.tests.ensureIndex({ &amp;#34;x&amp;#34; : 1 }) 然後我們可以達行下列指令，來查看有沒有建立成功。
+db.tests.getIndexs() 結果如下，建立成功x的索引，其中_id那個是預設的，mongodb會自動幫objectId建立索引。
+~ 索引與非索引搜尋比較 ~ 在mongodb中排序是非常的耗費內存資源，如果排序時內存耗費到32mb(這裡)，mongodb就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
+我們這裡建立些資料，來比較看看兩者的資源耗費不同點。
+for (var i=0;i&amp;lt;100000;i++){ db.test.insert({ &amp;#34;x&amp;#34; : i }) } 然後建立x的索引。</description>
+    </item>
+    
+    <item>
+      <title>30-10之MongoDB新手村CRUD---搜尋之Cursor運用與搜尋原理</title>
+      <link>https://mark-lin.com/posts/20160910/</link>
+      <pubDate>Sat, 10 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160910/</guid>
+      <description>本篇文章將要說明cursor的用法以及一些curosr的方法，可以搜尋後用來限制或排序結果的功能，以及說明一下在不考慮索引情況下find的搜尋原理。
+ Cursor是啥 Cursor的方法 搜尋的原理  P.S 三分之一囉，也代表基本的mongodb的crud要Ending囉。
+~ Cursor 是啥 ~ cursor是find時回傳的結果，它可以讓使用者對最終結果進行有效的控制，它事實上也就是Iterator 模式的實作。
+除了可以控制最終結果以外，它另一個好處是可以一次查看一條結果，像之前insertMany時，他會一次回傳全部的結果，mongodb shell就會自動一直輸出，結果看不到後來執行的東西。
+我們實際來看一下cursor的用法，首先我們還是要先新增一些資料。
+for (var i=0;i&amp;lt;10;i++){ db.test.insert({x:i}) } 然後進行搜尋，並用一個變數cursor存放。
+var cursor = db.test.find(); while (cursor.hasNext()){ obj = cursor.next(); print(obj.x + &amp;#34; ~呼呼~&amp;#34;) } 結行結果如下圖。
+~ Cursor 的方法 ~ limit、skip、sort這三個是很常用的cursor方法，主要功能就是限制、忽略、排序。
+limit 要限制find結果的數量可以用limit，不過注意limit是指定上限而不是指定下限， 使用方法如下，limit(10)就是代表最多只回傳10筆資料。
+db.test.find().limit(10) skip 當你想要忽略前面幾筆，在開始回傳值時，就是可以用skip，使用方法如下，skip(10)，代表忽略前十筆，然後在開始回傳，不過注意『 skip如果數量很多時速度會變很慢 』。
+db.test.find().skip(10) sort sort它主要就是將find出的資料，根據條件，進行排序。
+例如假設我們有以下的資料。
+{&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34; , age:20} {&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34; , age:25} {&amp;#34;name&amp;#34;:&amp;#34;max&amp;#34; , age:10} {&amp;#34;name&amp;#34;:&amp;#34;stanly&amp;#34; , age:40} {&amp;#34;name&amp;#34;:&amp;#34;crisis&amp;#34; , age:5} 然後我們希望可以根據age排序，由小到大，{age:1}代表由小到大，而{age:-1}則相反由大到小。</description>
+    </item>
+    
+    <item>
+      <title>30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex</title>
+      <link>https://mark-lin.com/posts/20160909/</link>
+      <pubDate>Fri, 09 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160909/</guid>
+      <description>本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。
+ 搜尋陣列內容 正規表達式搜尋  ~ 搜尋陣列內容 ~ 這邊我們將要介紹幾個陣列搜尋符號$all、$size、$slice。
+   Tables Are     $all 當需要尋找多個元素節合的document時，就可以使用它   $size 當要尋找特定長度的陣列時，就可以用它~   $slice 可以指定回傳的陣列指定的範例 ex. 10就為前十條，-10就為後十條。   $elemMatch 它會只針對陣列，進行多組query。    假設情況我們collection中有下列document。
+{&amp;#34;id&amp;#34;:&amp;#34;1&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;stanly&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;x&amp;#34;:[10,20,30]}; {&amp;#34;id&amp;#34;:&amp;#34;2&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;max&amp;#34;,&amp;#34;stanly&amp;#34;], &amp;#34;x&amp;#34;:[5,6,30]}; {&amp;#34;id&amp;#34;:&amp;#34;3&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;stanly&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;x&amp;#34;:[15,6,30,40]}; {&amp;#34;id&amp;#34;:&amp;#34;4&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;max&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;stanly&amp;#34;], &amp;#34;x&amp;#34;:[15,26,330,41,1]}; 我們這時想要尋找 fans 中同時有 steven、max 的網紅 我們這時就可以使用$all。
+db.user.find({&amp;#34;fans&amp;#34;:{&amp;#34;$all&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;max&amp;#34;]}}) 結果如下，應該是只找到mark、stanly這兩個人。
+我們想要尋找 fans 總共有三位的網紅。 我們這時可以用$size，不過有點可惜的一件事，$size無法與搜尋條件(ex.$gte)使用，所以無法尋找3人以上之類的，通常要來實現這種需求就只能多加個欄位了。
+我們來看看$size的使用方法。
+db.user.find({&amp;#34;fans&amp;#34;:{&amp;#34;$size&amp;#34; :3}}) 我們希望尋找 mark 的第一個 fans。 $slice主要功能就是將陣列切割只回傳你指定的範例。</description>
+    </item>
+    
+    <item>
+      <title>30-8之MongoDB新手村CRUD---搜尋之find與搜尋操作符號</title>
+      <link>https://mark-lin.com/posts/20160908/</link>
+      <pubDate>Thu, 08 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160908/</guid>
+      <description>前面幾篇已經說明完了新增、修改、刪除，最後咱們新手村之旅的尾巴將要說明搜尋，這個功能應該是我們最常會使用到的，請好好的學習。
+ find方法基本說明 find的搜尋條件(含搜尋故事)  P.S +u^8~
+find 方法基本說明 mongodb使用find來進行搜尋，它的第一個參數決定要那些資料，而第二個參數則決定要返回那些key。
+基本的使用範例如下，首先我們先建立一些資料。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;id&amp;#34;:&amp;#34;1&amp;#34;,&amp;#34;age&amp;#34;:20}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;id&amp;#34;:&amp;#34;2&amp;#34;,&amp;#34;age&amp;#34;:20}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;id&amp;#34;:&amp;#34;3&amp;#34;,&amp;#34;age&amp;#34;:25}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;bb&amp;#34;,&amp;#34;id&amp;#34;:&amp;#34;4&amp;#34;,&amp;#34;age&amp;#34;:20}); 我們想尋找到name為mark的document，並且我們希望回傳值只回傳id這個key就好，搜尋指令如下。
+db.user.find({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;id&amp;#34; :1 }) 搜尋結果如下，它只回傳了key id的內容，但是可以看到_id也被回傳回來，因為在默認情況下_id這個key會自動被傳回來，如果真的不想它也回傳回來可以下達下列搜尋指令。
+db.user.find({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;id&amp;#34; : 1,&amp;#34;_id&amp;#34;:0}) ~ find 的搜尋條件 ~ 這邊我們將要說明find常用搜尋條件，and、or、大於等於、大於、小於、小於等於、包含、不包含，有了這些條件我們就可以更方便的尋找你所需要的document。
+這邊簡單的整理成一張表來對應操作符號。
+   條件 操作符號     AND $and，另一種方法也可以直接在query中下{&amp;quot;key1&amp;quot;,&amp;quot;value1&amp;quot;,&amp;quot;key2&amp;quot;:&amp;quot;value2&amp;quot;}|   OR $or   NOT $not   NOR $nor   大於 $gt   大於等於 $gte   小於 $lt   小於等於 $lte   包含 $in   不包含 $nin    我們接下來會先產生幾筆測試資料，再來測試幾個搜尋故事。</description>
+    </item>
+    
+    <item>
+      <title>30-7之MongoDB新手村CRUD---刪除</title>
+      <link>https://mark-lin.com/posts/20160907/</link>
+      <pubDate>Wed, 07 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160907/</guid>
+      <description>本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別。
+ MongoDB的刪除方法 比較一下速度  ~ MongoDB的刪除方法 ~ remove remove方法是mongodb裡最基本的刪除document的方法，但這邊要注意就算你刪除了 document它的index與預分配空間都不會刪除。
+使用方法與參數如下
+ justOne預設false，代表query到幾個就會刪除幾個，true則只會刪第一個。 witeConecern為拋出異常的級別。 collation是3.4版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持collation前一徑依字節來對比。  db.collection.remove( &amp;lt;query&amp;gt;, { justOne: &amp;lt;boolean&amp;gt;, writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下，我們來新增三筆資料，然後刪除掉steven該筆資料。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.remove({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) 刪除所有資料 remove可以用來刪除collection的所有資料，但還有另一種方法也是刪除collection的所有資料，那就是drop，但它同時會將index給全部刪除。
+兩種的使用方法如下。
+db.user.remove({}) db.user.drop() deleteMany與deleteOne deleteMany與deleteOne也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和remove不同點大概只差在回傳值上，至於速度上等等來trytry看。
+使用兩種方法的參數如下，與remove也大至差不多。
+db.collection.deleteMany( &amp;lt;filter&amp;gt;, { writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.deleteMany({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) db.user.deleteOne({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;}) bulk delete bulk操作故明思意就是要來衝一下大筆資料刪除的效能方法。
+使用方法如下。
+//先新增二筆資料 var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.</description>
+    </item>
+    
+    <item>
+      <title>30-6之MongoDB新手村CRUD---更新之陣列欄位攻略</title>
+      <link>https://mark-lin.com/posts/20160906/</link>
+      <pubDate>Tue, 06 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160906/</guid>
+      <description>本篇文章將要說明陣列修改器 push，主要就是針對 document 中的陣列進行修改，同時他也可以搭配 each、slice、ne、addToSet、pop、pull 來使用。
+ 陣列更新修改器攻略  呼好多……
+~ 陣列更新修改器攻略 ~ $push $push是陣列修改器，假如一個document中已經有陣列的結構，使用push會在陣列的尾末加入一個新元素，要是本來就沒有這個陣列，則會自動新建一筆。
+使用方法如下範例，首先先新增一筆資料，然後新增加一個叫jack的fans。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {$push:{&amp;#34;fans&amp;#34; : &amp;#34;jack&amp;#34;} }) 結果如下圖。
+$each $push一次新增只能新增一筆元素，而搭配$each就可以新增多筆。
+使用方法如下範例，一樣首先新增一筆資料，然後這時我們一次新增三個fans分別為jack、landry、max。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {&amp;#34;$push&amp;#34; : {&amp;#34;fans&amp;#34; : {&amp;#34;$each&amp;#34; : [&amp;#34;jack&amp;#34;,&amp;#34;lnadry&amp;#34;,&amp;#34;max&amp;#34;]}}} ) 結果如下圖
+$slice 如果你希望限制一個陣列的大小，就算多push進元素，也不要超過限制大小，這時你就可以用$slice，不過注意它是保留最後n個元素。
+使用方法如下範例，新增一筆資料，然後我們希望fans人數不超過5人，但我們硬多塞一個人進去。
+db.user.insert({ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;crisis&amp;#34;,&amp;#34;stanly&amp;#34;] }) db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;}, {&amp;#34;$push&amp;#34; : {&amp;#34;fans&amp;#34; : {&amp;#34;$each&amp;#34; : [&amp;#34;jack&amp;#34;,&amp;#34;lnadry&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;$slice&amp;#34; : -5 }}} ) 執行結果如下，可以看到第一位steven被刪除，只保留了最後5位。</description>
+    </item>
+    
+    <item>
+      <title>30-5之MongoDB新手村CRUD---更新</title>
+      <link>https://mark-lin.com/posts/20160905/</link>
+      <pubDate>Mon, 05 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160905/</guid>
+      <description>本篇將要來說明MongoDB中更新文檔的方法，並且也同時會說明更新修改器的功能，它能幫助我們進行更有效率的更新。
+ 基本更新方法Update。 更新修改器 ($set、$inc)。 更新修改器效能比較。  ~ 基本更新方法Update ~ Update函數主要的功用就如同字面所說，更新~，而使用方法如下，query就是指你要先尋找更新的目標條件，update就是你要更新的值。而另外三個參考請考下列。
+ upsert : 這個參數如果是true，代表如果沒有找到該更新的對像，則新增，反之則否，默認是false。 multi : 如果是false，則代表你query出多筆，他就只會更新第一筆，反之則都更新，默認是false( !注意multi只能在有修改器時才能用 )。 writeConcern : 拋出異常的級別。  db.collection.update( &amp;lt;query&amp;gt;, &amp;lt;update&amp;gt;, { upsert: &amp;lt;boolean&amp;gt;, multi: &amp;lt;boolean&amp;gt;, writeConcern: &amp;lt;document&amp;gt; } ) 下面來簡單示範一下用法。首先我們先新增三筆資料。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); 然後我們將名字為mark這人的age改為18，指令如下，query為{&amp;quot;name&amp;quot;:&amp;quot;mark&amp;quot;}，query的詳細用法會在find那邊詳詳細細的說明。
+db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:18}) 執行結果如下，不過誒……我只要更新age也，為啥要全部換掉?
+~ 更新修改器 ( set、inc ) ~ 修改器 $set $set修改器主要的功用就是用來指定一個字段的值，不用像上面一樣整個替換掉。
+所以如我們如果要將mark這位仁兄的age改為18只要下達下面的指令。
+db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.update({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;},{&amp;#34;$set&amp;#34; : { &amp;#34;age&amp;#34; : 18} }) 執行結果如下，成功更新為age為18
+修改器 $inc 假設一下情景，假如有個投票網站、或是要存放訪客數的功能，每次更新時都是要+1，這種時後就可以用$inc來更新你的document，理論上來說速度應該會優於$set，等會兒會來測試一下。
+注意$inc只能用在數值類型，否則就會提示Modifier $inc allowed for numbers only。</description>
+    </item>
+    
+    <item>
+      <title>30-4之MongoDB新手村CRUD---新增之Bulk與新增效能測試</title>
+      <link>https://mark-lin.com/posts/20160904/</link>
+      <pubDate>Sun, 04 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160904/</guid>
+      <description>本篇文章會運用上一篇提到的二種新增方法insert、insertMany，以及另一種新增方法Bulk來做執行速度比較 ; 由於insertMany在mongodb shell執行完會直接輸出結果，所以如果有1萬筆資料他就會一直跑一直跑……跑到天荒地老，看不到我用來計算執行時間的方法，所以本測試打算用node js來建立測試方法。
+在開始測試之前，先介紹一下另一個新增方法Bulk Insert。
+ Bulk Insert 方法 新增方法的效能測試  ~ Bulk Insert方法 ~ Bulk Insert在2.6版時發佈，它也是種新增方法，效能如何等等會比較，基本使用方法有分有兩Unordered Operations和Ordered Operations。
+Ordered Operations Ordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它就會停止下來，不會在繼續執行列表內的其它寫入操作，並且前面的操作不會rollback 。
+使用範例如下。
+var bulk = db.collection.initializeOrderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.insert( { name: &amp;#34;hoho&amp;#34;} ); bulk.execute(); Unordered Operations Unordered Operations，mongodb在執行列表的寫入操作時，如果其中一個發生錯誤，它不會停止下來，會繼續執行列表內的其它寫入操作，速度較快。
+使用範例如下。
+var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.insert( { name: &amp;#34;hoho&amp;#34;} ); bulk.execute();  Ordered 與 Unordered我們在要如何選擇使用時機呢，記好只要有相關性的操作就要選擇用Ordered，而如果像是log之類的，流失一兩筆也是沒差，這時可以選用Unordered。
+ ~ 新增方法的效能測試 ~ 建立測試環境 首先我們先建立個新的資料夾，然後在裡面執行npm init來產生package.</description>
+    </item>
+    
+    <item>
+      <title> 30-3之MongoDB新手村CRUD---新增</title>
+      <link>https://mark-lin.com/posts/20160903/</link>
+      <pubDate>Sat, 03 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160903/</guid>
+      <description>安裝好MongoDB後，接下來本篇主要說明如何新增資料至MongoDB中，而用更精確的詞彙來說是，如何新增document至collection中。這邊我們會說明以下幾種MongoDB所的方法，來建立資料, 並說明這三種有何不同，而至於效能部份請看下篇~
+ Insert InsertOne InsertMany  ~ Insert方法 ~ 單筆資料Insert insert函數可以將一個document建立到collection裡，我們這裡建立一個簡單的範例來看如何使用insert。
+首先我們的需求是要建立一份使用者清單(collection)，然後可以存放多筆使用者資料(document)，我們假設使用者資料如下。
+順到一提，mongodb自帶javascript shell，所以可以在shell執行javascript 一些語法。
+user1 = { name : &amp;#34;Mark&amp;#34;, age : 18, bmi : 10 } 然後我們要將這筆document新增至user的collection裡。
+db.user.insert(user1); 新增完後，我們可以執行find指令，來查看user這collection中的資料。
+db.user.find() 程式執行過程如下圖，而回傳值如下，代表成功新增一筆。
+WriteResult({&amp;#34;nInserted&amp;#34; : 1}) 多筆資料Insert Insert函數同時也可以執行多筆，但效能好不好下篇會有比較。其中注意insert有個參數ordered ，true時代表如果其中一筆資料有問題，它就會停止下來，後面的資料都不會新增，而false時，則代表不會停下來，後面的資料會繼續新增，預設是true。
+我們用下面範例來看看使用方法。
+var user1 = { name : &amp;#34;Mark&amp;#34;, age : 18, bmi : 10 }, count = 1000, users = []; for (var i=0;i&amp;lt;count;i++){ users.push(user1); } db.user.insert(users,{ordered:false}) 結果如下圖。
+~ InsertOne方法 ~ InsertOne函數事實上用法和insert差不多，只有兩點不同，首先是回傳，insertOne會回傳你所建立的document的ObjectId，ObjectId是系統自動生成的，是唯一值，而第二點不同就如同它的名字，他只能一次新增一筆。</description>
+    </item>
+    
+    <item>
+      <title>30-2之使用 Docker 來建構 MongoDB</title>
+      <link>https://mark-lin.com/posts/20160902/</link>
+      <pubDate>Fri, 02 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160902/</guid>
+      <description>由於網站上已經有很多mongodb的安裝方法，所以本篇將說明，如何使用Docker來建立可使用mongodb的環境，這也代表你的電腦只要有安裝docker，都可以使用mongodb，不再需要去找各種東西的安裝方法。
+~ Step1. 安裝Docker ~ Mac安裝 https://docs.docker.com/docker-for-mac/
+docker最開始時還沒支援mac，而是需要用到其它方法來使用，但現在已經有出docker-for-Mac了，但注意雖然他是穩定版，但在mac自動休眠後，常常發生Bad response from Docker engine……，這目前好像沒啥解法，只能reset docker 或 重開機 ……
+Windows7 安裝 https://www.docker.com/products/docker-toolbox
+雖然出了docker-for-windows但目前只支援windows10和Server 2016，windows7哭哭。
+Windows10 安裝 https://docs.docker.com/docker-for-windows/
+懶講。
+Ubuntu 安裝 https://philipzheng.gitbooks.io/docker_practice/content/install/ubuntu.html
+請參考這篇安裝。
+~ Step2. 建立 docker-compose.yml ~ 在某個檔案夾下建立docker-compose.yml，並且內容如下，然後在執行docker-compose up指令，它就自動幫你建立一個裝有mongodb的環境。
+version: &amp;#39;2&amp;#39; services: mongo: image: mongo ports: - &amp;#34;27017:27017&amp;#34; volumes_from: - mongodata mongodata: image: tianon/true volumes: - /data/db 下圖為在該檔案夾下執行docker-compose up結果。可以看到他建立一個port為27017並且資料存放在環境/data/db的mongodb。
+~ Step3. 進入Docker Container裡操作 MongoDB ~ 在執行完docker-compose up後，換到另一個shell，然後你可以執行docker ps指令來確定有mongodb的container有沒有執行，你可以把container想成為一個很小的VM。
+從下圖可知，執行docker ps後可看到你這台電腦有在執行的container，其中mongo就是我們剛剛執行的。
+接下來我們就執行docker exec -ti 333fba82b57e bash，其中333fba82b57e為CONTAINER ID，如下圖，你就進入到這個container中囉。</description>
+    </item>
+    
+    <item>
+      <title>30-1 之 MongoDB 基礎知識</title>
+      <link>https://mark-lin.com/posts/20160901/</link>
+      <pubDate>Thu, 01 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160901/</guid>
+      <description>Hello ~ 大家好 ~ 接下來的30天的文章，小的我將要說明如何從0 → 1開始來學習MongoDB，咱們這30天的文章結構大至上會如下。
+ 首先，先來個十篇的新手村之旅，大致上是說明MongoDB的基本操作CRUD。 再來開始進階一點，當我們上面十篇會基本上的使用MongoDB後，我們接下來就是要學習『如何用的好』，這時我們大概會花個六、七篇左右來說明說明。 然後我們這時要來『驗證』你上面的東西有沒有學會，我們大概會用個三篇來模擬個應用。記好『驗證』自已有沒有學會，是學習過程很重要的步驟，請別老是覺得看過懂了，就算學會，這種道理就像是你腦袋想的和寫出來的程式不見得會一樣，請記得寫測試驗證。 接下來就是進行分散式的章節，大概來個六~七篇。 最後就是一樣驗證你上面的東西有沒有學會。  上面大概就是這30天的簡略流程，那麼就開始吧。
+由於是第一天，所以基本上就是要文言文一下，說明一下mongodb是啥。
+ 什麼是MongoDB MongoDB的優缺與缺點 MongoDB的組成Document與Collection  ~ 什麼是MongoDB ~ MongoDB一種強大，靈活、且易於擴展的文件導向式(document-oriented)資料庫，與傳統的關聯式導向資料庫相比，它不再有row的概念，取而代之的是document的概念，如下圖的fu。
+~ MongoDB的優缺與缺點 ~ 優點  Schema-less : MongoDB擁有非常彈性的Schema，這對RDBMS來說非常的難以高效能的方法來實現。 易於擴展 : MongoDB的設計採用橫向擴展，它的document的數據模型使寫能很容易在多台伺服器之間進行數據分割。 優透的性能 : MongoDB能預分配，以利用額外的空間換取穩定，同時盡可能把多的內存用作cache，試圖為每次查詢自動選擇正確的索引。  缺點  不支援事務操作 : 所以通常不適合應用在銀行或會計這種系統上，因為不包證一致性。 占用比較多空間 : 主要是有兩個原因，首先是它會預分配空間，為了提高效能，而第二個原因是欄位所占用的空間。  ~ MongoDB的組成 Document 與 Collection ~ Document Document是mongodb的核心，它就是Key對應個Value組合，例如下列範例。
+{ name : &amp;quot;mark&amp;quot;. age : 100 , title : &#39;Mark BIG BIG&#39; } document中的值可以是多種不同的類型，並且Key有幾個規定，首先它是區分大小寫，例如下面的範例這兩種是不同的，mongodb會存成兩份document。</description>
     </item>
     
   </channel>
