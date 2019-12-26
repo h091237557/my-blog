@@ -11,6 +11,177 @@
     
         <atom:link href="https://mark-lin.com/tags/network/index.xml" rel="self" type="application/rss+xml" />
     
+
+
+    <item>
+      <title>30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0</title>
+      <link>https://mark-lin.com/posts/20190922/</link>
+      <pubDate>Sun, 22 Sep 2019 20:16:57 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20190922/</guid>
+      <description>正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一個系統中，最重要的應用層協議，咱們幾乎可能說是『 Http 』。
+本篇文章分為以下幾個章節，事實上也就是所謂的 http 進化史 :
+ HTTP 行前基本知識 HTTP 1.X 的過去式 HTTP 2.0 的現在式 HTTP 3.0 的未來式  網路層的 http 優化事實上沒有啥重點，那就是 :
+ 儘可能將 http 升級更高的版本
+ 但是，為什麼要升級才是這一篇文章的重點。
+Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知識要來學習一下，不然下面會有很多東西看不太種。
+首先 http 基本上可以說是網路世界的基礎，它當初建立出來的目的是為讓瀏覽器這個應用層的應用使用，然後它在傳輸資料時所使用的協議為『 TCP 』，所以當咱們要建立連線時會進行所謂的『 TCP 三次握手 』如下圖 1 所示 :
+圖 1 : tcp 建立連線 ( 三次握手 )
+然後有了這個連線以後，咱們就可以開始進行資料傳輸。
+圖 2 : tcp 傳輸資料
+最後斷線時就有所謂的四次揮手。
+圖 3 : tcp 斷線 ( 四次揮手 )</description>
+    </item>
+    
+    <item>
+      <title>30-21 之網路傳輸的加速 - CDN 與 HTTP 緩存</title>
+      <link>https://mark-lin.com/posts/20190921/</link>
+      <pubDate>Sat, 21 Sep 2019 20:16:57 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20190921/</guid>
+      <description>正文開始 前幾篇文章中，咱們討論完資料庫層的資料緩存以後，接下來咱們要來談談另外兩個緩存 :
+ CDN ( Content Delivery Network ) HTTP 緩存  本篇文章分為以下幾個章節 :
+ CDN 與運行流程 HTTP 緩存與運行流程 CDN 與 HTTP 緩存搞在一起用  這裡先說一下，接下來有一些 cdn 的章節我是直接抓以前我寫的文章來簡單修改一下，不然我還真想不到 cdn 這還要寫什麼。
+30-23之 CDN 的說話島 ( AWS CloudFront CDN 實作 )
+CDN 與運行流程 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
+首先看看下面這張圖 1 所示，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
+圖 1 : 一個台灣用戶連到台灣網站的時間
+然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右，如下圖 2 所示。</description>
+    </item>
+    
+    <item>
+      <title>30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )</title>
+      <link>https://mark-lin.com/posts/20180928/</link>
+      <pubDate>Fri, 28 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180928/</guid>
+      <description>正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章要探討的主題：
+ 為什麼 P2P 連線很麻煩呢 ?
+ 因為如果你理解了這個問題，你就會知道為什麼 WebRTC 要使用怎麼多的技術來進行 P2P 連線囉，這也是為什麼我們會先說明這篇文章。
+本篇文章的問題，為什麼 P2P 的連線會很麻煩呢 ? 最主要的問題在於：
+ NAT 與防火牆的存在。
+ 因此本篇文章將針對這兩個東西來理解
+ NAT 與防火牆是啥 ? NAT 的運作原理。 為什麼有了 NAT 後 P2P 會很麻煩 ? NAT 的分類。  NAT 與防火牆是啥 ? NAT NAT (Network Address Translation) 中文就做網路位置轉換，它是用來將私網 IP 轉換成公網 IP 的技術。
+為啥會有 NAT ? 先說說它的起源。
+在咱們世界裡有個叫 IPV4 的地址規則，由於它數量稀少，不可能讓每一台電腦都有一個地址，因此就有了以下的解法如下圖，就是每個家庭或公司只有一組地址，然後公司內的電腦就使用這位置來上網。
+其中常用的私有 IP 段為：</description>
+    </item>
+    
+    <item>
+      <title>30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 )</title>
+      <link>https://mark-lin.com/posts/20180923/</link>
+      <pubDate>Sun, 23 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180923/</guid>
+      <description>正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。
+ 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。  接下來咱們要來理解一下，解這上述問題的關鍵技術 CDN 是什麼東西 ?
+本編文章將分為以下幾個章節：
+ 什麼是 CDN 呢 ? 它又是用來解決啥呢 ? CDN 的請求運作方式。 使用 AWS CloudFront 來建立 CDN。  什麽是 CDN 呢 ? 它又是用來解決啥呢 ? 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
+首先看看下面這張圖，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
+然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右。
+然後開始了有以下的對話 :
+老大：回應時間怎麼回事 ? 碼農仔：老大你叫我架到美國啊 !? 老大：我要的不是這回答，而是問你為啥回應時間你沒修改回來 ?</description>
+    </item>
+    
+    <item>
+      <title>30-18 之影音傳輸協議總整理</title>
+      <link>https://mark-lin.com/posts/20180918/</link>
+      <pubDate>Tue, 18 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180918/</guid>
+      <description>正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協議)
+前面的幾面文章，咱們學習了各種型的影音傳輸媒體，接下來將會在這一篇文章中，進行這些協議的總結。
+ 各種影音傳輸協議之比較與整理
+ 一張圖來簡單的理解各種協議的運作方式 RTSP RTMP HLS HTTP-FLV MPEG-DASH 特點整理    協議 傳輸層選擇 聲音編碼 影像編碼 延遲性     RTSP RTP、TCP、UDP RTP 可支援的都行 RTP 可支援的東行 低   RTMP TCP AAC、MP3 H.26X 系列 低   HLS TCP (因為它是用 HTTP ) AAC、MP3 H.26X 系列 高   HTTP-FLV TCP (因為它是用 HTTP ) AAC、MP3 H.</description>
+    </item>
+    
+    <item>
+      <title>30-17之 MPEG-DASH 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180917/</link>
+      <pubDate>Mon, 17 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180917/</guid>
+      <description>正文開始 接下來咱們要來介紹 MPEG-DASH協議。
+ MPEG-DASH 協議
+ 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議：
+ MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它想做的事情呢 ? 建立 MPEG-DASH 的串流傳輸流程。 MPEG-DASH 的特點總結。  MPEG-DASH 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ 嗯事實上它想完成的事情和 HLS 事實上是相同的，那為啥他會誕生出來呢 ? 比較大的問題是
+ HLS 是由蘋果所主導的協議，而不是國際通用協議，這也代表蘋果怎麼改，其它人也要一起動，也就是說一切蘋果說的算。
+ 因此在 MPEG 的主導下在與一些大廠合作下 MPEG-DASH 這種國際標準的協議就誕生了。
+ISO/IEC 23009-1:2012
+MPEG-DASH 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。
+ 就如同 HLS 一樣。
+建立 MPEG-DASH 的串流傳輸流程 它的基本流程如下圖。
+1. 直播主將聲音或影像傳輸到 Server 這裡可以使用 RTMP 來將聲音推收到 Server，又或是如果不是直播情況可以直接將聲音檔例如 .</description>
+    </item>
+    
+    <item>
+      <title>30-16之 HTTP-FLV 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180916/</link>
+      <pubDate>Sun, 16 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180916/</guid>
+      <description>正文開始 接下來咱們要來介紹 HTTP-FLV 協議。
+ HTTP-FLV 協議
+ 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：
+ HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。  HTTP-FLV 協議是要用來完成什麼事情呢 ?  可以使用 HTTP 來完成低延遲的串流媒體傳輸。
+ 那為啥他想使用 HTTP 呢 ?
+先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。
+那為啥不用 HLS 呢 ?
+使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。
+HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。
+ 以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。</description>
+    </item>
+    
+    <item>
+      <title>30-15之 HLS 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180915/</link>
+      <pubDate>Sat, 15 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180915/</guid>
+      <description>正文開始 接下來咱們要來介紹 HLS 協議。
+ HLS 協議
+ 本篇文章將會分成幾個章節來理解 HLS 協議：
+ HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建立 HLS 的串流傳輸流程。 HLS 的延遲問題。 HLS 的特點總結。  HLS 協議是要用來完成什麼事情呢 ?  讓 client 與 server 可以透過 Http 來進行流媒體的傳輸
+ HLS ( HTTP Live Streaming ) 是由高大尚的蘋果公司所開發，再 HLS 還沒誕生之前，這世界大部份的流媒體傳輸都是被 RTMP 所佔據，最主要的原因在於當時，大部份的電腦都有裝 Flash Player。
+而蘋果開發出 HLS 主要有兩個原因：
+ 不想被 Flash 綁死，所以它大部份的設備都慢慢的把 Flash 拔掉(當時)。 RTMP 有個問題就是，它不是透過 HTTP 來進行傳輸，所以它很有可能會被一些防火墻防掉。  HLS 協議如何完成它想做的事情呢 ?  它將聲音切成一小個一小個檔案，然後 client 就一個一個發 http 去下載。</description>
+    </item>
+    
+    <item>
+      <title>30-14之 RTMP 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180914/</link>
+      <pubDate>Fri, 14 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180914/</guid>
+      <description>正文開始 接下來咱們要來介紹 RTMP 協議。
+ RTMP 協議
+ 本篇文章將會分成幾個章節來理解 RTMP 協議：
+ RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建立 RTMP 的串流傳輸流程。 RTMP 的特點總結。  RTMP 協議是要用來完成什麼事情呢 ? 它當初的動機為：
+ 在 Flash 平台與伺服器進行串流媒體傳輸的協議
+ RTMP( Real-Time Messaging Protocol )，為 Adode 所開發，它就是要用來讓 Server 可以與 Flash 平台進行串流傳輸。
+這裡問個問題。
+為什麼不要用 RTSP 來進行傳輸呢 ? 這裡我覺得有兩個原因：
+ 因為 RTSP 大部份還是基於 RTP over UDP 上，由於當時 RTSP 大部份都用在 IPTV 或 VOD 上這些都是有專門一條線給它用，所以網路很穩定。但是 RTMP 當初是希望開發在互聯網上，所以不能保證網路很穩定，因此它選擇用 TCP 來傳輸。2. 因為想建立一個更符合 Flash 用途的協議。我猜的。  更多有支援的請參考RTMP Spec在 31、32 頁。</description>
+    </item>
+    
+    <item>
+      <title>30-13之 RTSP 傳輸協議</title>
+      <link>https://mark-lin.com/posts/20180913/</link>
+      <pubDate>Thu, 13 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180913/</guid>
+      <description>正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。
+ RTSP 協議
+ 本篇文章將會分成幾個章節來理解 RTSP 協議：
+ RTSP 協議是要用來完成什麼事情呢 ? RTSP 協議如何完成它想做的事情呢 ? 建立 RTSP 的串流傳輸流程。 RTSP 的特點。  RTSP 協議是要用來完成什麼事情呢 ?  它是被設計出來為，為了控制串流媒體 Sever 的協議 (ex. 快轉、暫停影片之類)
+ RTSP 它被設計出來是為了可以控制串流媒體伺服器的協議 (所以他是 C/S 架構)，例如我們先發送一個觀看影片的請求給 Server，然後它就開始以串流型式來傳輸影片，然後這時我們可以用 RTSP 所提供的一些方法，來進行影片的快轉或暫停，為了能控制串流就是它被設計出來的原理。
+就如同下圖所示，RTSP 讓我們可以操控串流媒體。
+RTSP 協議如何完成它想做的事情呢 ? 那它要如何控制呢串流呢 ?
+ 它定義了控制的方法與參數
+ 就如同 HTTP 一樣，它定義了一些方法可以給我們控制，例如 Play 這個動作，當串流 Server 看到這個動詞後，就會開始傳輸影片給請求者。
+建立 RTSP 的串流傳輸流程 我們直接去使用網路上所提供的 RTSP 進行請求看看。這個連結你可以使用 ffplay 來開啟 (ffplay 之後會提)。</description>
+    </item>
     
   </channel>
 </rss>

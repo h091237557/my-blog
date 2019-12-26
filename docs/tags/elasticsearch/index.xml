@@ -11,6 +11,108 @@
     
         <atom:link href="https://mark-lin.com/tags/elasticsearch/index.xml" rel="self" type="application/rss+xml" />
     
+
+
+    <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 ( 加強版 )</title>
+      <link>https://mark-lin.com/posts/20180809/</link>
+      <pubDate>Thu, 09 Aug 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180809/</guid>
+      <description>在之前筆者的這篇文章中：
+一個基於 AWS Elasticsearch 的用戶行為 log 系統建立
+在們學習了如何使用　AWS 的相關工具來建立一個用戶行為的　LOG 分析系統。
+但是這篇文章中所提到的架構有個問題。
+這個版本有什麼問題呢　？ 那就是在某些情況下它會一直噴以下錯誤 :
+ServiceUnavailableException: Slow down. 那為什麼會一直噴 Slow down 呢 ?
+會發生這個的原因在於，我們有採到 aws firehose 的限制，如下： Amazon Kinesis Data Firehose 有以下限制。
+如果将 Direct PUT 配置为数据源，每个 Kinesis Data Firehose 传输流 都会受以下限制的约束： * 对于 美国东部（弗吉尼亚北部）、美国西部（俄勒冈） 和 欧洲（爱尔兰）：5,000 条记录/秒；2,000 个事务/秒；5 MB/秒。 * 对于 欧洲 (巴黎)、亚太地区（孟买）、美国东部（俄亥俄州）、欧洲（法兰克福）、南美洲（圣保罗）、亚太区域（首尔）、欧洲 (伦敦)、亚太区域（东京）、美国西部（加利福尼亚北部）、亚太区域（新加坡）、亚太区域（悉尼） 和 加拿大 (中部)：1000 条记录/秒；1000 个事务/秒；1 MB/秒。 ! 注意 当 Kinesis Data Streams 配置为数据源时，此限制不适用，Kinesis Data Firehose 可无限扩展和缩小。 來源 : 官網</description>
+    </item>
+    
+    <item>
+      <title>Elasticearch 與 kibana 之日期的愛恨情仇</title>
+      <link>https://mark-lin.com/posts/20180808/</link>
+      <pubDate>Wed, 08 Aug 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180808/</guid>
+      <description>我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
+在開始搞前先說說我的簡單需求:
+ 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
+ 這時通常時間的儲法會有兩種選擇:
+ Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
+其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
+const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&amp;gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
+curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;, &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;, &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;, &amp;quot;_score&amp;quot; : 1.</description>
+    </item>
+    
+    <item>
+      <title>一個基於 AWS Elasticsearch 的用戶行為 log 系統建立</title>
+      <link>https://mark-lin.com/posts/20180629/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180629/</guid>
+      <description>本篇文章中，我們要說明的主題為 :
+ 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
+ 本篇文章中，我們將分成以下的主題:
+ Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
+其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
+這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
+ 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
+V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
+所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
+這裡我們選擇了AWS kinesis，它的優點如下:
+ 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !</description>
+    </item>
+    
+    <item>
+      <title>要如何定期的清除 Elasticsearch 文件 ?</title>
+      <link>https://mark-lin.com/posts/20180702/</link>
+      <pubDate>Fri, 29 Jun 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180702/</guid>
+      <description>上一篇文章『一個基於 AWS Elasticsearch 的用戶行為 log 系統建立』中我們說明了，如何使用 AWS Elasticsaerch 來建立收集 log 的系統，而 log 系統通常也有一種需求，那就是需要定期的清除舊的 log ，所以本篇文章的主題為:
+ 要如何定期的清除 Elasticsearch 文件 ?
+ 然後我們會分成以下幾個章節:
+ 最直覺式的定期刪除方法與缺點。 為什麼大量文件的清除對 Elasticsearch 會很耗資源呢 ? 大量文件清除方法 - 時間索引策略。  最直覺式的定期刪除方法與缺點 假設有以下的資料:
+{ data: &#39;Hi Mark ~&#39;, created_at: &#39;20180101&#39; }, { data: &#39;HI Fuc u Mark&#39;, created_at: &#39;20180201&#39; } 那我們要清除 1 月份的 log ，那我們最直覺的做法，應該會如下的操作:
+ 搜尋所有 created_at 為 1 月的 doc。 再將所有搜尋出的 doc 給清除。   上面這方法在小量資料時，是沒問題的，問題是出在大量資料。
+ 那為什麼大量資料刪除會有問題呢 ?</description>
+    </item>
+    
+    <item>
+      <title>Elasticsearch 的 Document 建立原理</title>
+      <link>https://mark-lin.com/posts/20180411/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180411/</guid>
+      <description>在這一篇文章中，我們將要理解兩個問題 :
+ 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ?  在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。
+Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。
+所以假設我們要新增一筆 document 應該是會長的像下面這樣。
+ POST /markcorp/employee (/(index)/(type))
+上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別 (type)
+ { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
+ GET 127.0.0.1:9200/markcorp/employee/123
+ 在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。
+新增一個 document 時資料會存放到那 ?? 像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。</description>
+    </item>
+    
+    <item>
+      <title>Elasticserach 的操作新手村</title>
+      <link>https://mark-lin.com/posts/20180401/</link>
+      <pubDate>Sun, 01 Apr 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180401/</guid>
+      <description>本篇文章中，我們將要很快速的學習以下幾個重點:
+ elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 document。 搜尋 document。  elasticsearch 的基本觀念 Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。
+Elasticserach 有這和關聯式資料庫相似的結構，如下圖。
+所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:
+index: markcorp type: employee { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
+ GET 127.0.0.1:9200/markcorp/employee/123
+ 使用 docker 建立 elastisearch 服務 接下來的教學可以直接用這個專案來直接執行:
+git clone https://github.com/h091237557/docker-composer-tools.git cd elasticsearch/ docker-compose up 下面為官網所直接使用的docker compose的檔案。(官網傳送門)
+version: &amp;#39;2.</description>
+    </item>
     
   </channel>
 </rss>

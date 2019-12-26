@@ -11,6 +11,127 @@
     
         <atom:link href="https://mark-lin.com/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     
+
+
+    <item>
+      <title>HTML5 之走在平行時空的 Web Worker</title>
+      <link>https://mark-lin.com/posts/20151001/</link>
+      <pubDate>Thu, 01 Oct 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20151001/</guid>
+      <description>什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
+Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
+建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
+var worker = new Worker(&amp;#39;work.js&amp;#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
+(fucntion(){ setTimeout(function(){ postMessage(&amp;#39;This work I spend 2s&amp;#39;); },2000); })(); 兩秒後執行結果就為。
+	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &amp;quot;fileName.js&amp;quot; ) ，下列程式碼為使用範例。
+importScripts( &amp;#34;work2.js&amp;#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&amp;#39;This work , I spend 2 s &amp;#39;); },2000); })() work2.js，如下程式碼。
+var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。</description>
+    </item>
+    
+    <item>
+      <title>Jquery 的 Promise 之 when 與 then ( pipe )</title>
+      <link>https://mark-lin.com/posts/20150909/</link>
+      <pubDate>Wed, 09 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150909/</guid>
+      <description>在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
+deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
+When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
+下列程式碼為when的基本使用方法。
+var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
+var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
+從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
+deferred.then()方法的回傳可以做以下兩件事。
+ 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
+$.get(&amp;#39;/getData&amp;#39;) .done(function(response) { if(response.error) { console.log(&amp;#39;Error&amp;#39;); }else { console.log(&amp;#39;Success&amp;#39;); } }) .fail(function(response) { console.log(&amp;#39;Error&amp;#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
+var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.</description>
+    </item>
+    
+    <item>
+      <title>Javascript非同步編程的方法 - Promise</title>
+      <link>https://mark-lin.com/posts/20150908/</link>
+      <pubDate>Tue, 08 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150908/</guid>
+      <description>在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
+Promise/A+ 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
+規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
+ pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
+promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
+hpromises-spec
+Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
+versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&amp;#39;/getData&amp;#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。</description>
+    </item>
+    
+    <item>
+      <title>Javascript非同步編程的方法 - Pub/Sub</title>
+      <link>https://mark-lin.com/posts/20150907/</link>
+      <pubDate>Mon, 07 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150907/</guid>
+      <description>發布與訂閱模式Pub/Sub它主要的概念為 :
+ 定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者
+ 在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 Jquery裡的on，下面的程式就可以想成，$(&#39;.SomeThing&#39;)為訂閱者，訂閱了click，如果click事件發生了，發布者就會執行doSomething。
+$(&amp;#39;.SomeThing&amp;#39;).on(&amp;#39;click&amp;#39;fucntion doSomething(){ //doSomething 	}); 該模式的優點在於解耦合，發行者與訂閱者不需要知道對方的存在。
+而使用的時機為當一個對象改變時，需要同時改變其它對象，但確不知道實際有多少個對象時，這種情況下，就可以考慮使用Pub/Sub模式。
+Pub / Sub 簡單版範例 var EventHub = { topics: {}, subscribe: function(topic, handler) { if(!this.topics[topic]){ this.topics[topic] = []; } this.topics[topic].push(handler); }, publish: function(topic, data) { if(!this.topics[topic] || this.topics[topic].length &amp;lt; 1) return; this.topics[topic].forEach(function(listener) { listener(data || {}); }); } }; 然後就可以使用了，首先訂閱一個Task，並且當Task被觸發時，會自動執行task函數。
+EventHub.subscribe(&amp;#39;Task&amp;#39;,function task(data){ console.log(data + &amp;#39;by Task1&amp;#39;); }); EventHub.subscribe(&amp;#39;Task&amp;#39;,function task(data){ console.log(data + &amp;#39;by Task2&amp;#39;); }); 然後在來觸發Task。</description>
+    </item>
+    
+    <item>
+      <title>Javascript 非同步編程的方法 - setTimeout</title>
+      <link>https://mark-lin.com/posts/20150906/</link>
+      <pubDate>Sun, 06 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150906/</guid>
+      <description>在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
+setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
+下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&amp;ldquo;Hello&amp;rdquo;)。
+setTimeout(function(){ console.log(&amp;#34;Hello&amp;#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
+var start = new Date; setTimeout(function(){ var end = new Date; console.log(&amp;#39;Time elapsed:&amp;#39;, end - start, &amp;#39;ms&amp;#39;); }, 1000); while (new Date - start &amp;lt; 2000) {}; &amp;lt;!-- tas --&amp;gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
+setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(&amp;quot;Mark&amp;quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
+如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven</description>
+    </item>
+    
+    <item>
+      <title>Javascript 之 Event Driven</title>
+      <link>https://mark-lin.com/posts/20150905/</link>
+      <pubDate>Sat, 05 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150905/</guid>
+      <description>在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，它一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
+事件驅動 ( Event Driven ) 與事件隊列（ Event Queue ） 先來說說事件驅動(Event Driven)，這種類型的程式執行流程基本上是由使用者的動作例如點擊了頁面或按了ENTER之類的事件來決定，而不像一些如批次程式設計（batch programming）是由程式開發者來決定。
+我們來看看下面這張Philip Roberts在JSConf EU 2014講述Javascript event-loop時所出現的這圖。
+首先左上角為V8 Javascript runtime，其中裡面的Stack代表JS接下來要做的事情（嚴格來說要做的任務被分配到的記憶體空間）由上至下來執行。Philip Roberts在演講中也有提到因javascript單線程而所擁有的等式。
+ one thread == one call stack == on thing at time
+ 其中Stack裡面的工作有些是非同步事件，例如ajax或settimeout等，stack會將工作丟給WebApis該區塊進行（嚴格來說是ｖ８中某個東西會丟），等到執行完後成，會發送個callback給callbackQueue，等到Stack完全清空時，會至callback queue裡尋找看看有沒有callback要執行。
+Javascript程式碼單線程運行流程範例 我們將以下列這段簡單的程式碼來看Javascript的執行流程。
+console.log(&amp;#34;hi&amp;#34;) setTimeout(function cb(){ console.log(&amp;#34;there&amp;#34;); },5000); console.log(&amp;#34;Mark Lin&amp;#34;); 首先為第一張圖，在還沒執行程式程式碼時，所有的Stack與Task Quenu都是空的。 然後我們開始執行，首先載入這段JS，Stack會產生main()這個區塊，再執行到 console.log(&#39;hi&#39;)時，也會在Stack產生console.log(&#39;hi&#39;)的區塊，並在Console印出hi，最後console.log(&#39;hi&#39;)工作完成，會從Stack中釋放出。
+執行到setTimeoout，Stack會產生setTimeout的區塊，並且會向api發送工作，然後繼續往下執行。
+執行console.log(&amp;quot;Mark Lin&amp;quot;)，最後工作剛成後，Stack全部清空。
+Stack全部空間釋放完後，同時也發現剛剛對api的請求已完成，並且已將CallBack cb放置Task Quenu，並且由於Stack已清空，它會自動去Task Quenu尋找Task，這時發現了Cb然後就執行consoel.log(&amp;quot;there&amp;quot;)。
+參考資料  https://www.youtube.com/watch?v=8aGhZQkoFbQ https://vimeo.com/96425312 http://www.ruanyifeng.com/blog/2014/10/event-loop.html  </description>
+    </item>
+    
+    <item>
+      <title>Javascript 之單線程</title>
+      <link>https://mark-lin.com/posts/20150904/</link>
+      <pubDate>Fri, 04 Sep 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150904/</guid>
+      <description>首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑出So sad，但因為被while一直佔住線程，因此永遠不會執行setTimeout事件，與console.log(&amp;ldquo;So sad&amp;rdquo;) 。
+setTimeout(function () { isEnd = false; }, 1000); while (isEnd); console.log(&amp;#34;So sad&amp;#34;); Javascript的單線程是指一個瀏覽器行程（process）只有一個JS的執行線程（但不代表瀏覽器是單線程），同一個時段內只會有一段代碼在執行，代表一次只能完成一件事，如果有多件事，就代表你要排隊，一件一件的處理，如果有一件事卡死或要做很久，就代表下面的事永遠不會執行，優點是簡單，環境單純，但缺點是如果其中一個事件很耗時間，會拖慢整個程式執行。
+Javascript將事件分為兩種同步（Synchronous）與非同步（Asynchronous）來解決單線程的缺點。
+同步（ Synchronous ） 就是一個完成換下一個，下一個完再換下下一個處理，程式執行順序與任務的排列順序是相同的，如下程式碼。
+console.log(1); console.log(2); console.log(3); 輸出結果。
+	１ ２ ３ 非同步（ Asynchronous ） 非同步為每一個任務都有一個CallBack，代表每個任務執行完後會執行該CallBack而不是執行下一個任務，因此程式執行順序與任務的排列順序是不相同的，下列以ajax為範例。
+	console.log(1); ＄.ajax({ url:&amp;quot;tests/1&amp;quot; success:function(data){ console.log(2); }	}) console.log(3); 輸出結果。
+	１ ３ ２ 也就是說，假設該ajax很耗時，你可以不用等到ajax執行完，才跑console.log(3)，而是先給它個callback等ajax執完後自動插入回線程中執行console.log(2)。
+為什麼 Javascript 是單線程 ? Javascript最初做為瀏覽器腳本語言，主要用途在於和使用者戶動與操作DOM，也因此如果該語言為多線程語言就會發生不少混亂，例如Javascript有兩個線程，一個線程針對某個DOM節點新增某些內容，而另一線程為刪除該節點，那瀏覽器要以那個為主?所以為了避免這些亂，因此Javascript被設計為單線程語言。
+HTML5提出了Web Worker的標準，web worker是運行在瀏覽器的後台，並且子線程完全由主線程控制，並且不得操作 DOM，所以該標準並沒有影響javascript為單線程的本質。  Javascript 為單線程，又怎著非同步的執行呢 ? 通常這種語言為單線程，但又可以處理非同步的語言都有個一種共同點，那就是事件驅動event driven）機制，一般是由通過事件循環(Event Loop)與事件隊列（Event Queue）來實現。
+參考資料  http://www.ruanyifeng.com/blog/2012/12/asynchronous%EF%BC%BFjavascript.html http://sporto.</description>
+    </item>
     
   </channel>
 </rss>

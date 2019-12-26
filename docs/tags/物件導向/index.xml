@@ -11,6 +11,148 @@
     
         <atom:link href="https://mark-lin.com/tags/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91/index.xml" rel="self" type="application/rss+xml" />
     
+
+
+    <item>
+      <title>物件導向系列菜單 11-『 泛型 ( Generics ) 』</title>
+      <link>https://mark-lin.com/posts/20150826/</link>
+      <pubDate>Wed, 26 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150826/</guid>
+      <description>什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如List就是裡面存放string，List就是裡面存放int。也被稱為型別參數。事實上我們可以將範例想成簡單點，那就是一個可以讓你自由決定型別的功能。
+為什麼要有泛型呢 假設需要我們建立一個ArrayList，但確發現要取出值都需要轉型，這是因為當你將某個物件存入ArrayList集合時，它的型別就隱含轉換成object了。只要是命名空system.Collection的集合類別都是如何(stack之類的)
+轉型是沒什麼問題，但在處理集合時，常常都會需要使用迴圈來取出或存入集合元素，假設迴歸數很大很大的話，那就會對程式的執行速度產生一定的影響了(不過不嚴重)。還有一點就是，缺泛編輯時期的安全檢查。
+泛型的優點   可以用不同的型別去做相同動作的事情如我上述程式碼的這段。   可以減少Boxing與UnBoxing，使效能增加。
+  讓程式碼更有彈性、重複使用程式碼。
+  泛型類別和方法 這邊寫個泛型的小範例，來知道一下大概的寫法。下列程式碼建立Car類別，其中Class Car&amp;lt;T,T1&amp;gt;被稱為『泛型類別』，而T power 被稱為『泛型參數』。
+輸出結果
+類別參數的條件約束 既然泛型可以讓我們自由決定型別，但有時候太自由也不太好，那我們要著麼樣來約束呢?如下，其中『where』就是就是限制的關鍵字，而『T』就是受限制的型別參數，最後Class就是限制的內容。
+下列程式碼為多參數限定。
+其中限制的內容請參考下圖，來源為MSDN。
+我們這邊在來寫個簡單的小程式。
+建立個Car類別，並且有二個型別參數T與T1，並限制T型別參數必預是『參數型別』。
+然後我們用兩種寫法來測試看看，第一種為T指定為 string型別，第二種為T指定為int型別。 其中，string型別會正確執行，這邊別忘了string為參考型別喔! 而第二種int則會出錯。
+注: 如果不知道實值與參考是啥的可以參考一下小弟寫的這篇實值型別與參考型別的記憶體配置
+未繫結的型別參數有幾項注意事項  無法使用!= 和 == 運算子，因為不能確定實體的型別引數是否會支援這些運算子。 這些參數可與System.Object相互轉換或明確轉換成任何介面型別。 你可以與NULL比較。如果將未繫結的型別參數與NULL比較，那麼當型別引數為實值型別時一定會傳FALSE。  參考資料  http://frankiestudy.blogspot.tw/2012/09/c.html http://msdn.microsoft.com/zh-tw/library/512aeb7t.aspx http://msdn.microsoft.com/zh-tw/library/d5x73970.aspx http://msdn.microsoft.com/zh-tw/library/kx37x362.aspx  </description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 10 -『 委派 ( Delegate ) 』</title>
+      <link>https://mark-lin.com/posts/20150825/</link>
+      <pubDate>Tue, 25 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150825/</guid>
+      <description>什麼是委派  委派是以特定參數清單和傳回型別表示對方法的參考型別。 當您具現化委派時您可以使其執行個體具有相容簽章和傳回型別的所有方法。(MSDN)
+ 白話文來說，委派方法是一種參考型別(Type)，可以用來將方法當做引數傳遞給其他方法。
+圖為委派型別的宣告範例
+為什麼要用委派 從類別的設計者來看，在設計類別時，可能會碰到某個方法需要額外處理，但又不想把該處理想在這個類別裡，因為有可能變化很多，又或是無法預先得知處理的規則。 (註 : 這部份主要參考Huan-Lin的文章)
+簡單用個情境來說明委派的用法 維京老大有一艘戰船，這艘船是老大專門買來給小弟用去打劫的(主要原因是因為老大怕死和麻煩)，為了維護自身利益，老大定了一個用船契約範本，上面定了兩個規定分別為回傳string型別與輸入一個string型別的參數，小弟需要自行寫一份參考老大契約範本的契約，裡面一定要符合這兩項規定，小弟才能拿這份契約去和老大借船，然後執行自行寫的打劫計畫。
+依上述的模擬情境來寫個程式碼來看看 ~首先先宣告一個委派方法，這就是維京老大所寫的契約範本，上面規定，小弟的契約裡需要符合兩個條件分別為回傳string型別與 輸入一個string型別的參數
+public delegate string Attack(string str); 然後小弟1這時想要和老大借船來幹一票大的~~ ，所以開始寫契約，如下，有沒有符合老大的範本要求呢??『回傳string型別』與『輸入一個string型別的參數』，嗯都有，拿去給老大看應該會答應!
+public string Attack_Plan1(string str) { //這邊可以小弟可自訂自已的攻擊計畫  //反正最後有回傳黃金(string型別)給老大就好  Console.WriteLine(str); return &amp;#34;給老大的黃金&amp;#34; ; } 這時小弟1就跑去和老大借船. 老大:嗯很好有符合，~ 努力去(為我)打劫吧!
+private void button1_Click(object sender, EventArgs e) { //C# 2.0寫法  Attack attack_plan = Attack_Plan1; GoToAttackWithBattleShip(attack_plan, &amp;#34;Attack&amp;#34;); } private void GoToAttackWithBattleShip(Attack attack_plan, string str) { textBox1.Text = attack_plan(str); } 其中這時又來個小弟2，他也想要船，但他沒注意到契約範本規則，然後建立了下面的契約，不符合傳入一個string型別的參數</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 9-『 物件導向特性-封裝 ( Encapsulation ) 』</title>
+      <link>https://mark-lin.com/posts/20150824/</link>
+      <pubDate>Mon, 24 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150824/</guid>
+      <description>存取修飾詞    存取修飾詞 說明     public 無任何存取限制。   internal 只能在自已類別與專案(組件)中其它類別進行存取。(不包含其它專案)。   protected 只能在自已類別和子類別中存取。   protected internal 只能在目前專案(組件)與子類別存取。   private 在自已類別存取。    封裝的使用 封裝的使用時機 :
+ 封裝表示讓一個類別對其他類別隱藏特定資訊，這樣有助於防止程式發生臭蟲。 當你回頭編程已經有好一陣子沒有沒看程式碼時，很容易就會忘記當初你要它做什麼，那正是封裝能夠大展身手的地方。  封裝的精神
+ 只要在必要時才讓欄位與方法為public 將物件想成黑箱。你並不在意該方法到底是怎麼運作的。你只在意它接受你提供的輸入，並回傳正確的結果。 減少程式BUG，因為相依性減少了。  封裝性不良好類別 首先我們先建立個，幾乎沒有使用到封裝的類別BagFamer，這個類別主要是計算該農場需要多少袋飼料來養牛。
+農場所需飼料(袋) = 牛隻數量 * 每隻牛需要的飼料 BagOfFeed = NumberOfCows * FeedMulitplier
+三個欄位
+ FeedMulitplier : 存放一隻牛需要多少袋飼料。 NumberOfCows : 存放這個農場有幾隻牛。 BagOfFeed : 存放這個農場需要多少飼料。  Tip.共同遵循的約定與慣例。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 8-『 屬性 ( Properties ) 與欄位 ( Field ) 和存取子 ( accessor ) 』</title>
+      <link>https://mark-lin.com/posts/20150823/</link>
+      <pubDate>Sun, 23 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150823/</guid>
+      <description>區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東東)
+public class Car { //這個就是欄位(Field)  private int PeopleNumber; } 而屬性呢?，屬性(Properties)是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。
+public class Car { //這個就是屬性  public int PeopleNumber { get; set;} }  存取子 ( accessor ) 屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。
+Get存取子 get存取子可以用於傳回欄位值或計算它並且回傳。
+下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。
+class Test { public int PeopleNumber { get ;} } 要改成下列程式碼，才正確。
+class Test { //設定唯時一定要給它值。不然會出錯。  public int PeopleNumber { get {return 10 ;} } } 試試看寫入值的話，則有人會打斷你的腿。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單7-『 部分類別 ( Partial Class ) 』</title>
+      <link>https://mark-lin.com/posts/20150822/</link>
+      <pubDate>Sat, 22 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150822/</guid>
+      <description>部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。
+程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。
+//部分類別(Employee其中一個組件)  public partial class Employee { public string PracticeTime; public void DoWork() { } } //部分類別(Employee其中一個組件)  public partial class Employee { public string GoToDinner() { return &amp;#34;GoToDinner&amp;#34; ; } } protected void Page_Load(object sender, EventArgs e) { Employee Employ = new Employee { PracticeTime = &amp;#34;100&amp;#34; TextBox1.Text = Employ.GoToDinner(); TextBox6.Text = Employ.PracticeTime; } 執行結果
+	GoToDinner 100 部分類別的特性  所有組件都必需在相同的命名空間(Namespace) 如果有任何組件宣告為abstract則被視為抽象，如果宣告為Sealed則被視為密封，如果其中一繼承某基底類別，整個型別都會繼承 任何組件都可以指定不同的基底介面，最後的型別會實作所有部份宣告的任何介面  部份方法的特性  部分方法的簽章是在部分型別中的一部分定義，而其實作是在型別的另一部分中定義。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 6-『 Interface 介面 』</title>
+      <link>https://mark-lin.com/posts/20150821/</link>
+      <pubDate>Fri, 21 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150821/</guid>
+      <description>Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然有人(編譯器)會打斷你的腿的…很恐怖的…
+Interface使用時機
+ 有時候，你必須根據物件能夠做什麼來將它們歸類。 想要做到類似C++中的多重繼承功能。  程式說明 建立UnitityCar的類別，該類別為未來車的概念。它可以飛(Fly)和跑(Run)，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到Interface。
+首先新增兩個Interface分別為ICanFly 與 IDrive。ICanFly定義飛的方法Fly() 與飛的速度FlySpeed。IRun定義跑的方法Run()與跑的速度RunSpeed (註:新增IRun Interface只是要給各位官爺看多個Interface使用)
+//宣告ICanFly介面  interface ICanFly { //介面不可以包含『欄位』。  string flySpeed { get ;} //介面不存放資料，因為不能增加欄位  //string test = &amp;#34;Hello&amp;#34;;  //任何實作該介面的類別必需具備一個接受Fly()的方法。  string fly(); } //宣告IDrive介面  interface IDrive { //driveSpeed屬性，但介面不儲存資料，所以不會有欄位。  string driveSpeed { get ; set; } //任何實作此介面的類別，必需具備接受 drive() 方法。  string drive(); } UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。
+//繼承基底類別Car  //並實作IDrive與IcanFly Interface  //假設UnitityCar在未來，他有兩個種類方法Drive與Fly。  public class UnitityCar :Car , IDrive, ICanFly { //由於在未來飛行速度(FlySpeed)，有限制100，  //因此設立唯讀的FlySpeed，不給人修改。  //一定要有!</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 5 -『 物件導向特性-繼承 ( Inheritance ) 4 - abstract 』</title>
+      <link>https://mark-lin.com/posts/20150820/</link>
+      <pubDate>Thu, 20 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150820/</guid>
+      <description>使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。
+//父類別  //增加『abstract』修飾詞，讓該類別只能繼承。不能實作。  public abstract class Car { //車子的速度  protected string Speed; //車子的顏色  protected string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法。  public string DriveCar(string a) { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; ; } } 抽像類別的特性  抽象類別不能實體化。 抽象類別可能包含抽象方法與存取子。 無法使用『Sealed』修飾詞，因為兩個意思完全相反。 衍生自抽象類別的非抽象類別必須包含所有繼承抽象方法和存取子的實作。  抽象方法的使用 抽象方法只能存在於抽象類別中。不然會出錯喔。
+//父類別  //增加『abstract』修飾詞，讓該類別只能繼承。不能實作。  public abstract class Car { //車子的速度  protected string Speed; //車子的顏色  protected string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法。  //抽象方法宣告，沒有提供實際的實作，因此並沒有方法主題。  //抽象方法只能存在於抽象類別中。  public abstract string DriveCar(); } 子類別，使用Overried，來進行抽象類別覆寫。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 4 -『 物件導向特性-繼承(Inheritance) 3 - Sealed 』</title>
+      <link>https://mark-lin.com/posts/20150819/</link>
+      <pubDate>Wed, 19 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150819/</guid>
+      <description>特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。
+父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將Car類別，新增Sealed修飾詞，主要目的為不然其它類別繼承。
+/// &amp;lt;summary&amp;gt;  /// 父類別  /// &amp;lt;/summary&amp;gt;  public sealed class Car //增加Sealed  { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &amp;lt;summary&amp;gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &amp;lt;/summary&amp;gt;  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; ; } } 子類別BMWCar 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』</title>
+      <link>https://mark-lin.com/posts/20150818/</link>
+      <pubDate>Tue, 18 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150818/</guid>
+      <description>Virtual 修飾詞  子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?
+ virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。
+//父類別  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法。  //在該方法加上Virtual，讓子類別可以覆寫該方法。  public virtual string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; ; } } Override 修飾詞 Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。
+// 子類別繼承Car  public class BMWCar :Car { //BMWCar類別建構子  public BMWCar() { Speed = &amp;#34;BMW500&amp;#34;; Color = &amp;#34;BWM_Red&amp;#34;; } //BMW的屬性引擎  public string BMWPower; //定義車子移動的方法  //使用存取修飾詞Overried，來進行覆寫  public override string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; + &amp;#34;『Override』&amp;#34; ; } } 執行結果 正在開『BMW_Red』的車時速『BWM500』在移動『Override』 Override 修飾詞特性 注意 1 你不能覆寫非虛擬或靜態方法。被覆寫的父類別方法必須是Virtual、abstract、Override。</description>
+    </item>
+    
+    <item>
+      <title>物件導向系列菜單 2-『 物件導向特性-繼承 ( Inheritance ) 1 』</title>
+      <link>https://mark-lin.com/posts/20150817/</link>
+      <pubDate>Mon, 17 Aug 2015 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20150817/</guid>
+      <description>繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但請官爺們想簡單點)，兒子可能會有老爸的大鼻子或小嘴巴，並且可以開著老爸的車(財產)出去玩，這就是繼承。
+繼承父類別(基底類別 Base Class)的類別就被稱為子類別(衍生類別 Derived Class)，子類別繼承了父類別的屬性與方法。
+繼承的傳遞 : 你也會繼承到你阿公的東西 繼承是可以傳遞，Class C 繼承至 Class B，而 Class B 繼承至 Class A，則 Class C 會繼承至 Class A、B 白話文就是，你也會繼承到你阿公的東西。
+以下為繼承程式碼 /// &amp;lt;summary&amp;gt;  /// 父類別  /// &amp;lt;/summary&amp;gt;  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &amp;lt;summary&amp;gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &amp;lt;/summary&amp;gt;  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; + Color + &amp;#34;』的車&amp;#34; + &amp;#34;時速『&amp;#34; + Speed + &amp;#34;』在移動&amp;#34; ; } } /// &amp;lt;summary&amp;gt;  /// 子類別繼承Car  /// &amp;lt;/summary&amp;gt;  public class BMWCar :Car { //BMW的屬性引擎  public string BMWPower; } 以下紅色框框的部份就是從父類別Car繼承而來的屬性與方法</description>
+    </item>
     
   </channel>
 </rss>
