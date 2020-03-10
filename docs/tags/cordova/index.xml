@@ -19,7 +19,7 @@
       <pubDate>Wed, 10 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160210/</guid>
-      <description>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome</description>
+      <description>在寫網頁時，最常使用到Chrome來進行Debug，對開發非常的有幫助，但如果是在Cordova上呢?這篇文章就是要介紹如何時用Chrome來進行Cordova的Debug。 Step1 將模擬器的Develop</description>
     </item>
     
   </channel>

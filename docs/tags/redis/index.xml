@@ -19,7 +19,7 @@
       <pubDate>Fri, 20 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190920/</guid>
-      <description>正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基</description>
+      <description>正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Thu, 19 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190919/</guid>
-      <description>正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，</description>
+      <description>正文開始 上一篇咱們基本上已經理解緩存服務 redis 的基本概念後，接下來咱們要進入正題 : 緩存策略 相信不少人應該會覺得這很簡單，不就是將熱資料丟到緩存，然後用戶先優先去緩存取得，沒有則去資料庫拿去嗎 ? 用腦袋想很簡</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Wed, 18 Sep 2019 20:16:57 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190918/</guid>
-      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能</description>
+      <description>正文開始 前面幾篇文章咱們已經學習完了資料層性能相關的知識，而接下來這篇文章，咱們要來學習，如何進一步的讓系統可以做更多的事情。 資料庫單機性能優化到最後，仍然還是逃不過性能的貧頸，但這並不是說單機優化沒</description>
     </item>
     
   </channel>

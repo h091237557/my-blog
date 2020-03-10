@@ -27,7 +27,7 @@
     <meta name="description" property="og:description" content="Describe what your web page is about...">
     
     <meta property="og:title" content="Posts">
-    <meta property="og:image" content="/assets/11474637685936.jpg">
+    <meta property="og:image" content="https://mark-lin.comassets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -128,7 +128,7 @@
   <div>
     
     <div class="summary">
-    發布與訂閱模式Pub/Sub它主要的概念為 : 定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者 在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 J
+    發布與訂閱模式Pub/Sub它主要的概念為 : 定義一對多的關係，當一件事情發布時會同時通知所有的訂閱者 在 Javascript 與 Jquery 非常容易看到該模式的使用。例如 Jquery裡的on，下面的程式就可以想成，$('.SomeT ...
     </div>
   </div>
 </div>
@@ -162,7 +162,7 @@
   <div>
     
     <div class="summary">
-    在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中
+    在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。 set ...
     </div>
   </div>
 </div>
@@ -196,7 +196,7 @@
   <div>
     
     <div class="summary">
-    在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，
+    在Javascript單線程該篇文章中有提到，大部份這種單線程但可以處理非同步的語言都有共同的特性那就是事件驅動(Event Driven)，它一般是由通過事件循環(Event Loop)與事件隊列（Ev ...
     </div>
   </div>
 </div>
@@ -230,7 +230,7 @@
   <div>
     
     <div class="summary">
-    首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑
+    首先看看下面的程式碼，會發現永遠跑不出So sad，因為Javascript為單線程，雖然設定１秒過後isEnd為false，然後應該就直接跑出So sad，但因為被while一直佔住線程，因此永遠不會執 ...
     </div>
   </div>
 </div>
@@ -268,7 +268,7 @@
   <div>
     
     <div class="summary">
-    什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如Li
+    什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如List就是裡面存放string，List就是裡面存放int。也 ...
     </div>
   </div>
 </div>
@@ -306,7 +306,7 @@
   <div>
     
     <div class="summary">
-    什麼是委派 委派是以特定參數清單和傳回型別表示對方法的參考型別。 當您具現化委派時您可以使其執行個體具有相容簽章和傳回型別的所有方法。(MSDN
+    什麼是委派 委派是以特定參數清單和傳回型別表示對方法的參考型別。 當您具現化委派時您可以使其執行個體具有相容簽章和傳回型別的所有方法。(MSDN) 白話文來說，委派方法是一種參考型別(Type)，可以用來將 ...
     </div>
   </div>
 </div>
@@ -344,7 +344,7 @@
   <div>
     
     <div class="summary">
-    存取修飾詞 存取修飾詞 說明 public 無任何存取限制。 internal 只能在自已類別與專案(組件)中其它類別進行存取。(不包含其它專案)。 protected 只能在自已類別和子類別中存
+    存取修飾詞 存取修飾詞 說明 public 無任何存取限制。 internal 只能在自已類別與專案(組件)中其它類別進行存取。(不包含其它專案)。 protected 只能在自已類別和子類別中存取。 protected internal 只能在目前專案(組件)與子類別存取。 private 在自已類別存取 ...
     </div>
   </div>
 </div>
@@ -382,7 +382,7 @@
   <div>
     
     <div class="summary">
-    區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告
+    區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東 ...
     </div>
   </div>
 </div>
@@ -420,7 +420,7 @@
   <div>
     
     <div class="summary">
-    部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加
+    部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。 //部分類別(Employee其 ...
     </div>
   </div>
 </div>
@@ -458,7 +458,7 @@
   <div>
     
     <div class="summary">
-    Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是
+    Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然 ...
     </div>
   </div>
 </div>
@@ -496,7 +496,7 @@
   <div>
     
     <div class="summary">
-    使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類
+    使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類別 //增加『abstract』修飾詞，讓該類別只能繼承。不能 ...
     </div>
   </div>
 </div>
@@ -534,7 +534,7 @@
   <div>
     
     <div class="summary">
-    特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構
+    特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將 ...
     </div>
   </div>
 </div>
@@ -572,7 +572,7 @@
   <div>
     
     <div class="summary">
-    Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的
+    Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override) ...
     </div>
   </div>
 </div>
@@ -610,7 +610,7 @@
   <div>
     
     <div class="summary">
-    繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但
+    繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但請官爺們想簡單點)，兒子可能會有老爸的大鼻子或小嘴巴，並且可 ...
     </div>
   </div>
 </div>
@@ -648,7 +648,7 @@
   <div>
     
     <div class="summary">
-    物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也
+    物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。 類別 小弟是把類別想成是『 ...
     </div>
   </div>
 </div>

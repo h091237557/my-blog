@@ -27,7 +27,7 @@
     <meta name="description" property="og:description" content="Describe what your web page is about...">
     
     <meta property="og:title" content="socket.io">
-    <meta property="og:image" content="/assets/11474637685936.jpg">
+    <meta property="og:image" content="https://mark-lin.comassets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -128,7 +128,7 @@
   <div>
     
     <div class="summary">
-    socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的
+    socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請 ...
     </div>
   </div>
 </div>
@@ -166,7 +166,7 @@
   <div>
     
     <div class="summary">
-    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client
+    首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進 ...
     </div>
   </div>
 </div>
@@ -204,7 +204,7 @@
   <div>
     
     <div class="summary">
-    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳
+    socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新 ...
     </div>
   </div>
 </div>
@@ -242,7 +242,7 @@
   <div>
     
     <div class="summary">
-    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成
+    socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。 socket.io 主要由以下幾個東東構成的 : engine.io、engin ...
     </div>
   </div>
 </div>

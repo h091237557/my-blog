@@ -19,7 +19,7 @@
       <pubDate>Mon, 05 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170605/</guid>
-      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執</description>
+      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sun, 04 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170604/</guid>
-      <description>這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們</description>
+      <description>這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170603/</guid>
-      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模</description>
+      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Fri, 02 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170602/</guid>
-      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du</description>
+      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Thu, 01 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170601/</guid>
-      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來</description>
+      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Thu, 27 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170427/</guid>
-      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸</description>
+      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Buc</description>
     </item>
     
     <item>
@@ -73,7 +73,7 @@
       <pubDate>Wed, 26 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170426/</guid>
-      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法</description>
+      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@
       <pubDate>Tue, 25 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170425/</guid>
-      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi</description>
+      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioion exchange sort)，是一種最快的排序法之一，它使用分治法的概念</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Mon, 24 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170424/</guid>
-      <description>本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，</description>
+      <description>本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，我們需要先知道一個東西，那就是Heap Tree，它是二元樹(</description>
     </item>
     
     <item>
@@ -100,7 +100,7 @@
       <pubDate>Sun, 23 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170423/</guid>
-      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後</description>
+      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後在未排序的資料中尋找最小(大)值，並將它移置已排序資料的右邊</description>
     </item>
     
     <item>
@@ -109,7 +109,7 @@
       <pubDate>Sat, 22 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170422/</guid>
-      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作</description>
+      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作 插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序</description>
     </item>
     
     <item>
@@ -118,7 +118,7 @@
       <pubDate>Fri, 21 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170421/</guid>
-      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如</description>
+      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說</description>
     </item>
     
     <item>
@@ -127,7 +127,7 @@
       <pubDate>Sat, 25 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170325/</guid>
-      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免</description>
+      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。 費波那西數列 最簡單說明動態規畫法的問題就是費波那</description>
     </item>
     
     <item>
@@ -136,7 +136,7 @@
       <pubDate>Fri, 24 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170324/</guid>
-      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小</description>
+      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。 分治法適用的</description>
     </item>
     
     <item>
@@ -145,7 +145,7 @@
       <pubDate>Thu, 23 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170323/</guid>
-      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題</description>
+      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題時，基本上它只會根據當前最好的資料，就做出選擇，如果以心理學</description>
     </item>
     
     <item>
@@ -154,7 +154,7 @@
       <pubDate>Sat, 18 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170318/</guid>
-      <description>鄂圖曼帝國是一個曾經強到在歐、亞、非都有領士的伊斯蘭帝國(1299~1922)，在世紀帝國二中，有一個國家上到城堡時代就可以建立土耳其火槍兵</description>
+      <description>鄂圖曼帝國是一個曾經強到在歐、亞、非都有領士的伊斯蘭帝國(1299~1922)，在世紀帝國二中，有一個國家上到城堡時代就可以建立土耳其火槍兵的國家就是它，它在那個時代，以武器來說幾乎可以說是屌打其它周</description>
     </item>
     
     <item>
@@ -163,7 +163,7 @@
       <pubDate>Fri, 17 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170317/</guid>
-      <description>蘇聯 (Soviet Union)歷史上的超級強國Hyperpower 之一，在 60 年代時，與美國分庭抗禮，同時是社會主義的代表，但『可惜』這個大國在1991年</description>
+      <description>蘇聯 (Soviet Union)歷史上的超級強國Hyperpower 之一，在 60 年代時，與美國分庭抗禮，同時是社會主義的代表，但『可惜』這個大國在1991年12月25日這天，它的國旗緩緩的從克里姆林宮上空降下，也代表</description>
     </item>
     
     <item>
@@ -172,7 +172,7 @@
       <pubDate>Tue, 14 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170314/</guid>
-      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆</description>
+      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。 資料結構&amp;mdash;樹狀結構與二元樹 不過我們</description>
     </item>
     
     <item>
@@ -181,7 +181,7 @@
       <pubDate>Sat, 11 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170311/</guid>
-      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe</description>
+      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koenigsberg bridge問題不是我們這篇的重點，但還是簡</description>
     </item>
     
     <item>
@@ -190,7 +190,7 @@
       <pubDate>Fri, 10 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170310/</guid>
-      <description>在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果</description>
+      <description>在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 : 中序追蹤 (in-order) : 先走訪左子樹，然後</description>
     </item>
     
     <item>
@@ -199,7 +199,7 @@
       <pubDate>Thu, 09 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170309/</guid>
-      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們</description>
+      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們將要好好的研究它，目錄如下。 樹的定義與特性 二元樹 二元樹的實作</description>
     </item>
     
     <item>
@@ -208,7 +208,7 @@
       <pubDate>Mon, 13 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170213/</guid>
-      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是</description>
+      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是一種相同形態(!)的資料集合，並且會分配『連續』的記憶體空間</description>
     </item>
     
     <item>
@@ -217,7 +217,7 @@
       <pubDate>Sat, 11 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170211/</guid>
-      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說</description>
+      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。 那選擇正確的</description>
     </item>
     
     <item>
@@ -226,7 +226,7 @@
       <pubDate>Wed, 01 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170201/</guid>
-      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開</description>
+      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開發時，可以更快速的進行修正。 配置完成果會如下圖，你可以看到他</description>
     </item>
     
     <item>
@@ -235,7 +235,7 @@
       <pubDate>Fri, 30 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160930/</guid>
-      <description>不知不覺~漫長的鐵人賽就進入了尾聲，當初會參加鐵人賽也只是因為，沒參加過 ~ 來試試看，而且也剛好我今年的時間比較多點兒，話說回來，為什麼我會選</description>
+      <description>不知不覺~漫長的鐵人賽就進入了尾聲，當初會參加鐵人賽也只是因為，沒參加過 ~ 來試試看，而且也剛好我今年的時間比較多點兒，話說回來，為什麼我會選MongoDB來當題目呢?事實上也只是因為我自已無聊在做的專</description>
     </item>
     
     <item>
@@ -244,7 +244,7 @@
       <pubDate>Thu, 29 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160929/</guid>
-      <description>本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。 MongoDB 不支持事務操作 但事實上這段話有很多觀念要來說明說明，不然很</description>
+      <description>本篇文章是用來補充一下，前面忘了講的觀念，記得在第一篇時，我們有提過下面這句話。 MongoDB 不支持事務操作 但事實上這段話有很多觀念要來說明說明，不然很難讓人了解事務操作是啥，所以我們這篇要用來補充一下這個主題。</description>
     </item>
     
     <item>
@@ -253,7 +253,7 @@
       <pubDate>Wed, 28 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160928/</guid>
-      <description>上一篇研究簡單的說明完，股價分析的運用操作後，接下來我們這篇文章將要說明一些程式交易的東西，不過雖然說是程式交易，但事實上也只是簡單的計算出</description>
+      <description>上一篇研究簡單的說明完，股價分析的運用操作後，接下來我們這篇文章將要說明一些程式交易的東西，不過雖然說是程式交易，但事實上也只是簡單的計算出技術分析指標然後產生出買賣時間點，要說是程式交易好像也不太算</description>
     </item>
     
     <item>
@@ -262,7 +262,7 @@
       <pubDate>Tue, 27 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160927/</guid>
-      <description>上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就</description>
+      <description>上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就改用 aggreagate framework，然後如果再不能的話則用 mapred</description>
     </item>
     
     <item>
@@ -271,7 +271,7 @@
       <pubDate>Mon, 26 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160926/</guid>
-      <description>前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在F</description>
+      <description>前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在Fintech幾乎天天在報紙上看到，所以我們就來應景一下，來嘗</description>
     </item>
     
     <item>
@@ -280,7 +280,7 @@
       <pubDate>Sun, 25 Sep 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160925/</guid>
-      <description>上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修</description>
+      <description>上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~ 完美的片鍵</description>
     </item>
     
   </channel>

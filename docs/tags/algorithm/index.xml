@@ -19,7 +19,7 @@
       <pubDate>Tue, 03 Sep 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190903/</guid>
-      <description>正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能</description>
+      <description>正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Thu, 27 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170427/</guid>
-      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸</description>
+      <description>比較排序法與非比較排序法 桶子排序法原理 桶子排序法使用時機 桶子排序法複雜度 javascript 演算法實作 比較排序法與非比較排序法 前面幾篇我們學的排序演算法都被歸類為比較排序法，而另一種歸類為非比較排序法，桶子排序法Buc</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Wed, 26 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170426/</guid>
-      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法</description>
+      <description>合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Tue, 25 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170425/</guid>
-      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioi</description>
+      <description>快速排序法的原理 快速排序法的速度效能 快速排序法的空間效能 基準點的選擇 javascript 演算法實作 快速排序法的原理 快速排序法，又稱為分割排序法(partioion exchange sort)，是一種最快的排序法之一，它使用分治法的概念</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Mon, 24 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170424/</guid>
-      <description>本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，</description>
+      <description>本篇文章分成以下幾個章節 : 堆積樹(Heap tree)。 堆積排序法的原理。 堆積排序法的執行效能。 javascript 演算法實作。 堆積樹 Heap Tree 再說明堆積排序排序前，我們需要先知道一個東西，那就是Heap Tree，它是二元樹(</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Sun, 23 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170423/</guid>
-      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後</description>
+      <description>選擇排序法的原理 插入排序法的執行效能 javascript演算法實作 選擇排序法的原理 選擇排序法，它基本的觀念為 : 將資料分成已排序與未排序，然後在未排序的資料中尋找最小(大)值，並將它移置已排序資料的右邊</description>
     </item>
     
     <item>
@@ -73,7 +73,7 @@
       <pubDate>Sat, 22 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170422/</guid>
-      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作</description>
+      <description>插入排序法是我們第一個學習到的排序方法，我們本篇會針對它來詳細的介紹一下。 插入排序法的原理 插入排序法的執行效能 javascript演算法實作 插入排序法的原理 我們先來看看下圖，來理論一下它是著麼進行排序</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@
       <pubDate>Fri, 21 Apr 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170421/</guid>
-      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如</description>
+      <description>基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Sat, 25 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170325/</guid>
-      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免</description>
+      <description>動態規劃法 Dynamic programming ; DP，它與分治法很像，都是將大問題分割成小問題，而它和分治法不同的地方在於，它會將處理過的子問題解答，將它記憶起來，為了避免重複的計算。 費波那西數列 最簡單說明動態規畫法的問題就是費波那</description>
     </item>
     
     <item>
@@ -100,7 +100,7 @@
       <pubDate>Fri, 24 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170324/</guid>
-      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小</description>
+      <description>在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。 分治法適用的</description>
     </item>
     
     <item>
@@ -109,7 +109,7 @@
       <pubDate>Thu, 23 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170323/</guid>
-      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題</description>
+      <description>通常當我們遇到一個演算法的問題時，通常都有一些策略可以使用，本篇文章中我們將會說明貪心法這種策略。 基本概念 實作問題 基本概念 貪心法在解決問題時，基本上它只會根據當前最好的資料，就做出選擇，如果以心理學</description>
     </item>
     
   </channel>

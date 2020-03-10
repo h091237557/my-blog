@@ -6,7 +6,7 @@ languageCode = "ja"
 publishDir = "docs"
 disqusShortname = "mark-lin"
 hasCJKLanguage = true
-summaryLength = 70
+summaryLength = 100
 paginate = 30
 
 [author]

@@ -19,7 +19,7 @@
       <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160201/</guid>
-      <description>Css Box Model 規定了Element處理元素Content、Padding、border、margin的方式 。 Box Model基本概念 這張圖就是在說明一個</description>
+      <description>Css Box Model 規定了Element處理元素Content、Padding、border、margin的方式 。 Box Model基本概念 這張圖就是在說明一個Element元素的Box Model，紅色框範圍內表代為El</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Mon, 01 Feb 2016 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160202/</guid>
-      <description>在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme</description>
+      <description>在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Element的Position屬性設置四種類型的值分別為static</description>
     </item>
     
   </channel>

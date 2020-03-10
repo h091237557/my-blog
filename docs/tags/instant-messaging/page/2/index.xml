@@ -19,7 +19,7 @@
       <pubDate>Sat, 01 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180901/</guid>
-      <description>前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內</description>
+      <description>前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內容提供(點播)，接下來這 30 天咱們將要從 0 到 1 的來研究要如何將</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170915/</guid>
-      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client</description>
+      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170914/</guid>
-      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳</description>
+      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170913/</guid>
-      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成</description>
+      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。 socket.io 主要由以下幾個東東構成的 : engine.io、engin</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Tue, 12 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170912/</guid>
-      <description>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由</description>
+      <description>在上一篇文章中，我們說明了如何的設計像 line 的聊天群的架構設計，而這一篇我們要來說明聊天室的架構設計，這東西和上一篇有什麼差別 ? 通常聊天群是會由用戶提出申請，然後管理者來加入到該群裡，而聊天室則不相同，它</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Mon, 11 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170911/</guid>
-      <description>本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們</description>
+      <description>本篇文章中，我們講要說明，如何開發一個簡單的聊天群系統，這個東東雖然我們很常見到，到和我們平常開發的一些 WEB 有很大的差別。 差別在那呢 ? 假設我們開一個todolist功能，事實上大部份的工作就是crud的</description>
     </item>
     
   </channel>

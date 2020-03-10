@@ -19,7 +19,7 @@
       <pubDate>Tue, 14 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170314/</guid>
-      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆</description>
+      <description>這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。 資料結構&amp;mdash;樹狀結構與二元樹 不過我們</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sat, 11 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170311/</guid>
-      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koe</description>
+      <description>圖學理論(graph theory)它源於1736年的數學家 LeonHard Euler ，它為了解決Koenigsberg bridge問題而發展出來的理論，雖然Koenigsberg bridge問題不是我們這篇的重點，但還是簡</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Fri, 10 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170310/</guid>
-      <description>在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果</description>
+      <description>在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 : 中序追蹤 (in-order) : 先走訪左子樹，然後</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Thu, 09 Mar 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170309/</guid>
-      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們</description>
+      <description>在這篇文章中，我們將要仔細的來說明樹(Tree)這個資料結構，它在計算機科學中非常的重要，有很多演算法都一定會運用到這種資料結構。接下來我們將要好好的研究它，目錄如下。 樹的定義與特性 二元樹 二元樹的實作</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Mon, 13 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170213/</guid>
-      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是</description>
+      <description>前篇文章中，我們說明三種資料結構、陣列、堆疊、佇列，在開始今天的文章前，我們先簡單的複習一下這三個東西是啥。 array : 最常用使用到的資料結構，它是一種相同形態(!)的資料集合，並且會分配『連續』的記憶體空間</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Sat, 11 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170211/</guid>
-      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說</description>
+      <description>接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。 那選擇正確的</description>
     </item>
     
   </channel>

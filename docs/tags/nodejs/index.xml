@@ -19,7 +19,7 @@
       <pubDate>Fri, 08 Mar 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190308/</guid>
-      <description>Nodejs 出來時它的官網寫這以下的描述 : Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world. 簡</description>
+      <description>Nodejs 出來時它的官網寫這以下的描述 : Node.js is a JavaScript runtime built on Chrome’s V8 JavaScript engine. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient. Node.js’ package ecosystem, npm, is the largest ecosystem of open source libraries in the world. 簡而言之 Nodejs 是運行在 V8 javascript 引擎，並且使用 Event driven 與 non-blocking I/O 模式所建立出來的</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170611/</guid>
-      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能</description>
+      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法: 加 減 乘 除 然後實際上執行大概會長這樣 :</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170610/</guid>
-      <description>本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登</description>
+      <description>本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170607/</guid>
-      <description>在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP</description>
+      <description>在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。 訊息佇列基本</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170608/</guid>
-      <description>上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si</description>
+      <description>上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。 所以後來就有人提出使用對等式架</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Wed, 07 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170609/</guid>
-      <description>本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗</description>
+      <description>本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用</description>
     </item>
     
     <item>
@@ -73,7 +73,7 @@
       <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170606/</guid>
-      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一</description>
+      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 : 反向代理器 這種擴展的</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@
       <pubDate>Mon, 05 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170605/</guid>
-      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執</description>
+      <description>本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Sun, 04 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170604/</guid>
-      <description>這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們</description>
+      <description>這篇文章中，我們希望學習到 : 在開發nodejs時，如果遇到cpu密集型的任務時，要如何處理 ? 首先我們先來複習一下nodejs的機制一下。 我們都知道nodejs是屬於單一執行序架構，在其它的語言裡，每當</description>
     </item>
     
     <item>
@@ -100,7 +100,7 @@
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170603/</guid>
-      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模</description>
+      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器</description>
     </item>
     
     <item>
@@ -109,7 +109,7 @@
       <pubDate>Fri, 02 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170602/</guid>
-      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du</description>
+      <description>在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨</description>
     </item>
     
     <item>
@@ -118,7 +118,7 @@
       <pubDate>Thu, 01 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170601/</guid>
-      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來</description>
+      <description>串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資</description>
     </item>
     
   </channel>

@@ -19,7 +19,7 @@
       <pubDate>Fri, 08 Mar 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190325/</guid>
-      <description>socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的</description>
+      <description>socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Fri, 15 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170915/</guid>
-      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client</description>
+      <description>首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Thu, 14 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170914/</guid>
-      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳</description>
+      <description>socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Wed, 13 Sep 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170913/</guid>
-      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成</description>
+      <description>socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。 socket.io 主要由以下幾個東東構成的 : engine.io、engin</description>
     </item>
     
   </channel>

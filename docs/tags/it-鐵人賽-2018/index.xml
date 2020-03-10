@@ -19,7 +19,7 @@
       <pubDate>Sun, 30 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180930/</guid>
-      <description>前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，</description>
+      <description>前言 這辛苦的三十天總於結束了，當初原本只是想要理解直播相關協議的東西一下，但是卻發現越來越多奇怪的名詞跑了出來，就算大概的知道 HLS 是要做什麼，但你總是會覺得前後知識好像缺了什麼，別人問你一下沒有 HLS 前是如</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sat, 29 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180929/</guid>
-      <description>正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用</description>
+      <description>正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用一個名為ICE ( Interactive Connectivity Establishment ) 的框架來進行打洞，它內部整合了 STUN 與 TURN</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Fri, 28 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180928/</guid>
-      <description>正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章</description>
+      <description>正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章要探討的主題： 為什麼 P2P 連線很麻煩呢 ? 因為如果你理解了這個問題</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Thu, 27 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180927/</guid>
-      <description>正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。 Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling S</description>
+      <description>正文開始 上一篇文章中，咱們已經學習完了 WebRTC 的一些基本知識，接下來咱們要針對 Signaling Server 這東東來做做一些比較深的的探討。 Signaling Server 要做的事情。 WebRTC 與 SDP。 Signaling Server的實作選擇。 Signaling Server 要做的事情 在上一篇文章，我們大概知</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Wed, 26 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180926/</guid>
-      <description>正文開始 在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的</description>
+      <description>正文開始 在很前面的文章中，咱們有簡單的介紹如何使用 WebRTC 來採集聲音與影像，但那時只是很簡單的介紹一下而以，所以接下來的幾篇文章，咱們將要來深入的了解 WebRTC。 這篇文章將要介紹幾個 WebRTC 的基概念，大約分成以</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Tue, 25 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180925/</guid>
-      <description>正文開始 現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用文字，也就是所謂的聊天室，而這篇文章咱們將要介紹另</description>
+      <description>正文開始 現今大部份的直播咱們要可以與漂亮的直播主姐姐或硬漢大叔進行互動，基本上咱們只能使用文字，也就是所謂的聊天室，而這篇文章咱們將要介紹另一種互動方式，那就是直播連麥，也就是直播主與聽眾可以進行語音</description>
     </item>
     
     <item>
@@ -73,7 +73,7 @@
       <pubDate>Mon, 24 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180924/</guid>
-      <description>正文開始 上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。 使用 CDN 來調整可動</description>
+      <description>正文開始 上一篇文章中咱們學習完了 CDN 的相關知識以後，接下來這篇文章，我們將要將上一篇所學的來改善咱們以下兩篇文章可動版的架構。 使用 CDN 來調整可動版的架構 30-20之如何建立像 KKTV 一樣的點播功能呢 ? 30-21</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@
       <pubDate>Sun, 23 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180923/</guid>
-      <description>正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片</description>
+      <description>正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。 接下來咱們要來理解一下，解這上述問題的關鍵技術 CDN</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Sat, 22 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180922/</guid>
-      <description>正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題</description>
+      <description>正文開始 前面文章中咱們簡單了可以動的點播 ( like KKTV )與直播 ( like 17 )的功能，那接下來這篇文章主題要探討的目問題為： 這兩篇文章實際上應用會有什麼問題 ? 30-20之如何建立像 KKTV 一樣的點播功能呢 ? 30-21之如何</description>
     </item>
     
     <item>
@@ -100,7 +100,7 @@
       <pubDate>Fri, 21 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180921/</guid>
-      <description>正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的</description>
+      <description>正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為： 將聲音檔案直接丟給</description>
     </item>
     
     <item>
@@ -109,7 +109,7 @@
       <pubDate>Thu, 20 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180920/</guid>
-      <description>正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。 在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方</description>
+      <description>正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。 在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為： 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流</description>
     </item>
     
     <item>
@@ -118,7 +118,7 @@
       <pubDate>Wed, 19 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180919/</guid>
-      <description>正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後</description>
+      <description>正文開始 在前面的文章中，咱們咱們已經會了如何將聲音傳送給對方，而接下來這篇文章咱們就要來學習 收到了聲音已後，要如何的播出呢 ? 咱們收到聲音以後(檔案或串流) 那接下來要如何播出了 ? 答案就是使用播放器，而接</description>
     </item>
     
     <item>
@@ -127,7 +127,7 @@
       <pubDate>Tue, 18 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180918/</guid>
-      <description>正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協</description>
+      <description>正文開始 30-12之 RTP/RTCP 傳輸協議 30-13之 RTSP 傳輸協議 30-14之 RTMP 傳輸協議 30-15之 HLS 傳輸協議 30-16之 HTTP-FLV 傳輸協議) 30-17之 MPEG-DASH 傳輸協議) 前面的幾面文章，咱們學習了各種型的影音傳輸媒體，接下來將</description>
     </item>
     
     <item>
@@ -136,7 +136,7 @@
       <pubDate>Mon, 17 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180917/</guid>
-      <description>正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它</description>
+      <description>正文開始 接下來咱們要來介紹 MPEG-DASH協議。 MPEG-DASH 協議 本篇文章將會分成幾個章節來理解 MPEG-DASH 協議： MPEG-DASH 協議是要用來完成什麼事情呢 ? MPEG-DASH 協議如何完成它想做的事情呢 ? 建立 MPEG-DASH 的串流傳輸流程。 MPEG-DASH 的特點總結。 MPEG-DASH 協議是要</description>
     </item>
     
     <item>
@@ -145,7 +145,7 @@
       <pubDate>Sun, 16 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180916/</guid>
-      <description>正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建</description>
+      <description>正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。 HTTP-FLV 協議是要用來完成什麼事情</description>
     </item>
     
     <item>
@@ -154,7 +154,7 @@
       <pubDate>Sat, 15 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180915/</guid>
-      <description>正文開始 接下來咱們要來介紹 HLS 協議。 HLS 協議 本篇文章將會分成幾個章節來理解 HLS 協議： HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建</description>
+      <description>正文開始 接下來咱們要來介紹 HLS 協議。 HLS 協議 本篇文章將會分成幾個章節來理解 HLS 協議： HLS 協議是要用來完成什麼事情呢 ? HLS 協議如何完成它想做的事情呢 ? 建立 HLS 的串流傳輸流程。 HLS 的延遲問題。 HLS 的特點總結。 HLS 協議是要用</description>
     </item>
     
     <item>
@@ -163,7 +163,7 @@
       <pubDate>Fri, 14 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180914/</guid>
-      <description>正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建</description>
+      <description>正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建立 RTMP 的串流傳輸流程。 RTMP 的特點總結。 RTMP 協議是要用來完成什麼事情</description>
     </item>
     
     <item>
@@ -172,7 +172,7 @@
       <pubDate>Thu, 13 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180913/</guid>
-      <description>正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議：</description>
+      <description>正文開始 本篇文章咱們將要開始介紹第一個應用層的流通訊協議 RTSP，別忘了上一篇介紹的 RTP 是傳輸層。 RTSP 協議 本篇文章將會分成幾個章節來理解 RTSP 協議： RTSP 協議是要用來完成什麼事情呢 ? RTSP 協議如何完成它想做的事情呢 ?</description>
     </item>
     
     <item>
@@ -181,7 +181,7 @@
       <pubDate>Wed, 12 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180912/</guid>
-      <description>正文開始 在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議： RTP 協議 (RTCP 後來會提到) 本篇文章將會分成幾個章節來理解 RTP 協議： RTP 協議是要用來</description>
+      <description>正文開始 在前一篇學習完了 TCP 與 UDP 協議以後，咱們要介紹另一個傳輸層協議： RTP 協議 (RTCP 後來會提到) 本篇文章將會分成幾個章節來理解 RTP 協議： RTP 協議是要用來完成什麼事情呢 ? RTP 協議如何完成它想做的事情呢 ? RTP 協議的基本概</description>
     </item>
     
     <item>
@@ -190,7 +190,7 @@
       <pubDate>Tue, 11 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180911/</guid>
-      <description>正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這</description>
+      <description>正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這兩個出來說呢 ? 因為在即時影音傳輸的世界中，這兩個協議常常拿出</description>
     </item>
     
     <item>
@@ -199,7 +199,7 @@
       <pubDate>Mon, 10 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180910/</guid>
-      <description>正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是</description>
+      <description>正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是當你碰到問題時，或是想要追求更高的效能時，一定卡關。 通訊協議</description>
     </item>
     
     <item>
@@ -208,7 +208,7 @@
       <pubDate>Sun, 09 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180909/</guid>
-      <description>正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這</description>
+      <description>正文開始 之前的八篇文章中，我們已經理解完聲音與影像的採集與編碼原理，並且也簡單的進行 Web 方面的採集實作，接下來咱們就要開始進入網路的部份，而這部份最主要探討的主題為： 別人要如何聽的到我的聲音呢 ? 基本上這</description>
     </item>
     
     <item>
@@ -217,7 +217,7 @@
       <pubDate>Sat, 08 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180908/</guid>
-      <description>正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre</description>
+      <description>正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，</description>
     </item>
     
     <item>
@@ -226,7 +226,7 @@
       <pubDate>Fri, 07 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180907/</guid>
-      <description>正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。 如何在 Web 上進行聲音與影像的採集 ?</description>
+      <description>正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。 如何在 Web 上進行聲音與影像的採集 ? ( 其它平台的別問我 ) 這篇文章中，咱們將會用到一個東東叫做We</description>
     </item>
     
     <item>
@@ -235,7 +235,7 @@
       <pubDate>Thu, 06 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180906/</guid>
-      <description>正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時</description>
+      <description>正文開始 前面的文章咱們已經學習到麥克風或攝影機如何的將聲音與影像進行採集，並且也學會了將這些 raw data 進行編碼為了讓它們儘量小點兒，好讓咱們傳輸時輕鬆些，接下來咱們要學習將這些東東封裝在一個容器中。 聲音與影</description>
     </item>
     
     <item>
@@ -244,7 +244,7 @@
       <pubDate>Wed, 05 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180905/</guid>
-      <description>正文開始 本篇文章中我們將要學習以下的主題: 影像編碼 接下來我們會分以下三個章節來進行學習: 什麼是影像編碼呢 ? 如何進行壓縮呢 ? 常用的編碼 什麼是影</description>
+      <description>正文開始 本篇文章中我們將要學習以下的主題: 影像編碼 接下來我們會分以下三個章節來進行學習: 什麼是影像編碼呢 ? 如何進行壓縮呢 ? 常用的編碼 什麼是影像編碼呢 ? 用來描敘影像的有規則二進位。 這個東西事實上就和音頻</description>
     </item>
     
     <item>
@@ -253,7 +253,7 @@
       <pubDate>Tue, 04 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180904/</guid>
-      <description>圖片來源:馬克 正文開始 影像的產生與採集 在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習</description>
+      <description>圖片來源:馬克 正文開始 影像的產生與採集 在聲音的採集與編碼後，咱們要開始學習影像採集的部份，在開始採集之前咱們要先理解圖片，接下來我們還要學習對電腦來說影像到底是如何組成的。 對電腦來說圖片是啥呢 ? 那對電</description>
     </item>
     
     <item>
@@ -262,7 +262,7 @@
       <pubDate>Mon, 03 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180903/</guid>
-      <description>圖片來源 : 馬克 正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下</description>
+      <description>圖片來源 : 馬克 正文開始 在上一篇文章中，在咱們理解了麥克風幫我們將聲音進行採集，並且透過 PCM 方法轉化成電腦看的懂的東東後，接下來咱們要來學習以下主題 : 聲音的編碼與壓縮 這篇文章中咱們會先說明一下編碼是什麼東</description>
     </item>
     
     <item>
@@ -271,7 +271,7 @@
       <pubDate>Sun, 02 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180902/</guid>
-      <description>圖片來源:馬克 正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明: 要如何採集聲音到電腦中呢 ?</description>
+      <description>圖片來源:馬克 正文開始 首先最一開始的文章，咱們要來討論聲音的採集這個主題，但是我覺得比較準備的說法是下面這種說明: 要如何採集聲音到電腦中呢 ? 要理解這個問題，咱們就需要從最源頭開始說起，什麼是聲音呢 ? 知</description>
     </item>
     
     <item>
@@ -280,7 +280,7 @@
       <pubDate>Sat, 01 Sep 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180901/</guid>
-      <description>前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內</description>
+      <description>前言 現今可以說是即時網路影音平台的戰國時代，17 直播、KKBOX、KKTV 、Youtube、 IG 等這些平台一個一個都推出了不少直播、影音串流內容提供(點播)，接下來這 30 天咱們將要從 0 到 1 的來研究要如何將</description>
     </item>
     
   </channel>

@@ -19,7 +19,7 @@
       <pubDate>Sun, 11 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170611/</guid>
-      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能</description>
+      <description>本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法: 加 減 乘 除 然後實際上執行大概會長這樣 :</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Sat, 10 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170610/</guid>
-      <description>本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登</description>
+      <description>本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Sat, 03 Jun 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170603/</guid>
-      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模</description>
+      <description>本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器</description>
     </item>
     
   </channel>

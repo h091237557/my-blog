@@ -19,7 +19,7 @@
       <pubDate>Wed, 01 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170201/</guid>
-      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開</description>
+      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開發時，可以更快速的進行修正。 配置完成果會如下圖，你可以看到他</description>
     </item>
     
   </channel>

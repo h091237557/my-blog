@@ -19,7 +19,7 @@
       <pubDate>Wed, 26 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150826/</guid>
-      <description>什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如Li</description>
+      <description>什麼是泛型呢 什麼是泛型呢~? 這個東西有看過吧，你有時後會在程式碼裡看到List這種寫法， 這代表List串列中，你可以存放『T』型別，例如List就是裡面存放string，List就是裡面存放int。也</description>
     </item>
     
     <item>
@@ -28,7 +28,7 @@
       <pubDate>Tue, 25 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150825/</guid>
-      <description>什麼是委派 委派是以特定參數清單和傳回型別表示對方法的參考型別。 當您具現化委派時您可以使其執行個體具有相容簽章和傳回型別的所有方法。(MSDN</description>
+      <description>什麼是委派 委派是以特定參數清單和傳回型別表示對方法的參考型別。 當您具現化委派時您可以使其執行個體具有相容簽章和傳回型別的所有方法。(MSDN) 白話文來說，委派方法是一種參考型別(Type)，可以用來將</description>
     </item>
     
     <item>
@@ -37,7 +37,7 @@
       <pubDate>Mon, 24 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150824/</guid>
-      <description>存取修飾詞 存取修飾詞 說明 public 無任何存取限制。 internal 只能在自已類別與專案(組件)中其它類別進行存取。(不包含其它專案)。 protected 只能在自已類別和子類別中存</description>
+      <description>存取修飾詞 存取修飾詞 說明 public 無任何存取限制。 internal 只能在自已類別與專案(組件)中其它類別進行存取。(不包含其它專案)。 protected 只能在自已類別和子類別中存取。 protected internal 只能在目前專案(組件)與子類別存取。 private 在自已類別存取</description>
     </item>
     
     <item>
@@ -46,7 +46,7 @@
       <pubDate>Sun, 23 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150823/</guid>
-      <description>區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告</description>
+      <description>區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東</description>
     </item>
     
     <item>
@@ -55,7 +55,7 @@
       <pubDate>Sat, 22 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150822/</guid>
-      <description>部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加</description>
+      <description>部份類別 ( Partial Class ) 部分類別使用時機大都在處理大型專案時，將類別分散至個別檔案，可讓多位程式設計師進行運作。 程式碼說明建立部分類別的方法，就是加上關鍵子『partial』。 //部分類別(Employee其</description>
     </item>
     
     <item>
@@ -64,7 +64,7 @@
       <pubDate>Fri, 21 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150821/</guid>
-      <description>Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是</description>
+      <description>Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然</description>
     </item>
     
     <item>
@@ -73,7 +73,7 @@
       <pubDate>Thu, 20 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150820/</guid>
-      <description>使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類</description>
+      <description>使用修飾詞abstract，限定類別只能被繼承 在Class Car 前增加abstract，表是該類別只能繼承、不能實作，也被稱為抽象類別。 //父類別 //增加『abstract』修飾詞，讓該類別只能繼承。不能</description>
     </item>
     
     <item>
@@ -82,7 +82,7 @@
       <pubDate>Wed, 19 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150819/</guid>
-      <description>特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構</description>
+      <description>特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將</description>
     </item>
     
     <item>
@@ -91,7 +91,7 @@
       <pubDate>Tue, 18 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150818/</guid>
-      <description>Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的</description>
+      <description>Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)</description>
     </item>
     
     <item>
@@ -100,7 +100,7 @@
       <pubDate>Mon, 17 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150817/</guid>
-      <description>繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但</description>
+      <description>繼承為物件導向的三大特性之一(封裝、多型)，你可以想像老爸與兒子的關係，兒子會繼承老爸所擁有的特徵(屬性)和)財產(方法)(現實上不一定，但請官爺們想簡單點)，兒子可能會有老爸的大鼻子或小嘴巴，並且可</description>
     </item>
     
     <item>
@@ -109,7 +109,7 @@
       <pubDate>Sun, 16 Aug 2015 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150816/</guid>
-      <description>物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也</description>
+      <description>物件導向基本概念為『類別』與『物件』 基本上保哥這篇文章已經寫的很清楚了保哥 (保哥)，但知識的學習還是要經過自已的腦袋與手加眼睛，所以小弟我也用自已的意思來表達這兩個東西的概念。 類別 小弟是把類別想成是『</description>
     </item>
     
   </channel>
