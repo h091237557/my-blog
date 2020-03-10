@@ -35,7 +35,7 @@
     <meta name="description" property="og:description" content="{{ .Site.Params.Description }}...">
     {{ end }}
     <meta property="og:title" content="{{ .Title }}">
-    <meta property="og:image" content="{{ `assets/11474637685936.jpg`}}">
+    <meta property="og:image" content="{{ `assets/11474637685936.jpg` | relURL }}">
 
     <meta name="apple-mobile-web-app-title" content="{{ .Site.Title }}">
     <!-- favicon & touch-icon -->
