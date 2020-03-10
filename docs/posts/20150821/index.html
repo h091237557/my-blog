@@ -26,13 +26,10 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然有人(編譯器)會打斷你的腿的…很恐怖的…
-Interface使用時機
- 有時候，你必須根據物件能夠做什麼來將它們歸類。 想要做到類似C&#43;&#43;中的多重繼承功能。  程式說明 建立UnitityCar的類別，該類別為未來車的概念。它可以飛(Fly)和跑(Run)，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到Interface。
-首先新增兩個Interface分別為ICanFly 與 IDrive。ICanFly定義飛的方法Fly() 與飛的速度FlySpeed。IRun定義跑的方法Run()與跑的速度RunSpeed (註:新增IRun Interface只是要給各位官爺看多個Interface使用)
-//宣告ICanFly介面  interface ICanFly { //介面不可以包含『欄位』。  string flySpeed { get ;} //介面不存放資料，因為不能增加欄位  //string test = &amp;#34;Hello&amp;#34;;  //任何實作該介面的類別必需具備一個接受Fly()的方法。  string fly(); } //宣告IDrive介面  interface IDrive { //driveSpeed屬性，但介面不儲存資料，所以不會有欄位。  string driveSpeed { get ; set; } //任何實作此介面的類別，必需具備接受 drive() 方法。  string drive(); } UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。
-//繼承基底類別Car  //並實作IDrive與IcanFly Interface  //假設UnitityCar在未來，他有兩個種類方法Drive與Fly。  public class UnitityCar :Car , IDrive, ICanFly { //由於在未來飛行速度(FlySpeed)，有限制100，  //因此設立唯讀的FlySpeed，不給人修改。  //一定要有!|Describe what your web page is about">
+    <meta name="description" property="og:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是...">
     
+    <meta property="og:title" content="物件導向系列菜單 6-『 Interface 介面 』">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -47,12 +44,7 @@ Interface使用時機
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 6-『 Interface 介面 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是XXX，就是XXX，裡面如果說要在那交易，就是在那交易，不然有人(編譯器)會打斷你的腿的…很恐怖的…
-Interface使用時機
- 有時候，你必須根據物件能夠做什麼來將它們歸類。 想要做到類似C&#43;&#43;中的多重繼承功能。  程式說明 建立UnitityCar的類別，該類別為未來車的概念。它可以飛(Fly)和跑(Run)，但如果這時讓他繼承飛機類別讓他可以飛，有些飛機的屬性與方法不需用到，但如果在車類別新增飛的動作，但其它種車不會飛啊…。所以這時就需要用到Interface。
-首先新增兩個Interface分別為ICanFly 與 IDrive。ICanFly定義飛的方法Fly() 與飛的速度FlySpeed。IRun定義跑的方法Run()與跑的速度RunSpeed (註:新增IRun Interface只是要給各位官爺看多個Interface使用)
-//宣告ICanFly介面  interface ICanFly { //介面不可以包含『欄位』。  string flySpeed { get ;} //介面不存放資料，因為不能增加欄位  //string test = &#34;Hello&#34;;  //任何實作該介面的類別必需具備一個接受Fly()的方法。  string fly(); } //宣告IDrive介面  interface IDrive { //driveSpeed屬性，但介面不儲存資料，所以不會有欄位。  string driveSpeed { get ; set; } //任何實作此介面的類別，必需具備接受 drive() 方法。  string drive(); } UnitityCar 繼承基底類別 Car，並實作 IDrive 與 IcanFly ，記得任何實作介面的類別都必需符合它的方法與屬性。
-//繼承基底類別Car  //並實作IDrive與IcanFly Interface  //假設UnitityCar在未來，他有兩個種類方法Drive與Fly。  public class UnitityCar :Car , IDrive, ICanFly { //由於在未來飛行速度(FlySpeed)，有限制100，  //因此設立唯讀的FlySpeed，不給人修改。  //一定要有!|Describe what your web page is about">
+    <meta name="twitter:description" content="Interface概念 介面(Interface)你可以將他想成是商品契約，所有要商品的交易，都要經過這個商品契約來決定，例如裡面說交易單位是|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

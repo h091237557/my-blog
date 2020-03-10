@@ -26,13 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明幾個比較特別索引使用的方法。
- 索引陣列欄位 索引子欄位 全文索引  P.S 快要一半囉~~&#43;u^13
-~ 索引陣列欄位 ~ 假設你有下列資料，但發現搜尋fans裡的值很慢，你想要建立索引，要著麼建呢?
-{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;max&amp;#34;,&amp;#34;jack&amp;#34;,&amp;#34;mmark&amp;#34;]} { &amp;#34;name&amp;#34; : &amp;#34;jack&amp;#34; , &amp;#34;fans&amp;#34; : [&amp;#34;steven&amp;#34;,&amp;#34;hello&amp;#34;,&amp;#34;mmark&amp;#34;]} 事實上就和之前幾篇建立索引一樣。
-db.user.ensureIndex({&amp;#34;fans&amp;#34;:1}) 那我們在再假設資料如下。
-{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;a&amp;#34; , &amp;#34;age&amp;#34; :11}, {&amp;#34;name&amp;#34; : &amp;#34;b&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] }, { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;fans&amp;#34; : [ {&amp;#34;name&amp;#34; : &amp;#34;e&amp;#34; , &amp;#34;age&amp;#34; :10}, {&amp;#34;name&amp;#34; : &amp;#34;f&amp;#34; , &amp;#34;age&amp;#34; :20}, {&amp;#34;name&amp;#34; : &amp;#34;c&amp;#34; , &amp;#34;age&amp;#34; :21}, ] } 這時如果我們建立fans裡的name為索引，指令會如下。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現...">
     
+    <meta property="og:title" content="30-13之MongoDB索引(3)---比較特別的索引使用">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -47,12 +44,7 @@ db.user.ensureIndex({&amp;#34;fans&amp;#34;:1}) 那我們在再假設資料如�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-13之MongoDB索引(3)---比較特別的索引使用 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明幾個比較特別索引使用的方法。
- 索引陣列欄位 索引子欄位 全文索引  P.S 快要一半囉~~&#43;u^13
-~ 索引陣列欄位 ~ 假設你有下列資料，但發現搜尋fans裡的值很慢，你想要建立索引，要著麼建呢?
-{ &#34;name&#34; : &#34;mark&#34; , &#34;fans&#34; : [&#34;steven&#34;,&#34;jack&#34;,&#34;mmark&#34;]} { &#34;name&#34; : &#34;steven&#34; , &#34;fans&#34; : [&#34;max&#34;,&#34;jack&#34;,&#34;mmark&#34;]} { &#34;name&#34; : &#34;jack&#34; , &#34;fans&#34; : [&#34;steven&#34;,&#34;hello&#34;,&#34;mmark&#34;]} 事實上就和之前幾篇建立索引一樣。
-db.user.ensureIndex({&#34;fans&#34;:1}) 那我們在再假設資料如下。
-{ &#34;name&#34; : &#34;mark&#34; , &#34;fans&#34; : [ {&#34;name&#34; : &#34;a&#34; , &#34;age&#34; :11}, {&#34;name&#34; : &#34;b&#34; , &#34;age&#34; :10}, {&#34;name&#34; : &#34;c&#34; , &#34;age&#34; :21}, ] }, { &#34;name&#34; : &#34;steven&#34; , &#34;fans&#34; : [ {&#34;name&#34; : &#34;e&#34; , &#34;age&#34; :10}, {&#34;name&#34; : &#34;f&#34; , &#34;age&#34; :20}, {&#34;name&#34; : &#34;c&#34; , &#34;age&#34; :21}, ] } 這時如果我們建立fans裡的name為索引，指令會如下。|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明幾個比較特別索引使用的方法。 索引陣列欄位 索引子欄位 全文索引 P.S 快要一半囉~~&#43;u^13 ~ 索引陣列欄位 ~ 假設你有下列資料，但發現|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

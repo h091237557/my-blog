@@ -26,17 +26,10 @@
     <meta content="nodejs, passport" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下的重點 :
-  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
- passort.js 活著的目的就是為了驗證 request
- 要使用 passport 來進行驗證，需要設定三個東西 :
- 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
- 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
- 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
-而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
-而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
-var users = { zack: { username: &amp;#39;zack&amp;#39;, password: &amp;#39;1234&amp;#39;, id: 1, }, node: { username: &amp;#39;node&amp;#39;, password: &amp;#39;5678&amp;#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &amp;#39;username&amp;#39;, passwordField: &amp;#39;password&amp;#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &amp;#39;Invalid user&amp;#39; }); }; if (user.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗...">
     
+    <meta property="og:title" content="Passport.js 之 Hello 你好嗎 ~ ">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ var users = { zack: { username: &amp;#39;zack&amp;#39;, password: &amp;#39;1234&
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Passport.js 之 Hello 你好嗎 ~  | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們想要知道以下的重點 :
-  passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ?   passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用 google 登入或使用 fb 登入，它的架構就是所謂的策略模式，接下來我們來實際上看看他是如何使用的。
- passort.js 活著的目的就是為了驗證 request
- 要使用 passport 來進行驗證，需要設定三個東西 :
- 驗證策略 (Authentication strategies) 應用程式的中間件 (Application middleware) Sessions (可選擇)  驗證策略的建立 上面我們有提到 passport 本身就是使用策略模式的實作，而它的定義就是 :
- 定義一系列的演算法，把它們一個個封裝起來，並且可以相互替換。
- 所以在這邊，我們需要定義驗證的策略(演算法)，例如使用 facebook 登入驗證、google 登入驗證或自訂的驗證策略。
-而我們這裡直接看官網的自訂驗證策略localStrategy，下面的程式碼中，我們會定義一個localStrategy，它準備用來驗證我們的request。
-而LocalStrategy的兩個參數為options和verify，我們option需要先定義要用來驗證的欄位username、passowrd，然後verify就是驗證規則，就是下面那個function裡面的東東。
-var users = { zack: { username: &#39;zack&#39;, password: &#39;1234&#39;, id: 1, }, node: { username: &#39;node&#39;, password: &#39;5678&#39;, id: 2, }, } // LacalStrategy(options,verify) var localStrategy = new LocalStrategy({ usernameField: &#39;username&#39;, passwordField: &#39;password&#39;, }, function (username, password, done) { user = users[username]; if (user == null) { return done(null, false, { message: &#39;Invalid user&#39; }); }; if (user.|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,19 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別。
- MongoDB的刪除方法 比較一下速度  ~ MongoDB的刪除方法 ~ remove remove方法是mongodb裡最基本的刪除document的方法，但這邊要注意就算你刪除了 document它的index與預分配空間都不會刪除。
-使用方法與參數如下
- justOne預設false，代表query到幾個就會刪除幾個，true則只會刪第一個。 witeConecern為拋出異常的級別。 collation是3.4版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持collation前一徑依字節來對比。  db.collection.remove( &amp;lt;query&amp;gt;, { justOne: &amp;lt;boolean&amp;gt;, writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下，我們來新增三筆資料，然後刪除掉steven該筆資料。
-db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.remove({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) 刪除所有資料 remove可以用來刪除collection的所有資料，但還有另一種方法也是刪除collection的所有資料，那就是drop，但它同時會將index給全部刪除。
-兩種的使用方法如下。
-db.user.remove({}) db.user.drop() deleteMany與deleteOne deleteMany與deleteOne也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和remove不同點大概只差在回傳值上，至於速度上等等來trytry看。
-使用兩種方法的參數如下，與remove也大至差不多。
-db.collection.deleteMany( &amp;lt;filter&amp;gt;, { writeConcern: &amp;lt;document&amp;gt;, collation: &amp;lt;document&amp;gt; } ) 使用範例如下。
-db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;,&amp;#34;age&amp;#34;:23}); db.user.deleteMany({&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;}) db.user.deleteOne({&amp;#34;name&amp;#34;:&amp;#34;jj&amp;#34;}) bulk delete bulk操作故明思意就是要來衝一下大筆資料刪除的效能方法。
-使用方法如下。
-//先新增二筆資料 var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &amp;#34;mark&amp;#34;} ); bulk.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別...">
     
+    <meta property="og:title" content="30-7之MongoDB新手村CRUD---刪除">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@ db.user.insert({&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;,&amp;#34;age&amp;#
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-7之MongoDB新手村CRUD---刪除 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別。
- MongoDB的刪除方法 比較一下速度  ~ MongoDB的刪除方法 ~ remove remove方法是mongodb裡最基本的刪除document的方法，但這邊要注意就算你刪除了 document它的index與預分配空間都不會刪除。
-使用方法與參數如下
- justOne預設false，代表query到幾個就會刪除幾個，true則只會刪第一個。 witeConecern為拋出異常的級別。 collation是3.4版開始支持的功能，可依照語言定義來針對文字的內容進行解讀，再還沒支持collation前一徑依字節來對比。  db.collection.remove( &lt;query&gt;, { justOne: &lt;boolean&gt;, writeConcern: &lt;document&gt;, collation: &lt;document&gt; } ) 使用範例如下，我們來新增三筆資料，然後刪除掉steven該筆資料。
-db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); db.user.remove({&#34;name&#34;:&#34;steven&#34;}) 刪除所有資料 remove可以用來刪除collection的所有資料，但還有另一種方法也是刪除collection的所有資料，那就是drop，但它同時會將index給全部刪除。
-兩種的使用方法如下。
-db.user.remove({}) db.user.drop() deleteMany與deleteOne deleteMany與deleteOne也是刪除的方法一種，就一個是刪除多筆和一個是單筆，和remove不同點大概只差在回傳值上，至於速度上等等來trytry看。
-使用兩種方法的參數如下，與remove也大至差不多。
-db.collection.deleteMany( &lt;filter&gt;, { writeConcern: &lt;document&gt;, collation: &lt;document&gt; } ) 使用範例如下。
-db.user.insert({&#34;name&#34;:&#34;mark&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;steven&#34;,&#34;age&#34;:23}); db.user.insert({&#34;name&#34;:&#34;jj&#34;,&#34;age&#34;:23}); db.user.deleteMany({&#34;name&#34;:&#34;steven&#34;}) db.user.deleteOne({&#34;name&#34;:&#34;jj&#34;}) bulk delete bulk操作故明思意就是要來衝一下大筆資料刪除的效能方法。
-使用方法如下。
-//先新增二筆資料 var bulk = db.collection.initializeUnorderedBulkOp(); bulk.insert( { name: &#34;mark&#34;} ); bulk.|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要來說明MongoDB的刪除方法，rmoeve、deleteOne、deleteMany、bulk，並且簡單的比較一下速有有何差別|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

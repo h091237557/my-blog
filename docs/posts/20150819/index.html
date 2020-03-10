@@ -26,10 +26,10 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。
-父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將Car類別，新增Sealed修飾詞，主要目的為不然其它類別繼承。
-/// &amp;lt;summary&amp;gt;  /// 父類別  /// &amp;lt;/summary&amp;gt;  public sealed class Car //增加Sealed  { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &amp;lt;summary&amp;gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &amp;lt;/summary&amp;gt;  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法  public string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; ; } } 子類別BMWCar 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構...">
     
+    <meta property="og:title" content="物件導向系列菜單 4 -『 物件導向特性-繼承(Inheritance) 3 - Sealed 』">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -44,9 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 4 -『 物件導向特性-繼承(Inheritance) 3 - Sealed 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。
-父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構子Car() ，以及DriveCar()方法，在這範例中我們將Car類別，新增Sealed修飾詞，主要目的為不然其它類別繼承。
-/// &lt;summary&gt;  /// 父類別  /// &lt;/summary&gt;  public sealed class Car //增加Sealed  { //車子的速度  public string Speed; //車子的顏色  public string Color; /// &lt;summary&gt;  /// 定義建構子，預設Speed為50，Color為Blue  /// &lt;/summary&gt;  public Car() { Speed = &#34;50&#34;; Color = &#34;Blue&#34;; } //定義車子移動的方法  public string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; ; } } 子類別BMWCar 繼承父類別Car，並有自行定義建構子BMWCar() ，以及BMWPower屬性。由於父類別Car有加Sealed因此無法被繼承。依下列程式碼，會找不到父類別的Speed與Color，而出現錯誤訊息。|Describe what your web page is about">
+    <meta name="twitter:description" content="特點 1 - 使用 Sealed 關鍵字使類別不能被繼承 下列為簡單的Sealed範例。 父類別Class Car ，有兩個屬性分別為Speed與Color，並自行訂定建構|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

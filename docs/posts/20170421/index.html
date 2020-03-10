@@ -26,12 +26,10 @@
     <meta content="algorithm, binary search" name="keywords">
     
     
-    <meta name="description" property="og:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
- 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
-我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
-接下來我們簡單的使用js來實現二分搜尋法。
-效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如...">
     
+    <meta property="og:title" content="搜尋之二元搜尋法 Binary search">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -46,11 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="搜尋之二元搜尋法 Binary search | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如果在已排序的資料中，要來進行搜尋，就不太有效率了，本篇文章說明的二元搜尋法就是用來搜尋已排序的資料集。
- 二元搜尋法原理 程式碼實作(資料結構:陣列) 程式碼實作(二元搜尋樹實作)  二元搜尋法原理 它的基本搜尋概念，是將資料切兩半，然後比較搜尋目標在這兩半的左邊還右邊，如果在左邊，則將左邊的資料再切兩半，以此類推，至到尋找到目標。
-我們簡單的用下圖來說明，假設我們有個陣列，資料 1 至 9，並且已經排序，然後我們要搜尋2，首先我們會先比較目標值( 2 )與中位數( 5 )，由於 5 大於 2 ，所以我們接下來只將搜尋左邊 1 至 4 的資料，然後我們再將目標值( 2 )與中位數( 3 )進行比較，由於 3 大於 2 ，因此再來也只搜尋左邊的 1 至 2 的資料，將目標值( 2 )與中位數( 2 )比較，相等，尋找到目標值。
-接下來我們簡單的使用js來實現二分搜尋法。
-效能 最佳時間複雜度 : O (1) 平均時間複雜度 : O (log n) 最差時間複雜度 : O (log n) 空間複雜度 : O (1) 程式碼實作(資料結構:陣列) function binarySearch(datas, low, heigh, target) { let mid = Math.|Describe what your web page is about">
+    <meta name="twitter:description" content="基本上如果我們要在陣列中搜尋一個元素，最簡單的方法就是跑個迴圈一個一個跑，它有個專有名詞叫線性搜尋，這在未排序的資料中，效果還算可以，但是如|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

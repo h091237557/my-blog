@@ -19,15 +19,7 @@
       <pubDate>Wed, 15 May 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190515/</guid>
-      <description>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。
-本篇文章分為以下幾個章節 :
- Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項  swoole 的架構 swoole 官網寫到 :
- event-driven asynchronous &amp;amp; coroutine-based concurrency networking communication engine with high performance written in C and C++ for PHP.
- swoole 它是一個用 c++ 所寫的 php extension，一個非常高效能的通訊引擎，而它能達到高效能的基礎在於以下幾個重點 :
- event-drivent coroutine  一句話來說他可以幹麻。
- 它可以讓我們建立一個高效能的網路服務
- 下面就是它實現非阻塞 I/O 的架構圖。
-當它建立一個 http server 以後，你會看到產生出下圖這些 process 與 thread，基本上可以分為幾個部份 :</description>
+      <description>本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項</description>
     </item>
     
     <item>
@@ -36,13 +28,7 @@
       <pubDate>Tue, 14 May 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190514/</guid>
-      <description>上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reactPHP。
-本篇文章分為以下三個章節 :
- reactPHP 基本概念 reactPHP 非阻塞 I/O 實現 reactPHP 使用時注意事項  reactPHP 基本概念 reactPHP 官網寫這一段話 :
- Event-driven, non-blocking I/O with PHP
- 它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :
- 可以建立一個非阻塞 I/O 的網路服務。 可以建立一個定時排程服務。  http server 的範例 下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。
-$loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) { return new React\Http\Response( 200, array(&amp;#39;Content-Type&amp;#39; =&amp;gt; &amp;#39;text/plain&amp;#39;), &amp;#34;Hello World!</description>
+      <description>上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac</description>
     </item>
     
     <item>
@@ -51,13 +37,7 @@ $loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(funct
       <pubDate>Mon, 13 May 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190513/</guid>
-      <description>前篇: PHP 的 Web 運行原理 ( 1 )
-上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而我們這篇文章就是要來理解是碰到什麼問題，然後又是如何解決呢 ?
- Reactor 模式想解決的問題 Reactor 模式原理 Reactor 的使用注意事項  Reactor 模式想解決的問題 使用 moduel 與 fast_cgi 模式 的 web server 模式基本上會有兩個問題存在。
-1. 高併發請求，會爆 ! 如下面這張圖一樣，它每一個 http 請求都需要使用一個 process 或是 thread 來進行處理，而每一台機器的 process 與 thread 的數量都有限制，且操作系統進行 process 或 thread 上文文切換時非常耗的資源。
-2. 服務如果是大量 I/O 操作會很浪費資源 ! ex. 讀 db 或 redis 啥的
-主要耗資源的地方在於，每個 process 開啟後，大部份的時間者是在等待 I/O 的處理，而 CPU 都是閒在那。
-上面兩個是看到的現象，而真正的問題點在於 :  為什麼每個請求都需要開啟一個 process 或 thread 來處理呢 ?</description>
+      <description>前篇: PHP 的 Web 運行原理 ( 1 ) 上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而</description>
     </item>
     
     <item>
@@ -66,15 +46,7 @@ $loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(funct
       <pubDate>Thu, 31 Jan 2019 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190131/</guid>
-      <description>這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 :
- 一個 http 請求進來後，php 到底是如何運行呢 ?
- 要理解這件事情，有個最基本的觀念要先理解，那就是下面這段指令，它到底是如何運行的。
-php index.php 然後接下來才能在理解 Web 是如何用 php 來處理。
-這篇文章將分為以下幾個章節 :
- 執行 php index.php 它是如何運行的呢 ? 三種用 PHP 來處理 HTTP 的模式 Web PHP 應用組合與問題  執行 php index.php 它是如何運行的呢 ? 假設我們在 Terminal 執行了如下的指令。
- php index.php
- 那實際上它的運行流程會如下圖，而這張圖也代表 PHP 的基本運行架構。
- SAPI ( Server Application Programming Interface ) : 它就是一個應用環境與PHP 核心的一個 Interface，會有這層主要的原因在於，不同的應用環境，例如命令行環境(就是在 Terminal 執行 php) 或 Web 環境都需要不同的 PHP 環境配置，如果沒有這一層就代表 PHP 本身要針對不同的環境來考慮設計兼容，這也是為什麼會有 SAPI 的目的。 main : 它是 php 所有操作的整合者。 Zend 引擎 : 它就是將咱們編寫的 PHP 程式碼解釋成可以執行的 opcode 碼，其中 PHP7 與 PHP5 有速度上的飛升原因就在於此，PHP7 大幅度的優化了 Zend 引擎。 Extension : 它是 PHP 內核所提供的一套擴充 PHP 功能的方式，大部份都是使用 C/C++ 所撰寫，基本上可以分為 PHP extension 與 Zend extension。  三種用 PHP 來處理 HTTP 的模式 那如果改成 Web 情況下，上面那張圖會變成什麼樣子呢 ?</description>
+      <description>這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情</description>
     </item>
     
     <item>
@@ -83,15 +55,7 @@ php index.php 然後接下來才能在理解 Web 是如何用 php 來處理。
       <pubDate>Fri, 28 Dec 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20181228/</guid>
-      <description>什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :
-&amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 :
-&amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。
-Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
- 定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。
- 畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。
-程式碼範例 假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。
-&amp;lt;?php interface IMessage { public function push(); } class LineSDK implements IMessage { public function push() { var_dump(&amp;#39;I push a message to line&amp;#39;); } } 然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。
-&amp;lt;?php class MessageFacade { private $sdk; public function __construct(IMessage $sdk) { $this-&amp;gt;sdk = $sdk; } public function push() { $this-&amp;gt;sdk-&amp;gt;push(); } } 最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。</description>
+      <description>什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 : &amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，</description>
     </item>
     
     <item>
@@ -100,11 +64,7 @@ Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
       <pubDate>Fri, 14 Dec 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20181214/</guid>
-      <description>什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。
-&amp;lt;?php $containter = require(&amp;#39;Container&amp;#39;); // 建立抽象與實體類別的對應 $containter-&amp;gt;bind(ILogService, AWSLogServcie::class); $log = $container-&amp;gt;make(Log::class); $log-&amp;gt;send(&amp;#39;log....&amp;#39;); 其中上面的bind就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。
-那 Service Provider 是什麼 ?  它就個註冊與管理 Container 內服務的地方。
- 下面的程式碼為 Laravel 專案的 Service Provider，其中有兩個重要的方法boot與register。
- register : 它就是用來寫 bind 的地方。 boot : 它就是當 register 結束以後會執行的方法。  &amp;lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services.</description>
+      <description>什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類</description>
     </item>
     
     <item>
@@ -113,11 +73,7 @@ Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
       <pubDate>Tue, 30 Oct 2018 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20181030/</guid>
-      <description>Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。
-容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 :
- 裡面裝了一堆可以用的服務載體，就叫 Container。
- 像我們每當要執行 Laravel 時，都會先執行下面這段程式碼，其中 $app 就是我們的 Container，然後接下來會使用 Container 來實體化一些物件，例如 $kernel。
-&amp;lt;?php public/index.php $app = require_once __DIR__.&amp;#39;/../bootstrap/app.php&amp;#39;; /* |-------------------------------------------------------------------------- | Run The Application |-------------------------------------------------------------------------- | | Once we have the application, we can handle the incoming request | through the kernel, and send the associated response back to | the client&amp;#39;s browser allowing them to enjoy the creative | and wonderful application we have prepared for them.</description>
+      <description>Container 是什麼 ? Laravel Container 是什麼呢 ? 我們先來理解 Container 容器 是什麼。 容器抽象一點概念是指用來裝東西的載體，向菜籃也算個容器，而在 Laravel 中所代表的意思就是指 : 裡面裝</description>
     </item>
     
   </channel>

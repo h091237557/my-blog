@@ -26,19 +26,10 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。
-本篇分為以下幾個章節 :
- 分散式事務難題 分散式事務的處理方案 : 2 PC 二階段提交（ Two-phase Commit ） MySQL XA 事務實現與使用 MySQL XA 問題 - 性能  分散式事務難題 首先咱們都知道資料庫有所謂的『 事務 』機制，比較準備的說是事務這個『 單位 』，它當初建立出來是為了解決所謂的 :
- 確保『 同一組資料庫業務操作 』可以有正確的結果
- 它們不會因為某項業務的其中一項操作錯誤了，導致整個資料庫的資料不正確 ( A )。
-它們不會因為系統固障而導致原本成功修改的資料消失 ( D )。
-它們不會因為並行操作，導致資料產生產生無法預期的結果 ( I )。
-總而言之，事務在固障與並行的情況下，不會產生所謂的『 資料不一致性 』 ( C )
-如果事務可以確保上述事情，那就可以說 :
- 這個事務有 ACID 的特性
- 然後咱們在以下三篇文章中，咱們有談到，在 mysql 單機事務的情況下，它們用了以下的機制來確保這些機制 :
- 原子性 A : undo log 持久性 D : redo log 隔離性 I : 鎖 &#43; mvcc  30-15 之資料庫層的難題 - 單機『 故障 』一致性難題|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。 本篇分為以下幾個章節 : 分散式...">
     
+    <meta property="og:title" content="30-28 之資料庫層擴展難題 -  MySQL 分散式事務處理">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-28 之資料庫層擴展難題 -  MySQL 分散式事務處理 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。
-本篇分為以下幾個章節 :
- 分散式事務難題 分散式事務的處理方案 : 2 PC 二階段提交（ Two-phase Commit ） MySQL XA 事務實現與使用 MySQL XA 問題 - 性能  分散式事務難題 首先咱們都知道資料庫有所謂的『 事務 』機制，比較準備的說是事務這個『 單位 』，它當初建立出來是為了解決所謂的 :
- 確保『 同一組資料庫業務操作 』可以有正確的結果
- 它們不會因為某項業務的其中一項操作錯誤了，導致整個資料庫的資料不正確 ( A )。
-它們不會因為系統固障而導致原本成功修改的資料消失 ( D )。
-它們不會因為並行操作，導致資料產生產生無法預期的結果 ( I )。
-總而言之，事務在固障與並行的情況下，不會產生所謂的『 資料不一致性 』 ( C )
-如果事務可以確保上述事情，那就可以說 :
- 這個事務有 ACID 的特性
- 然後咱們在以下三篇文章中，咱們有談到，在 mysql 單機事務的情況下，它們用了以下的機制來確保這些機制 :
- 原子性 A : undo log 持久性 D : redo log 隔離性 I : 鎖 &#43; mvcc  30-15 之資料庫層的難題 - 單機『 故障 』一致性難題|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章中，咱們要來說說分散式系統中，最麻煩的部份『 分散式事務 』這一塊，接下來咱們來認真的理一下這個鬼。 本篇分為以下幾個章節 : 分散式|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

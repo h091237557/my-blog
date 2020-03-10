@@ -26,11 +26,10 @@
     <meta content="測試, c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="Virtual 修飾詞  子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?
- virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。
-//父類別  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &amp;#34;50&amp;#34;; Color = &amp;#34;Blue&amp;#34;; } //定義車子移動的方法。  //在該方法加上Virtual，讓子類別可以覆寫該方法。  public virtual string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; ; } } Override 修飾詞 Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。
-// 子類別繼承Car  public class BMWCar :Car { //BMWCar類別建構子  public BMWCar() { Speed = &amp;#34;BMW500&amp;#34;; Color = &amp;#34;BWM_Red&amp;#34;; } //BMW的屬性引擎  public string BMWPower; //定義車子移動的方法  //使用存取修飾詞Overried，來進行覆寫  public override string DriveCar() { return &amp;#34;正在開『&amp;#34; &#43; Color &#43; &amp;#34;』的車&amp;#34; &#43; &amp;#34;時速『&amp;#34; &#43; Speed &#43; &amp;#34;』在移動&amp;#34; &#43; &amp;#34;『Override』&amp;#34; ; } } 執行結果 正在開『BMW_Red』的車時速『BWM500』在移動『Override』 Override 修飾詞特性 注意 1 你不能覆寫非虛擬或靜態方法。被覆寫的父類別方法必須是Virtual、abstract、Override。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的...">
     
+    <meta property="og:title" content="物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -45,10 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 3 -『 物件導向特性-繼承 ( Inheritance ) 2- Virtual 與 Override 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="Virtual 修飾詞  子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ?
- virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的時機是在未來預期該方法可能會被子類別覆寫(override)，則此方法必須宣告Virtual。
-//父類別  public class Car { //車子的速度  public string Speed; //車子的顏色  public string Color; // 定義建構子，預設Speed為50，Color為Blue  public Car() { Speed = &#34;50&#34;; Color = &#34;Blue&#34;; } //定義車子移動的方法。  //在該方法加上Virtual，讓子類別可以覆寫該方法。  public virtual string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; ; } } Override 修飾詞 Overrride修飾詞為需要用來修改或擴充父類別的方法、屬性，則需要給予該方法或屬性進行宣告。
-// 子類別繼承Car  public class BMWCar :Car { //BMWCar類別建構子  public BMWCar() { Speed = &#34;BMW500&#34;; Color = &#34;BWM_Red&#34;; } //BMW的屬性引擎  public string BMWPower; //定義車子移動的方法  //使用存取修飾詞Overried，來進行覆寫  public override string DriveCar() { return &#34;正在開『&#34; &#43; Color &#43; &#34;』的車&#34; &#43; &#34;時速『&#34; &#43; Speed &#43; &#34;』在移動&#34; &#43; &#34;『Override』&#34; ; } } 執行結果 正在開『BMW_Red』的車時速『BWM500』在移動『Override』 Override 修飾詞特性 注意 1 你不能覆寫非虛擬或靜態方法。被覆寫的父類別方法必須是Virtual、abstract、Override。|Describe what your web page is about">
+    <meta name="twitter:description" content="Virtual 修飾詞 子類別的方法名稱和父類別的方法名稱一樣，著麼辦呢 ? virtual 關鍵字的用途是修改方法、屬性或事件宣告，以及允許在衍生類別中給予覆寫。通常使用的|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

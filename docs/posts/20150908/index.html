@@ -26,15 +26,10 @@
     <meta content="js, javascript, promise" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
-Promise/A&#43; 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
-規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
- pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
-promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
-hpromises-spec
-Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
-versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&amp;#39;/getData&amp;#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步...">
     
+    <meta property="og:title" content="Javascript非同步編程的方法 - Promise">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@ versin 1.4 $.get(&amp;#39;/getData&amp;#39;, { success: onSuccess, failure: onFa
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Javascript非同步編程的方法 - Promise | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，在未來他會有多種狀況，可能是成功又或是失敗，當未來發生成功時他就執行成功的 callBack fucntion，但它失敗`時就執行失敗的callback function。
-Promise/A&#43; 規範 上述說的promise只能說是一種概念，然後有很多人會針對它進行實作，但是因為都沒個規範，所以每個人做出來的promise都不太一樣，因此Kris Zyp提出了 CommonJs 的 promises/A 規範，符合條件如下。
-規範 1 : Promise狀態 一個Promise必須要處於以下三種狀態。pending, fulfilled, or rejected
- pending : 當為Pending 狀態時，可以轉換至f fulfilled 或 rejected。 fulfilled : 通常是代表成功。 rejected : 通常代表失敗。  規範 2 : Promise必須要 Then 一個Promise必須提供Then方法，並且接受兩個參數，並且第一個參數onFulfilled為fulfilled執行後調用，而onRejected為rejected後調用。
-promise.then(onFulfilled, onRejected) 其它詳細的規範其參考下面的連結。。
-hpromises-spec
-Jquery 的 Promise 實現 Jquery在1.5之後，我們常用的$.ajax、$.get、$.getJson等這些ajax函數全部都會返回promise，下面給個例子來看看差別。
-versin 1.4 $.get(&#39;/getData&#39;, { success: onSuccess, failure: onFailure }); version 1.5 var promise = $.get(&#39;/getData&#39;); promise.done(onSuccess); promise.fail(onFailure); 這種改變的好處在於封裝，你可以將複雜非同步處理輕鬆的模式化，例如希望任務１與任務２完成時在執行任務３，或是任務１執行完在執行任務２這種複雜的非同步任務都可以用promise來解決。|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,18 +26,10 @@
     <meta content="redis, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :
- 如果緩存失效的情況，與可能會發生什麼事情呢 ?
- 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。
-圖 1 : 緩存失效圖
-而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :
- 緩存失效情況 - 緩存穿透 緩存失效情況 - 緩存雪崩 緩存失效情況 - 緩存服務炸了  緩存失效情況 - 緩存穿透 這個的主要情境如下 :
- 查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。
- 圖 2 : 緩存穿透
-通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。
-解法 1 : 硬處理 這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。
-這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基...">
     
+    <meta property="og:title" content="30-20 之資料緩存失效問題">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-20 之資料緩存失效問題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 :
- 如果緩存失效的情況，與可能會發生什麼事情呢 ?
- 基本上緩存失效後的結果，會很慘，尤其是你當初建立緩存時，就是已經為了讀取接近性能臨異值而建立的情況，當緩存一失效，你的資料庫也會瞬間爆掉，然後用戶就不愈悅，你就完了。
-圖 1 : 緩存失效圖
-而在實務上，緩存失效大至可以分為以下幾類，也就是咱們接下來每個章節 :
- 緩存失效情況 - 緩存穿透 緩存失效情況 - 緩存雪崩 緩存失效情況 - 緩存服務炸了  緩存失效情況 - 緩存穿透 這個的主要情境如下 :
- 查詢一個不存在的資料，由於沒命中緩存，因此會一直往 DB 穿，如下圖 2 所示。
- 圖 2 : 緩存穿透
-通常這種情況有可能是前端出了錯，導致一直送不存在的資料，又或是人為刻意，就是要有人想打爆你整個系統。
-解法 1 : 硬處理 這種方法就是，當用戶使用 a key 去 redis 找發現沒有 cache，然後再去 db 抓，也發現沒有，然後就將『 這個 a key 是空值 』也寫入到緩存中 ( 可以給它設個到期時間 )，如下程式碼範例。
-這樣後面有人在使用這個 key 去打，會在 cache 這被防下來，然後將算後來真的有寫入 a key 時，咱們緩存寫入流程也是會將它處理 ( 詳見前篇文章 )。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中咱們已經學習了一些緩存基本的策略，那接下來我們要來理解一下一個重要的主題 : 如果緩存失效的情況，與可能會發生什麼事情呢 ? 基|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

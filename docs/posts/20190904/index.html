@@ -26,17 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ?
-假設你所在的機器是多核心 CPU，那這時的確是有解，那就是本篇文章的主題 :
- 開啟 Process 或 Thread 來幫忙進行運算。
- 本篇文章就分為以下三個章節:
- CPU 運算與 process、thread 的關係。 CPU 密集任務處理。 多線程並行處理的淺在問題。  CPU 運算與 Process、Thread 的關係 在實際上理解如何開啟 process 或 thread 前，咱們先從最基本的東西說起。
-何謂 process ? 何謂 thread 呢 ?
-進程、行程 ( Process ) 首先咱們先來看看 process，基本上在你的電腦中每一個應用 ( ex. line、chrome ) 都是至少是一個 process，然後比較重要的一點在於 :
- 對作業系統來說，它是資源分配的最小單位，並且同時是個『操作單位』
- 在 linux 系統上，一個 process 的建立過程如下圖 1 所示 :
- 母進程執行 fork() 建立一個子進程。 同時間建立子進程的記憶體空間。  圖 1 : 作業系統建立進程的概念圖|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ? 假設你所在的機器是多核心...">
     
+    <meta property="og:title" content="30-04 之應用層的運算加速 - 並行運算">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-04 之應用層的運算加速 - 並行運算 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ?
-假設你所在的機器是多核心 CPU，那這時的確是有解，那就是本篇文章的主題 :
- 開啟 Process 或 Thread 來幫忙進行運算。
- 本篇文章就分為以下三個章節:
- CPU 運算與 process、thread 的關係。 CPU 密集任務處理。 多線程並行處理的淺在問題。  CPU 運算與 Process、Thread 的關係 在實際上理解如何開啟 process 或 thread 前，咱們先從最基本的東西說起。
-何謂 process ? 何謂 thread 呢 ?
-進程、行程 ( Process ) 首先咱們先來看看 process，基本上在你的電腦中每一個應用 ( ex. line、chrome ) 都是至少是一個 process，然後比較重要的一點在於 :
- 對作業系統來說，它是資源分配的最小單位，並且同時是個『操作單位』
- 在 linux 系統上，一個 process 的建立過程如下圖 1 所示 :
- 母進程執行 fork() 建立一個子進程。 同時間建立子進程的記憶體空間。  圖 1 : 作業系統建立進程的概念圖|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 假設你已經將你的演算法進行了優化，但是這時發現，這一項演算法工作還是需要花到非常多的時間處理，那要怎麼辦呢 ? 假設你所在的機器是多核心|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

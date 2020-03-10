@@ -26,17 +26,10 @@
     <meta content="nodejs, rabbitmq" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。
-所以後來就有人提出使用對等式架構來解決這個問題，這個架構就是會將broker給移除掉，每一個用戶端同時也是伺服器端，像比特幣這種應用就是用該結構來處理。
-但相對的，它也有缺點，那就是要建置起來較為複雜，用在大規模的網路上，管理較難、安全性較低。
-使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作 zeromq它是一套網路通訊函式庫，記得他不是一個伺服器，而是一個lib，它在socket api之上做了一層封裝，將網路、通訊、進程等抽象化為統一的 API 接口，它和 socket 的區別是 :
- socket : 點對對的關係(一對一) zeromq : 多點對多點的關係(多對多)  那 zeromq 有什麼特點呢 ? 它有以下四個特點 :
- 去中心化 (無 broker) 強調訊息收發模式 以統一的接口支持多種底層通信方式 異步 速度飛快 (請參考這篇比較)  不過有一點要注意一下，zeromq 它不是一個獨立的伺服器進程 (rabbitmq 是)，所以嚴格來說它不是 mq ，它沒有 mq 這種在中間解耦合的能力，事實上他的名命也說了 zero mq 。
-zeromq 主要提供三種類型的通訊模式分別如下 :
-REQ (request) / REP (reply) 模式 這模式就是傳統的一個 reuest 配一個 response 的模式，非常的簡單。
-下面這段程式碼是發送請求(request)的程式碼。
-var zmq = require(&amp;#39;zeromq&amp;#39;); var requester = zmq.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si...">
     
+    <meta property="og:title" content="Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ var zmq = require(&amp;#39;zeromq&amp;#39;); var requester = zmq.|Describe what 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之可擴展性 --- 訊息佇列 Message queue (ZeroMQ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(single point of failure)。
-所以後來就有人提出使用對等式架構來解決這個問題，這個架構就是會將broker給移除掉，每一個用戶端同時也是伺服器端，像比特幣這種應用就是用該結構來處理。
-但相對的，它也有缺點，那就是要建置起來較為複雜，用在大規模的網路上，管理較難、安全性較低。
-使用 ZEROMQ 進行對等式架構 (peer-to-peer)實作 zeromq它是一套網路通訊函式庫，記得他不是一個伺服器，而是一個lib，它在socket api之上做了一層封裝，將網路、通訊、進程等抽象化為統一的 API 接口，它和 socket 的區別是 :
- socket : 點對對的關係(一對一) zeromq : 多點對多點的關係(多對多)  那 zeromq 有什麼特點呢 ? 它有以下四個特點 :
- 去中心化 (無 broker) 強調訊息收發模式 以統一的接口支持多種底層通信方式 異步 速度飛快 (請參考這篇比較)  不過有一點要注意一下，zeromq 它不是一個獨立的伺服器進程 (rabbitmq 是)，所以嚴格來說它不是 mq ，它沒有 mq 這種在中間解耦合的能力，事實上他的名命也說了 zero mq 。
-zeromq 主要提供三種類型的通訊模式分別如下 :
-REQ (request) / REP (reply) 模式 這模式就是傳統的一個 reuest 配一個 response 的模式，非常的簡單。
-下面這段程式碼是發送請求(request)的程式碼。
-var zmq = require(&#39;zeromq&#39;); var requester = zmq.|Describe what your web page is about">
+    <meta name="twitter:description" content="上一章節中我們有提到rabbitmq，它是用來建立中介式架構的broker，但這種架構有什麼問題呢 ? 那就是分散式架構的頭號公敵單點失效(si|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,14 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本文將會說明以下幾點。
- 複合索引是啥~ 複合索引的運用與坑坑坑~  ~ 複合索引是啥 ~ 假設有下列資料。
-{ &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;age&amp;#34; : 20} { &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34; , &amp;#34;age&amp;#34; : 25} { &amp;#34;name&amp;#34; : &amp;#34;steven&amp;#34; , &amp;#34;age&amp;#34; : 30} { &amp;#34;name&amp;#34; : &amp;#34;max&amp;#34; , &amp;#34;age&amp;#34; : 15} 在上一篇文章中說到，如果要建立name的索引，是像下面這樣。
-db.user.ensureIndex({&amp;#34;name&amp;#34; : 1}) 這時mongodb就會大致上~將索引建成如下。
-索引目錄 存放位置 [&amp;quot;mark&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;mark&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;max&amp;quot;] -&amp;gt; xxxxxxxx [&amp;quot;steven&amp;quot;] -&amp;gt; xxxxxxxx 而所謂的複合索引事實上就是只是針對多個欄位建立索引，如下。
-db.user.ensureIndex({&amp;#34;name&amp;#34; : 1 , &amp;#34;age&amp;#34; : 1}) 而mongodb就會建立索引如下。
-索引目錄 存放位置 [&amp;quot;mark&amp;quot;,20] -&amp;gt; xxxxxxxx [&amp;quot;mark&amp;quot;,25] -&amp;gt; xxxxxxxx [&amp;quot;max&amp;quot;,15] -&amp;gt; xxxxxxxx [&amp;quot;steven&amp;quot;,30] -&amp;gt; xxxxxxxx ~ 複合索引的運用與坑坑坑 ~ 在前一篇文章中有說過，索引是把雙刃刀，建立的不好反而會浪費更多資源，而複合索引更是雙刃刀中連握把可能都有刀刃，以下舉個例子來說明~說明~|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本文將會說明以下幾點。 複合索引是啥~ 複合索引的運用與坑坑坑~ ~ 複合索引是啥 ~ 假設有下列資料。 { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 20} { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 25} { &#34;name&#34; : &#34;steven&#34; , &#34;age&#34; : 30}...">
     
+    <meta property="og:title" content="30-12之MongoDB索引(2)---複合索引的坑">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ db.user.ensureIndex({&amp;#34;name&amp;#34; : 1 , &amp;#34;age&amp;#34; : 1}) �
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-12之MongoDB索引(2)---複合索引的坑 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本文將會說明以下幾點。
- 複合索引是啥~ 複合索引的運用與坑坑坑~  ~ 複合索引是啥 ~ 假設有下列資料。
-{ &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 20} { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 25} { &#34;name&#34; : &#34;steven&#34; , &#34;age&#34; : 30} { &#34;name&#34; : &#34;max&#34; , &#34;age&#34; : 15} 在上一篇文章中說到，如果要建立name的索引，是像下面這樣。
-db.user.ensureIndex({&#34;name&#34; : 1}) 這時mongodb就會大致上~將索引建成如下。
-索引目錄 存放位置 [&quot;mark&quot;] -&gt; xxxxxxxx [&quot;mark&quot;] -&gt; xxxxxxxx [&quot;max&quot;] -&gt; xxxxxxxx [&quot;steven&quot;] -&gt; xxxxxxxx 而所謂的複合索引事實上就是只是針對多個欄位建立索引，如下。
-db.user.ensureIndex({&#34;name&#34; : 1 , &#34;age&#34; : 1}) 而mongodb就會建立索引如下。
-索引目錄 存放位置 [&quot;mark&quot;,20] -&gt; xxxxxxxx [&quot;mark&quot;,25] -&gt; xxxxxxxx [&quot;max&quot;,15] -&gt; xxxxxxxx [&quot;steven&quot;,30] -&gt; xxxxxxxx ~ 複合索引的運用與坑坑坑 ~ 在前一篇文章中有說過，索引是把雙刃刀，建立的不好反而會浪費更多資源，而複合索引更是雙刃刀中連握把可能都有刀刃，以下舉個例子來說明~說明~|Describe what your web page is about">
+    <meta name="twitter:description" content="本文將會說明以下幾點。 複合索引是啥~ 複合索引的運用與坑坑坑~ ~ 複合索引是啥 ~ 假設有下列資料。 { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 20} { &#34;name&#34; : &#34;mark&#34; , &#34;age&#34; : 25} { &#34;name&#34; : &#34;steven&#34; , &#34;age&#34; : 30}|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

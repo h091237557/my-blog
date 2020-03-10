@@ -26,17 +26,10 @@
     <meta content="elasticsearch" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在這一篇文章中，我們將要理解兩個問題 :
- 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ?  在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。
-Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆 document 應該是會長的像下面這樣。
- POST /markcorp/employee (/(index)/(type))
-上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別 (type)
- { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。
-新增一個 document 時資料會存放到那 ?? 像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在這一篇文章中，我們將要理解兩個問題 : 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ? 在...">
     
+    <meta property="og:title" content="Elasticsearch 的 Document 建立原理">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Elasticsearch 的 Document 建立原理 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在這一篇文章中，我們將要理解兩個問題 :
- 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ?  在開始前，我們先簡單的複習一下 Elasticsearch 的基本觀念。
-Elasticsearch ( ES ) 的前提觀念概要 Elasticsearch 是一種分散的搜尋引擎，它也有和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆 document 應該是會長的像下面這樣。
- POST /markcorp/employee (/(index)/(type))
-上面這行的語意就是新增一筆 document 到 markcorp (index) 的 employee 類別 (type)
- { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 在有了簡單的基本概念後接下來就可以來尋找我們這篇文章的問題。
-新增一個 document 時資料會存放到那 ?? 像我們上面已經建立好了 document ，那實際上在 ES 中它是存放在那呢 ?? 雖然我們上面說它是對應到 RDBMS 的概念，但實際存放的地方不是存放在 markcorp 這個資料庫下的 employee 表下。|Describe what your web page is about">
+    <meta name="twitter:description" content="在這一篇文章中，我們將要理解兩個問題 : 在新增一個 document 時，會建立 json 實體與索引，那這兩個東東會存放到那兒去 ? 而在建立索引時，它又存放了什麼東東 ? 在|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

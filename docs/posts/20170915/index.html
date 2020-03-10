@@ -26,14 +26,10 @@
     <meta content="socket, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
-var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.sockets.on(&amp;#39;connection&amp;#39;, function (socket) { console.log(&amp;#34;Hello xxxx client&amp;#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
-Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
-前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io(&#39;xxxx&#39;)時，他就會去後端建立連線。
-&amp;lt;script src=&amp;#34;/socket.io/socket.io.js&amp;#34;&amp;gt;&amp;lt;/script&amp;gt; &amp;lt;script&amp;gt; var socket = io(&amp;#39;http://localhost&amp;#39;); socket.on(&amp;#39;connect&amp;#39;, function(){}); &amp;lt;/script&amp;gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
-lookup 原始碼
-function lookup (uri, opts) { .... if (newConnection) { debug(&amp;#39;ignoring socket cache for %s&amp;#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&amp;#39;new io instance for %s&amp;#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client...">
     
+    <meta property="og:title" content="Socket.io 原始碼分析之建立連線">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ function lookup (uri, opts) { .... if (newConnection) { debug(&amp;#39;ignoring 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 原始碼分析之建立連線 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 :
-var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。
-Client 端它做了什麼呢 ?? Socket.io-client 建立連線的地方 在最開始時，一定是前端會去進行連線，那我們來看看他在socket.io-client中什麼地方行處理。
-前端與 server 端連結的程式碼如下，從下面程式碼可知，我們執行io(&#39;xxxx&#39;)時，他就會去後端建立連線。
-&lt;script src=&#34;/socket.io/socket.io.js&#34;&gt;&lt;/script&gt; &lt;script&gt; var socket = io(&#39;http://localhost&#39;); socket.on(&#39;connect&#39;, function(){}); &lt;/script&gt; 然後我們來看看 socket.io-client 的這段程式碼長啥樣子，如下，但下面程式碼我們只要先注意newConnection裡面做的事情，因為我們是要建立新的連線。
-lookup 原始碼
-function lookup (uri, opts) { .... if (newConnection) { debug(&#39;ignoring socket cache for %s&#39;, source); io = Manager(source, opts); } else { if (!cache[id]) { debug(&#39;new io instance for %s&#39;, source); cache[id] = Manager(source, opts); } io = cache[id]; } if (parsed.|Describe what your web page is about">
+    <meta name="twitter:description" content="首先我們先來看看最一開始時，要建立連線會那些事情，假設我們的 server 已經開啟 : var io = require(&#39;socket.io&#39;).listen(8080); io.sockets.on(&#39;connection&#39;, function (socket) { console.log(&#34;Hello xxxx client&#34;); }); 接下來我們要從前端開始追蹤它做了那些事情。 Client|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

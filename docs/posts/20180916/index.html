@@ -26,17 +26,10 @@
     <meta content="instant messaging, 鐵人賽, http-flv" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。
- HTTP-FLV 協議
- 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：
- HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。  HTTP-FLV 協議是要用來完成什麼事情呢 ?  可以使用 HTTP 來完成低延遲的串流媒體傳輸。
- 那為啥他想使用 HTTP 呢 ?
-先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。
-那為啥不用 HLS 呢 ?
-使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。
-HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。
- 以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建...">
     
+    <meta property="og:title" content="30-16之 HTTP-FLV 傳輸協議">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-16之 HTTP-FLV 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。
- HTTP-FLV 協議
- 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議：
- HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建立 HTTP-FLV 的串流傳輸流程。 HTTP-FLV 的特點總結。  HTTP-FLV 協議是要用來完成什麼事情呢 ?  可以使用 HTTP 來完成低延遲的串流媒體傳輸。
- 那為啥他想使用 HTTP 呢 ?
-先來說說 RTMP，它不是基於 Http 來進行傳輸，所以他個缺點，那就是有一定的機率被封，而且還有另外一點，通常使用 Http 的來進行傳輸的 html5 會支援的不錯，像在 chrome 比較新的幾個版本就有開始支援 HLS，而當然 RTMP 不支援。
-那為啥不用 HLS 呢 ?
-使用 HLS 的極大缺點就是它的延遲問題，可能直播主說個話後，大約要 10 秒左右聽眾才可以聽到，而 HTTP-FLV 就是想要解決這件事情。
-HTTP-FLV 協議如何完成它想做的事情呢 ?  將聲音與影像封裝成 FLV 流容器，然後在使用 Http 進行流式傳輸。
- 以直播情況來看，直播主會將聲音用任何方式 ( RTMP 或啥的 ) 傳送到 Server，然後 Server 會將它轉換成 FLV 檔，然後 Client 會使用 Http 來請求這個畫面，請求如下，然後 Server 就會用 Http 流的方式就影像一段一段的傳輸過去。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 HTTP-FLV 協議。 HTTP-FLV 協議 本篇文章將會分成幾個章節來理解 HTTP-FLV 協議： HTTP-FLV 協議是要用來完成什麼事情呢 ? HTTP-FLV 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,16 +26,10 @@
     <meta content="instant messaging, 鐵人賽, rtmp" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。
- RTMP 協議
- 本篇文章將會分成幾個章節來理解 RTMP 協議：
- RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建立 RTMP 的串流傳輸流程。 RTMP 的特點總結。  RTMP 協議是要用來完成什麼事情呢 ? 它當初的動機為：
- 在 Flash 平台與伺服器進行串流媒體傳輸的協議
- RTMP( Real-Time Messaging Protocol )，為 Adode 所開發，它就是要用來讓 Server 可以與 Flash 平台進行串流傳輸。
-這裡問個問題。
-為什麼不要用 RTSP 來進行傳輸呢 ? 這裡我覺得有兩個原因：
- 因為 RTSP 大部份還是基於 RTP over UDP 上，由於當時 RTSP 大部份都用在 IPTV 或 VOD 上這些都是有專門一條線給它用，所以網路很穩定。但是 RTMP 當初是希望開發在互聯網上，所以不能保證網路很穩定，因此它選擇用 TCP 來傳輸。2. 因為想建立一個更符合 Flash 用途的協議。我猜的。  更多有支援的請參考RTMP Spec在 31、32 頁。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建...">
     
+    <meta property="og:title" content="30-14之 RTMP 傳輸協議">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-14之 RTMP 傳輸協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。
- RTMP 協議
- 本篇文章將會分成幾個章節來理解 RTMP 協議：
- RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建立 RTMP 的串流傳輸流程。 RTMP 的特點總結。  RTMP 協議是要用來完成什麼事情呢 ? 它當初的動機為：
- 在 Flash 平台與伺服器進行串流媒體傳輸的協議
- RTMP( Real-Time Messaging Protocol )，為 Adode 所開發，它就是要用來讓 Server 可以與 Flash 平台進行串流傳輸。
-這裡問個問題。
-為什麼不要用 RTSP 來進行傳輸呢 ? 這裡我覺得有兩個原因：
- 因為 RTSP 大部份還是基於 RTP over UDP 上，由於當時 RTSP 大部份都用在 IPTV 或 VOD 上這些都是有專門一條線給它用，所以網路很穩定。但是 RTMP 當初是希望開發在互聯網上，所以不能保證網路很穩定，因此它選擇用 TCP 來傳輸。2. 因為想建立一個更符合 Flash 用途的協議。我猜的。  更多有支援的請參考RTMP Spec在 31、32 頁。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來介紹 RTMP 協議。 RTMP 協議 本篇文章將會分成幾個章節來理解 RTMP 協議： RTMP 協議是要用來完成什麼事情呢 ? RTMP 協議如何完成它想做的事情呢 ? 建|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

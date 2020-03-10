@@ -26,16 +26,10 @@
     <meta content="nodejs, nodejs stream" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。
- Tranform Stream Duplex Stream  那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨立的readable與writable的組成。
-而tranform就是寫出與讀入彼此間的資料存在有轉換關係，我們接下來會直接實作程式碼，更能夠看出它們兩個的差異。
-最後我們還會說到pipe，它的功用就是用來接串流組合起來。
-Tranform Stream 我們這邊會簡單做個替換指定字串的Transform串流，其中這個類別，我們需要實作兩個方法_transform與_flust。
-_transform基本上與readable的_read很像，是將資料寫入水缸中，而不是直接將它寫到資源內，而我們在這個方法中實作了將指定字串連行替換。
-_flush是在串流要結束時，如果還有事實沒有處理，這時就可以在_flush進行處理，像我們這個範例中，想要在最後加個!!!!!時，就是寫在這裡。
-基本上只要前一篇文章中的readable與writable基本概念都了解，那這些雙工串流你會學的很輕鬆的。
-const stream = require(&amp;#39;stream&amp;#39;); class TransofrmStream extends stream.Transform{ constructor(search_string, replace_string){ super({decodeStrings:false}); this.search_string=search_string; this.replace_string = replace_string; } _transform(chunk, encoding, cb){ const result = chunk.toString().replace(this.search_string,this.replace_string); this.push(result); cb(); } _flush(cb){ this.push(&amp;#39;!!!!&amp;#39;) cb(); } } const transofm_stream = new TransofrmStream(&amp;#39;World&amp;#39;, &amp;#39;Mark&amp;#39;); transofm_stream.on(&amp;#39;data&amp;#39;, (chunk) =&amp;gt; { console.log(chunk.toString()); }) transofm_stream.write(&amp;#39;Hello World&amp;#39;); transofm_stream.write(&amp;#39;Mark ! you are my all World&amp;#39;); transofm_stream.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du...">
     
+    <meta property="og:title" content="Node.js 的串流之旅之雙工串流與管道">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ const stream = require(&amp;#39;stream&amp;#39;); class TransofrmStream extends 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node.js 的串流之旅之雙工串流與管道 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。
- Tranform Stream Duplex Stream  那這兩者有什麼差別呢，差別在於duplex的寫出與讀入可以完全的沒關係，你可以把他想像成兩個獨立的readable與writable的組成。
-而tranform就是寫出與讀入彼此間的資料存在有轉換關係，我們接下來會直接實作程式碼，更能夠看出它們兩個的差異。
-最後我們還會說到pipe，它的功用就是用來接串流組合起來。
-Tranform Stream 我們這邊會簡單做個替換指定字串的Transform串流，其中這個類別，我們需要實作兩個方法_transform與_flust。
-_transform基本上與readable的_read很像，是將資料寫入水缸中，而不是直接將它寫到資源內，而我們在這個方法中實作了將指定字串連行替換。
-_flush是在串流要結束時，如果還有事實沒有處理，這時就可以在_flush進行處理，像我們這個範例中，想要在最後加個!!!!!時，就是寫在這裡。
-基本上只要前一篇文章中的readable與writable基本概念都了解，那這些雙工串流你會學的很輕鬆的。
-const stream = require(&#39;stream&#39;); class TransofrmStream extends stream.Transform{ constructor(search_string, replace_string){ super({decodeStrings:false}); this.search_string=search_string; this.replace_string = replace_string; } _transform(chunk, encoding, cb){ const result = chunk.toString().replace(this.search_string,this.replace_string); this.push(result); cb(); } _flush(cb){ this.push(&#39;!!!!&#39;) cb(); } } const transofm_stream = new TransofrmStream(&#39;World&#39;, &#39;Mark&#39;); transofm_stream.on(&#39;data&#39;, (chunk) =&gt; { console.log(chunk.toString()); }) transofm_stream.write(&#39;Hello World&#39;); transofm_stream.write(&#39;Mark ! you are my all World&#39;); transofm_stream.|Describe what your web page is about">
+    <meta name="twitter:description" content="在node js 中雙工串流主要有以下兩種，這兩種直接用白話文來講就是同時有read與write的功能。 Tranform Stream Duplex Stream 那這兩者有什麼差別呢，差別在於du|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

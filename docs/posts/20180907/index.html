@@ -26,18 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。
- 如何在 Web 上進行聲音與影像的採集 ? ( 其它平台的別問我 )
- 這篇文章中，咱們將會用到一個東東叫做WebRTC，接下來會以它為主，將之分成以下三個章節：
- WebRTC 是啥 ? 使用 WebRTC 來採集聲音與影像 將採集到的聲音儲放成一個檔案  WebRTC 是啥 ?  讓瀏覽器不需加裝任何套件就可以進行即時文字、語音與影像對話的 API 。
- WebRTC　全名為　Web Real-Time Communication，中文為網頁即時通訊，這東東用途就是讓咱們的瀏覽器不用裝認何啥套件就可以進行和其它瀏覽器進行即時文字、語音與影像對話。
-它在 2011 年時進入了 W3C 的推薦表準，並且到了現在(2018)，大部份的瀏覽器都有支援 (IE 例外)。
-它主要有三種類型的 API：
- getUserMedia：用來處理音視串流採集。 (採集聲音或影像)。 RTCPeerConnection：用來建立兩個瀏覽器之間的直接通訊。 (建立與管理 p2p 連線) RTCDataChannel：負責用來傳送資料。(操作那條 p2p 連線)  基本上在這篇文章中只會用到第一個 getUserMedia 其它的 API 在後面文章會詳細的進行說明。
-備註 當前（2018）支援各平台的狀態請參考以下連結：
-WiKI: WebRTC Support
-使用 WebRTC 來採集聲音與影像 事實上就是如此的簡單，下面程式碼中，我們使用 getUserMedia 來採集聲音與影像，而 stream 就是咱們所採集到的聲音與影像，它們都是 raw data，也就是說聲音是 PCM 編碼，而影像就是單純的一堆連續的圖片編碼。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。 如何在 Web 上進行聲音與影像的採集 ?...">
     
+    <meta property="og:title" content="30-07之Web 如何進行語音與影像採集 ?">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@ WiKI: WebRTC Support
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-07之Web 如何進行語音與影像採集 ? | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。
- 如何在 Web 上進行聲音與影像的採集 ? ( 其它平台的別問我 )
- 這篇文章中，咱們將會用到一個東東叫做WebRTC，接下來會以它為主，將之分成以下三個章節：
- WebRTC 是啥 ? 使用 WebRTC 來採集聲音與影像 將採集到的聲音儲放成一個檔案  WebRTC 是啥 ?  讓瀏覽器不需加裝任何套件就可以進行即時文字、語音與影像對話的 API 。
- WebRTC　全名為　Web Real-Time Communication，中文為網頁即時通訊，這東東用途就是讓咱們的瀏覽器不用裝認何啥套件就可以進行和其它瀏覽器進行即時文字、語音與影像對話。
-它在 2011 年時進入了 W3C 的推薦表準，並且到了現在(2018)，大部份的瀏覽器都有支援 (IE 例外)。
-它主要有三種類型的 API：
- getUserMedia：用來處理音視串流採集。 (採集聲音或影像)。 RTCPeerConnection：用來建立兩個瀏覽器之間的直接通訊。 (建立與管理 p2p 連線) RTCDataChannel：負責用來傳送資料。(操作那條 p2p 連線)  基本上在這篇文章中只會用到第一個 getUserMedia 其它的 API 在後面文章會詳細的進行說明。
-備註 當前（2018）支援各平台的狀態請參考以下連結：
-WiKI: WebRTC Support
-使用 WebRTC 來採集聲音與影像 事實上就是如此的簡單，下面程式碼中，我們使用 getUserMedia 來採集聲音與影像，而 stream 就是咱們所採集到的聲音與影像，它們都是 raw data，也就是說聲音是 PCM 編碼，而影像就是單純的一堆連續的圖片編碼。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面幾篇咱們已經學習了聲音與影像的採集相關知識，那接下咱們來學習一下如何在 Web 上進行聲音與影像的採集。 如何在 Web 上進行聲音與影像的採集 ?|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

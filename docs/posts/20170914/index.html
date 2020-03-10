@@ -26,16 +26,10 @@
     <meta content="socket, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
-你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
-但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
-websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
-那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
-Socket.io 的組成 請參考筆者的這篇文章。
-Socketio 的架構
-簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &amp;quot;world&amp;quot;}訊息。
-var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳...">
     
+    <meta property="og:title" content="Socket.io 的說話島">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ var io = require(&amp;#39;socket.io&amp;#39;).listen(8080); io.|Describe what yo
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 的說話島 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。
-你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳統的 server 與 client 架構下，因為只能由 client 向 server 發出請求，而不能由 server 發送新的訊息到 client，所以當時的人們的解決方案就是輪詢，固名思意就是指定時的去 server 找資料。
-但這種方案有缺點，你想想，你有可能去 server 抓 10 次資料，它有可能 10 次都有新的資料嗎 ? 不一定對吧 ? 所以最理想的方案一定是從 server 端有新資料就自動推送到 client 端。
-websocket就是一個由 html 5 所發布的新協議，它就可以做到上面所需要的功能。
-那socket.io是啥 ? 它是會根據你的 client 所支援的功能(websocket、comet、長輪詢…)來決定你後端要如何的發送資料，更白話文的說，你不用管你的 client 有沒有支援 websocket，socket.io 一切都自動會處理好，你只要和我說啥時要送資訊到前端就對了。
-Socket.io 的組成 請參考筆者的這篇文章。
-Socketio 的架構
-簡單 client 與 server 的溝通範例 server 端程式碼如下，這段程式碼當與 client 端建立一條 websocket 連線後，會直接對該條連線傳送個{hello: &quot;world&quot;}訊息。
-var io = require(&#39;socket.io&#39;).listen(8080); io.|Describe what your web page is about">
+    <meta name="twitter:description" content="socket io 是 nodejs 所提供的套件，它主要可以做的事情就是推播功能。 你想想，假設你要做個股票報價網站，然後當你後端收到新的股價時，你要如何的送到前端 ? 在傳|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

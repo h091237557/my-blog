@@ -26,12 +26,10 @@
     <meta content="nodejs, design pattern" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本文中我們將會知道兩件事件
-為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
- 加 減 乘 除  然後實際上執行大概會長這樣 :
-add(5) =&amp;gt; current = 5 sub(3) =&amp;gt; current = 2 mul(3) =&amp;gt; current = 6 div(3) =&amp;gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
-class Calculator { constructor(){ this.current = 0; } add(value){ this.current &#43;= value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能...">
     
+    <meta property="og:title" content="Node設計模式之命令模式 ( Command )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -46,11 +44,7 @@ class Calculator { constructor(){ this.current = 0; } add(value){ this.current &
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node設計模式之命令模式 ( Command ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本文中我們將會知道兩件事件
-為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能，然後他有提供以下方法:
- 加 減 乘 除  然後實際上執行大概會長這樣 :
-add(5) =&gt; current = 5 sub(3) =&gt; current = 2 mul(3) =&gt; current = 6 div(3) =&gt; current = 2 這樣我們大概會寫個最簡單的程式碼，大概會長成下面這樣:
-class Calculator { constructor(){ this.current = 0; } add(value){ this.current &#43;= value; } sub(value){ this.current -= value; } mul(value){ this.current *= value; } div(value){ this.current /= value; } getCurrent(){ return this.current; } } const client = new Calculator(); client.|Describe what your web page is about">
+    <meta name="twitter:description" content="本文中我們將會知道兩件事件 為什麼要使用命令模式呢 ? 什麼是命令模式呢? 為什麼要使用命令模式呢 ? 我們先來想想，假設我們要做一個簡單的計算機的功能|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

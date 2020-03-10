@@ -26,17 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :
- 異步非阻塞的 I/O 操作。
- 而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?
-簡單的說它可以讓我們實現以下的事情 :
- 可以在應用層實現同步非阻塞的 I/O 操作
- 接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。
- coroutine 協程想要解決的問題。 coroutine 協程實現原理。 Golang 的 goroutine。  coroutine 協程想要解決的問題 首先咱們先來看看它想要解決什麼問題呢 ?
- 協程它想要將異步非阻塞的 I/O 操作變成同步的。
- 異步非阻塞寫法 首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :
- 異步 : callback 機制，也就是下面程式碼裡面的 function。 非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。  &amp;lt;?php $client = new swoole_redis; $client-&amp;gt;connect(&amp;#39;127.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西...">
     
+    <meta property="og:title" content="30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-08 之應用層的 I/O 優化 ( 維護性 ) - 協程 Coroutine | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 :
- 異步非阻塞的 I/O 操作。
- 而接下這篇文章我們將要來說說 coroutine 協程這東西，協程這東西在 I/O 優化佔據什麼地位呢 ?
-簡單的說它可以讓我們實現以下的事情 :
- 可以在應用層實現同步非阻塞的 I/O 操作
- 接下來我們來深入的探討一下，協程這東西可以解決什麼事情以下現階段有那些東西有在使用這個機制。本篇文章共分以下幾個章節。
- coroutine 協程想要解決的問題。 coroutine 協程實現原理。 Golang 的 goroutine。  coroutine 協程想要解決的問題 首先咱們先來看看它想要解決什麼問題呢 ?
- 協程它想要將異步非阻塞的 I/O 操作變成同步的。
- 異步非阻塞寫法 首先咱們來看看 reactor 所實現的異步非阻塞的 I/O 操作的寫法，如下程式碼，這一段是使用 php swoole 來打 redis 的模擬碼。然後重點在於以下兩點 :
- 異步 : callback 機制，也就是下面程式碼裡面的 function。 非阻塞 : 當打這個 I/O 操作時，不會阻塞住整個進程。  &lt;?php $client = new swoole_redis; $client-&gt;connect(&#39;127.|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章說明完了非阻塞 I/O 模式核心 reactor，並且它可以幫我們建立 : 異步非阻塞的 I/O 操作。 而接下這篇文章我們將要來說說 coroutine 協程這東西|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

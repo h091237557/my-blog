@@ -26,17 +26,10 @@
     <meta content="nodejs, proxy" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中我們將要解決以下的問答。
-  什麼是代理器模式 ? 我們為什麼要使用它 ?   其中本篇文章還會介紹ES6所提供的Proxy使用方法。
-什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器模式的概念，無論如何，client和Real Object之間一定會由Proxy來進行溝通。
-我們還可以用下面這句非常白話文的文字來表達代理器模式的精華。
- 我的時間很忙的，除非真的要用到我，不然請直接找我的代理人。
- 我們簡單來寫個範例來說明一下，代理器的實際上使用，首先我們先寫一個登入的程式。
-Class UserService{ construct () { } GetUser(name,password){ ...... return user; } } 然後通常我們要使用的時後會執行下面程式碼。
-const userService = new UserService(); const user = userService.GetUser(&amp;#34;mark&amp;#34;,&amp;#34;123456789&amp;#34;); 這樣看起來是沒什麼問題，東西是都還可以執行，然後我們來改寫成代理器的模式，我們會先建立一個UserServiceProxy，我們外面要使用UserService時，都只能透過這個Proxy進行溝通 (想找明星，只能想找他的代理人)。
- 注意 : 這只是其中一種寫法，代理器還有很多的方法可實現。
- Class UserServiceProxy { construct(real){ this.Real = real; } GetUser(name,passowrd){ const real = new Real(); real.getUser(name,password); } } const userServiceProxy = new UserServiceProxy(UserService); const user = userServiceProxy.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模...">
     
+    <meta property="og:title" content="Node 設計模式之代理器 ( Proxy )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ const userService = new UserService(); const user = userService.GetUser(&amp;#34
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node 設計模式之代理器 ( Proxy ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中我們將要解決以下的問答。
-  什麼是代理器模式 ? 我們為什麼要使用它 ?   其中本篇文章還會介紹ES6所提供的Proxy使用方法。
-什麼是代理器模式呢 ? 首先我們先來看一張下面這張圖，這張圖基本就說明了代理器模式的概念，無論如何，client和Real Object之間一定會由Proxy來進行溝通。
-我們還可以用下面這句非常白話文的文字來表達代理器模式的精華。
- 我的時間很忙的，除非真的要用到我，不然請直接找我的代理人。
- 我們簡單來寫個範例來說明一下，代理器的實際上使用，首先我們先寫一個登入的程式。
-Class UserService{ construct () { } GetUser(name,password){ ...... return user; } } 然後通常我們要使用的時後會執行下面程式碼。
-const userService = new UserService(); const user = userService.GetUser(&#34;mark&#34;,&#34;123456789&#34;); 這樣看起來是沒什麼問題，東西是都還可以執行，然後我們來改寫成代理器的模式，我們會先建立一個UserServiceProxy，我們外面要使用UserService時，都只能透過這個Proxy進行溝通 (想找明星，只能想找他的代理人)。
- 注意 : 這只是其中一種寫法，代理器還有很多的方法可實現。
- Class UserServiceProxy { construct(real){ this.Real = real; } GetUser(name,passowrd){ const real = new Real(); real.getUser(name,password); } } const userServiceProxy = new UserServiceProxy(UserService); const user = userServiceProxy.|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中我們將要解決以下的問答。 什麼是代理器模式 ? 我們為什麼要使用它 ? 其中本篇文章還會介紹ES6所提供的Proxy使用方法。 什麼是代理器模|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

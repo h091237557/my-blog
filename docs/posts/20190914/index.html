@@ -26,13 +26,10 @@
     <meta content="mysql, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。
- 表設計的幾個小建議 正規與非正規的小戰爭  表設計的幾個小建議 這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。
-建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 &#43; ) 基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :
- char varchar text blob  char vs varchar char 的特點 :
- 最大 255 byte 不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。 用 char 需要處理空白。  varchar 特色 :
- 存幾個字就是需花費 n&#43;1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 &#43; 1 = 2 byte。 65535 為最大，實際為 65532。 當 varchar 大於一定字數時，會自動轉成 text。  varchar (255&#43;) 轉成 tinytext varchar (500&#43;) 轉成 text varchar (20000&#43;) 轉成 mediumtext 下表為 char 與 varchar 的實際存儲空間比較。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時...">
     
+    <meta property="og:title" content="30-14 之資料庫層的優化 - 表的設計">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -47,12 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-14 之資料庫層的優化 - 表的設計 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。
- 表設計的幾個小建議 正規與非正規的小戰爭  表設計的幾個小建議 這個章節會給一些建立表時的小建議，雖然這裡優化的點不多，但是每一個地方都做到好，才是專業。
-建議 1 : 選擇適當的欄位類型 - 字串 ( 性能 &#43; ) 基本上在 mysql 中有一下文字類型的選擇，適當的選擇類型，可以省下不少資源 :
- char varchar text blob  char vs varchar char 的特點 :
- 最大 255 byte 不管如何就是使用指定的空間 ex. char(4) 就是就算只有 1 個字元，就是花費 4 byte。 用 char 需要處理空白。  varchar 特色 :
- 存幾個字就是需花費 n&#43;1 個 byte。 Ex. varchar(4) 假設你儲 1 個字，那就是花費 1 &#43; 1 = 2 byte。 65535 為最大，實際為 65532。 當 varchar 大於一定字數時，會自動轉成 text。  varchar (255&#43;) 轉成 tinytext varchar (500&#43;) 轉成 text varchar (20000&#43;) 轉成 mediumtext 下表為 char 與 varchar 的實際存儲空間比較。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章中咱們將要從『 表 』的角度來儘可能的優化性能。 表設計的幾個小建議 正規與非正規的小戰爭 表設計的幾個小建議 這個章節會給一些建立表時|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

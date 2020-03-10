@@ -26,14 +26,10 @@
     <meta content="php, reactor, reactphp" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reactPHP。
-本篇文章分為以下三個章節 :
- reactPHP 基本概念 reactPHP 非阻塞 I/O 實現 reactPHP 使用時注意事項  reactPHP 基本概念 reactPHP 官網寫這一段話 :
- Event-driven, non-blocking I/O with PHP
- 它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :
- 可以建立一個非阻塞 I/O 的網路服務。 可以建立一個定時排程服務。  http server 的範例 下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。
-$loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) { return new React\Http\Response( 200, array(&amp;#39;Content-Type&amp;#39; =&amp;gt; &amp;#39;text/plain&amp;#39;), &amp;#34;Hello World!|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac...">
     
+    <meta property="og:title" content="PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ $loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(funct
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 3 ) - Reactor 的實現之 reactPHP | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reactPHP。
-本篇文章分為以下三個章節 :
- reactPHP 基本概念 reactPHP 非阻塞 I/O 實現 reactPHP 使用時注意事項  reactPHP 基本概念 reactPHP 官網寫這一段話 :
- Event-driven, non-blocking I/O with PHP
- 它是一個用 php 所寫的 libaray，可以幫助我們做以下的事情 :
- 可以建立一個非阻塞 I/O 的網路服務。 可以建立一個定時排程服務。  http server 的範例 下面就是官網首頁的範例，我們可以用它簡單的建立一個非阻塞 I/O 的 http server，就如同 nodejs 一樣。
-$loop = React\EventLoop\Factory::create(); $server = new React\Http\Server(function (Psr\Http\Message\ServerRequestInterface $request) { return new React\Http\Response( 200, array(&#39;Content-Type&#39; =&gt; &#39;text/plain&#39;), &#34;Hello World!|Describe what your web page is about">
+    <meta name="twitter:description" content="上一篇文章PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式我們理解到實現非阻塞 I/O 的 reactor 模式以後，接下來本篇文章我們將來要說明，在 php 中的 reactor 實現reac|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

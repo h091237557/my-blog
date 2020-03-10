@@ -26,14 +26,10 @@
     <meta content="socket, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
-socket.io 主要由以下幾個東東構成的 :
- engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
-engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
-目前 engine.io 所提供的溝通方式有以下幾種 :
- polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
-var engine = require(&amp;#39;engine.io&amp;#39;); var server = engine.listen(80); server.on(&amp;#39;connection&amp;#39;, function(socket){ socket.send(&amp;#39;utf 8 string&amp;#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成...">
     
+    <meta property="og:title" content="Socket.io 的架構">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ var engine = require(&amp;#39;engine.io&amp;#39;); var server = engine.listen(80
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 的架構 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成。
-socket.io 主要由以下幾個東東構成的 :
- engine.io、engino.io-client socket.io-parser socket.io-adapter socket.io-client socket.io-protocol  接下來我們將一個一個說明它們是做啥用的，並且最後會在進行一個總結。
-engine.io engine.io是一個實際執行 socket.io 通訊層級的 libary，嚴格說起來，socket.io 的核心就是engine.io，所有的建立連線、傳輸資訊實際上都是由它來做，並且根據前端傳送回來的資訊，來決定使用什麼傳輸方式。
-目前 engine.io 所提供的溝通方式有以下幾種 :
- polling-jsonp polling-xhr pollin websocket  上面有提到，socket.io 本身不提供連線功能，而是在 engine.io 才提供，所以事實上，如果你沒有一定要使用到 socket.io 的功能，而只是要連線到 http server 或是監聽 port 的話，只要用 engine.io 就夠了，這邊有個重點要記得 socket.io 是個 framework 而 engine.io 只是個 libary，只要分的出這兩個差別，你就可以自由的選你要的使用。
-var engine = require(&#39;engine.io&#39;); var server = engine.listen(80); server.on(&#39;connection&#39;, function(socket){ socket.send(&#39;utf 8 string&#39;); socket.send(new Buffer([0, 1, 2, 3, 4, 5])); // binary data }); engino.|Describe what your web page is about">
+    <meta name="twitter:description" content="socket.io 是 node js 的一個 framework，它可以幫助我們建立聊天室這種推播功能的系統，這篇文章我們不會說明它如何使用，而是要理解 socket.io 這個套件的架構組成|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,17 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分析者的角度，使用聚合工作Aggregate framework與MapReduce來進行一些分析案例，一樣為了怕使用者忘記需求，我們還是再再貼一次~~
-~需求說明~ 我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，所以我們簡單的先列出我們可以用的功能。
- 使用者可以簡單的新增發文，並且會存放Text、Date、Author、likes、Message。(完成) 建立100萬筆模擬po文。(完成) 使用者可以刪除發文。(完成) 使用者可以對自已的po文進行更新。(完成) 使用者可以進行留言和刪除留言。(完成) 使用者可以like發文。(完成) 使用者可以根據Text、Author、likes、Date進行搜尋。(完成) 管理者可以速行分析個案(已經想到囉如下)  ~分析個案 (需求8)~  Boss希望可以知道最多人留言的貼文，並且該貼文中前三位留言最熱絡的使用者，並計算留言次數。 Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~  嗯……才兩個好像有點少，但你往下來就知道可以寫很多了，都是要動腦想三下著麼做的啊……
-1. Boss希望可以知道最多人留言的貼文，並且知道該貼文中，前三位留言最熱絡的使用者，並計算留言次數。 首先先來解決這需求，仔細看看不太難，將需求拆解成如下步驟就好。
- 將每筆貼文的留言數量計算出來，並存放在messagesCount這變數中。 根據messagesCount進行排序。 將排序好的資料取第一個。 在將messages中的author來進行分組統計，並將結果存放在count中。 在針對count進行排序，取前三名。 交給Boss看……  根據以上的步驟我們使用mongodb的aggreagate framework來寫出下列程式碼，啊咧啊咧…… 著麼只寫到步驟2的排序…… ?
-db.posts.aggregate( { &amp;#34;$project&amp;#34; : { &amp;#34;messagesCount&amp;#34; : { &amp;#34;$size&amp;#34; : &amp;#34;$messages&amp;#34; } } }, { &amp;#34;$sort&amp;#34; : { &amp;#34;messagesCount&amp;#34; : 1} } ) 因為GG了，咱們的排序所耗用的記憶體超過mongodb的限制囉，請看下圖~
-網路上有人推薦說，在建立document時就多建立一個欄位，來存放它的數量，然後直接建立索引，但在我們這邊是會GG掉的，因為我們的留言隨時都在變，而且沒新增或刪除個留言都還要去對那個存放欄位進行更新，而且還有索引，這樣會讓咱們的效能大大的下降，所以在這應用中否定這選項~
-那要著麼辦呢 ? 後來又查到一個方法，那就是allowDiskUse 參數，mongodb有個限制在Pipeline的階段中，規定記憶體只能用100mb，不然就會跳出上圖的錯誤，但如果將allowDiskUse設定為true，則它多出來的資料暫存寫入到臨時的collection，只是會不會有什麼問題或壞處，官網上都沒特別提到……
-繼續正題，然後解決完這個sort的問題後，我們就可以使取得貼文的留言數最多的貼文。
-db.posts.aggregate( [ { &amp;#34;$project&amp;#34; : { &amp;#34;messagesCount&amp;#34; : { &amp;#34;$size&amp;#34; : &amp;#34;$messages&amp;#34; },&amp;#34;messages&amp;#34; : 1 } }, { &amp;#34;$sort&amp;#34; : { &amp;#34;messagesCount&amp;#34; : -1}}, { &amp;#34;$limit&amp;#34; : 1} ], { allowDiskUse: true } ) 咱們再繼續往下寫，取得了最多留言數的貼文後，我們要繼續來尋找留言最多的人是那位，我們先使用$unwind將messages的陣列欄位，拆分成多個document，以方便我們用來group，再下來我們就可以根據messages的author來進行分組，並且計算每一組的數量存放至count來欄位。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分...">
     
+    <meta property="og:title" content="30-20之MongoDB運用研究---PO文情境模擬(3)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ db.posts.aggregate( [ { &amp;#34;$project&amp;#34; : { &amp;#34;messagesCount&am
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-20之MongoDB運用研究---PO文情境模擬(3) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分析者的角度，使用聚合工作Aggregate framework與MapReduce來進行一些分析案例，一樣為了怕使用者忘記需求，我們還是再再貼一次~~
-~需求說明~ 我們這邊想要簡單的模擬FB的貼文，我們可以新增貼文或做一些事情，並且我們希望還可以進行一些貼文分析，最後這項模擬會建立在有100萬筆下貼文的情況下，所以我們簡單的先列出我們可以用的功能。
- 使用者可以簡單的新增發文，並且會存放Text、Date、Author、likes、Message。(完成) 建立100萬筆模擬po文。(完成) 使用者可以刪除發文。(完成) 使用者可以對自已的po文進行更新。(完成) 使用者可以進行留言和刪除留言。(完成) 使用者可以like發文。(完成) 使用者可以根據Text、Author、likes、Date進行搜尋。(完成) 管理者可以速行分析個案(已經想到囉如下)  ~分析個案 (需求8)~  Boss希望可以知道最多人留言的貼文，並且該貼文中前三位留言最熱絡的使用者，並計算留言次數。 Boss想知道最近貼文中最長出現的『單詞』是啥 ? 可以讓老大知道最近最熱門的東西 ~  嗯……才兩個好像有點少，但你往下來就知道可以寫很多了，都是要動腦想三下著麼做的啊……
-1. Boss希望可以知道最多人留言的貼文，並且知道該貼文中，前三位留言最熱絡的使用者，並計算留言次數。 首先先來解決這需求，仔細看看不太難，將需求拆解成如下步驟就好。
- 將每筆貼文的留言數量計算出來，並存放在messagesCount這變數中。 根據messagesCount進行排序。 將排序好的資料取第一個。 在將messages中的author來進行分組統計，並將結果存放在count中。 在針對count進行排序，取前三名。 交給Boss看……  根據以上的步驟我們使用mongodb的aggreagate framework來寫出下列程式碼，啊咧啊咧…… 著麼只寫到步驟2的排序…… ?
-db.posts.aggregate( { &#34;$project&#34; : { &#34;messagesCount&#34; : { &#34;$size&#34; : &#34;$messages&#34; } } }, { &#34;$sort&#34; : { &#34;messagesCount&#34; : 1} } ) 因為GG了，咱們的排序所耗用的記憶體超過mongodb的限制囉，請看下圖~
-網路上有人推薦說，在建立document時就多建立一個欄位，來存放它的數量，然後直接建立索引，但在我們這邊是會GG掉的，因為我們的留言隨時都在變，而且沒新增或刪除個留言都還要去對那個存放欄位進行更新，而且還有索引，這樣會讓咱們的效能大大的下降，所以在這應用中否定這選項~
-那要著麼辦呢 ? 後來又查到一個方法，那就是allowDiskUse 參數，mongodb有個限制在Pipeline的階段中，規定記憶體只能用100mb，不然就會跳出上圖的錯誤，但如果將allowDiskUse設定為true，則它多出來的資料暫存寫入到臨時的collection，只是會不會有什麼問題或壞處，官網上都沒特別提到……
-繼續正題，然後解決完這個sort的問題後，我們就可以使取得貼文的留言數最多的貼文。
-db.posts.aggregate( [ { &#34;$project&#34; : { &#34;messagesCount&#34; : { &#34;$size&#34; : &#34;$messages&#34; },&#34;messages&#34; : 1 } }, { &#34;$sort&#34; : { &#34;messagesCount&#34; : -1}}, { &#34;$limit&#34; : 1} ], { allowDiskUse: true } ) 咱們再繼續往下寫，取得了最多留言數的貼文後，我們要繼續來尋找留言最多的人是那位，我們先使用$unwind將messages的陣列欄位，拆分成多個document，以方便我們用來group，再下來我們就可以根據messages的author來進行分組，並且計算每一組的數量存放至count來欄位。|Describe what your web page is about">
+    <meta name="twitter:description" content="上篇文章中，基本上已經把po文的方法，大部份都完成了，也建立好了索引，並且也將po文常見的搜尋給實作出來，接下來本篇文章，我們將要站在資料分|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

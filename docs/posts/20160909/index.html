@@ -26,15 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。
- 搜尋陣列內容 正規表達式搜尋  ~ 搜尋陣列內容 ~ 這邊我們將要介紹幾個陣列搜尋符號$all、$size、$slice。
-   Tables Are     $all 當需要尋找多個元素節合的document時，就可以使用它   $size 當要尋找特定長度的陣列時，就可以用它~   $slice 可以指定回傳的陣列指定的範例 ex. 10就為前十條，-10就為後十條。   $elemMatch 它會只針對陣列，進行多組query。    假設情況我們collection中有下列document。
-{&amp;#34;id&amp;#34;:&amp;#34;1&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;mark&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;stanly&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;x&amp;#34;:[10,20,30]}; {&amp;#34;id&amp;#34;:&amp;#34;2&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;steven&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;max&amp;#34;,&amp;#34;stanly&amp;#34;], &amp;#34;x&amp;#34;:[5,6,30]}; {&amp;#34;id&amp;#34;:&amp;#34;3&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;stanly&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;max&amp;#34;], &amp;#34;x&amp;#34;:[15,6,30,40]}; {&amp;#34;id&amp;#34;:&amp;#34;4&amp;#34;,&amp;#34;name&amp;#34;:&amp;#34;max&amp;#34;, &amp;#34;fans&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;stanly&amp;#34;], &amp;#34;x&amp;#34;:[15,26,330,41,1]}; 我們這時想要尋找 fans 中同時有 steven、max 的網紅 我們這時就可以使用$all。
-db.user.find({&amp;#34;fans&amp;#34;:{&amp;#34;$all&amp;#34;:[&amp;#34;steven&amp;#34;,&amp;#34;max&amp;#34;]}}) 結果如下，應該是只找到mark、stanly這兩個人。
-我們想要尋找 fans 總共有三位的網紅。 我們這時可以用$size，不過有點可惜的一件事，$size無法與搜尋條件(ex.$gte)使用，所以無法尋找3人以上之類的，通常要來實現這種需求就只能多加個欄位了。
-我們來看看$size的使用方法。
-db.user.find({&amp;#34;fans&amp;#34;:{&amp;#34;$size&amp;#34; :3}}) 我們希望尋找 mark 的第一個 fans。 $slice主要功能就是將陣列切割只回傳你指定的範例。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式...">
     
+    <meta property="og:title" content="30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@ db.user.find({&amp;#34;fans&amp;#34;:{&amp;#34;$size&amp;#34; :3}}) 我們希望
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-9之MongoDB新手村CRUD---搜尋之陣列欄位與regex | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。
- 搜尋陣列內容 正規表達式搜尋  ~ 搜尋陣列內容 ~ 這邊我們將要介紹幾個陣列搜尋符號$all、$size、$slice。
-   Tables Are     $all 當需要尋找多個元素節合的document時，就可以使用它   $size 當要尋找特定長度的陣列時，就可以用它~   $slice 可以指定回傳的陣列指定的範例 ex. 10就為前十條，-10就為後十條。   $elemMatch 它會只針對陣列，進行多組query。    假設情況我們collection中有下列document。
-{&#34;id&#34;:&#34;1&#34;,&#34;name&#34;:&#34;mark&#34;, &#34;fans&#34;:[&#34;steven&#34;,&#34;stanly&#34;,&#34;max&#34;], &#34;x&#34;:[10,20,30]}; {&#34;id&#34;:&#34;2&#34;,&#34;name&#34;:&#34;steven&#34;, &#34;fans&#34;:[&#34;max&#34;,&#34;stanly&#34;], &#34;x&#34;:[5,6,30]}; {&#34;id&#34;:&#34;3&#34;,&#34;name&#34;:&#34;stanly&#34;, &#34;fans&#34;:[&#34;steven&#34;,&#34;max&#34;], &#34;x&#34;:[15,6,30,40]}; {&#34;id&#34;:&#34;4&#34;,&#34;name&#34;:&#34;max&#34;, &#34;fans&#34;:[&#34;steven&#34;,&#34;stanly&#34;], &#34;x&#34;:[15,26,330,41,1]}; 我們這時想要尋找 fans 中同時有 steven、max 的網紅 我們這時就可以使用$all。
-db.user.find({&#34;fans&#34;:{&#34;$all&#34;:[&#34;steven&#34;,&#34;max&#34;]}}) 結果如下，應該是只找到mark、stanly這兩個人。
-我們想要尋找 fans 總共有三位的網紅。 我們這時可以用$size，不過有點可惜的一件事，$size無法與搜尋條件(ex.$gte)使用，所以無法尋找3人以上之類的，通常要來實現這種需求就只能多加個欄位了。
-我們來看看$size的使用方法。
-db.user.find({&#34;fans&#34;:{&#34;$size&#34; :3}}) 我們希望尋找 mark 的第一個 fans。 $slice主要功能就是將陣列切割只回傳你指定的範例。|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將要說明其它幾個搜尋方法，包含如何搜尋document中的陣列欄位的值以及運用正規表達式regex 來進行搜尋。 搜尋陣列內容 正規表達式|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

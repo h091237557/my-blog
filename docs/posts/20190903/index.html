@@ -26,20 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?
-這首先第一部份，我們要探討以下主題 :
- 在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?
- 而這一題的主要的答案就是不少人面試很排斥的『演算法』。
-本篇文章會分為以下幾段 :
- 一個好與不好的演算法性能差距多大呢 ? 演算法運算時間的分類 演算法優化建議  接下來正文開始。
-一個好與不好的演算法性能差距多大呢 ? 一個演算法的效能基本上有兩個東東 :
- 時間複雜度: 你可以把它想成演算法的運行時間。 空間複雜度: 這個可以想成你這個演算法需要花多少的空間來處理。  上面只是簡單說明它的代表概念，比較實際的運算方法直接去 wiki 看就夠囉。
-那麼拉回拉，一個好與不好的演算法性能差距有多大呢 ?
-呵 !
-我們以一個最簡單的演算法『費波那契數列』來看看。
-首先這是好的程式碼。
-// good  console.time(&amp;#39;time&amp;#39;); function fib (n) { if ( n === 0 || n === 1) { return n; } let a = 0; let res = 1; let temp = 0; for (let i=2; i &amp;lt;= n; i&#43;&#43;) { temp = res; res = a &#43; res; a = temp; } return res; } fib(45); console.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能...">
     
+    <meta property="og:title" content="30-03 之應用層的運算加速 - 演算法">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -54,19 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-03 之應用層的運算加速 - 演算法 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ?
-這首先第一部份，我們要探討以下主題 :
- 在應用層，要如何儘可能的使用越少的資源( CPU、Memory )，來做最多的事情呢 ?
- 而這一題的主要的答案就是不少人面試很排斥的『演算法』。
-本篇文章會分為以下幾段 :
- 一個好與不好的演算法性能差距多大呢 ? 演算法運算時間的分類 演算法優化建議  接下來正文開始。
-一個好與不好的演算法性能差距多大呢 ? 一個演算法的效能基本上有兩個東東 :
- 時間複雜度: 你可以把它想成演算法的運行時間。 空間複雜度: 這個可以想成你這個演算法需要花多少的空間來處理。  上面只是簡單說明它的代表概念，比較實際的運算方法直接去 wiki 看就夠囉。
-那麼拉回拉，一個好與不好的演算法性能差距有多大呢 ?
-呵 !
-我們以一個最簡單的演算法『費波那契數列』來看看。
-首先這是好的程式碼。
-// good  console.time(&#39;time&#39;); function fib (n) { if ( n === 0 || n === 1) { return n; } let a = 0; let res = 1; let temp = 0; for (let i=2; i &lt;= n; i&#43;&#43;) { temp = res; res = a &#43; res; a = temp; } return res; } fib(45); console.|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章開始，我們將要深入的探討，每一個服務，要如何儘可能的達到高性能呢 ? 這首先第一部份，我們要探討以下主題 : 在應用層，要如何儘可能|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

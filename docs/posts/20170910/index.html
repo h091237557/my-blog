@@ -26,24 +26,10 @@
     <meta content="socket" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。
-在開始說明 socket 前，我們需要先準備一些基本知識，那就是常聽到的 tcp/ip。
-TCP/IP 通訊模型 tcp/ip 它是一種網路協定，它定義了點對點如何的傳輸，如何將資料封裝、定址、傳輸、路由以及在目的地如何接受，全部都加以標準化，它基本上可以分為四層應用層、傳輸層、網路互連層與網路介面層，它常被視為簡化的七層 OSI 模型。
-圖片來源:鳥哥
-在了解 socket 前，我們需要了解應用層與傳輸層的基本概念。
-應用層 這個層級主要是定義 :
- 應用程式的溝通協定，也可以理解為不同應用程式如何協同工作。
- 在這個層級的協定，大部份都會使用到兩個傳輸協定tcp與udp，至於何時使用 tcp 或 udp 取決於，該協定是否保證資料完整的傳送到另一端，這邊我們只要記得tcp可靠而udp不可靠這兩件事情就夠了。
-我們常用的 http 就是屬於這一層協定，smtp 也屬於這層，我們簡單的來說明一下 http 的概念。
-HTTP (超文字傳輸協定) 它是一種應用層的傳輸協定，它主要定義了下面的事情 :
- 它是一個用戶端與伺服器端請求和應答的標準
- 通常 http 用戶端的發出一個請求，它會建立一個到伺服器端的 TCP 連線 。
-傳輸層 這個層級主要是定義 :
- 定義點到點如何傳輸
- 其中tcp、udp就是這一層，我們簡單的來說明一下 tcp 的工作，就會知道這個層級主要是做啥事情。
-TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，這個協定宗旨在於 :
- 提供一個可靠(不會掉資料)的資料流傳送服務|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。 在開始說明 socket 前，我...">
     
+    <meta property="og:title" content="Socket 的哩哩扣扣">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -58,23 +44,7 @@ TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket 的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。
-在開始說明 socket 前，我們需要先準備一些基本知識，那就是常聽到的 tcp/ip。
-TCP/IP 通訊模型 tcp/ip 它是一種網路協定，它定義了點對點如何的傳輸，如何將資料封裝、定址、傳輸、路由以及在目的地如何接受，全部都加以標準化，它基本上可以分為四層應用層、傳輸層、網路互連層與網路介面層，它常被視為簡化的七層 OSI 模型。
-圖片來源:鳥哥
-在了解 socket 前，我們需要了解應用層與傳輸層的基本概念。
-應用層 這個層級主要是定義 :
- 應用程式的溝通協定，也可以理解為不同應用程式如何協同工作。
- 在這個層級的協定，大部份都會使用到兩個傳輸協定tcp與udp，至於何時使用 tcp 或 udp 取決於，該協定是否保證資料完整的傳送到另一端，這邊我們只要記得tcp可靠而udp不可靠這兩件事情就夠了。
-我們常用的 http 就是屬於這一層協定，smtp 也屬於這層，我們簡單的來說明一下 http 的概念。
-HTTP (超文字傳輸協定) 它是一種應用層的傳輸協定，它主要定義了下面的事情 :
- 它是一個用戶端與伺服器端請求和應答的標準
- 通常 http 用戶端的發出一個請求，它會建立一個到伺服器端的 TCP 連線 。
-傳輸層 這個層級主要是定義 :
- 定義點到點如何傳輸
- 其中tcp、udp就是這一層，我們簡單的來說明一下 tcp 的工作，就會知道這個層級主要是做啥事情。
-TCP (傳輸控制協定) 它是根據傳輸層的定義，所完成的協定，這個協定宗旨在於 :
- 提供一個可靠(不會掉資料)的資料流傳送服務|Describe what your web page is about">
+    <meta name="twitter:description" content="在前面的幾篇有說到，不同的 process 間可以使用 IPC 通信來進行溝通，但如果是不同電腦呢 ? 要如何溝通呢 ? 我們這時就可以使用 socket 來進行溝通。 在開始說明 socket 前，我|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

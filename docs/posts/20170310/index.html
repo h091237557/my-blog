@@ -26,14 +26,10 @@
     <meta content="data structure, tree" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在筆者的『基礎資料結構 3 &amp;mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :
- 中序追蹤 (in-order) : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG) 前序追蹤 (pre-order) : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG) 後序追蹤 (post-order) : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA) level-order : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)   補充: 這裡我們在補充第四種追蹤level-order，事實上它就是BFS，也就是一層一層的掃
- 那為什麼我們這裡要在拿來說一次呢 ?
- 因為我們之前實作的方法是用『 Recursion 』來實作。
- 有寫過程式的人大概會知道，在使用recursion 實作程式碼，常常有可能會發生memory leak事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。
-中序追蹤 (in-order)  左 =&amp;gt; 根 =&amp;gt; 右
- iteration  直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。 然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。 接下來在從 pop 出的節點的右子樹開始重複第一個步驟。  /** * Tree inordrTraversal (no recursive) * Tip: 左根右 */ BinarySearchTree.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果...">
     
+    <meta property="og:title" content="樹狀結構的遍歷 Traversal ( Iteration )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="樹狀結構的遍歷 Traversal ( Iteration ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果要遍歷樹大至上有以下三種方法 :
- 中序追蹤 (in-order) : 先走訪左子樹，然後在根，最後在右子樹。(DBEAFCG) 前序追蹤 (pre-order) : 先走訪根，然後在左子樹，最後在右子樹。(ABDECFG) 後序追蹤 (post-order) : 先走訪左子樹，然後在右子樹，最後是根。(DEBFGCA) level-order : 先走訪第一層節點，再走訪第二層，最後會走到最後一層。(ABCDEFG)   補充: 這裡我們在補充第四種追蹤level-order，事實上它就是BFS，也就是一層一層的掃
- 那為什麼我們這裡要在拿來說一次呢 ?
- 因為我們之前實作的方法是用『 Recursion 』來實作。
- 有寫過程式的人大概會知道，在使用recursion 實作程式碼，常常有可能會發生memory leak事件，所以我們這篇將要來說明，如何不使用它，來實作以上三種 traversal。
-中序追蹤 (in-order)  左 =&gt; 根 =&gt; 右
- iteration  直接先深入最深的左子樹，並將行經的節點，存放到 stack 中。 然後深入到最後時，發現是 null ，開始從 stack 中 pop 東西出來。 接下來在從 pop 出的節點的右子樹開始重複第一個步驟。  /** * Tree inordrTraversal (no recursive) * Tip: 左根右 */ BinarySearchTree.|Describe what your web page is about">
+    <meta name="twitter:description" content="在筆者的『基礎資料結構 3 &mdash; 樹狀結構與二元樹』的這篇文章中，我們介紹了樹的基本概念，也學習了如何遍歷樹的方法，在之前的文章中，我們有說到，如果|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

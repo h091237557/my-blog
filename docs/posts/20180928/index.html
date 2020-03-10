@@ -26,17 +26,10 @@
     <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章要探討的主題：
- 為什麼 P2P 連線很麻煩呢 ?
- 因為如果你理解了這個問題，你就會知道為什麼 WebRTC 要使用怎麼多的技術來進行 P2P 連線囉，這也是為什麼我們會先說明這篇文章。
-本篇文章的問題，為什麼 P2P 的連線會很麻煩呢 ? 最主要的問題在於：
- NAT 與防火牆的存在。
- 因此本篇文章將針對這兩個東西來理解
- NAT 與防火牆是啥 ? NAT 的運作原理。 為什麼有了 NAT 後 P2P 會很麻煩 ? NAT 的分類。  NAT 與防火牆是啥 ? NAT NAT (Network Address Translation) 中文就做網路位置轉換，它是用來將私網 IP 轉換成公網 IP 的技術。
-為啥會有 NAT ? 先說說它的起源。
-在咱們世界裡有個叫 IPV4 的地址規則，由於它數量稀少，不可能讓每一台電腦都有一個地址，因此就有了以下的解法如下圖，就是每個家庭或公司只有一組地址，然後公司內的電腦就使用這位置來上網。
-其中常用的私有 IP 段為：|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章...">
     
+    <meta property="og:title" content="30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-28之 WebRTC 連線前傳 - 為什麼 P2P 連線很麻煩 ? ( NAT ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章要探討的主題：
- 為什麼 P2P 連線很麻煩呢 ?
- 因為如果你理解了這個問題，你就會知道為什麼 WebRTC 要使用怎麼多的技術來進行 P2P 連線囉，這也是為什麼我們會先說明這篇文章。
-本篇文章的問題，為什麼 P2P 的連線會很麻煩呢 ? 最主要的問題在於：
- NAT 與防火牆的存在。
- 因此本篇文章將針對這兩個東西來理解
- NAT 與防火牆是啥 ? NAT 的運作原理。 為什麼有了 NAT 後 P2P 會很麻煩 ? NAT 的分類。  NAT 與防火牆是啥 ? NAT NAT (Network Address Translation) 中文就做網路位置轉換，它是用來將私網 IP 轉換成公網 IP 的技術。
-為啥會有 NAT ? 先說說它的起源。
-在咱們世界裡有個叫 IPV4 的地址規則，由於它數量稀少，不可能讓每一台電腦都有一個地址，因此就有了以下的解法如下圖，就是每個家庭或公司只有一組地址，然後公司內的電腦就使用這位置來上網。
-其中常用的私有 IP 段為：|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 在開始說明 WebRTC 如何建立 P2P 連線前，咱們要先理解一件事情，那就是 WebRTC 要使用非常多的 P2P 連線技術，那位啥它需要使用如此多的技術呢 ? 那就是本篇文章|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

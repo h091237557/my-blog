@@ -26,18 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。
-在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為：
- 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播或網路電話一樣即時的將聲音傳送給對方 ( 方法 3 )  接下來我們將來實作方法 2 的選項，而這東西事實上就是點播網站的應用，像 KKTV、楓林網就是這種類型的應用，本篇文章將會說明：
- 如何建立的像 KKTV 一樣的點播功能呢 (可以動就好版) ?
- 先說好，如果真的要建立像 KKTV 一樣的可營運的應用，還需要做不少架構的調整，這裡就是只是學習如何做出可以動的點播網站，也就是可以看片 (不是全部下載完才可以看)。
-本篇將分為以下幾個章節：
- 點播架構原理。 實作 - 建立 Media Server。 實作 - 網頁用戶端取得串流影像。  架構原理 基本上點播的架構，最基本(不管流量或 CDN 這些鬼)的樣貌會如下：
-然後基本上可以選擇的協議有RTMP、HLS、HTTP-FLV、MPEG-DASH。
-那這裡問個問題 ?
-我要選擇那個協議呢 ? 基本上我覺得是要看你的用戶端的裝置取向，基本上以現在的狀態選擇 HLS 與 MPEG-DASH 在點播類的應用，應該是最安穩的，最主要我覺得有以下三個原因：
- 這兩個都是使用 HTTP 來傳輸，不太會發生有的用戶可以看有的不行。 大部份的平台都可以找到方法支援。 這兩種都有支援依劇網路狀況，來自動調整畫質的功能，這在看影片時尤其有用。  這兩個協議可以去參考筆者的以下兩篇文章。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。 在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方...">
     
+    <meta property="og:title" content="30-20之如何建立像 KKTV 一樣的點播功能呢 ? ">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-20之如何建立像 KKTV 一樣的點播功能呢 ?  | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。
-在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為：
- 將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播或網路電話一樣即時的將聲音傳送給對方 ( 方法 3 )  接下來我們將來實作方法 2 的選項，而這東西事實上就是點播網站的應用，像 KKTV、楓林網就是這種類型的應用，本篇文章將會說明：
- 如何建立的像 KKTV 一樣的點播功能呢 (可以動就好版) ?
- 先說好，如果真的要建立像 KKTV 一樣的可營運的應用，還需要做不少架構的調整，這裡就是只是學習如何做出可以動的點播網站，也就是可以看片 (不是全部下載完才可以看)。
-本篇將分為以下幾個章節：
- 點播架構原理。 實作 - 建立 Media Server。 實作 - 網頁用戶端取得串流影像。  架構原理 基本上點播的架構，最基本(不管流量或 CDN 這些鬼)的樣貌會如下：
-然後基本上可以選擇的協議有RTMP、HLS、HTTP-FLV、MPEG-DASH。
-那這裡問個問題 ?
-我要選擇那個協議呢 ? 基本上我覺得是要看你的用戶端的裝置取向，基本上以現在的狀態選擇 HLS 與 MPEG-DASH 在點播類的應用，應該是最安穩的，最主要我覺得有以下三個原因：
- 這兩個都是使用 HTTP 來傳輸，不太會發生有的用戶可以看有的不行。 大部份的平台都可以找到方法支援。 這兩種都有支援依劇網路狀況，來自動調整畫質的功能，這在看影片時尤其有用。  這兩個協議可以去參考筆者的以下兩篇文章。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前面聲音與影像的基本原理都學習完後，咱們接下來要來實作一些東西。 在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

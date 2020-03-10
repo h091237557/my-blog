@@ -26,16 +26,10 @@
     <meta content="php, reactor, swoole" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。
-本篇文章分為以下幾個章節 :
- Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項  swoole 的架構 swoole 官網寫到 :
- event-driven asynchronous &amp;amp; coroutine-based concurrency networking communication engine with high performance written in C and C&#43;&#43; for PHP.
- swoole 它是一個用 c&#43;&#43; 所寫的 php extension，一個非常高效能的通訊引擎，而它能達到高效能的基礎在於以下幾個重點 :
- event-drivent coroutine  一句話來說他可以幹麻。
- 它可以讓我們建立一個高效能的網路服務
- 下面就是它實現非阻塞 I/O 的架構圖。
-當它建立一個 http server 以後，你會看到產生出下圖這些 process 與 thread，基本上可以分為幾個部份 :|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項...">
     
+    <meta property="og:title" content="PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。
-本篇文章分為以下幾個章節 :
- Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項  swoole 的架構 swoole 官網寫到 :
- event-driven asynchronous &amp; coroutine-based concurrency networking communication engine with high performance written in C and C&#43;&#43; for PHP.
- swoole 它是一個用 c&#43;&#43; 所寫的 php extension，一個非常高效能的通訊引擎，而它能達到高效能的基礎在於以下幾個重點 :
- event-drivent coroutine  一句話來說他可以幹麻。
- 它可以讓我們建立一個高效能的網路服務
- 下面就是它實現非阻塞 I/O 的架構圖。
-當它建立一個 http server 以後，你會看到產生出下圖這些 process 與 thread，基本上可以分為幾個部份 :|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章，咱們將要在說明另一個在 php 實現 reactor 模式的東西swoole。 本篇文章分為以下幾個章節 : Swoole 的架構 Swoole 非阻塞 I/O 的處理 Swoole 的 Coroutine Swoole 實際使用的注意事項|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

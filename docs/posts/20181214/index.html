@@ -26,12 +26,10 @@
     <meta content="php, laravel" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。
-&amp;lt;?php $containter = require(&amp;#39;Container&amp;#39;); // 建立抽象與實體類別的對應 $containter-&amp;gt;bind(ILogService, AWSLogServcie::class); $log = $container-&amp;gt;make(Log::class); $log-&amp;gt;send(&amp;#39;log....&amp;#39;); 其中上面的bind就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。
-那 Service Provider 是什麼 ?  它就個註冊與管理 Container 內服務的地方。
- 下面的程式碼為 Laravel 專案的 Service Provider，其中有兩個重要的方法boot與register。
- register : 它就是用來寫 bind 的地方。 boot : 它就是當 register 結束以後會執行的方法。  &amp;lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類...">
     
+    <meta property="og:title" content="PHP Laravel 的 Service Provider 理解">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -46,11 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP Laravel 的 Service Provider 理解 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類別的對應，最後就可以自動的進行依賴性注入。如下偽程式碼。
-&lt;?php $containter = require(&#39;Container&#39;); // 建立抽象與實體類別的對應 $containter-&gt;bind(ILogService, AWSLogServcie::class); $log = $container-&gt;make(Log::class); $log-&gt;send(&#39;log....&#39;); 其中上面的bind就是可以在這個容器內建立一個抽象類別舉實體類別的對應，也就是說如果後來要實體化有實作 ILogService 的類別，那他就會實體化 AWSLogServcie 出來。
-那 Service Provider 是什麼 ?  它就個註冊與管理 Container 內服務的地方。
- 下面的程式碼為 Laravel 專案的 Service Provider，其中有兩個重要的方法boot與register。
- register : 它就是用來寫 bind 的地方。 boot : 它就是當 register 結束以後會執行的方法。  &lt;?php namespace App\Providers; use Illuminate\Support\ServiceProvider; class AppServiceProvider extends ServiceProvider { /** * Bootstrap any application services.|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是 Laravel Service Provider ? 上一篇文章『PHP Laravel 的 Container 理解』中咱們學習到了 Laravel 的 Container 是一種用來解決依賴與耦合的概念，它建立了一個容器並且在裡面定義好抽像與實際類|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

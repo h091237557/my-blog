@@ -26,16 +26,10 @@
     <meta content="php, laravel" name="keywords">
     
     
-    <meta name="description" property="og:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 :
- 一個 http 請求進來後，php 到底是如何運行呢 ?
- 要理解這件事情，有個最基本的觀念要先理解，那就是下面這段指令，它到底是如何運行的。
-php index.php 然後接下來才能在理解 Web 是如何用 php 來處理。
-這篇文章將分為以下幾個章節 :
- 執行 php index.php 它是如何運行的呢 ? 三種用 PHP 來處理 HTTP 的模式 Web PHP 應用組合與問題  執行 php index.php 它是如何運行的呢 ? 假設我們在 Terminal 執行了如下的指令。
- php index.php
- 那實際上它的運行流程會如下圖，而這張圖也代表 PHP 的基本運行架構。
- SAPI ( Server Application Programming Interface ) : 它就是一個應用環境與PHP 核心的一個 Interface，會有這層主要的原因在於，不同的應用環境，例如命令行環境(就是在 Terminal 執行 php) 或 Web 環境都需要不同的 PHP 環境配置，如果沒有這一層就代表 PHP 本身要針對不同的環境來考慮設計兼容，這也是為什麼會有 SAPI 的目的。 main : 它是 php 所有操作的整合者。 Zend 引擎 : 它就是將咱們編寫的 PHP 程式碼解釋成可以執行的 opcode 碼，其中 PHP7 與 PHP5 有速度上的飛升原因就在於此，PHP7 大幅度的優化了 Zend 引擎。 Extension : 它是 PHP 內核所提供的一套擴充 PHP 功能的方式，大部份都是使用 C/C&#43;&#43; 所撰寫，基本上可以分為 PHP extension 與 Zend extension。  三種用 PHP 來處理 HTTP 的模式 那如果改成 Web 情況下，上面那張圖會變成什麼樣子呢 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情...">
     
+    <meta property="og:title" content="PHP 的 Web 運行原理 ( 1 )  - 傳統型">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ php index.php 然後接下來才能在理解 Web 是如何用 php 來處理。
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 1 )  - 傳統型 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 :
- 一個 http 請求進來後，php 到底是如何運行呢 ?
- 要理解這件事情，有個最基本的觀念要先理解，那就是下面這段指令，它到底是如何運行的。
-php index.php 然後接下來才能在理解 Web 是如何用 php 來處理。
-這篇文章將分為以下幾個章節 :
- 執行 php index.php 它是如何運行的呢 ? 三種用 PHP 來處理 HTTP 的模式 Web PHP 應用組合與問題  執行 php index.php 它是如何運行的呢 ? 假設我們在 Terminal 執行了如下的指令。
- php index.php
- 那實際上它的運行流程會如下圖，而這張圖也代表 PHP 的基本運行架構。
- SAPI ( Server Application Programming Interface ) : 它就是一個應用環境與PHP 核心的一個 Interface，會有這層主要的原因在於，不同的應用環境，例如命令行環境(就是在 Terminal 執行 php) 或 Web 環境都需要不同的 PHP 環境配置，如果沒有這一層就代表 PHP 本身要針對不同的環境來考慮設計兼容，這也是為什麼會有 SAPI 的目的。 main : 它是 php 所有操作的整合者。 Zend 引擎 : 它就是將咱們編寫的 PHP 程式碼解釋成可以執行的 opcode 碼，其中 PHP7 與 PHP5 有速度上的飛升原因就在於此，PHP7 大幅度的優化了 Zend 引擎。 Extension : 它是 PHP 內核所提供的一套擴充 PHP 功能的方式，大部份都是使用 C/C&#43;&#43; 所撰寫，基本上可以分為 PHP extension 與 Zend extension。  三種用 PHP 來處理 HTTP 的模式 那如果改成 Web 情況下，上面那張圖會變成什麼樣子呢 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="這篇文章雖然主題為PHP 的 Web 運行原理，但是比較白話文的說，事實上是想要理解這件事情 : 一個 http 請求進來後，php 到底是如何運行呢 ? 要理解這件事情|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,14 +26,10 @@
     <meta content="php, reactor" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前篇: PHP 的 Web 運行原理 ( 1 )
-上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而我們這篇文章就是要來理解是碰到什麼問題，然後又是如何解決呢 ?
- Reactor 模式想解決的問題 Reactor 模式原理 Reactor 的使用注意事項  Reactor 模式想解決的問題 使用 moduel 與 fast_cgi 模式 的 web server 模式基本上會有兩個問題存在。
-1. 高併發請求，會爆 ! 如下面這張圖一樣，它每一個 http 請求都需要使用一個 process 或是 thread 來進行處理，而每一台機器的 process 與 thread 的數量都有限制，且操作系統進行 process 或 thread 上文文切換時非常耗的資源。
-2. 服務如果是大量 I/O 操作會很浪費資源 ! ex. 讀 db 或 redis 啥的
-主要耗資源的地方在於，每個 process 開啟後，大部份的時間者是在等待 I/O 的處理，而 CPU 都是閒在那。
-上面兩個是看到的現象，而真正的問題點在於 :  為什麼每個請求都需要開啟一個 process 或 thread 來處理呢 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="前篇: PHP 的 Web 運行原理 ( 1 ) 上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而...">
     
+    <meta property="og:title" content="PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP 的 Web 運行原理 ( 2 ) - 非阻塞 I/O 之 Reactor 模式 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前篇: PHP 的 Web 運行原理 ( 1 )
-上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而我們這篇文章就是要來理解是碰到什麼問題，然後又是如何解決呢 ?
- Reactor 模式想解決的問題 Reactor 模式原理 Reactor 的使用注意事項  Reactor 模式想解決的問題 使用 moduel 與 fast_cgi 模式 的 web server 模式基本上會有兩個問題存在。
-1. 高併發請求，會爆 ! 如下面這張圖一樣，它每一個 http 請求都需要使用一個 process 或是 thread 來進行處理，而每一台機器的 process 與 thread 的數量都有限制，且操作系統進行 process 或 thread 上文文切換時非常耗的資源。
-2. 服務如果是大量 I/O 操作會很浪費資源 ! ex. 讀 db 或 redis 啥的
-主要耗資源的地方在於，每個 process 開啟後，大部份的時間者是在等待 I/O 的處理，而 CPU 都是閒在那。
-上面兩個是看到的現象，而真正的問題點在於 :  為什麼每個請求都需要開啟一個 process 或 thread 來處理呢 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="前篇: PHP 的 Web 運行原理 ( 1 ) 上面一篇文章中，我們有提到兩種 php 的 web 運行模式moduel與fast_cgi模式，它們在某種情況下，都會有些問題，而|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

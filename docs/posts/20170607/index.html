@@ -26,29 +26,10 @@
     <meta content="nodejs, rabbitmq" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
-訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
- 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
- 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
-至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
-使用訊息佇列的十個理由&amp;mdash;簡中
-然後我們先簡單的說明一下訊息系統的基礎。
-訊息系統架構 基本上分為以下兩種 :
-對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
- 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
- zeroMQ 他可以幫助我們建立對等式架構。
- 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
-以下為中介者架構的圖示 :
- RabbitMQ 就是專門用來建立這個架構的東東。
- 接下來的文章中，我們將要先來實作一些rabbitmq。
-Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
-如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
-那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
-根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
-它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
-佇列它還有以下三種特性 :
- 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP...">
     
+    <meta property="og:title" content="Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -63,28 +44,7 @@ Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之可擴展性 --- 訊息佇列 Message queue (RabbitMQ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IPC通信，其中裡面就包含了訊息佇列 (message queue)。
-訊息佇列基本上是用來行程間溝通或是同行程內不同執行序溝通，他提供了異步的溝通協定，這個意思就是指當你傳送一堆訊息給 A 時，A 可以不用即時的來處理這些訊息，這也代表這訊息可堆積再處理，白話文就是 :
- 訊息接受者如果爆了，我訊息發送者還是可以一直發送訊息，等你好了，你還是可以取得完整的訊息。
- 我們可以想想http協定他是一個同步協定，這也代表你傳送一個request必須等待伺服器發送response。
-至於我們為什麼要用message queue請參考下面這篇文章，他真的已經寫的很完整了。
-使用訊息佇列的十個理由&mdash;簡中
-然後我們先簡單的說明一下訊息系統的基礎。
-訊息系統架構 基本上分為以下兩種 :
-對等式 (peer-to-peer) 在對等式的架構下，每一個節點都直接將訊息傳送給接受者，這種方法基本上會比較複雜，因為他還要決定各自結點的的通訊協定，但還是有一些優點 :
- 避免單點故障。 和中介者模式比較來少了中間一層，速度應該是比較快。 彈性較高。  以下為對等式架構的圖示 :
- zeroMQ 他可以幫助我們建立對等式架構。
- 中介者模式 (message broker) 而中介者模式就是所有的節點，都會連結到某個broker，一切都由broke來處理，每個節點不需要知道，我和誰溝通，只需要知道要傳送的訊息內容即可。但缺點就是上面對等式的優點。
-以下為中介者架構的圖示 :
- RabbitMQ 就是專門用來建立這個架構的東東。
- 接下來的文章中，我們將要先來實作一些rabbitmq。
-Rabbit MQ 在上面的章節中，我們應該有說到，分佈式架構除了對等式架構外，還有一個是中介者架構，中介者的主要作用就是讓訊息接受者與傳送者之間完全的解偶，而rabbitmq就是一個支援AMQP (Advanced Message Queuing Protocol)協議的中間介者。
-如下圖所示，它就是中間綠綠那個，我們稱他為中介者 broker。
-那AMQP是什麼 ? 它是一種協議，AMQP 是一個提供統一訊息服務的應用層標準協議(osi第七層)，也就是設定於其它應用軟體之間的通訊，像 http、https、ftp 等都是應用層協議。
-根據該協議，客戶端與訊息中間件(broker)可傳送訊息，不受客戶端/中間件不同產品，不同開發語言的條件限制。
-它有三個總要概念 佇列 (queue) : 這東東它是儲存訊息的架構，然後裡面的訊息它會被客戶端拿走。一個佇列可能會推多個客戶端取走訊息，這時處理的方式和我們之前說的負載平衡差不多。
-佇列它還有以下三種特性 :
- 可延續性 : 意即若 broker 重新啟動時，則佇列也自動重新建立。那裡面的訊息著麼辦呢 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="在前幾篇文章中，我們說明了如何將系統進行擴展，而接下來呢，我們將要說明如何使用訊息佇列來進行整合，事實上之前的每篇文章中都要提到一個名稱IP|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

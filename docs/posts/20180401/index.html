@@ -26,16 +26,10 @@
     <meta content="elasticsearch" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們將要很快速的學習以下幾個重點:
- elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 document。 搜尋 document。  elasticsearch 的基本觀念 Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。
-Elasticserach 有這和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:
-index: markcorp type: employee { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 使用 docker 建立 elastisearch 服務 接下來的教學可以直接用這個專案來直接執行:
-git clone https://github.com/h091237557/docker-composer-tools.git cd elasticsearch/ docker-compose up 下面為官網所直接使用的docker compose的檔案。(官網傳送門)
-version: &amp;#39;2.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們將要很快速的學習以下幾個重點: elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 documen...">
     
+    <meta property="og:title" content="Elasticserach 的操作新手村">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ version: &amp;#39;2.|Describe what your web page is about">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Elasticserach 的操作新手村 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們將要很快速的學習以下幾個重點:
- elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 document。 搜尋 document。  elasticsearch 的基本觀念 Elasticserach 是一種分散式的搜尋引擎，它非常適合用來處理大量資料的搜尋與分析，像 github 就是拿他來搜尋它們所有的程式碼，而且它也提供了豐富的 restful api 來給我們進行操作。
-Elasticserach 有這和關聯式資料庫相似的結構，如下圖。
-所以假設我們要新增一筆在 markcorp 某一位員工的文檔會長的如下:
-index: markcorp type: employee { id: 123 name: ‘Mark’, age: 18 } 然後當我們要去 ES 尋找這筆資料時，就可以使用它提供的 Restful API 來直接尋找:
- GET 127.0.0.1:9200/markcorp/employee/123
- 使用 docker 建立 elastisearch 服務 接下來的教學可以直接用這個專案來直接執行:
-git clone https://github.com/h091237557/docker-composer-tools.git cd elasticsearch/ docker-compose up 下面為官網所直接使用的docker compose的檔案。(官網傳送門)
-version: &#39;2.|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們將要很快速的學習以下幾個重點: elasticsearch 的基本觀念。 使用 docker 建立 elastisearch 服務。 新增 document。 取得 document。 修改 documen|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

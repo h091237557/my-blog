@@ -26,23 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。
- chunk的分配與拆分。  ~ chunk 的分配與拆分 ~ 在上一篇文章中，我們知道每個分片中都包含了多個chunk，而每chunk中，又包含了某個範圍的document組，我們先簡單來畫個圖複習一下。
-然後我們接下來要討論的就是，mongodb是如何拆分chunk和如何將chunk分片到shard裡，首先我們先來看看chunk的拆分。
-chunk 的拆分 首先我們先想一下，chunk它本身是一堆document的集合體，大概長降,我們使用上一章節的範例，來看一下chunk的詳細資訊，假設我們都已經分片好了，我們直接看結果。
-首先我們需要先移動到一個名為config的資料庫。
-use config &amp;gt; switched to db config 然後再執行db.chunks.find().pretty()來看一下，目前只有一個chunk，它目前窩在shard0000，而它的範圍是min ~ max，呃對了忘了說，我們的資料是1萬筆的{&amp;quot;name&amp;quot;:&amp;quot;user&amp;quot;&#43;i}這種物件。
-這時我們要問個問題囉，它什麼時後會再分成另一個chunk ?
-答案是chunk的大小，mongodb預設chunk最大限制為64MB，當超過時mongos會將它拆分為兩塊chunk，如下圖，此圖為官方圖片。
-預設是64MB，當然我們也有辦法修改預設，指令如下，下面32代表為32MB。
-use config &amp;gt; switched to db config db.settings.save({&amp;#34;_id&amp;#34; : &amp;#34;chunksize&amp;#34; : &amp;#34;value&amp;#34; : 32}) 但是這邊要修改大小時有幾點要思考一下。
- chunk 越小時可以使分片的可以使分片的資料量更均衡，不會有差距太大的狀況，但缺點就是，因為小所以會常移動chunk，所以mongos壓力會比較重。
- chunk 的拆分實驗 咱們來簡單的測試看看chunk的拆分，首先來建立一些資料，大小約為4188890 byte大概為4mb左右，然後我們的chunk大小預設為1mb，所以理論上應會開拆為3~4個chunk。
-var objs = []; for (var i=0;i&amp;lt;100000;i&#43;&#43;){ objs.push({&amp;#34;name&amp;#34;:&amp;#34;user&amp;#34;&#43;i}); } db.users.insert(objs); 建好後別忘了執行這兩個指令。
-db.users.ensureIndex({&amp;#34;name&amp;#34;:1}) sh.shardCollection(&amp;#34;test.users&amp;#34;,{&amp;#34;name&amp;#34;:1}) 然後我們指行sh.status()來看看結果，呃我淚囉為什麼會拆分為8個……
-我們來檢查一下chunk size的設定，如下圖嗯沒錯~是1。
-use config db.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。...">
     
+    <meta property="og:title" content="30-24之MongoDB分片Sharding(2)---Chunk的札事">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -57,22 +44,7 @@ use config db.|Describe what your web page is about">
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-24之MongoDB分片Sharding(2)---Chunk的札事 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。
- chunk的分配與拆分。  ~ chunk 的分配與拆分 ~ 在上一篇文章中，我們知道每個分片中都包含了多個chunk，而每chunk中，又包含了某個範圍的document組，我們先簡單來畫個圖複習一下。
-然後我們接下來要討論的就是，mongodb是如何拆分chunk和如何將chunk分片到shard裡，首先我們先來看看chunk的拆分。
-chunk 的拆分 首先我們先想一下，chunk它本身是一堆document的集合體，大概長降,我們使用上一章節的範例，來看一下chunk的詳細資訊，假設我們都已經分片好了，我們直接看結果。
-首先我們需要先移動到一個名為config的資料庫。
-use config &gt; switched to db config 然後再執行db.chunks.find().pretty()來看一下，目前只有一個chunk，它目前窩在shard0000，而它的範圍是min ~ max，呃對了忘了說，我們的資料是1萬筆的{&quot;name&quot;:&quot;user&quot;&#43;i}這種物件。
-這時我們要問個問題囉，它什麼時後會再分成另一個chunk ?
-答案是chunk的大小，mongodb預設chunk最大限制為64MB，當超過時mongos會將它拆分為兩塊chunk，如下圖，此圖為官方圖片。
-預設是64MB，當然我們也有辦法修改預設，指令如下，下面32代表為32MB。
-use config &gt; switched to db config db.settings.save({&#34;_id&#34; : &#34;chunksize&#34; : &#34;value&#34; : 32}) 但是這邊要修改大小時有幾點要思考一下。
- chunk 越小時可以使分片的可以使分片的資料量更均衡，不會有差距太大的狀況，但缺點就是，因為小所以會常移動chunk，所以mongos壓力會比較重。
- chunk 的拆分實驗 咱們來簡單的測試看看chunk的拆分，首先來建立一些資料，大小約為4188890 byte大概為4mb左右，然後我們的chunk大小預設為1mb，所以理論上應會開拆為3~4個chunk。
-var objs = []; for (var i=0;i&lt;100000;i&#43;&#43;){ objs.push({&#34;name&#34;:&#34;user&#34;&#43;i}); } db.users.insert(objs); 建好後別忘了執行這兩個指令。
-db.users.ensureIndex({&#34;name&#34;:1}) sh.shardCollection(&#34;test.users&#34;,{&#34;name&#34;:1}) 然後我們指行sh.status()來看看結果，呃我淚囉為什麼會拆分為8個……
-我們來檢查一下chunk size的設定，如下圖嗯沒錯~是1。
-use config db.|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇文章中說明完基本的分片概念後，我們本章節要更深的了解分片內的chunk， 它是每個分片組成的東西，我們這篇將要說明它的拆分與分配機制。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

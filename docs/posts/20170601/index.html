@@ -26,17 +26,10 @@
     <meta content="nodejs, nodejs stream" name="keywords">
     
     
-    <meta name="description" property="og:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資料，一直傳送給網頁，所以我們可以直接進行觀看，並且在觀看時它還會繼續傳送後面的片段過來。
-串流的優點 在node js中，傳送內容基本上有分兩種形式，一種是緩衝而另一種就是串流，我們先來看看緩衝在處理資料傳送時，它是如何處理。
-緩衝它的基本概念就是將所有的資料先收集到緩衝區裡，當資料已經完整的讀取完，在傳送給接受者，如下圖所示，它會將HELLO MARK這所有的資料先讀取完，然後才能傳送給接受者。
-然後我們來看看串流，它每個時間點一接受到資料就會直接發送給接受者，所以如下圖所示，在時間點t1時，它會接受到HELLO這串資料，然後在t2時會接受到剩下的MARK資料。
-那這樣有什麼好處呢 ? 簡單的說有兩個優點，一個是空間效率，因為如果使用緩衝的方法來進行個10gb以上的資料傳輸，就代表這你需要10gb的緩衝空間，那這樣記憶體一定爆掉。而第二個優點就是時間效率，就如同最上面的影片例子來說明，使用串流，你可以直接看影片，然後再看影片時，它還會繼續傳送剩下的影片片段，節省了等待時間。
-緩衝與串流的程式碼實做比較 我們簡單寫一個檔案下載的伺服器，然後分別以緩衝與串流的程式碼，來進行實作，在nodejs中，有個 module 名為fs，它是專門用來處理檔案傳輸的工具，它也同時繼承了node 中的串流模組stream。
-緩衝讀取檔案實作 這是一個下載aaa.avi檔案的伺服器，但假設該檔案大小如果大於1024mb(舊版本node)的話，它會直接死掉，因為它緩衝爆掉了。
-基本上這種類形的api被稱為Bulk I/O。
-const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.createServer((req, res) =&amp;gt; { fs.readFile(&amp;#39;aaa.avi&amp;#39;, (err, data) =&amp;gt; { if(err) { console.log(err); res.writeHead(500); res.end(err.message); } else{ res.writeHead(200, { &amp;#39;Content-Type&amp;#39;: &amp;#39;video/avi&amp;#39; }); res.end(data); } }); }); server.listen(3000, () =&amp;gt; { console.log(&amp;#39;server up !&amp;#39;); }); 串流讀取檔案實作 下列程式碼就是使用串流來實作的讀取檔案伺服器，這樣如果檔案大小在大，它都可以進行處理，因為它是將大檔案分割成小塊小塊，然後一直傳輸。
-const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp;#39;); const server = http.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來...">
     
+    <meta property="og:title" content="Node.js 的串流之旅之基本概念">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ const http = require(&amp;#39;http&amp;#39;); const fs = require(&amp;#39;fs&amp
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node.js 的串流之旅之基本概念 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來才能播放，但如果使用串流技術那傳送影片，它會將一小短小短的資料，一直傳送給網頁，所以我們可以直接進行觀看，並且在觀看時它還會繼續傳送後面的片段過來。
-串流的優點 在node js中，傳送內容基本上有分兩種形式，一種是緩衝而另一種就是串流，我們先來看看緩衝在處理資料傳送時，它是如何處理。
-緩衝它的基本概念就是將所有的資料先收集到緩衝區裡，當資料已經完整的讀取完，在傳送給接受者，如下圖所示，它會將HELLO MARK這所有的資料先讀取完，然後才能傳送給接受者。
-然後我們來看看串流，它每個時間點一接受到資料就會直接發送給接受者，所以如下圖所示，在時間點t1時，它會接受到HELLO這串資料，然後在t2時會接受到剩下的MARK資料。
-那這樣有什麼好處呢 ? 簡單的說有兩個優點，一個是空間效率，因為如果使用緩衝的方法來進行個10gb以上的資料傳輸，就代表這你需要10gb的緩衝空間，那這樣記憶體一定爆掉。而第二個優點就是時間效率，就如同最上面的影片例子來說明，使用串流，你可以直接看影片，然後再看影片時，它還會繼續傳送剩下的影片片段，節省了等待時間。
-緩衝與串流的程式碼實做比較 我們簡單寫一個檔案下載的伺服器，然後分別以緩衝與串流的程式碼，來進行實作，在nodejs中，有個 module 名為fs，它是專門用來處理檔案傳輸的工具，它也同時繼承了node 中的串流模組stream。
-緩衝讀取檔案實作 這是一個下載aaa.avi檔案的伺服器，但假設該檔案大小如果大於1024mb(舊版本node)的話，它會直接死掉，因為它緩衝爆掉了。
-基本上這種類形的api被稱為Bulk I/O。
-const http = require(&#39;http&#39;); const fs = require(&#39;fs&#39;); const server = http.createServer((req, res) =&gt; { fs.readFile(&#39;aaa.avi&#39;, (err, data) =&gt; { if(err) { console.log(err); res.writeHead(500); res.end(err.message); } else{ res.writeHead(200, { &#39;Content-Type&#39;: &#39;video/avi&#39; }); res.end(data); } }); }); server.listen(3000, () =&gt; { console.log(&#39;server up !&#39;); }); 串流讀取檔案實作 下列程式碼就是使用串流來實作的讀取檔案伺服器，這樣如果檔案大小在大，它都可以進行處理，因為它是將大檔案分割成小塊小塊，然後一直傳輸。
-const http = require(&#39;http&#39;); const fs = require(&#39;fs&#39;); const server = http.|Describe what your web page is about">
+    <meta name="twitter:description" content="串流是啥，事實上這個東東，我們每天都有使用，簡單的說，它是一種傳送內容的技術，在沒有使用串流技術時，我們想要在網路上看影片，需要將它下載下來|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

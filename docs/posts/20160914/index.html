@@ -26,16 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
- 聚合 (aggregate) 是啥 ? 有啥用。 Mongodb 聚合工具 Aggregate Framework。 管道 pipeline 操作符號。  ~ 聚合(aggregate)是啥?有啥用? ~ 在前面幾篇文章中，我們學會了mongodb的CRUD，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是『分析』，是的，我們將資料存放進mongodb最終的目的就是要使用分析，而聚合就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
-~ MongoDb 聚合工具之 Aggregate Framework ~ 在mongodb中提供了aggregate framework的聚合工具，使用方法如下，其中AGGREGATE_OPERATION就是指你每一次的處理過程。
-db.collection.aggregate(AGGREGATE_OPERATION) 先不考慮mongodb的語言，下面就是一個聚合的範例，mongodb的aggregate framework主要是建立在聚合管道(pipeline)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節[依作者進行分類]，直到最後產生結果。
-db.collection.aggregate( [將每篇文章作者與like數抓取出來], [依作者進行分類], [將like數進行加總] [返like數前五多的結果] ) ~ 管道 pipeline 操作符號 ~ Aggregate framework提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆document，並對這些document做些操作，然後再將結果傳至下一個pipeline直到最後結果出現。
-project 使用$project可以用來選取document中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。 下面寫個簡單的使用範例。
-首先我們有下列的資料。
-{ &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : &amp;#34;mark&amp;#34;, &amp;#34;age&amp;#34; : 20, &amp;#34;assets&amp;#34; : 100000000 } 然後我們可以用$project來決定要那個欄位，我們選取id與name欄位。
-db.user.aggregate({ &amp;#34;$project&amp;#34; : { &amp;#34;id&amp;#34; : 1, &amp;#34;name&amp;#34; : 1 }}) 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明...">
     
+    <meta property="og:title" content="30-14之MongoDB聚合(1)---Aggregate Framework的哩哩扣扣">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ db.user.aggregate({ &amp;#34;$project&amp;#34; : { &amp;#34;id&amp;#34; : 1, &am
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-14之MongoDB聚合(1)---Aggregate Framework的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明的事情。
- 聚合 (aggregate) 是啥 ? 有啥用。 Mongodb 聚合工具 Aggregate Framework。 管道 pipeline 操作符號。  ~ 聚合(aggregate)是啥?有啥用? ~ 在前面幾篇文章中，我們學會了mongodb的CRUD，以及使用索引讓我們搜尋、排序速度更快速，那我們接下來幾篇要學什麼?答案就是『分析』，是的，我們將資料存放進mongodb最終的目的就是要使用分析，而聚合就是能幫助我們分析的工具，它能處理數據記錄並回傳結果。
-~ MongoDb 聚合工具之 Aggregate Framework ~ 在mongodb中提供了aggregate framework的聚合工具，使用方法如下，其中AGGREGATE_OPERATION就是指你每一次的處理過程。
-db.collection.aggregate(AGGREGATE_OPERATION) 先不考慮mongodb的語言，下面就是一個聚合的範例，mongodb的aggregate framework主要是建立在聚合管道(pipeline)基礎下，而這管道就是可以一連串的處理事件，以下列範例中你可以想成管道中有四節，『將每篇文章作者與like數抓取出來』為第一節，然後它處理完會產生資料，會再丟給第二節[依作者進行分類]，直到最後產生結果。
-db.collection.aggregate( [將每篇文章作者與like數抓取出來], [依作者進行分類], [將like數進行加總] [返like數前五多的結果] ) ~ 管道 pipeline 操作符號 ~ Aggregate framework提供了很多的操作符號，來幫助你進行複雜的操作，每個符號都會接受一堆document，並對這些document做些操作，然後再將結果傳至下一個pipeline直到最後結果出現。
-project 使用$project可以用來選取document中的欄位，還可以在這些欄位上進行一些操作，或是新建欄位。 下面寫個簡單的使用範例。
-首先我們有下列的資料。
-{ &#34;id&#34; : 1, &#34;name&#34; : &#34;mark&#34;, &#34;age&#34; : 20, &#34;assets&#34; : 100000000 } 然後我們可以用$project來決定要那個欄位，我們選取id與name欄位。
-db.user.aggregate({ &#34;$project&#34; : { &#34;id&#34; : 1, &#34;name&#34; : 1 }}) 結果如下，當然他的功能沒著麼單純，它還可以和很多東西搭配，晚點會說。|Describe what your web page is about">
+    <meta name="twitter:description" content="在前面幾篇都是說明如何尋找到你想要的東西，而在接下來的聚合章節中，我們將說來學習到如何使用聚合工具，來幫助我們分析更多資料，以下為本篇要說明|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

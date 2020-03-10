@@ -26,18 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。
-本篇文章將分為以下幾個章節
- Stream 是什麼 ? 可以解決什麼事情 ? Stream 在 IPC 通信的原理。 簡單的小範例。  Stream 是什麼 ? 可以解決什麼事情 ? 傳統資料傳輸流程問題 stream 它是一種技術，基本上專門用來傳輸資料用。
-咱們先來看看傳統上，咱們如果要從硬碟拿個檔案是如何處理。
-基本上流程如下圖 1 所示。
- 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料(也就是所謂的內核記憶體)。 有，則將內核緩衝區的資料，拷貝到用戶緩衝區(用戶進程記憶體)。 無，則前往硬碟取得。 將硬碟資料拷貝至內核緩衝區。 將內核緩存區資料，拷貝到用戶緩衝區。(內核切成用戶) 然後就可以使用資料了。  圖 1 : 傳統的資料傳輸流程
-而重點在於這裡 :
- 硬碟資料 copy 到內核緩衝區，接下來再從內核緩衝區 copy 到用戶緩衝區。
- 然後問題出在於 :
- 如果資料很大會發生什麼事呢 ?
- 基本上結果就如下圖 2 所示，有可能在內核緩衝或用戶緩衝，就爆掉了，因為記憶體是整份 copy 過去，如果你硬碟資料有 10 gb，那就代表，要將這 10 gb 的資料 copy 到內核緩存，再 copy 到用戶緩存，這時後用戶進程才能拿到它。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。...">
     
+    <meta property="og:title" content="30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-06 之應用層的 I/O 優化 - Stream ( 與一些 IPC 知識 ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。
-本篇文章將分為以下幾個章節
- Stream 是什麼 ? 可以解決什麼事情 ? Stream 在 IPC 通信的原理。 簡單的小範例。  Stream 是什麼 ? 可以解決什麼事情 ? 傳統資料傳輸流程問題 stream 它是一種技術，基本上專門用來傳輸資料用。
-咱們先來看看傳統上，咱們如果要從硬碟拿個檔案是如何處理。
-基本上流程如下圖 1 所示。
- 應用程式發送 system call read 某個檔案給作業系統的內核。(用戶切內核) 內核看看內核緩衝區有沒有相關資料(也就是所謂的內核記憶體)。 有，則將內核緩衝區的資料，拷貝到用戶緩衝區(用戶進程記憶體)。 無，則前往硬碟取得。 將硬碟資料拷貝至內核緩衝區。 將內核緩存區資料，拷貝到用戶緩衝區。(內核切成用戶) 然後就可以使用資料了。  圖 1 : 傳統的資料傳輸流程
-而重點在於這裡 :
- 硬碟資料 copy 到內核緩衝區，接下來再從內核緩衝區 copy 到用戶緩衝區。
- 然後問題出在於 :
- 如果資料很大會發生什麼事呢 ?
- 基本上結果就如下圖 2 所示，有可能在內核緩衝或用戶緩衝，就爆掉了，因為記憶體是整份 copy 過去，如果你硬碟資料有 10 gb，那就代表，要將這 10 gb 的資料 copy 到內核緩存，再 copy 到用戶緩存，這時後用戶進程才能拿到它。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 Stream 這個東東，基本上在每一個語言你都看的到，而今天我們將要深入的來理解它到底是什麼東西，並且它在一些 I/O 操作上可以幫助我們解決什麼事情。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

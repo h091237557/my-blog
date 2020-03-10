@@ -26,19 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將會說明以下幾點。
- 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機  P.S &#43;u^11鐵人們 ~ 事實上我已快gg了
-~ 什麼是索引? ~ 索引是什麼?最常見的說法是，一本字典中，你要找單字，會先去前面的索引找他在第幾頁，是的這就是索引，可以幫助我們更快速的尋找到document，下面畫張圖來比較一下不使用索引和使用索引的搜尋概念圖。
-~ 索引的優缺點 ~ 索引竟然可以幫助我們著麼快的找到目標，那是不是以後都用索引就好??著麼可能!~ 索引好歸好，但他就像雙刃刀，用的不好會gg的。
-優點  搜尋速度更(飛)快 ~ 在使用分組或排度時更快 ~  缺點  每次進行操作(新增、更新、刪除)時，都會更費時，因為也要修改索引。 索引需要佔據空間。  使用時機 所以根據以上的優缺點可知，不是什麼都要建立索引的，通常只有下列時機才會使用。
- 搜尋結果佔原collection越小，才越適合(下面會說明更清楚)。 常用的搜尋。 該搜尋造成性能瓶頸。 在經常需要排序的搜尋。 當索引性能大於操作性能時。  ~ 索引的建立 ~ 我們簡單建立個索引使用範例。
-db.tests.insert( {&amp;#34;x&amp;#34; : &amp;#34;hello&amp;#34;} ) 然後這時我們建立x欄位的索引。
-db.tests.ensureIndex({ &amp;#34;x&amp;#34; : 1 }) 然後我們可以達行下列指令，來查看有沒有建立成功。
-db.tests.getIndexs() 結果如下，建立成功x的索引，其中_id那個是預設的，mongodb會自動幫objectId建立索引。
-~ 索引與非索引搜尋比較 ~ 在mongodb中排序是非常的耗費內存資源，如果排序時內存耗費到32mb(這裡)，mongodb就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
-我們這裡建立些資料，來比較看看兩者的資源耗費不同點。
-for (var i=0;i&amp;lt;100000;i&#43;&#43;){ db.test.insert({ &amp;#34;x&amp;#34; : i }) } 然後建立x的索引。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將會說明以下幾點。 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機 P.S &#43;u^11鐵人們 ~ 事實上我已快gg了...">
     
+    <meta property="og:title" content="30-11之MongoDB索引(1)的哩哩扣扣">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@ for (var i=0;i&amp;lt;100000;i&#43;&#43;){ db.test.insert({ &amp;#34;x&amp;#34; 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-11之MongoDB索引(1)的哩哩扣扣 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將會說明以下幾點。
- 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機  P.S &#43;u^11鐵人們 ~ 事實上我已快gg了
-~ 什麼是索引? ~ 索引是什麼?最常見的說法是，一本字典中，你要找單字，會先去前面的索引找他在第幾頁，是的這就是索引，可以幫助我們更快速的尋找到document，下面畫張圖來比較一下不使用索引和使用索引的搜尋概念圖。
-~ 索引的優缺點 ~ 索引竟然可以幫助我們著麼快的找到目標，那是不是以後都用索引就好??著麼可能!~ 索引好歸好，但他就像雙刃刀，用的不好會gg的。
-優點  搜尋速度更(飛)快 ~ 在使用分組或排度時更快 ~  缺點  每次進行操作(新增、更新、刪除)時，都會更費時，因為也要修改索引。 索引需要佔據空間。  使用時機 所以根據以上的優缺點可知，不是什麼都要建立索引的，通常只有下列時機才會使用。
- 搜尋結果佔原collection越小，才越適合(下面會說明更清楚)。 常用的搜尋。 該搜尋造成性能瓶頸。 在經常需要排序的搜尋。 當索引性能大於操作性能時。  ~ 索引的建立 ~ 我們簡單建立個索引使用範例。
-db.tests.insert( {&#34;x&#34; : &#34;hello&#34;} ) 然後這時我們建立x欄位的索引。
-db.tests.ensureIndex({ &#34;x&#34; : 1 }) 然後我們可以達行下列指令，來查看有沒有建立成功。
-db.tests.getIndexs() 結果如下，建立成功x的索引，其中_id那個是預設的，mongodb會自動幫objectId建立索引。
-~ 索引與非索引搜尋比較 ~ 在mongodb中排序是非常的耗費內存資源，如果排序時內存耗費到32mb(這裡)，mongodb就會報錯，如果超出值，那麼必須使用索引來獲取經過排序的結果。
-我們這裡建立些資料，來比較看看兩者的資源耗費不同點。
-for (var i=0;i&lt;100000;i&#43;&#43;){ db.test.insert({ &#34;x&#34; : i }) } 然後建立x的索引。|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將會說明以下幾點。 什麼是索引? 索引的優點與缺點 索引的建立 索引與非索引搜尋比較 不要使用索引的時機 P.S &#43;u^11鐵人們 ~ 事實上我已快gg了|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

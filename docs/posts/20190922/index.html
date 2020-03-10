@@ -26,19 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一個系統中，最重要的應用層協議，咱們幾乎可能說是『 Http 』。
-本篇文章分為以下幾個章節，事實上也就是所謂的 http 進化史 :
- HTTP 行前基本知識 HTTP 1.X 的過去式 HTTP 2.0 的現在式 HTTP 3.0 的未來式  網路層的 http 優化事實上沒有啥重點，那就是 :
- 儘可能將 http 升級更高的版本
- 但是，為什麼要升級才是這一篇文章的重點。
-Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知識要來學習一下，不然下面會有很多東西看不太種。
-首先 http 基本上可以說是網路世界的基礎，它當初建立出來的目的是為讓瀏覽器這個應用層的應用使用，然後它在傳輸資料時所使用的協議為『 TCP 』，所以當咱們要建立連線時會進行所謂的『 TCP 三次握手 』如下圖 1 所示 :
-圖 1 : tcp 建立連線 ( 三次握手 )
-然後有了這個連線以後，咱們就可以開始進行資料傳輸。
-圖 2 : tcp 傳輸資料
-最後斷線時就有所謂的四次揮手。
-圖 3 : tcp 斷線 ( 四次揮手 )|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一...">
     
+    <meta property="og:title" content="30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@ Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-22 之網路傳輸的優化 - HTTP 1.0 至 HTTP 3.0 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一個系統中，最重要的應用層協議，咱們幾乎可能說是『 Http 』。
-本篇文章分為以下幾個章節，事實上也就是所謂的 http 進化史 :
- HTTP 行前基本知識 HTTP 1.X 的過去式 HTTP 2.0 的現在式 HTTP 3.0 的未來式  網路層的 http 優化事實上沒有啥重點，那就是 :
- 儘可能將 http 升級更高的版本
- 但是，為什麼要升級才是這一篇文章的重點。
-Http 行前基本知識 在這篇文章正式開始一前，咱們有些前知識要來學習一下，不然下面會有很多東西看不太種。
-首先 http 基本上可以說是網路世界的基礎，它當初建立出來的目的是為讓瀏覽器這個應用層的應用使用，然後它在傳輸資料時所使用的協議為『 TCP 』，所以當咱們要建立連線時會進行所謂的『 TCP 三次握手 』如下圖 1 所示 :
-圖 1 : tcp 建立連線 ( 三次握手 )
-然後有了這個連線以後，咱們就可以開始進行資料傳輸。
-圖 2 : tcp 傳輸資料
-最後斷線時就有所謂的四次揮手。
-圖 3 : tcp 斷線 ( 四次揮手 )|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章中，網路世界最重的協議 http，不只如上圖應用所示只有用戶端那有用到，現階段大部份很多 server 都還是會實用 http 去其它 server 取資料，所以一|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

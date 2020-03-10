@@ -26,16 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。
-本篇文章共分以下幾個章節 :
- IM 服務的先行知識 IM 服務的擴展方案 1 - 負載均衡 IM 服務的擴展方案 2 : IM 服務分配器  在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。
-簡單的說就是像 line 一樣可以進行即時的溝通。
-傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :
-IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。
- IM 服務就是像聊天室例如 Line 這種類型的服務
- 而通常要實現這個功能目前應該只有兩種機制 :
- long polling websocket  咱們來簡單用下圖 1 來看一下這兩種運行的差別。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個...">
     
+    <meta property="og:title" content="30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-24 之應用層擴展『 外傳 』 - IM 服務擴展與雷坑 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。
-本篇文章共分以下幾個章節 :
- IM 服務的先行知識 IM 服務的擴展方案 1 - 負載均衡 IM 服務的擴展方案 2 : IM 服務分配器  在開台之前咱們先來簡單的談談，什麼是即時通訊服務的擴展。
-簡單的說就是像 line 一樣可以進行即時的溝通。
-傳統上要建立這種類型的系統，通常會使用以下兩種機制來建立雙向的溝通 :
-IM 服務的先行知識 首先一般 web 應用都是使用 http 單向的來取得資料，也就是 request 然後 response 這種機制，但是在 im 這種服務系統中，場景通常都是 client A 發送訊息，然後 client B 會收到。
- IM 服務就是像聊天室例如 Line 這種類型的服務
- 而通常要實現這個功能目前應該只有兩種機制 :
- long polling websocket  咱們來簡單用下圖 1 來看一下這兩種運行的差別。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們理解了一般 web 系統的擴展方法後，接下來我們來一篇外傳，來說說關於 即時通訊服務 ( IM Instant Messaging Service ) 的擴展。 本篇文章共分以下幾個|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

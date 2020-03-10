@@ -26,18 +26,10 @@
     <meta content="elasticsearch, aws elasticsearch" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們要說明的主題為 :
- 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
- 本篇文章中，我們將分成以下的主題:
- Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
-其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
-這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
- 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
-V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
-所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
-這裡我們選擇了AWS kinesis，它的優點如下:
- 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們要說明的主題為 : 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。 本篇文章中，我們將分成以下的主題: Log 系統的架構說明 AWS 的工具申請 (Ela...">
     
+    <meta property="og:title" content="一個基於 AWS Elasticsearch 的用戶行為 log 系統建立">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@ V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="一個基於 AWS Elasticsearch 的用戶行為 log 系統建立 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們要說明的主題為 :
- 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。
- 本篇文章中，我們將分成以下的主題:
- Log 系統的架構說明 AWS 的工具申請 (Elasticsearch、Kinesis、S3) Log client 端的小實作  Log 系統的架構說明 V1 一個最簡單的 log 架構，應該會長的如下圖一樣，一個 log 來源與 log 接受端。
-其中 log 接受端，有很多種選擇，你可以選擇來源端的本機，並且選擇將之儲放成文字檔，又或是儲放在某個資料庫中，各種儲放法都優有缺。
-這裡我們選擇了使用Elasticsearch來當接受端，主要的理由如下:
- 可以進行快速的搜尋 可擴展性強  但相對的與文本儲放相比，那缺點就是空間一定比文本的大，因為文本可以壓縮，不過文本的搜尋速度可就 QQ 囉。
-V2 那 V1 有什麼缺點呢 ? 假設我們 Elasticsearch 上天堂，或是要停機更新一下，那這些 log 會著麼樣呢 ? 當然就是消了囉，雖然你可能會覺得 log 消失一些沒啥差別，但如果剛好是出問題的地方，那你真的會罵髒話了。
-所以這裡我們會增加一個Broker，架構圖如下，所有的資料來源都會先送到Broker來後在送到儲放點。
-這裡我們選擇了AWS kinesis，它的優點如下:
- 擁有 Queue 的機制，也就是說如果資料儲放點上天堂在 24 小時以內，只要回復了，它會自動將這些 log 在丟過去。 AWS Kinesis 可處理任何數量的串流資料，不用擔心它爆掉就對了。 可以設定 log 同步也備份到 S3。  !|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們要說明的主題為 : 如何使用 AWS Elasticsearch 來建立一個用戶行為 log 系統。 本篇文章中，我們將分成以下的主題: Log 系統的架構說明 AWS 的工具申請 (Ela|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

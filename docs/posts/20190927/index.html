@@ -26,16 +26,10 @@
     <meta content="鐵人賽, mysql" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
- 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
- 分區表
- 本篇文章分以下幾個章節 :
- 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
- 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
- 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
- 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
-user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = &#39;mark&#39;; 而如果是『 分區表 』的話為 :|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的...">
     
+    <meta property="og:title" content="30-27之資料庫層的擴展 - 分區表">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. u
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-27之資料庫層的擴展 - 分區表 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 :
- 分庫 分表  其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的工具 :
- 分區表
- 本篇文章分以下幾個章節 :
- 分區概念 MySQL 分區的切分類型 分區使用的注意事項  分區概念 分區表的核心概念為 :
- 將一張大表，根據『 規則 』拆分為『 隱藏 』的小表
- 觀念和分表事實上完全相同，就差在『 隱藏 』這個字詞上。它們的差異如下
- 分表 : 分表後，應用層需要修改 sql 操作位置，指定到對應的分表上。 分區 : 分區後，應用層『 不 』需要修改 sql 操作位置，資料庫層會自動幫你處理。  也就是說假設是使用 type 這個欄位來『 分表 』那你在查詢時可能需為變成如下指令 :
-user 根據 type 拆分成三個表 : 1. user_type_A 表 2. user_type_B 表 3. user_type_C 長 SELECT * FROM user_type_A WHERE name = &#39;mark&#39;; 而如果是『 分區表 』的話為 :|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到了兩種資料庫層的擴展方式 : 分庫 分表 其中分表是用來解決單表太大的問題，而接下來本章節要來介紹另一種處理單表太的|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

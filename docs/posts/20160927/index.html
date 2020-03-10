@@ -26,18 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就改用 aggreagate framework，然後如果再不能的話則用 mapreduce。
-~ 二哈的分析需求 ~ 這二貨根本沒有想需求，只是想說來分析一下，但分析啥也沒說，然後還要我們幫他想一下，然後還用這種表情看我，一臉用這種事情還用問我的表情。
-然後我們只能乖乖的幫他想幾個。
- 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  那我們先開始吧。
-~ 索引與片鍵的建立 ~ 呃對了，雖然上一篇文章中，我們已經將索引與片鍵選出來了，分別為
-索引 : { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }
-片鍵 : { &amp;quot;code&amp;quot; : 1 }
-但咱們突然想到一件事，你要建立的片鍵，必須要有索引，當我們的索引是複合索引，這樣我們還可以使用{ &amp;quot;code&amp;quot; : 1 }來建立嗎? 我們來試試。
-db.stocks.ensureIndex({ &amp;#34;date&amp;#34; : 1 , &amp;#34;code&amp;#34; : 1 }) sh.enableSharding(&amp;#34;test&amp;#34;) sh.shardCollection(&amp;#34;test.stocks&amp;#34;,{&amp;#34;code&amp;#34;:1}) 結果如下，看來是不行。
-那要著麼辦呢?這時我們有三個辦法。
- 再增加一個code索引。 選擇 { &amp;quot;date&amp;quot; : 1 }與{ &amp;quot;code&amp;quot; : 1}當索引。 片鍵修改為{ &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }。  要選那個呢，首先先來說說第一個，增加一個索引，缺點就在於需要更多的空間，而且這索引搜尋時幾乎不太用到，因為幾乎被原本的 { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 }可取代。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就...">
     
+    <meta property="og:title" content="30-27之MongoDB運用研究---股價應用模擬(2)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@ db.stocks.ensureIndex({ &amp;#34;date&amp;#34; : 1 , &amp;#34;code&amp;#34; : 1 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-27之MongoDB運用研究---股價應用模擬(2) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就改用 aggreagate framework，然後如果再不能的話則用 mapreduce。
-~ 二哈的分析需求 ~ 這二貨根本沒有想需求，只是想說來分析一下，但分析啥也沒說，然後還要我們幫他想一下，然後還用這種表情看我，一臉用這種事情還用問我的表情。
-然後我們只能乖乖的幫他想幾個。
- 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  那我們先開始吧。
-~ 索引與片鍵的建立 ~ 呃對了，雖然上一篇文章中，我們已經將索引與片鍵選出來了，分別為
-索引 : { &quot;date&quot; : 1 , &quot;code&quot; : 1 }
-片鍵 : { &quot;code&quot; : 1 }
-但咱們突然想到一件事，你要建立的片鍵，必須要有索引，當我們的索引是複合索引，這樣我們還可以使用{ &quot;code&quot; : 1 }來建立嗎? 我們來試試。
-db.stocks.ensureIndex({ &#34;date&#34; : 1 , &#34;code&#34; : 1 }) sh.enableSharding(&#34;test&#34;) sh.shardCollection(&#34;test.stocks&#34;,{&#34;code&#34;:1}) 結果如下，看來是不行。
-那要著麼辦呢?這時我們有三個辦法。
- 再增加一個code索引。 選擇 { &quot;date&quot; : 1 }與{ &quot;code&quot; : 1}當索引。 片鍵修改為{ &quot;date&quot; : 1 , &quot;code&quot; : 1 }。  要選那個呢，首先先來說說第一個，增加一個索引，缺點就在於需要更多的空間，而且這索引搜尋時幾乎不太用到，因為幾乎被原本的 { &quot;date&quot; : 1 , &quot;code&quot; : 1 }可取代。|Describe what your web page is about">
+    <meta name="twitter:description" content="上一篇文章中，我們已經說明完基本的架構以及索引和分片的選擇，接下來我們就要實際的來使用資料來進行一些分析，能用搜尋時就用搜尋，不能用搜尋時就|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

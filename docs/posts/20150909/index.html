@@ -26,18 +26,10 @@
     <meta content="js, javascript, promise, jqeury" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
-deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
-When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
-下列程式碼為when的基本使用方法。
-var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
-var promise1 = $.get(&amp;#39;/test1&amp;#39;); var promise2 = $.get(&amp;#39;/test2&amp;#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
-從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
-deferred.then()方法的回傳可以做以下兩件事。
- 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
-$.get(&amp;#39;/getData&amp;#39;) .done(function(response) { if(response.error) { console.log(&amp;#39;Error&amp;#39;); }else { console.log(&amp;#39;Success&amp;#39;); } }) .fail(function(response) { console.log(&amp;#39;Error&amp;#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
-var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務...">
     
+    <meta property="og:title" content="Jquery 的 Promise 之 when 與 then ( pipe )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@ var getData = $.get(&amp;#39;/getData&amp;#39;).then(function(response){ if(resp
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Jquery 的 Promise 之 when 與 then ( pipe ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。
-deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就可以運用when來完成這種類型的工作。
-When相當與執行Promise情況的AND。也就是說一旦給定的所有Promise均已執行後，就立即執行when方法產生的Promise對象。而一旦任一個Promise被拒絕，則立即拒絕when產生的Promise。
-下列程式碼為when的基本使用方法。
-var promise1 = $.get(&#39;/test1&#39;); var promise2 = $.get(&#39;/test2&#39;); $.when(promise1,promise2).done(function(){ //promise1與promise2都完成時會執行的事情。 	}); 如果要取得promise1與promise2的回傳參數則如下程式碼，其中arg1為promise1的回傳參數，而arg2為promise2的回傳參數。
-var promise1 = $.get(&#39;/test1&#39;); var promise2 = $.get(&#39;/test2&#39;); $.when(promise1,promise2).done(function(arg1,arg2){ //promise1與promise2都完成時會執行的事情。 	}); ##d eferred.then(.pipe)
-從Jquery1.8開始，官網建議將deferred.pipe()由deferred.then()替代。
-deferred.then()方法的回傳可以做以下兩件事。
- 如果then回傳為promise物件，則then生成的promise物件會模仿這個promise物件。 如果then回傳為非promise物件，則then生成的promise物件會立即因該回傳值而執行、拒絕或通知，取決於then那個初使promise發生什麼事了。  來看看使用情況，假設某api回傳發生錯誤時，不是回傳http status XXX，而是回傳個Json如{error:true}之類的，由於promise是在http請求失敗時，才會觸發，因為我們會將處理錯誤流程寫在done裡。
-$.get(&#39;/getData&#39;) .done(function(response) { if(response.error) { console.log(&#39;Error&#39;); }else { console.log(&#39;Success&#39;); } }) .fail(function(response) { console.log(&#39;Error&#39;); }); 上述程式碼，不是個好的解決方法，非得要在done做兩次判斷，因此我們這時就可以使用.then，來過濾Promise，如下程式碼。
-var getData = $.get(&#39;/getData&#39;).then(function(response){ if(response.error) return $.Deferred().reject(response); else return response; },function(response){ return $.Deferred().reject(response); });	getData.|Describe what your web page is about">
+    <meta name="twitter:description" content="在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

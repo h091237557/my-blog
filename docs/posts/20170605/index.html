@@ -26,17 +26,10 @@
     <meta content="nodejs, nodejs cluster" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一定會有界限，因此我們必須將應用程式擴展運用。
-根據The Art of Scalabiltiy的內容來知道，在擴展時，可以用下列三個維度來描述可擴展性。這也是被稱為擴展立方(scale cube)的東東。
- X 軸 : 複制 Y 軸 : 以服務/功能分解 Z 軸 : 以資料來分解  基本上Y軸擴展的方法是屬於微服務(Microservices)的範圍所以本篇也不詳細說明，而Z 軸則屬於資料庫方法所以也不加以說明。
-我們本篇將要說明X軸 : 複制，它的白話文概念如下 :
- 將應用程式加以複制 N 個，這也代表每個實體只須處理 N 分之一的工作量。
- 傳統的系統可以利用多執行緒，來完整使用整台機器的效能，但 node 則否，因為它是單一執行緒，並且在 64 位元下有1.7GB的限制，接下來我們將介紹 node 擴展的基本機制 cluster。
-cluster cluster是在 node 中的內建模組，他讓我們可以建立一個 cluster，可通過父進程來管理一堆子進程，在 cluster 中父進程被稱為master process，而子進程則被稱為worker process。
-每個傳送的連線都會先到master process然後會在將工作分配到worker process中。
-我們根據上一篇的程式碼來進行修改。下面程式碼中，首先請先看if(cluster.isMaster)裡面，當執行時，會使用cluster fork根據 cpu 的數量來新增 process，然後每次fork時都會執行else裡面的程式。
-const http = require(&amp;#39;http&amp;#39;); const child_process = require(&amp;#39;child_process&amp;#39;); const cluster = require(&amp;#39;cluster&amp;#39;); const numCPUs = require(&amp;#39;os&amp;#39;).|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執...">
     
+    <meta property="og:title" content="Node之可擴展性 --- Node的Cluster">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ const http = require(&amp;#39;http&amp;#39;); const child_process = require(&amp
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node之可擴展性 --- Node的Cluster | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執行緒架構，但是無論單體的伺服器能力在強大，單一執行緒的效能一定會有界限，因此我們必須將應用程式擴展運用。
-根據The Art of Scalabiltiy的內容來知道，在擴展時，可以用下列三個維度來描述可擴展性。這也是被稱為擴展立方(scale cube)的東東。
- X 軸 : 複制 Y 軸 : 以服務/功能分解 Z 軸 : 以資料來分解  基本上Y軸擴展的方法是屬於微服務(Microservices)的範圍所以本篇也不詳細說明，而Z 軸則屬於資料庫方法所以也不加以說明。
-我們本篇將要說明X軸 : 複制，它的白話文概念如下 :
- 將應用程式加以複制 N 個，這也代表每個實體只須處理 N 分之一的工作量。
- 傳統的系統可以利用多執行緒，來完整使用整台機器的效能，但 node 則否，因為它是單一執行緒，並且在 64 位元下有1.7GB的限制，接下來我們將介紹 node 擴展的基本機制 cluster。
-cluster cluster是在 node 中的內建模組，他讓我們可以建立一個 cluster，可通過父進程來管理一堆子進程，在 cluster 中父進程被稱為master process，而子進程則被稱為worker process。
-每個傳送的連線都會先到master process然後會在將工作分配到worker process中。
-我們根據上一篇的程式碼來進行修改。下面程式碼中，首先請先看if(cluster.isMaster)裡面，當執行時，會使用cluster fork根據 cpu 的數量來新增 process，然後每次fork時都會執行else裡面的程式。
-const http = require(&#39;http&#39;); const child_process = require(&#39;child_process&#39;); const cluster = require(&#39;cluster&#39;); const numCPUs = require(&#39;os&#39;).|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中將要說明，要如何的擴展 node 應用，從上一篇文章中我們知道， node 它很適合高 I/O 的任務，而不適合高 cpu 的任務，最主要的原因在於它的架構，它是單執|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

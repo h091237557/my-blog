@@ -26,14 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。
- 採集的詳細說明與聲音的加工。
- 本篇文章會將之分成以下幾個章節：
- WebRTC 的 Stream (Media Stream) 組成。 如何對 Media Stream 的聲音進行加工 ？  WebRTC 的 Stream ( Media Stream ) 組成  stream = track A &#43; track B
- 前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。
-const constraints = { audio: true, video: true } navigator.mediaDevices.getUserMedia(constraints) .then((stream) =&amp;gt; { // stream 就是咱們的聲音與影像 }) .catch((err) =&amp;gt; { // 錯誤處理 }) 然後咱們這裡來問個問題：
- stream 是由什麼組合的 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre...">
     
+    <meta property="og:title" content="30-08之 WebRTC 採集的詳細說明與聲音的加工">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ const constraints = { audio: true, video: true } navigator.mediaDevices.getUserM
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-08之 WebRTC 採集的詳細說明與聲音的加工 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stream，最後在將儲放成檔案，接下來我們將研究一下 stream 裡面的東西，以及來簡單的將所採集到的聲音進行加工。
- 採集的詳細說明與聲音的加工。
- 本篇文章會將之分成以下幾個章節：
- WebRTC 的 Stream (Media Stream) 組成。 如何對 Media Stream 的聲音進行加工 ？  WebRTC 的 Stream ( Media Stream ) 組成  stream = track A &#43; track B
- 前一篇文章中，咱們有提到可以用以下的程式碼，將聲音與影像給採集下來。
-const constraints = { audio: true, video: true } navigator.mediaDevices.getUserMedia(constraints) .then((stream) =&gt; { // stream 就是咱們的聲音與影像 }) .catch((err) =&gt; { // 錯誤處理 }) 然後咱們這裡來問個問題：
- stream 是由什麼組合的 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 前一篇文章『30-07 Web 如何進行語音與影像採集 ?』咱們已經學習到如何使用 WebRTC 來進行聲音與影像的採集，並且將採集的結果儲放成一個 stre|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

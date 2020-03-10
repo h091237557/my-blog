@@ -26,11 +26,10 @@
     <meta content="mysql, 鐵人賽, 索引" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b&#43; 樹來建立索引機制 ?
-本篇文章分為以下幾個章節 :
- 一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index ) InnoDB 所提供的索引類型  一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?
-   Id ( PK ) Name age     1 Mark 18   2 Jack 10   3 Ian 36   4 Jiro 30   5 Fucc 27   &amp;hellip; &amp;hellip; &amp;hellip;   10 Fukk 46   表 1 : 範例      首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使...">
     
+    <meta property="og:title" content="30-12 之資料庫層的核心 - MySQL 的索引實現">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -45,10 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-12 之資料庫層的核心 - MySQL 的索引實現 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使用 b&#43; 樹來建立索引機制 ?
-本篇文章分為以下幾個章節 :
- 一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 一張自加索引的表 InnoDB 實際上如何儲呢 ? ( Secondary Index ) InnoDB 所提供的索引類型  一張乾淨的表 InnoDB 實際上如何儲呢 ? ( Clustered Index ) 假設我們有以下的 table 表，然後咱們不要手動設什麼索引，那麼 innodb 會如何儲存它呢 ?
-   Id ( PK ) Name age     1 Mark 18   2 Jack 10   3 Ian 36   4 Jiro 30   5 Fucc 27   &hellip; &hellip; &hellip;   10 Fukk 46   表 1 : 範例      首先 innodb 會自動幫你建立一個叫『 clustered Index 』的東東，在 innodb 中，它就是這份資料實際上儲存的結構，請別管它叫索引，它就是你的實際資料，只是它是有規則的儲存結構。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，我們理解了 innoDB 索引的基本原理 b&#43; 樹的，也理解了為什麼 innoDB 要選擇 b&#43; 樹的原因後，那接下來，我們要來理解，在 innoDB 中『 實際上 』是如何使|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

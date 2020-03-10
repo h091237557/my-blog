@@ -26,14 +26,10 @@
     <meta content="js, javascript, settimeout" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
-setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
-下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&amp;ldquo;Hello&amp;rdquo;)。
-setTimeout(function(){ console.log(&amp;#34;Hello&amp;#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
-var start = new Date; setTimeout(function(){ var end = new Date; console.log(&amp;#39;Time elapsed:&amp;#39;, end - start, &amp;#39;ms&amp;#39;); }, 1000); while (new Date - start &amp;lt; 2000) {}; &amp;lt;!-- tas --&amp;gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
-setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(&amp;quot;Mark&amp;quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
-如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中...">
     
+    <meta property="og:title" content="Javascript 非同步編程的方法 - setTimeout">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ setTimeout(function(){ console.log(&amp;quot;Hello&amp;quot;); },0) console.log(
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Javascript 非同步編程的方法 - setTimeout | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中我們將會說明運用SetTimeout來處理非同步事件。
-setTimeout基本用法 SetTimeout為Javascript的原生函數，主要的用法為在一個指定的延遲時間後執行某個函數。
-下列程式碼為setTimeout的基本使用，代表在１秒鐘後執行console.log(&ldquo;Hello&rdquo;)。
-setTimeout(function(){ console.log(&#34;Hello&#34;) },1000); 這邊要注意一點，雖然上面程式碼是設定１秒，但是Javascript為單線程，因此如過將程式碼修改如下，讓單線程被While阻塞，setTimeout就不會在1秒後執行，而是等while執行完在執行。
-var start = new Date; setTimeout(function(){ var end = new Date; console.log(&#39;Time elapsed:&#39;, end - start, &#39;ms&#39;); }, 1000); while (new Date - start &lt; 2000) {}; &lt;!-- tas --&gt; 輸出結果： Time elapsed: 2002 ms --- setTimeout ( 0 ) 的意思 SetTimeout為在一個指定的延遲時間後執行某個函數，所以如果帶入(0)，則是否意味馬上執行的意思?來看下面程式碼。
-setTimeout(function(){ console.log(&quot;Hello&quot;); },0) console.log(&quot;Mark&quot;);  執行結果為： Mark Hello  嚴來來說不是立即執行，而是立即排進Task Quenu等待執行，等Call Stack空時它會至Task Quenu尋找工作，因此執行結果才為Mark Hello。
-如果不知道Task Quenu或Call Stack可至該篇看Event Driven的觀念。 Javascript Event Driven|Describe what your web page is about">
+    <meta name="twitter:description" content="在Javascript單線程與Javascript之Event Driven這兩篇文章中，我們大概了解了單線程與非同步事件的工作原理，在這篇中|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

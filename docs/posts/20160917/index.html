@@ -26,17 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。
- 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。 該選用那個方法呢 ?  ~ 正規化 ~ 在開始討論mongodb架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
-首先什麼是正規化呢 ? 根據wiki的定義。
- Database normalization is the process of organizing the fields and tables of a relational database to minimize redundancy and dependency.
- 中文意思為。
- 資料庫正規化就是指將關聯式資料庫的欄位與表單進行讓『資料重複性與相依性』能夠降到最低的組織過程。
- 是的，真的很文鄒鄒，不過我們只要知道正規化的目的是解決資料的『重複性』與『相依性』這兩個點就夠囉，資料庫正規化有一些規則，每條規則都稱為『正規形式』，符合第一條規則就稱為『第一正規形式』，總共有不少條，但通常到『第三正規形式』就被視為最高級的正規形式， 下面來簡單的說明一下這幾條規則。
-第一正規形式 以下條列為第一正規形式的規則，事實上重點還是在說『不要有重複群組』。
- 刪除各個資料表中的重複群組。 為每一組關聯的資料建立不同的資料表。 使用主索引鍵識別每一組關聯的資料。  我們假設資料為每個人的交易資料，下表為違反正規化的資料結構，因為它有重複的群組Volume，並且也缺少主索引鍵來識別每一組關聯的資料。
-   Name Date Volume     Mark 20160101 10 , -20   Jiro 20160102 -20 , 30   Ian 20160103 34 , -10    如果要符合第一正規形式大概要長的像降。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。...">
     
+    <meta property="og:title" content="30-17之MongoDB的設計---正規與反正規化的戰爭">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-17之MongoDB的設計---正規與反正規化的戰爭 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。
- 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。 該選用那個方法呢 ?  ~ 正規化 ~ 在開始討論mongodb架構時，有個東西要先講講，那就是『正規化』與『反正規化』，有使用過資料庫的應該都有聽過這名詞，不過這邊還是來解釋解釋，順到回憶一下。
-首先什麼是正規化呢 ? 根據wiki的定義。
- Database normalization is the process of organizing the fields and tables of a relational database to minimize redundancy and dependency.
- 中文意思為。
- 資料庫正規化就是指將關聯式資料庫的欄位與表單進行讓『資料重複性與相依性』能夠降到最低的組織過程。
- 是的，真的很文鄒鄒，不過我們只要知道正規化的目的是解決資料的『重複性』與『相依性』這兩個點就夠囉，資料庫正規化有一些規則，每條規則都稱為『正規形式』，符合第一條規則就稱為『第一正規形式』，總共有不少條，但通常到『第三正規形式』就被視為最高級的正規形式， 下面來簡單的說明一下這幾條規則。
-第一正規形式 以下條列為第一正規形式的規則，事實上重點還是在說『不要有重複群組』。
- 刪除各個資料表中的重複群組。 為每一組關聯的資料建立不同的資料表。 使用主索引鍵識別每一組關聯的資料。  我們假設資料為每個人的交易資料，下表為違反正規化的資料結構，因為它有重複的群組Volume，並且也缺少主索引鍵來識別每一組關聯的資料。
-   Name Date Volume     Mark 20160101 10 , -20   Jiro 20160102 -20 , 30   Ian 20160103 34 , -10    如果要符合第一正規形式大概要長的像降。|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章將說要說如何設計mongodb的架構，讓你可以更快速的使用mongodb。 資料庫的正規化(文鄒鄒)。 mongodb正規化與反正規化。|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

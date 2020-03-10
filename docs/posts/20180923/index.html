@@ -26,15 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。
- 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。  接下來咱們要來理解一下，解這上述問題的關鍵技術 CDN 是什麼東西 ?
-本編文章將分為以下幾個章節：
- 什麼是 CDN 呢 ? 它又是用來解決啥呢 ? CDN 的請求運作方式。 使用 AWS CloudFront 來建立 CDN。  什麽是 CDN 呢 ? 它又是用來解決啥呢 ? 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
-首先看看下面這張圖，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
-然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右。
-然後開始了有以下的對話 :
-老大：回應時間怎麼回事 ? 碼農仔：老大你叫我架到美國啊 !? 老大：我要的不是這回答，而是問你為啥回應時間你沒修改回來 ?|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片...">
     
+    <meta property="og:title" content="30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-23之 CDN 的說話島 ( AWS CloudFront  CDN 實作 ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。
- 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片卡頓的問題。  接下來咱們要來理解一下，解這上述問題的關鍵技術 CDN 是什麼東西 ?
-本編文章將分為以下幾個章節：
- 什麼是 CDN 呢 ? 它又是用來解決啥呢 ? CDN 的請求運作方式。 使用 AWS CloudFront 來建立 CDN。  什麽是 CDN 呢 ? 它又是用來解決啥呢 ? 在開始理解 CDN 之前，咱們先來說說傳統上一個 client 連線到一個網站的流程。
-首先看看下面這張圖，這張圖說明了每當一個 client 發送一個請求到 web 網站時，web 網站會回傳 html、css 與 javascript 回來，這裡假設咱們的 web 網站還在台灣，然後回應時間大約在 100 ms 以內 (假設)。
-然後呢 ~ 這時付你錢的老大叫你將 web 網路架設到美國，因爲免費，然後這時發現回應時間變成 1000 ms 左右。
-然後開始了有以下的對話 :
-老大：回應時間怎麼回事 ? 碼農仔：老大你叫我架到美國啊 !? 老大：我要的不是這回答，而是問你為啥回應時間你沒修改回來 ?|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們有提到點播與直播可動版本的一些問題，如下所列。 人多時連線數限制問題。 人多時頻寬問題。 人多時效能消耗問題。 遠距離看片|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

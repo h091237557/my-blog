@@ -26,15 +26,10 @@
     <meta content="elasticsearch, kibana" name="keywords">
     
     
-    <meta name="description" property="og:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
-在開始搞前先說說我的簡單需求:
- 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
- 這時通常時間的儲法會有兩種選擇:
- Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
-其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
-const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&amp;gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
-curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;quot;, &amp;quot;_type&amp;quot; : &amp;quot;log&amp;quot;, &amp;quot;_id&amp;quot; : &amp;quot;2139103&amp;quot;, &amp;quot;_score&amp;quot; : 1.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201...">
     
+    <meta property="og:title" content="Elasticearch 與 kibana 之日期的愛恨情仇">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@ curl 127.0.0.1/_search?pretty { &amp;quot;_index&amp;quot; : &amp;quot;api&amp;q
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Elasticearch 與 kibana 之日期的愛恨情仇 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。
-在開始搞前先說說我的簡單需求:
- 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如2017-07-16T19:20:30。
- 這時通常時間的儲法會有兩種選擇:
- Timestamp ISO 標準  咱們先來看看 Timestamp 的儲法與查找 下面為範例程式碼(nodejs)，其中 putRecord 我就不寫了，因為只是範例，反正就是透過 aws kinesis 來將資料丟到 aws elasticsearch 上。
-其中 test 為我們要丟到 elasticsearch 的資料，這裡我們要注意的 created_at 我們將會丟 timestamp 的進去。
-const streamName = &#39;mark-stream&#39;; const test = { name: &#39;Mark III&#39;, age: 40, created_at: Date.now() // timestamp 1533634630945 , }; putRecord(streamName, test, (err, res) =&gt; { console.log(err); }); Elasticsearch 查找 然後我們直接下來找找剛剛新增的那一筆。
-curl 127.0.0.1/_search?pretty { &quot;_index&quot; : &quot;api&quot;, &quot;_type&quot; : &quot;log&quot;, &quot;_id&quot; : &quot;2139103&quot;, &quot;_score&quot; : 1.|Describe what your web page is about">
+    <meta name="twitter:description" content="我相信有使用過 Elasticsearch 的人都應該是會被他的日期時區的問題搞到很火。 在開始搞前先說說我的簡單需求: 馬克大希望可以使用 ISO 標準來進行範圍搜尋，例如201|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

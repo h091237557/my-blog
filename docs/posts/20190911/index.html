@@ -26,18 +26,10 @@
     <meta content="mysql, 鐵人賽, 索引, b&#43;樹" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來理解資料庫系統中最核心的問題 :
- 要如何儲放資料，才能更快速的找到資料呢 ?
- 而這個東西的技術就是所謂的 :
- 索引
- 而在 mysql 中決定如何儲放的是資料庫儲存引擎來決定，而這裡咱們將要從 mysql 預設引擎 innodb 來深入的理解一下。
-在 InnoDB 中預設是使用『 B&#43;樹 』來當資料儲放格式，而為什麼要選擇它呢 ?
-這就是我們這篇文章的重點。
- InnoDB 為什麼選擇 B&#43; 樹 ?
- 本篇文章分為以下幾個章節，這也就是 B&#43; 樹的誕生原由。
- 二分搜尋 Binary Search 二元搜尋樹 Binary Search Tree 平衡二元搜尋樹 Balanced Binary Search Tree B 樹 B&#43;樹 ( InnoDB 的選擇 )  二分搜尋 Binary Search 首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。
-那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何...">
     
+    <meta property="og:title" content="30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-11 之資料庫層的核心 - 索引結構演化論 B&#43;樹 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來理解資料庫系統中最核心的問題 :
- 要如何儲放資料，才能更快速的找到資料呢 ?
- 而這個東西的技術就是所謂的 :
- 索引
- 而在 mysql 中決定如何儲放的是資料庫儲存引擎來決定，而這裡咱們將要從 mysql 預設引擎 innodb 來深入的理解一下。
-在 InnoDB 中預設是使用『 B&#43;樹 』來當資料儲放格式，而為什麼要選擇它呢 ?
-這就是我們這篇文章的重點。
- InnoDB 為什麼選擇 B&#43; 樹 ?
- 本篇文章分為以下幾個章節，這也就是 B&#43; 樹的誕生原由。
- 二分搜尋 Binary Search 二元搜尋樹 Binary Search Tree 平衡二元搜尋樹 Balanced Binary Search Tree B 樹 B&#43;樹 ( InnoDB 的選擇 )  二分搜尋 Binary Search 首先我們都知道，資料庫誕生出來的本質就是為了讓我們找東西更快速。
-那是和什麼比呢 ? 就是所謂的『 線性搜尋 』，也就是說有 1000 筆資料，你要找到你想要的值，需要一筆一筆的慢慢查，而這種線性搜尋的時間複雜就是 O(n)，其中 n 就是你所有的資料量。如下圖 1 所示。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來理解資料庫系統中最核心的問題 : 要如何儲放資料，才能更快速的找到資料呢 ? 而這個東西的技術就是所謂的 : 索引 而在 mysql 中決定如何|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

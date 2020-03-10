@@ -26,18 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。
-本篇文章分為以下幾個章節 :
- 什麼是進程池 ? 為什麼需要它呢 ? 進程池的數量設置。 什麼是連線池 ? 為什麼需要它呢 ? 連線池的數量設定。  什麼是進程池 ? 為什麼需要它呢 ? 先說以一下，這裡不一定是指進程 process ，也有可能是指線程 thread，反正都是代表一個池子裡裝了這兩種東西。
-接下來咱們以 process 進程為主。
-進程 process 咱們已經在前幾章很常看到它，它的基本概念就是 :
- 作業系統的操作單位且是最小資源分配單位
- 也就是在某個時間，會以 process 為單位開啟資源，並將 cpu 分配給它來工作。
-而所謂的進程池的就是，一個裝了一堆進程的隊列，當你有需要進程時，去裡面拿，而不用在重新建立一個新的。
-為什麼需要它呢 ? 先說一下，咱們什麼時後要開多個 process 或 thread 呢 ?
- 並行運算，也就是多開個 process 或 thread 來幫忙計算。 i/o 處理，在某些情況下，咱們需要開一個 process 或 thread 來處理 i/o。  那為什麼需要進程池呢 ?
- 可以節省建立與結束 process 所耗費資源 ( cpu 、 mem )。 可以有效的控制 process 的數量，如果一個不注意開太多，就算開時沒爆，你也有可能在上下文切換時爆了。 有了進程池事實上也代表有管理器，那這樣也代表有可能玩定時執行進程或線程 ( Java 就降玩 )。  這裡後我們簡單的複習一下，看看建立進程與結束是要做那些事情。基本上就如下面這張圖一樣，就是不斷的拷貝記憶體或移除記憶體。請別小看這一段工作，事實上要做不少事情的。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。 本篇文章分為以下幾...">
     
+    <meta property="og:title" content="30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-09之應用層的兩個池 - 進 ( 線 ) 程池與連線池 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。
-本篇文章分為以下幾個章節 :
- 什麼是進程池 ? 為什麼需要它呢 ? 進程池的數量設置。 什麼是連線池 ? 為什麼需要它呢 ? 連線池的數量設定。  什麼是進程池 ? 為什麼需要它呢 ? 先說以一下，這裡不一定是指進程 process ，也有可能是指線程 thread，反正都是代表一個池子裡裝了這兩種東西。
-接下來咱們以 process 進程為主。
-進程 process 咱們已經在前幾章很常看到它，它的基本概念就是 :
- 作業系統的操作單位且是最小資源分配單位
- 也就是在某個時間，會以 process 為單位開啟資源，並將 cpu 分配給它來工作。
-而所謂的進程池的就是，一個裝了一堆進程的隊列，當你有需要進程時，去裡面拿，而不用在重新建立一個新的。
-為什麼需要它呢 ? 先說一下，咱們什麼時後要開多個 process 或 thread 呢 ?
- 並行運算，也就是多開個 process 或 thread 來幫忙計算。 i/o 處理，在某些情況下，咱們需要開一個 process 或 thread 來處理 i/o。  那為什麼需要進程池呢 ?
- 可以節省建立與結束 process 所耗費資源 ( cpu 、 mem )。 可以有效的控制 process 的數量，如果一個不注意開太多，就算開時沒爆，你也有可能在上下文切換時爆了。 有了進程池事實上也代表有管理器，那這樣也代表有可能玩定時執行進程或線程 ( Java 就降玩 )。  這裡後我們簡單的複習一下，看看建立進程與結束是要做那些事情。基本上就如下面這張圖一樣，就是不斷的拷貝記憶體或移除記憶體。請別小看這一段工作，事實上要做不少事情的。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來咱們要來談談，在應用層中很常提到的兩個池『線程池』與『連線池』，它們兩個在應用層扮演了性能方面什麼樣的角色。 本篇文章分為以下幾|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

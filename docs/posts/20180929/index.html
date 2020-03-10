@@ -26,16 +26,10 @@
     <meta content="instant messaging, 鐵人賽, webrtc" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習：
- WebRTC 是如何進行打洞與連線呢 ?
- WebRTC 的打洞流程 ICE WebRTC 它主要使用一個名為ICE ( Interactive Connectivity Establishment ) 的框架來進行打洞，它內部整合了 STUN 與 TURN 協議，下面簡單的說明一下這兩個協議。
-STUN ( Session Traversal Utilities for NAT ) 中文為 NAT 對談穿透應用程式，它的最主要用處就是幫助在 NAT 內的用戶找到可以連到它的位置。
-STUN-RFC3489 STUN-RFC5389
-TURN ( Traversal Using Relay NAT )，它也是一種穿透 NAT 的一樣協議，不過它是使用中繼的方式來進行，通常都是 STUN 的候選位置都無法連線時，才會使用它。
-TURN-RFC5766
-WebRTC 連線流程 假設目前要連線的雙方情況如下：
-A 內網位置：192.168.1.1:5555 B 內網位置：10.10.1.1:7777 A 外網位置(經過 NAT 轉換)：310.110.1.1:9000 B 外網位置(經過 NAT 轉換)：210.210.1.1:7000 TURN Server：111.111.111.111 下圖為示意圖。表示雙方去外部連 Server 時對外的的位置。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用...">
     
+    <meta property="og:title" content="30-29之 WebRTC 的 P2P 打洞術 ( ICE )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ A 內網位置：192.168.1.1:5555 B 內網位置：10.10.1.1:7777 A 外網位置
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-29之 WebRTC 的 P2P 打洞術 ( ICE ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習：
- WebRTC 是如何進行打洞與連線呢 ?
- WebRTC 的打洞流程 ICE WebRTC 它主要使用一個名為ICE ( Interactive Connectivity Establishment ) 的框架來進行打洞，它內部整合了 STUN 與 TURN 協議，下面簡單的說明一下這兩個協議。
-STUN ( Session Traversal Utilities for NAT ) 中文為 NAT 對談穿透應用程式，它的最主要用處就是幫助在 NAT 內的用戶找到可以連到它的位置。
-STUN-RFC3489 STUN-RFC5389
-TURN ( Traversal Using Relay NAT )，它也是一種穿透 NAT 的一樣協議，不過它是使用中繼的方式來進行，通常都是 STUN 的候選位置都無法連線時，才會使用它。
-TURN-RFC5766
-WebRTC 連線流程 假設目前要連線的雙方情況如下：
-A 內網位置：192.168.1.1:5555 B 內網位置：10.10.1.1:7777 A 外網位置(經過 NAT 轉換)：310.110.1.1:9000 B 外網位置(經過 NAT 轉換)：210.210.1.1:7000 TURN Server：111.111.111.111 下圖為示意圖。表示雙方去外部連 Server 時對外的的位置。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經理解了為什麼 P2P 連線如此的困難，接下來這篇文章咱們將要學習： WebRTC 是如何進行打洞與連線呢 ? WebRTC 的打洞流程 ICE WebRTC 它主要使用|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

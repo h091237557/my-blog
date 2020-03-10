@@ -26,13 +26,10 @@
     <meta content="鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。
-這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http 請求 web server 是如何處理的，從 0 至 1，那這樣的話當你完全通了，就知道這為什麼會有這些模式。
-本篇文章共分以下幾個章節 :
- 傳統的 Web Server 請求 I/O 處理與問題 非阻塞 I/O 模式核心 Reactor 模型。 一些常見的問題。  ~ 重要備註 ~ 相信有不少人聽過阻塞、非阻塞、同步、非同步，也相信有些熟悉 linux 的友人，聽過它所提供的一些上述名詞的方法，但這裡要先說明，接下來的說有上述詞語，都是指『 應用層 』的表達，而不是『 業系統層 』的所提供的方法，除非有特別說明才是作業系統的。
-傳統的 I/O 處理與問題  一個 I/O 請求進來要如何處理呢 ?
- 傳統的 I/O 請求處理 咱們這裡以 http server 處理請求時來當範例，如下圖所示，咱們以常見的 PHP &#43; Apache 來看。如下圖 1 所示，每一個 http 請求都需要開啟一個或是使用一個進程來進行處理，這裡不是只有 http 請求會被阻塞，而是所有的 I/O ( ex. 網路請求、檔案讀取 ) 操作正常來說都是會被阻塞的。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。 這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http...">
     
+    <meta property="og:title" content="30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -47,12 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-07 之應用層的 I/O 優化 - 非阻塞 I/O 模型 Reactor | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。
-這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http 請求 web server 是如何處理的，從 0 至 1，那這樣的話當你完全通了，就知道這為什麼會有這些模式。
-本篇文章共分以下幾個章節 :
- 傳統的 Web Server 請求 I/O 處理與問題 非阻塞 I/O 模式核心 Reactor 模型。 一些常見的問題。  ~ 重要備註 ~ 相信有不少人聽過阻塞、非阻塞、同步、非同步，也相信有些熟悉 linux 的友人，聽過它所提供的一些上述名詞的方法，但這裡要先說明，接下來的說有上述詞語，都是指『 應用層 』的表達，而不是『 業系統層 』的所提供的方法，除非有特別說明才是作業系統的。
-傳統的 I/O 處理與問題  一個 I/O 請求進來要如何處理呢 ?
- 傳統的 I/O 請求處理 咱們這裡以 http server 處理請求時來當範例，如下圖所示，咱們以常見的 PHP &#43; Apache 來看。如下圖 1 所示，每一個 http 請求都需要開啟一個或是使用一個進程來進行處理，這裡不是只有 http 請求會被阻塞，而是所有的 I/O ( ex. 網路請求、檔案讀取 ) 操作正常來說都是會被阻塞的。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 接下來本篇文章，咱們要來說明所謂的『 I/O 』模型。 這個東西我當初看到也有點不太能理解，為什麼需要它，但後來理解以後發覺，你只要知道一個 http|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

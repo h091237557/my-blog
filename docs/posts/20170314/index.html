@@ -26,23 +26,10 @@
     <meta content="data structure, graph" name="keywords">
     
     
-    <meta name="description" property="og:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。
-資料結構&amp;mdash;樹狀結構與二元樹
-不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合每個節點最多有兩個子樹這個特性，才能稱為二元樹。
-在大概知道了二元樹後，我們就可以開始本篇文章的重點堆積heap。
- 堆積的原理 二元樹轉成堆積 程式碼實作  堆積 Heap 的原理 堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為堆積。
- 任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。 堆積是種完全樹。   完全樹 : 除了最低層外，其它層的節都都被塞滿。
- 我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。
-二元樹轉換成堆積 上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。
-傳統上有二種方法，由下而上與由上而下，我們本章節將說明由下而上的方法，不然文章會太長……。
-這個方法的基本流程如下，我們以下說明都以max heap為主，也就是根節點為最大值。
- 計算出此棵樹的節點數量，假設為n。 在從其n/2節點(事實上也就是最後一個父節點)開始進行比較。 若子節點的值大於父節點，則相互對調。 若有交換，還比較在去子節點進行比較。  我們來舉個例子，假設我們有如下圖的二元素。
-接下來我們開始說明他的轉換成堆積的流程。
-最後下圖就是二元樹轉換成堆積的結果。
-程式碼實作 最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。
-function Node(data, index) { this.data = data; this.index = index; this.left = null; this.right = null; } function BinaryTree() { this.root = null; this.count = 0; } 然後我們將要新增個方法，可以新增節點到二元樹中。
-BinaryTree.prototype.add = function(node) { node.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆...">
     
+    <meta property="og:title" content="資料結構---堆積 Heap">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -57,22 +44,7 @@ BinaryTree.prototype.add = function(node) { node.|Describe what your web page is
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---堆積 Heap | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆者的這篇文章。
-資料結構&mdash;樹狀結構與二元樹
-不過我們這邊也簡單的複習一下二元樹 ; 二元樹它是一種樹狀結構，但它要符合每個節點最多有兩個子樹這個特性，才能稱為二元樹。
-在大概知道了二元樹後，我們就可以開始本篇文章的重點堆積heap。
- 堆積的原理 二元樹轉成堆積 程式碼實作  堆積 Heap 的原理 堆積這種資料結構，它是一種二元樹，而且要有以下兩種特點的，才能被稱為堆積。
- 任意節點小於(大於)它的所有子節點，最小(大)的節點一定在根上。 堆積是種完全樹。   完全樹 : 除了最低層外，其它層的節都都被塞滿。
- 我們畫個圖來看看，就可以很明顯的知道二元樹與堆積的差別，如下圖，左邊的堆積樹很明顯的，子節點值一定小於父節點，而二元樹的就沒這特性。
-二元樹轉換成堆積 上面簡單的說明什是堆積，接下來我們這邊要來說明，如何將二元樹轉換成堆積。
-傳統上有二種方法，由下而上與由上而下，我們本章節將說明由下而上的方法，不然文章會太長……。
-這個方法的基本流程如下，我們以下說明都以max heap為主，也就是根節點為最大值。
- 計算出此棵樹的節點數量，假設為n。 在從其n/2節點(事實上也就是最後一個父節點)開始進行比較。 若子節點的值大於父節點，則相互對調。 若有交換，還比較在去子節點進行比較。  我們來舉個例子，假設我們有如下圖的二元素。
-接下來我們開始說明他的轉換成堆積的流程。
-最後下圖就是二元樹轉換成堆積的結果。
-程式碼實作 最後我們來將來上述說明進行程式碼的實作，將二元樹轉換成堆積。我們先來簡單的複習實作二元樹。首先是二元樹的基本結構。
-function Node(data, index) { this.data = data; this.index = index; this.left = null; this.right = null; } function BinaryTree() { this.root = null; this.count = 0; } 然後我們將要新增個方法，可以新增節點到二元樹中。
-BinaryTree.prototype.add = function(node) { node.|Describe what your web page is about">
+    <meta name="twitter:description" content="這篇文章中，我們將要來說明堆積(heap)這種資料結構，但在說明這個資料結構前，讀者需要先了解二元樹這種資料結構，如果不了解的話，可以看看筆|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

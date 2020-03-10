@@ -26,15 +26,10 @@
     <meta content="js, javascript, worker, html5" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
-Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
-建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
-var worker = new Worker(&amp;#39;work.js&amp;#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
-(fucntion(){ setTimeout(function(){ postMessage(&amp;#39;This work I spend 2s&amp;#39;); },2000); })(); 兩秒後執行結果就為。
-	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &amp;quot;fileName.js&amp;quot; ) ，下列程式碼為使用範例。
-importScripts( &amp;#34;work2.js&amp;#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&amp;#39;This work , I spend 2 s &amp;#39;); },2000); })() work2.js，如下程式碼。
-var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪...">
     
+    <meta property="og:title" content="HTML5 之走在平行時空的 Web Worker">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@ var work2Obj = { taskName:&amp;#34;work2&amp;#34; } Web Worker的限制 有幾�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="HTML5 之走在平行時空的 Web Worker | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪問windows、Document、parent等物件。
-Worker 主要的用處在避免重度 CPU 運算的任務阻礙到 UI 執行緒運行。
-建立Worker 首先我們來建立worker，並且該獨立的script為work.js，並且在worker建立onmessage監聽器，當work.js有執行postMessage()，則會觸發。
-var worker = new Worker(&#39;work.js&#39;); worker.onmessage = function(e){ console.log(e.data); } 下面這段程式碼為work.js，以下只是段簡單的兩秒後觸發postMessage()並回傳一段文字回去。
-(fucntion(){ setTimeout(function(){ postMessage(&#39;This work I spend 2s&#39;); },2000); })(); 兩秒後執行結果就為。
-	This work I spend 2s 在 Web Worker 中載入 Javascript 在Worker裡面如果要載入Javascript，則需要使用importScripts( &quot;fileName.js&quot; ) ，下列程式碼為使用範例。
-importScripts( &#34;work2.js&#34; ) var work2Obj = work2Obj; (function(){ console.log(work2Obj.taskName); setTimeout(function(){ self.postMessage(&#39;This work , I spend 2 s &#39;); },2000); })() work2.js，如下程式碼。
-var work2Obj = { taskName:&#34;work2&#34; } Web Worker的限制 有幾點要web worker的限制需要注意一下。|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是Web Worker？，它就是個運行在後台的Javascript，獨立於其它Script，並且不會影響效能，但它不能影響Dom、並不能訪|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,15 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在Fintech幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。
-~ 情景說明 ~ 二哈是一位二貨，他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二
-回歸主題，二哈的需求只是分析，所以我們再分析前，我們要先建立好資料，通常能分析的資料量是越大越好，所以我們這邊一定會需要用到分片，並且我們先從最基本的股票資料k線與成交量來建立資料，首先我們的資料結構應該如下。
-{ 股價代碼	&amp;quot;code&amp;quot; : 1011, 日期	&amp;quot;date&amp;quot; : 20160101, 開盤價 &amp;quot;open&amp;quot; : 100, 最高價 &amp;quot;height&amp;quot; : 100, 收盤價 &amp;quot;close&amp;quot; : 90, 最低價 &amp;quot;low&amp;quot; : 80, 成交量 &amp;quot;volume&amp;quot; : 1000 } 然後我們來正試開始吧。
-~ Step 1. 架構分析 ~ 索引架構思考 首先我們根據以上的資料結構可知，我們該主題目前不太需要考慮到正規化與反正規化的問題，那接下來我們來思考看看索引的問題，但那蠢二哈只想到分析但不知道分析啥，我們來幫他想想。
-我們來一條一條列出，我們想到的需求。
- 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  細細想一下，大部份的使用情境都一定需要時間，而且是個範圍，然後有時在搭配某個股票，所以我們基本上會針對date和code來考慮建立索引，那要選用那種索引呢，目前有三種選擇我們先列出。
-第一種 { &amp;quot;date&amp;quot; : 1 , &amp;quot;code&amp;quot; : 1 } 第二種 { &amp;quot;code&amp;quot; : 1 , &amp;quot;date&amp;quot; : 1 } 第三種 { &amp;quot;code&amp;quot; :1 },{ &amp;quot;date&amp;quot; :1 } 還記得{ &amp;quot;sortKey&amp;quot; : 1 , &amp;quot;queryKey&amp;quot; : 1 }這個複合索引時有提到的東西麻，很常用來排序的請放前面，日期和股價代碼，理論上來說日期會很常用到排序，所以我們第二種索引可以刪除。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在F...">
     
+    <meta property="og:title" content="30-26之MongoDB運用研究---股價應用模擬(1)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -49,14 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-26之MongoDB運用研究---股價應用模擬(1) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在Fintech幾乎天天在報紙上看到，所以我們就來應景一下，來嘗試這建立看看金融應用。
-~ 情景說明 ~ 二哈是一位二貨，他平常就有在進行投資，大部份都是買買股票，但平常都只是直接卷商的平台看看資料，然後就直接投資囉，但是這貨兒每買必輸每賣必虧，然後有一天他聽到天賴之音說『請分析一下』，然後它就決定走上資料分析一途……這貨真的很二
-回歸主題，二哈的需求只是分析，所以我們再分析前，我們要先建立好資料，通常能分析的資料量是越大越好，所以我們這邊一定會需要用到分片，並且我們先從最基本的股票資料k線與成交量來建立資料，首先我們的資料結構應該如下。
-{ 股價代碼	&quot;code&quot; : 1011, 日期	&quot;date&quot; : 20160101, 開盤價 &quot;open&quot; : 100, 最高價 &quot;height&quot; : 100, 收盤價 &quot;close&quot; : 90, 最低價 &quot;low&quot; : 80, 成交量 &quot;volume&quot; : 1000 } 然後我們來正試開始吧。
-~ Step 1. 架構分析 ~ 索引架構思考 首先我們根據以上的資料結構可知，我們該主題目前不太需要考慮到正規化與反正規化的問題，那接下來我們來思考看看索引的問題，但那蠢二哈只想到分析但不知道分析啥，我們來幫他想想。
-我們來一條一條列出，我們想到的需求。
- 二哈最基本應該會輸入股價代碼，然後輸出該股票的全部資料。 二哈想尋找出該股票某段區間的資料。 二哈想找出當日交易最熱絡的股票。 二哈想找出某日價格波動最高的股票。  細細想一下，大部份的使用情境都一定需要時間，而且是個範圍，然後有時在搭配某個股票，所以我們基本上會針對date和code來考慮建立索引，那要選用那種索引呢，目前有三種選擇我們先列出。
-第一種 { &quot;date&quot; : 1 , &quot;code&quot; : 1 } 第二種 { &quot;code&quot; : 1 , &quot;date&quot; : 1 } 第三種 { &quot;code&quot; :1 },{ &quot;date&quot; :1 } 還記得{ &quot;sortKey&quot; : 1 , &quot;queryKey&quot; : 1 }這個複合索引時有提到的東西麻，很常用來排序的請放前面，日期和股價代碼，理論上來說日期會很常用到排序，所以我們第二種索引可以刪除。|Describe what your web page is about">
+    <meta name="twitter:description" content="前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在F|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

@@ -26,19 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。
-在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為：
-將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播或網路電話一樣即時的將聲音傳送給對方 ( 方法 3 )
-接下來我們將來實作方法 3 的選項，而這東西事實上就是直播網站的應用，像 17 就是這種類型的應用，本篇文章將會說明：
- 如何建立的像 17 一樣的直播功能呢 (可以動就好版) ?
- 本篇將分為以下幾個章節：
- 直播架構原理。 實作 - 建立 Media Server。 實作 - 網頁用戶端取得串流影像。  直播架構原理 直播的架構最基本的如下圖，基本上和點播很相似，只差了直播主推送聲音到 Media Server 這個步驟。
-然後基本上推流的協議，應該是只有一種選擇RTMP，網路上看到有人說 HLS 這點我還要待調查，我先打個問號， 然後還有提到 WebRTC 這個可以當推流 (不過它應該不算傳輸協議)，這理論上應該是行，這之後 WebRTC 的文章會來聊聊。
-而拉流就有不少RTMP、HLS、HTTP-FLV、MPEG-DASH。
-老樣子問個問題。
-那要選擇那個協議來當拉流呢 ? 首先我覺得要先看你的直播應用是否為互動性很要求的，如果是它就只有兩個選擇 RTMP 與 HTTP-FLV。不過 RTMP 拉流應該會有不少設備無法使用(果粉)，所以最後應該會選 HTTP-FLV 吧。
-而如果是不會太在意互動性的直播，例如運動賽事直播這種，那選那個，我覺得就看用戶那的支援度吧。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的...">
     
+    <meta property="og:title" content="30-21之如何建立的像 17 一樣的直播功能呢 ?">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-21之如何建立的像 17 一樣的直播功能呢 ? | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。
-在筆者的30-09之別人要如何聽到我的聲音呢 ?有提到三種影音的傳遞方式，分別為：
-將聲音檔案直接丟給對方 ( 方法 1 ) 將聲音檔案以串流的方式傳送給對方 ( 方法 2 ) 像直播或網路電話一樣即時的將聲音傳送給對方 ( 方法 3 )
-接下來我們將來實作方法 3 的選項，而這東西事實上就是直播網站的應用，像 17 就是這種類型的應用，本篇文章將會說明：
- 如何建立的像 17 一樣的直播功能呢 (可以動就好版) ?
- 本篇將分為以下幾個章節：
- 直播架構原理。 實作 - 建立 Media Server。 實作 - 網頁用戶端取得串流影像。  直播架構原理 直播的架構最基本的如下圖，基本上和點播很相似，只差了直播主推送聲音到 Media Server 這個步驟。
-然後基本上推流的協議，應該是只有一種選擇RTMP，網路上看到有人說 HLS 這點我還要待調查，我先打個問號， 然後還有提到 WebRTC 這個可以當推流 (不過它應該不算傳輸協議)，這理論上應該是行，這之後 WebRTC 的文章會來聊聊。
-而拉流就有不少RTMP、HLS、HTTP-FLV、MPEG-DASH。
-老樣子問個問題。
-那要選擇那個協議來當拉流呢 ? 首先我覺得要先看你的直播應用是否為互動性很要求的，如果是它就只有兩個選擇 RTMP 與 HTTP-FLV。不過 RTMP 拉流應該會有不少設備無法使用(果粉)，所以最後應該會選 HTTP-FLV 吧。
-而如果是不會太在意互動性的直播，例如運動賽事直播這種，那選那個，我覺得就看用戶那的支援度吧。|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一篇文章中，咱們已經學習了如何建立點播這種類型的網站應用，接下咱們要來學學如何建立直播應用。 在筆者的30-09之別人要如何聽到我的|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

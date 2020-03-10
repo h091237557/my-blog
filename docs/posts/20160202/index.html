@@ -26,16 +26,10 @@
     <meta content="css, css-box" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Element的Position屬性設置四種類型的值分別為static、relative、absolute、fixed。
-Static static為position的預設值，它會在頁面上佔據位置，但不能使用top right bottom left移動Element。請看看下面範例。
-HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2&amp;lt;/div&amp;gt; CSS	.test1 { position:static; background-color:red; top:100px; right:100px; } .test2 { background-color:green; } 從結果可看出Test1完全沒有移動，且有佔據位置，所以Test2會在Test1下面。
-Relative relative為相對定位，元素在頁面上佔據位置，可使用top right bottom left移動Element。
-其中所謂的相對定位概念可以想成，一個元素設置成相對定位，然後可以設置它垂直或水平的位置，讓這個元素相對於原本位置進行移動，並且會保留原本位置的空間。如下圖框2的原本位置空間會保留。
-HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2&amp;lt;/div&amp;gt; CSS .test1 { position:relative; background-color:red; top:10px; left:10px; } .test2 { background-color:green; } 從下圖可知Test1，向下位移了10px，並向右移10px，但注意Test1原本的空間位置還在喔。
-Absolute Absolute為絕對定位，相對於最近一級且不是static的父元素來進行定位。元素在頁面不占據位置，你可以想成他從頁面上浮起來，然後它移動的起使位置為父元素，可以使用top right bottom left移動元素位置，如下圖不會像相對定位一樣保留原本框2的空間與位置。
-HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; &amp;lt;div class=&amp;#34;test2&amp;#34;&amp;gt;Test2 &amp;lt;div class=&amp;#34;test3&amp;#34;&amp;gt;Test3&amp;lt;/div&amp;gt; &amp;lt;/div&amp;gt; CSS
-.test1 { height:30px; background-color:red; } .test2 { height:50px; position:relative; background-color:green; } .|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme...">
     
+    <meta property="og:title" content="CSS-Position 觀念">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ HTML &amp;lt;div class=&amp;#34;test1&amp;#34;&amp;gt;Test1&amp;lt;/div&amp;gt; 
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="CSS-Position 觀念 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Element的Position屬性設置四種類型的值分別為static、relative、absolute、fixed。
-Static static為position的預設值，它會在頁面上佔據位置，但不能使用top right bottom left移動Element。請看看下面範例。
-HTML &lt;div class=&#34;test1&#34;&gt;Test1&lt;/div&gt; &lt;div class=&#34;test2&#34;&gt;Test2&lt;/div&gt; CSS	.test1 { position:static; background-color:red; top:100px; right:100px; } .test2 { background-color:green; } 從結果可看出Test1完全沒有移動，且有佔據位置，所以Test2會在Test1下面。
-Relative relative為相對定位，元素在頁面上佔據位置，可使用top right bottom left移動Element。
-其中所謂的相對定位概念可以想成，一個元素設置成相對定位，然後可以設置它垂直或水平的位置，讓這個元素相對於原本位置進行移動，並且會保留原本位置的空間。如下圖框2的原本位置空間會保留。
-HTML &lt;div class=&#34;test1&#34;&gt;Test1&lt;/div&gt; &lt;div class=&#34;test2&#34;&gt;Test2&lt;/div&gt; CSS .test1 { position:relative; background-color:red; top:10px; left:10px; } .test2 { background-color:green; } 從下圖可知Test1，向下位移了10px，並向右移10px，但注意Test1原本的空間位置還在喔。
-Absolute Absolute為絕對定位，相對於最近一級且不是static的父元素來進行定位。元素在頁面不占據位置，你可以想成他從頁面上浮起來，然後它移動的起使位置為父元素，可以使用top right bottom left移動元素位置，如下圖不會像相對定位一樣保留原本框2的空間與位置。
-HTML &lt;div class=&#34;test1&#34;&gt;Test1&lt;/div&gt; &lt;div class=&#34;test2&#34;&gt;Test2 &lt;div class=&#34;test3&#34;&gt;Test3&lt;/div&gt; &lt;/div&gt; CSS
-.test1 { height:30px; background-color:red; } .test2 { height:50px; position:relative; background-color:green; } .|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇Css Box Model討論完Element的大小問題，接來下來談談Element的位置(Position)問題，Css中可以對Eleme|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

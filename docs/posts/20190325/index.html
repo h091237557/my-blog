@@ -26,16 +26,10 @@
     <meta content="nodejs, socket.io" name="keywords">
     
     
-    <meta name="description" property="og:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
-而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
- 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
- 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
-本篇文章架構如下 :
- 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
-這裡我們就要先從 socket.io 建立連線的流程開始說啟。
-Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
-var socket = require(&amp;#39;socket.io-client&amp;#39;)(&amp;#39;http://localhost&amp;#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :|Describe what your web page is about">
+    <meta name="description" property="og:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的...">
     
+    <meta property="og:title" content="Socket.io 使用 AWS ALB 建立 Load Balance 問題">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ var socket = require(&amp;#39;socket.io-client&amp;#39;)(&amp;#39;http://localho
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Socket.io 使用 AWS ALB 建立 Load Balance 問題 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的考慮要加機器來進行擴展，同時間也會建立一台 load balance 的應用來分散請求。
-而這時如果你選擇使用AWS ALB (Application Load Balancer)來建立 load balance 你會發現它有個很大的問題，那就是 :
- 使用非瀏覽器(未處理 cookie )的 client 無法使用 polling 來建立連線
- 接下來我們將慢慢的來探討原因為何，並且來想想是否有什麼解法呢 ?
-本篇文章架構如下 :
- 原因 解法  原因 為什麼非瀏覽器的 Client 無法使用 polling 來建立連線呢 ?
-這裡我們就要先從 socket.io 建立連線的流程開始說啟。
-Socket.io 建立連線原理 假設我們在已經在 server 端使用 socket.io 來建立起 message server，然後接下來我們要在 client 端使用socket.io client來建立連線。
-var socket = require(&#39;socket.io-client&#39;)(&#39;http://localhost&#39;); 而 socket.io client 這裡主要提供了兩種 transport 讓我們 client 與 server 可以互相的傳遞資料 :|Describe what your web page is about">
+    <meta name="twitter:description" content="socket.io 是一套可以讓我們快速與簡單的建立一套，讓 client 與 server 可以雙向溝通的 Libary，而當我們使用它來建立一個 message server 後，通常在一定的使用量以後，會開始的|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

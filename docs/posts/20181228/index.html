@@ -26,16 +26,10 @@
     <meta content="php, laravel" name="keywords">
     
     
-    <meta name="description" property="og:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :
-&amp;lt;?php $userService = $app-&amp;gt;make(&amp;#39;UserService&amp;#39;); $userService-&amp;gt;createUser(); 但是有時後你會看到如下的程式碼 :
-&amp;lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。
-Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
- 定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。
- 畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。
-程式碼範例 假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。
-&amp;lt;?php interface IMessage { public function push(); } class LineSDK implements IMessage { public function push() { var_dump(&amp;#39;I push a message to line&amp;#39;); } } 然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。
-&amp;lt;?php class MessageFacade { private $sdk; public function __construct(IMessage $sdk) { $this-&amp;gt;sdk = $sdk; } public function push() { $this-&amp;gt;sdk-&amp;gt;push(); } } 最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 : &lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，...">
     
+    <meta property="og:title" content="PHP Laravel 的 Facade 的理解">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="PHP Laravel 的 Facade 的理解 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 :
-&lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 :
-&lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，而 Facade 實際上是一種設計模式。
-Facade(外觀) 設計模式 Facade 設計模式基本的定義如下 :
- 定義一個高層級的接口，客戶端只能透過它來與子系統進行溝通。
- 畫成概念圖大概長的如下，客戶端當要使用某個子系統所提供的功能時，不會直接去使用，而是會透過 Facade 來進行操作。
-程式碼範例 假設咱們現在有個功能是用使用 LineSDK 來將訊息推送到 Line 取，然後咱們假設 sdk 的程式碼如下。
-&lt;?php interface IMessage { public function push(); } class LineSDK implements IMessage { public function push() { var_dump(&#39;I push a message to line&#39;); } } 然後我們這裡會在寫一個 Facade 來讓我們的系統來使用。
-&lt;?php class MessageFacade { private $sdk; public function __construct(IMessage $sdk) { $this-&gt;sdk = $sdk; } public function push() { $this-&gt;sdk-&gt;push(); } } 最後這個時候客戶端想要使用時，就會透過 Facade 來進行發送訊息，如下程式碼。|Describe what your web page is about">
+    <meta name="twitter:description" content="什麼是 Laravel Facade ? 在一般情況咱們如果要使用物件的某個方法可能會寫成如下 : &lt;?php $userService = $app-&gt;make(&#39;UserService&#39;); $userService-&gt;createUser(); 但是有時後你會看到如下的程式碼 : &lt;?php UserService::createUser(); 而這就是 Laravel 所提供的 Facade 語法糖，|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

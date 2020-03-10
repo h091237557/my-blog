@@ -26,18 +26,10 @@
     <meta content="algorithm, merge sort" name="keywords">
     
     
-    <meta name="description" property="og:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
-大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
-合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
-首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
-然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
-合併排序法的速度效能 平均 O(nlogn)
-最好 O(n)
-最壞 O(nlogn)
-合併排序法的空間效能 O(n)
-javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
- Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &amp;gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &amp;lt; len; i&#43;&#43;) { if (i &amp;lt; mid) { left.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法...">
     
+    <meta property="og:title" content="排序之合併排序法(Merge Sort)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -52,17 +44,7 @@ javascript演算法實作  注意，基本上只有在拆分時作法不一樣�
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="排序之合併排序法(Merge Sort) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作  合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法的概念，也就是將問題拆分為子問題，各別解決後，再將結果進行合併。
-大部份的排序演算法中，都不太需要額外(大量)的儲存空間，而合併排序法，會需要使用到空間，但相對的它在時間複雜度的表現，比其它幾個演算法優質些。
-合併排序法實作的概念基本上有分為兩個，Top Down與Bottom Up
-首先請看下圖，它是Top Down的概念，它會先將資料拆分開來，然後再進行組合、排序，直到資料全部排序完成。
-然後我們在看下圖，它為Bottom Up的概感，將資料以最小單位2為限制，拆分，然後進行排序，再組合成下一個單位4，再進行排序，以此類推，直到排序完成。
-合併排序法的速度效能 平均 O(nlogn)
-最好 O(n)
-最壞 O(nlogn)
-合併排序法的空間效能 O(n)
-javascript演算法實作  注意，基本上只有在拆分時作法不一樣，但在merge時，這邊都是呼叫它一個方法。
- Top Down實作 debugger; /** * mergeSort_TopDown * @param datas * @returns {undefined} */ function mergeSort_TopDown(datas) { if (datas.length &gt; 1) { var len = datas.length; var mid = Math.floor(len / 2); var right = []; var left = []; //將datas陣列分兩左子陣列與右子陣列  for (var i = 0; i &lt; len; i&#43;&#43;) { if (i &lt; mid) { left.|Describe what your web page is about">
+    <meta name="twitter:description" content="合併排序法的原理 合併排序法的速度效能 合併排序法的空間效能 javascript 演算法實作 合併排序法原理 合併排序法，它也是與上一篇提到的快速排序法一樣，使用分治法|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

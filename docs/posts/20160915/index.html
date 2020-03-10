@@ -26,11 +26,10 @@
     <meta content="mongodb, nosql, it鐵人賽, 30天之你好MongoDB" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分析方法。
- 數學表達式(mathematical expression) 日期表達式(date expression) 字串表達式(string expression) 邏輯表達式(logical expression)  ~ 數學表達式 ~ 以下列表為比較常用的數學表達式(全部在這)。
-   表達式 說明     $add 接受多個表達式，然後相加。   $subtract 接受兩個表達式，用第一個減去第二個作為結果。   $multiply| 接受多個表達式，然後相乘。    $divide 接受兩個表達式，然後相除。   $mod 接受個表達式，然後相除取餘。    實際運用 ~ 我們想要知道訂單總收入是多少。 我們來看看實際上是如何運用，假設我們有下列資料，該資料為訂單資料。
-{ &amp;#34;id&amp;#34; : 1 , &amp;#34;price&amp;#34; : 100 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 0 }, { &amp;#34;id&amp;#34; : 2 , &amp;#34;price&amp;#34; : 200 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 100 }, { &amp;#34;id&amp;#34; : 3 , &amp;#34;price&amp;#34; : 50 , &amp;#34;count&amp;#34; : 20, &amp;#34;discount&amp;#34; : 100 }, { &amp;#34;id&amp;#34; : 4 , &amp;#34;price&amp;#34; : 10 , &amp;#34;count&amp;#34; : 210, &amp;#34;discount&amp;#34; : 200 }, { &amp;#34;id&amp;#34; : 5 , &amp;#34;price&amp;#34; : 100 , &amp;#34;count&amp;#34; : 30, &amp;#34;discount&amp;#34; : 20 } 這個應用中，我們希望知道總收入是多少，以下為收入公式。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分...">
     
+    <meta property="og:title" content="30-15之MongoDB聚合(2)---Pipeline武器庫">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -45,10 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-15之MongoDB聚合(2)---Pipeline武器庫 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分析方法。
- 數學表達式(mathematical expression) 日期表達式(date expression) 字串表達式(string expression) 邏輯表達式(logical expression)  ~ 數學表達式 ~ 以下列表為比較常用的數學表達式(全部在這)。
-   表達式 說明     $add 接受多個表達式，然後相加。   $subtract 接受兩個表達式，用第一個減去第二個作為結果。   $multiply| 接受多個表達式，然後相乘。    $divide 接受兩個表達式，然後相除。   $mod 接受個表達式，然後相除取餘。    實際運用 ~ 我們想要知道訂單總收入是多少。 我們來看看實際上是如何運用，假設我們有下列資料，該資料為訂單資料。
-{ &#34;id&#34; : 1 , &#34;price&#34; : 100 , &#34;count&#34; : 20, &#34;discount&#34; : 0 }, { &#34;id&#34; : 2 , &#34;price&#34; : 200 , &#34;count&#34; : 20, &#34;discount&#34; : 100 }, { &#34;id&#34; : 3 , &#34;price&#34; : 50 , &#34;count&#34; : 20, &#34;discount&#34; : 100 }, { &#34;id&#34; : 4 , &#34;price&#34; : 10 , &#34;count&#34; : 210, &#34;discount&#34; : 200 }, { &#34;id&#34; : 5 , &#34;price&#34; : 100 , &#34;count&#34; : 30, &#34;discount&#34; : 20 } 這個應用中，我們希望知道總收入是多少，以下為收入公式。|Describe what your web page is about">
+    <meta name="twitter:description" content="在上一篇文章中說明了 pipeline 操作符號，接下來我們這篇要說明在操作符號內使用的 pipeline 表達式，它讓我們可以在pipeline 內進行計算、比較、字串修改等分|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

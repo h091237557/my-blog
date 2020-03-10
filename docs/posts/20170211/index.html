@@ -26,20 +26,10 @@
     <meta content="data structure, array, stack, queue" name="keywords">
     
     
-    <meta name="description" property="og:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢?
-根據 wiki 的解答。
- 資料結構是電腦中儲存、組織資料的方式。
- 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。
-那選擇正確的資料結構可以做啥 ? 答案就是可以提供你的演算法效率。接下來我們將在本篇文章說明三種資料結構陣列(Array)、堆疊(Stack)、佇列(Queue)。
-本篇文章目錄如下。
- 陣列 堆疊 佇列  陣列 ( Array ) 陣列應該算是我們寫程式時，最常使用到的一種資料結構，它就長的下面這樣，上面那行代表我們的資料陣列，下面那行只是表示每個資料對應到的Index，例如array[0]的值為a。
-不過有幾點要注意，當初陣列設計之初是在形式上依賴內存分配而成，也就是說必須預先設定陣列的大小。這使得陣列有以下特性。
- 設定陣列大小後，不能在改變(資料溢位問題)。 在內存中有該陣列專用的連續空間，不會存在其中程式要調用的資料空間。  由於陣列實在太常使用了，這邊就不多說囉。
-時間複雜度  indexing : O(1) find : O(n)  堆疊 ( Stack ) 它事實上與陣列很相似，只是它有幾個特殊的方，它只能允許在陣列的一端進行操作，而且按照『後進先出』 LIFO, Last In First Out 的原理運作。如下圖表示。
-然後我們簡單的使用javascript來建立stack的資料結構，由於我們是要練習用，所以我們不使用Js的陣列內本來就有提供的stack方法。
-首先我們先建立Stack的類別，事實上在js中不該說類別，_size存放該stack的大小，而_container則存放資料。
-/** * Stack * this is stack data structure; * @returns {undefined} */ function Stack(){ this._size =0; this._container = {}; } 接下來我們要建立的方法有兩個push與pop，其中push就是將資料丟到stack內，而pop就是取出資料，由於stack遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以pop，是要取該stack內最後被丟進去的資料。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說...">
     
+    <meta property="og:title" content="資料結構---陣列(Array)、堆疊(Stack)、佇列(Queue)">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -54,19 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="資料結構---陣列(Array)、堆疊(Stack)、佇列(Queue) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢?
-根據 wiki 的解答。
- 資料結構是電腦中儲存、組織資料的方式。
- 也就是說你丟了一堆資料進去，你的儲存方式，就是資料結構。
-那選擇正確的資料結構可以做啥 ? 答案就是可以提供你的演算法效率。接下來我們將在本篇文章說明三種資料結構陣列(Array)、堆疊(Stack)、佇列(Queue)。
-本篇文章目錄如下。
- 陣列 堆疊 佇列  陣列 ( Array ) 陣列應該算是我們寫程式時，最常使用到的一種資料結構，它就長的下面這樣，上面那行代表我們的資料陣列，下面那行只是表示每個資料對應到的Index，例如array[0]的值為a。
-不過有幾點要注意，當初陣列設計之初是在形式上依賴內存分配而成，也就是說必須預先設定陣列的大小。這使得陣列有以下特性。
- 設定陣列大小後，不能在改變(資料溢位問題)。 在內存中有該陣列專用的連續空間，不會存在其中程式要調用的資料空間。  由於陣列實在太常使用了，這邊就不多說囉。
-時間複雜度  indexing : O(1) find : O(n)  堆疊 ( Stack ) 它事實上與陣列很相似，只是它有幾個特殊的方，它只能允許在陣列的一端進行操作，而且按照『後進先出』 LIFO, Last In First Out 的原理運作。如下圖表示。
-然後我們簡單的使用javascript來建立stack的資料結構，由於我們是要練習用，所以我們不使用Js的陣列內本來就有提供的stack方法。
-首先我們先建立Stack的類別，事實上在js中不該說類別，_size存放該stack的大小，而_container則存放資料。
-/** * Stack * this is stack data structure; * @returns {undefined} */ function Stack(){ this._size =0; this._container = {}; } 接下來我們要建立的方法有兩個push與pop，其中push就是將資料丟到stack內，而pop就是取出資料，由於stack遵循『後進先出法』，也就是後丟進去的資料，反而會比較快取得，所以pop，是要取該stack內最後被丟進去的資料。|Describe what your web page is about">
+    <meta name="twitter:description" content="接下來的幾篇文章，我們將要簡單的說明幾個基礎的資料結構，那麼資料結構又是什麼呢? 根據 wiki 的解答。 資料結構是電腦中儲存、組織資料的方式。 也就是說|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

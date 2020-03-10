@@ -26,17 +26,10 @@
     <meta content="algorithm, divid" name="keywords">
     
     
-    <meta name="description" property="og:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
-分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
- 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
- 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
-實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
-最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
- 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
- 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
-這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
-function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start&#43;end)/2); console.log(&amp;#34;startM:&amp;#34; &#43; start &#43; &amp;#34; middleM:&amp;#34;&#43;middle &#43; &amp;#34; end :&amp;#34; &#43; end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle&#43;1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle&#43;1;i&amp;lt;=end;i&#43;&#43;){ currentRightSum &#43;= datas[i]; if(currentRightSum &amp;gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&amp;gt;=start;k--){ currentLeftSum &#43;= datas[k]; if(currentLeftSum &amp;gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum&#43;leftSum; console.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小...">
     
+    <meta property="og:title" content="演算法策略---分治法">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@ function maxSubarrary(datas, start, end) { if (start == end) { return datas[star
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="演算法策略---分治法 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小，再將小變回大的方法，在計算機科學中成為分治法。
-分治法適用的情況 但並不是所有問題都適合分治法，有以下特性的問題才可以使用。
- 問題的規模可小到一定的程式就可以容易解決。 問題可以分解為若干個規模較小的相同問題，該問題有最優子結構性質，最優子結構的意思就是局部最優解能決定全局最優解。(同貪心法) 可使用這個問題分解出的子問題的解，合併成該問題的解。 這個問題的子問題都是獨立的。  分治法的方法 要用分治法來解決一個問題，通常會有以下的步驟。
- 分解 : 將大問題分解成小問題。 解決 : 將每個小問題解決。 合併 : 將每個子問題的解合併為原問題的解。  分治法基本上的手段是『遞迴』，也就是自已呼叫自已的意思。
-實作練習 以下的問題都出自於培養與鍛鍊程式設計的邏輯腦這個本書裡或leetcode中找到的，但我們這邊的都會使用JS來進行實作。
-最大子序列問題 ( Maximum Subarray ) 最大子序列是個經典的問題，它的問題定義如下。
- 在一個包含正負值的陣列中，尋找一段連續的元素總合『最大』的區間。
- 例如假設我們有陣列[1,5,-8,7,4,1,-9,6]，所以這時我們的最大子序列就為7、4、1。
-這邊的解法基本概念如下圖，它會將陣列分成兩塊，並且最大子區塊有可能會落在左邊區塊、中間跨陣列區塊、右邊區塊，而每個區塊又可以在繼續切分成三塊，這樣就可以使用遞回取出，每塊最大子區間，最後再將結果組合起來就ok囉。以下是程式碼。maxCrossover是用來尋找中間那塊的最大子區塊值。
-function maxSubarrary(datas, start, end) { if (start == end) { return datas[start]; } else { let middle = Math.floor((start&#43;end)/2); console.log(&#34;startM:&#34; &#43; start &#43; &#34; middleM:&#34;&#43;middle &#43; &#34; end :&#34; &#43; end); return Math.max(maxSubarrary(datas,start,middle),maxSubarrary(datas,middle&#43;1,end),maxCrossover(datas,start,middle,end));	} } function maxCrossover(datas,start,middle,end){ var currentLeftSum =0; var leftSum = 0; var currentRightSum =0; var rightSum=0; for (var i=middle&#43;1;i&lt;=end;i&#43;&#43;){ currentRightSum &#43;= datas[i]; if(currentRightSum &gt; rightSum){ rightSum = currentRightSum; } } for (var k=middle;k&gt;=start;k--){ currentLeftSum &#43;= datas[k]; if(currentLeftSum &gt; leftSum){ leftSum = currentLeftSum; } } let test = rightSum&#43;leftSum; console.|Describe what your web page is about">
+    <meta name="twitter:description" content="在解決一個問題時，有一種很常見的方法，那就是將這個問題，分成很多個小問題，然後將所以小問題全部解決，最後可以合成一個解答。這種將問題分割變小|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

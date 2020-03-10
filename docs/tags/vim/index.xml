@@ -19,16 +19,7 @@
       <pubDate>Wed, 01 Feb 2017 19:51:35 +0800</pubDate>
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170201/</guid>
-      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開發時，可以更快速的進行修正。
-配置完成果會如下圖，你可以看到他會自動顯示什麼地方需要修改，以及修改的原因。
-Step1. 安裝syntastic 首先我們第一步，要先安裝syntastic ，它是一個vim的套件，它的功用就是可以針對程式碼進行檢查，你可以針對不同的程式碼配置不同的檢查器，像我們要檢查javascipt時，就是配置了eslint這個檢查器。
-由於我是使用vundle，所以只要在.vimrc加入下面這行。然後再執行PluginInstall就會自動幫你裝好這套件了。
- Plugin &#39;scrooloose/syntastic&#39; 接下來我們會在.vimrc檔案內加入以下的配置。
- set statusline+=%#warningmsg# set statusline+=%{SyntasticStatuslineFlag()} set statusline+=%* let g:syntastic_always_populate_loc_list = 1 let g:syntastic_auto_loc_list = 1 let g:syntastic_check_on_open = 1 let g:syntastic_check_on_wq = 0 let g:syntastic_javascript_checkers = [&#39;standard&#39;] let g:syntastic_javascript_standard_generic = 1 let g:syntastic_javascript_checkers = [&#39;eslint&#39;] let g:syntastic_javascript_eslint_exec = &#39;eslint&#39; Step2. 安裝eslint checker. 上面的步驟我們已經完成了vim的配置，並且已經設置好javascript的檢查器為eslint，但我們實際上還沒安裝好eslint，所以我們這裡將要說明如何安裝eslint。
-首先要安裝全域的eslint。
-npm install -g eslint 然後在有packjson下的專案，執行下列指令，該指令可以進行eslint的規則配置，它會問你是否用es6或react之類的問題，然後根據你的回答產生出配置檔。
-eslint --init 產生出配置檔如下。eslint會根據該配置檔，來檢查javascript檔案。正常來說，這樣就該可以使用，但有時還是會有問題。
-module.exports = { &amp;quot;env&amp;quot;: { &amp;quot;browser&amp;quot;: true, &amp;quot;commonjs&amp;quot;: true, &amp;quot;es6&amp;quot;: true }, &amp;quot;extends&amp;quot;: &amp;quot;eslint:recommended&amp;quot;, &amp;quot;parserOptions&amp;quot;: { &amp;quot;ecmaFeatures&amp;quot;: { &amp;quot;experimentalObjectRestSpread&amp;quot;: true, &amp;quot;jsx&amp;quot;: true }, &amp;quot;sourceType&amp;quot;: &amp;quot;module&amp;quot; }, &amp;quot;plugins&amp;quot;: [ &amp;quot;react&amp;quot; ], &amp;quot;rules&amp;quot;: { &amp;quot;indent&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;tab&amp;quot; ], &amp;quot;linebreak-style&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;unix&amp;quot; ], &amp;quot;quotes&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;double&amp;quot; ], &amp;quot;semi&amp;quot;: [ &amp;quot;error&amp;quot;, &amp;quot;always&amp;quot; ] } }; BUG&amp;mdash;沒有出現錯誤訊息 正常來說，上面的流程有配置好，應該就可以使用，但是呢，我就在這邊debug了很久，它的錯誤提示一直沒有跑出來。我來說明一下我的debug流程。</description>
+      <description>本篇文章中，我們將要和讀者說明，在使用vim開發javascript應用時，如何可以在每一次儲存時，自動的檢查我們js是否有問題，讓我們在開</description>
     </item>
     
   </channel>

@@ -26,14 +26,10 @@
     <meta content="c#, 物件導向, oo" name="keywords">
     
     
-    <meta name="description" property="og:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東東)
-public class Car { //這個就是欄位(Field)  private int PeopleNumber; } 而屬性呢?，屬性(Properties)是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。
-public class Car { //這個就是屬性  public int PeopleNumber { get; set;} }  存取子 ( accessor ) 屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。
-Get存取子 get存取子可以用於傳回欄位值或計算它並且回傳。
-下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。
-class Test { public int PeopleNumber { get ;} } 要改成下列程式碼，才正確。
-class Test { //設定唯時一定要給它值。不然會出錯。  public int PeopleNumber { get {return 10 ;} } } 試試看寫入值的話，則有人會打斷你的腿。|Describe what your web page is about">
+    <meta name="description" property="og:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告...">
     
+    <meta property="og:title" content="物件導向系列菜單 8-『 屬性 ( Properties ) 與欄位 ( Field ) 和存取子 ( accessor ) 』">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -48,13 +44,7 @@ class Test { //設定唯時一定要給它值。不然會出錯。  public int P
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="物件導向系列菜單 8-『 屬性 ( Properties ) 與欄位 ( Field ) 和存取子 ( accessor ) 』 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告。(註: 型別(Type)就是Int 、bool這些在變數前的東東)
-public class Car { //這個就是欄位(Field)  private int PeopleNumber; } 而屬性呢?，屬性(Properties)是欄位和方法的綜合體，也是直接在類別(Class)與結構(struct)中宣告，它可以提供完整的控制，你可以控制它為只能讀或寫，有時會與private 欄位(Filed)一起使用，怎麼控制呢，這就需要介紹存取子(accessor)。
-public class Car { //這個就是屬性  public int PeopleNumber { get; set;} }  存取子 ( accessor ) 屬性的存取子包含讀取 ( Get )和 寫入 ( Set )。
-Get存取子 get存取子可以用於傳回欄位值或計算它並且回傳。
-下列程式碼為Test 類別，有公開屬性PeopleNumber，設定為『只能讀』，但寫成降出錯喔，因為一定要有初始值。
-class Test { public int PeopleNumber { get ;} } 要改成下列程式碼，才正確。
-class Test { //設定唯時一定要給它值。不然會出錯。  public int PeopleNumber { get {return 10 ;} } } 試試看寫入值的話，則有人會打斷你的腿。|Describe what your web page is about">
+    <meta name="twitter:description" content="區別何謂屬性與何謂欄位 先來說說欄位，欄位(Field)是一個任意型別(Type)的變數，直接在類別(Class)與結構(struct)中宣告|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

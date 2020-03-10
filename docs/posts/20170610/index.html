@@ -26,16 +26,10 @@
     <meta content="nodejs, design pattern" name="keywords">
     
     
-    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下兩件事情 :
-  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
-var user = { login: function (type) { if (type == &amp;#34;google&amp;#34;) { doGoogleLoginSomething(); console.log(&amp;#34;google login process&amp;#34;); } else if (type == &amp;#34;facebook&amp;#34;) { doFbLoginSomething(); console.log(&amp;#34;facebook login process&amp;#34;); } else { doSomething(); console.log(&amp;#34;custom login process&amp;#34;); } } } user.login(&amp;#34;google&amp;#34;); 那上面這段程式碼中，有那些缺點呢 ?
-首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
-第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
- 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
-好處 : 較好維護、較好測試、可重複使用
- 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
-策略模式簡單的來說，就是為了處理以下的情況 :|Describe what your web page is about">
+    <meta name="description" property="og:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登...">
     
+    <meta property="og:title" content="Node設計模式之策略模式 ( Stratgey )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -50,15 +44,7 @@ var user = { login: function (type) { if (type == &amp;#34;google&amp;#34;) { do
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="Node設計模式之策略模式 ( Stratgey ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="本篇文章中，我們想要知道以下兩件事情 :
-  為什麼要使用它呢 ? 什麼是策略模式呢 ?   為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登入方法，它可以選擇使用google、facebook的方法，來進行登入。
-var user = { login: function (type) { if (type == &#34;google&#34;) { doGoogleLoginSomething(); console.log(&#34;google login process&#34;); } else if (type == &#34;facebook&#34;) { doFbLoginSomething(); console.log(&#34;facebook login process&#34;); } else { doSomething(); console.log(&#34;custom login process&#34;); } } } user.login(&#34;google&#34;); 那上面這段程式碼中，有那些缺點呢 ?
-首先第一個，它包含了很多的 if else 判斷，這樣反而增加了該函數的邏輯分支。
-第二個為該函數缺泛彈性，如果你想增加twitter的登入，那就必須修改這函數的內部實作，這樣違反了開放封閉原則
- 開放封閉原則 : 白話文就是當你增加新功能時，盡量不修改原有的程式碼。
-好處 : 較好維護、較好測試、可重複使用
- 所以說，當碰到這種情況時，就可以使用策略模式囉 ~
-策略模式簡單的來說，就是為了處理以下的情況 :|Describe what your web page is about">
+    <meta name="twitter:description" content="本篇文章中，我們想要知道以下兩件事情 : 為什麼要使用它呢 ? 什麼是策略模式呢 ? 為什麼要使用策略模式呢 ? 我們簡單的寫一下，一個多需要用不同方法的登|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

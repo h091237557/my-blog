@@ -26,17 +26,10 @@
     <meta content="mysql, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 :
- 『 並行 』產生的不一致性難題
- 基本上並行所產生的不一致性難題，可以分為以下幾種類型 :
- 更新不一致 髒讀 不可重讀 幻讀  本篇將會分為以下幾個章節來談談這幾個難題 :
- 更新不一致難題與解法 - 鎖 髒讀與不可重讀難題與解法 - MVCC 幻讀難題與解法 - MVCC &#43; Next-Lock 鎖  更新不一致難題與解法 - 鎖 這種情境如下圖 1 所示，a 與 b 兩個事務進行更新操作後，事務 a 再看看自已操作的結果，發現自已的更新消失了。這種情境被稱為『 更新不一致問題 』
-圖 1 : 更新不一致問題
-那這種情境 innodb 它是如何處理呢 ?
- 它使用鎖來處理
- 在 innodb 的預設，它會對要『 update、delete 』的『 行加鎖排他鎖 』，不過比較嚴格定義應該是說 :
- 它會對有用到『 索引 』的『 行 』加『 排他鎖 』，不然會退化成『 表 』鎖|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾...">
     
+    <meta property="og:title" content="30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 )">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -51,16 +44,7 @@
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-16 之資料庫層的難題 - 單機『 並行 』一致性難題 ( 1 ) | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 :
- 『 並行 』產生的不一致性難題
- 基本上並行所產生的不一致性難題，可以分為以下幾種類型 :
- 更新不一致 髒讀 不可重讀 幻讀  本篇將會分為以下幾個章節來談談這幾個難題 :
- 更新不一致難題與解法 - 鎖 髒讀與不可重讀難題與解法 - MVCC 幻讀難題與解法 - MVCC &#43; Next-Lock 鎖  更新不一致難題與解法 - 鎖 這種情境如下圖 1 所示，a 與 b 兩個事務進行更新操作後，事務 a 再看看自已操作的結果，發現自已的更新消失了。這種情境被稱為『 更新不一致問題 』
-圖 1 : 更新不一致問題
-那這種情境 innodb 它是如何處理呢 ?
- 它使用鎖來處理
- 在 innodb 的預設，它會對要『 update、delete 』的『 行加鎖排他鎖 』，不過比較嚴格定義應該是說 :
- 它會對有用到『 索引 』的『 行 』加『 排他鎖 』，不然會退化成『 表 』鎖|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 本篇文章中，咱們要說說另一種資料不一致性產生的場景，那就是 : 『 並行 』產生的不一致性難題 基本上並行所產生的不一致性難題，可以分為以下幾|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">

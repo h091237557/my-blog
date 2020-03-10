@@ -5,6 +5,8 @@ theme = "hugo-primer"
 languageCode = "ja"
 publishDir = "docs"
 disqusShortname = "mark-lin"
+hasCJKLanguage = true
+summaryLength = 70
 paginate = 30
 
 [author]
@@ -12,8 +14,6 @@ paginate = 30
     email = "h091237557@gmail.com"
 
 # If you are using Chinese, Japanese, or Korean, I highly recommend you to set this true.
-hasCJKLanguage = true
-summaryLength = 70
 # Code pen
 pygmentsCodeFences = true
 pygmentsUseClasses = true

@@ -26,19 +26,10 @@
     <meta content="instant messaging, 鐵人賽" name="keywords">
     
     
-    <meta name="description" property="og:description" content="正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。
-為什麼會選這兩個出來說呢 ? 因為在即時影音傳輸的世界中，這兩個協議常常拿出來進行比較(雖然大部份還是 TCP)，而且這兩個是所有資料傳輸的基本，不論是要傳輸文字、檔案、語音都一定會透過這兩個來傳送資料，所以這兩個很重要。
-這篇文章的主是題就是：
- 什麼是 TCP 和 UDP 呢? 這協議到底用來做啥的 ?
- 接下來會就簡單的分成兩個章節：
- UDP (User Datagram Protocol) TCP (Transmission Control Protocol)  UDP (User Datagram Protocol) 首先我們已經知道協議是用做完成某事件的過程，那 UDP 是想用來做什麼呢 ?
-咱們已經知道傳輸層主要是處理應用程式與應用程式如何進行傳輸，而要送到某個應用程式最基本所需要的東西就是 Port。
-UDP 就是符合咱們最低需求的東西。
- UDP 就是用來傳輸資料到某台電腦中的應用程式 (有沒有收到不用管)
- 它的封包長的如下。
-UDP 封包 = 表頭 &#43; 資料 其中表頭欄位如下，事實上也就只是加上 Port 而以，其中 length 只是用來說明它是資料有多大。
-Source Port: 55084 Destination Port: 443 Length: 31 (byte) UDP 注意事項  UDP 的特點就是射後不理，他不會管對方有沒有收到的 (不可靠傳輸)。 它有可能會發生到達順序不一致問題。  Ex.|Describe what your web page is about">
+    <meta name="description" property="og:description" content="正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這...">
     
+    <meta property="og:title" content="30-11之 TCP 與 UDP 協議">
+    <meta property="og:image" content="assets/11474637685936.jpg">
 
     <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
     
@@ -53,18 +44,7 @@ Source Port: 55084 Destination Port: 443 Length: 31 (byte) UDP 注意事項  UDP
     <meta name="twitter:site" content="@your_twitter_id">
     <meta name="twitter:creator" content="@your_twitter_id">
     <meta name="twitter:title" content="30-11之 TCP 與 UDP 協議 | 拿鐵派的馬克 Blog">
-    <meta name="twitter:description" content="正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。
-為什麼會選這兩個出來說呢 ? 因為在即時影音傳輸的世界中，這兩個協議常常拿出來進行比較(雖然大部份還是 TCP)，而且這兩個是所有資料傳輸的基本，不論是要傳輸文字、檔案、語音都一定會透過這兩個來傳送資料，所以這兩個很重要。
-這篇文章的主是題就是：
- 什麼是 TCP 和 UDP 呢? 這協議到底用來做啥的 ?
- 接下來會就簡單的分成兩個章節：
- UDP (User Datagram Protocol) TCP (Transmission Control Protocol)  UDP (User Datagram Protocol) 首先我們已經知道協議是用做完成某事件的過程，那 UDP 是想用來做什麼呢 ?
-咱們已經知道傳輸層主要是處理應用程式與應用程式如何進行傳輸，而要送到某個應用程式最基本所需要的東西就是 Port。
-UDP 就是符合咱們最低需求的東西。
- UDP 就是用來傳輸資料到某台電腦中的應用程式 (有沒有收到不用管)
- 它的封包長的如下。
-UDP 封包 = 表頭 &#43; 資料 其中表頭欄位如下，事實上也就只是加上 Port 而以，其中 length 只是用來說明它是資料有多大。
-Source Port: 55084 Destination Port: 443 Length: 31 (byte) UDP 注意事項  UDP 的特點就是射後不理，他不會管對方有沒有收到的 (不可靠傳輸)。 它有可能會發生到達順序不一致問題。  Ex.|Describe what your web page is about">
+    <meta name="twitter:description" content="正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這|Describe what your web page is about">
     <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
     
     <meta name="author" content="marklin">
