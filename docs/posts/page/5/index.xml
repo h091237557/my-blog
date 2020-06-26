@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>30-25之MongoDB分片Sharding(3)---片鍵的選擇</title>
+      <link>https://mark-lin.com/posts/20160925/</link>
+      <pubDate>Sun, 25 Sep 2016 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20160925/</guid>
+      <description>上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~ 完美的片鍵</description>
+    </item>
     
     <item>
       <title>30-24之MongoDB分片Sharding(2)---Chunk的札事</title>
@@ -272,15 +281,6 @@
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20150909/</guid>
       <description>在這篇文章中，我們將來說明一下when與then(pipe)的用法，這兩個方法都算是promise衍伸技術。 deferred.when 在實務上很常有這種要求，任務１與任務２這兩個非同步方法執行完成，再執行任務３，這時我們就</description>
-    </item>
-    
-    <item>
-      <title>Javascript非同步編程的方法 - Promise</title>
-      <link>https://mark-lin.com/posts/20150908/</link>
-      <pubDate>Tue, 08 Sep 2015 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20150908/</guid>
-      <description>在上一篇介紹 PubSub 的方法後，發現該方法不適合處理一次性事件，而Promise就是用來解決該問題的手法。那什麼是Promise呢?，他是一種非同步操作的最終結果，你也可以把想成是未來的物件但是現在還不可用，</description>
     </item>
     
   </channel>

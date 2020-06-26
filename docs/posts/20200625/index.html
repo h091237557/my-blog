@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html>
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154360458-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154360458-1');
+</script>
+  <head>
+      <link rel="shortcut icon" href="assets/favicon.ico"/>
+      <link rel="bookmark" href="assets/favicon.ico"/>
+
+      <script data-ad-client="ca-pub-6564736746698681" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+      
+  Rabin-Karp 演算法的詳細解析 &ndash; 拿鐵派的馬克 Blog
+
+    </title>
+    
+    <meta content="rabinkarp" name="keywords">
+    
+    
+    <meta name="description" property="og:description" content="Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 : 它可以判斷 t 字串是否為 s 字串的子字串 子字串例的範例如下 : s: &quot;abcabee&quot; t: &quot;cab&quot; t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。 那這裡問個問題。 **用兩次 for loop 就能找到子字串...">
+    
+
+    
+    <meta property="og:title" content="Rabin-Karp 演算法的詳細解析">
+    <meta property="og:image" content="https://mark-lin.com/assets/11474637685936.jpg">
+    <meta property="og:url" content="https://mark-lin.com/posts/20200625/">
+    <meta property="og:type" content="website">
+
+    <meta itemprop="name" content="Rabin-Karp 演算法的詳細解析">
+    <meta itemprop="description" content="Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 : 它可以判斷 t 字串是否為 s 字串的子字串 子字串例的範例如下 : s: &quot;abcabee&quot; t: &quot;cab&quot; t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。 那這裡問個問題。 **用兩次 for loop 就能找到子字串...">
+    <meta itemprop="image" content="https://mark-lin.com/assets/11474637685936.jpg">
+
+
+    <meta name="apple-mobile-web-app-title" content="拿鐵派的馬克 Blog">
+    
+    
+    <link rel="icon" href="/favicon-64.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="mask-icon" size="any" href="/pinned-icon.svg">
+    
+    
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@your_twitter_id">
+    <meta name="twitter:creator" content="@your_twitter_id">
+    <meta name="twitter:title" content="Rabin-Karp 演算法的詳細解析 | 拿鐵派的馬克 Blog">
+    <meta name="twitter:description" content="Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 : 它可以判斷 t 字串是否為 s 字串的子字串 子字串例的範例如下 : s: &quot;abcabee&quot; t: &quot;cab&quot; t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。 那這裡問個問題。 **用兩次 for loop 就能找到子字串|Describe what your web page is about">
+    <meta name="twitter:image" content="https://mark-lin.comtwitter-card.png">
+    
+    <meta name="author" content="marklin">
+    <meta name="author" content="mark lin">
+    <meta name="author" content="馬克">
+    <meta name="author" content="拿鐵派">
+    <meta name="author" content="拿鐵派的馬克">
+
+
+    <link rel="stylesheet" href="/assets/syntax-1.1.css">
+    <link rel="stylesheet" href="/assets/primer-build.css">
+    <link rel="stylesheet" href="/assets/style-1.7.css">
+  </head>
+
+
+  <body>
+        <div id="header" class="px-1 bg-white">
+                <nav class="UnderlineNav--right px-2 container-lg">
+  <div class="logo">
+      <a class="log-main UnderlineNav-actions" href="https://mark-lin.com">
+          拿鐵派的馬克 Blog
+        </a>
+      <span class="logo-small">拿鐵才是王道</span>
+  </div>
+
+  
+  
+</nav>
+<div class='header-addd' style='width:600px;height:100px !important'> 
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<ins class="adsbygoogle"
+     style="display:inline-block;width:600px;height:100px"
+     data-ad-client="ca-pub-6564736746698681"
+     data-ad-slot="8706832635"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div>
+
+
+
+              </div>
+    <div id="holy" class="container-lg bg-white h-100">
+
+
+
+      <div role="main" id="main" class="holy-main markdown-body px-4">
+        
+
+
+
+
+<div class="Subhead">
+  <div class="Subhead-heading">
+    <div class="h1 mt-3 mb-1">Rabin-Karp 演算法的詳細解析</div>
+  </div>
+  <div class="Subhead-description">
+    
+
+
+
+
+<a href='/tags/algorithm' class="muted-link">
+  <span class="Label Label--gray">algorithm</span>
+</a>
+
+
+
+    
+    <div class="float-md-right">
+      <span title="Lastmod: 2020-06-26. Published at: 2020-06-24.">
+        
+          Lastmod: 2020-06-26
+        
+      </span>
+    </div>
+    
+  </div>
+</div>
+<article>
+  
+  <section class="pb-6 mb-3 border-bottom">
+    <p>Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 :</p>
+<blockquote>
+<p>它可以判斷 t 字串是否為 s 字串的子字串</p>
+</blockquote>
+<p>子字串例的範例如下 :</p>
+<pre><code>s: &quot;abcabee&quot;
+t: &quot;cab&quot;
+</code></pre><p>t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。</p>
+<p>那這裡問個問題。</p>
+<p>**用兩次 for loop 就能找到子字串了，為啥需要使用 Rabin-Karp 呢 ? **</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * @param source: 
+</span><span style="color:#75715e">     * @param target: 
+</span><span style="color:#75715e">     * @return: 回傳是否 target 是否為 source 的子字串
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">bool</span> strStr(string <span style="color:#f92672">&amp;</span>source, string <span style="color:#f92672">&amp;</span>target) {
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> (source.size() <span style="color:#f92672">-</span> target.size()); i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> target.size(); j<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+                <span style="color:#66d9ef">if</span>(source[i<span style="color:#f92672">+</span>j] <span style="color:#f92672">!</span><span style="color:#f92672">=</span> target[j]) <span style="color:#66d9ef">break</span>;
+                
+                <span style="color:#66d9ef">if</span>(j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> (target.size()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)){
+                    <span style="color:#66d9ef">return</span> true;
+                }
+            }
+        }
+        <span style="color:#66d9ef">return</span> false;
+    }
+};
+</code></pre></div><blockquote>
+<p>因為兩次 for loop 的平均時間複雜度為 O(NxM)，而 Rabin-Karp 為 O(N+M)</p>
+</blockquote>
+<p>但這裡要注意 Rabin-Karp 嚴格來說不是最佳的『字串搜尋演算法』，更好的還有 KMP 之類的，不過這裡在本篇討論範圍，會拉 Rabin Karp 出來看是因為比較簡單……</p>
+<p>其它字串搜尋演算法可以至以下連結來查查。</p>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%AD%97%E4%B8%B2%E6%90%9C%E5%B0%8B%E6%BC%94%E7%AE%97%E6%B3%95">wiki-字串搜尋演算法</a></p>
+<p>接下來將開始的那理解 Rabin-Karp 這個演算法，本篇文章分以為下幾個章節 :</p>
+<ul>
+<li>Rabin-Karp 基本原理</li>
+<li>Rabin-Karp 的 hash function</li>
+<li>LeetCode 的題目 Implement strStr()</li>
+</ul>
+<h2 id="rabinkarp-">Rabin-Karp 基本原理</h2>
+<p>Rabin-Karp 的核心為 :</p>
+<blockquote>
+<p>用 hash 來進行字串判斷，並且只要 O(1) 的時間就可以計算出 next hash</p>
+</blockquote>
+<blockquote>
+<p>使得 Rabin-Karp 為時間複雜度為 O(N+M) 優於爆力法 O(NxM)</p>
+</blockquote>
+<p>這裡先簡單說一下 hash 是啥。簡單的說就是將『 某個東東 A 』透過 hash function，轉成『 某個東東 B 』。例如下範例，會根據字串的每個字元 ascii 加總起來，產生一個 hash 值。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">abc</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> hash function <span style="color:#f92672">=</span><span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">294</span>(<span style="color:#ae81ff">97</span><span style="color:#f92672">+</span><span style="color:#ae81ff">98</span><span style="color:#f92672">+</span><span style="color:#ae81ff">99</span>)
+
+function hash(string s){
+   <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+   <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> s.size(); i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+      <span style="color:#75715e">// (int)字串，這裡會取得 s[i] 這字串的 ASCII 碼
+</span><span style="color:#75715e"></span>      res <span style="color:#f92672">+</span><span style="color:#f92672">=</span> (<span style="color:#66d9ef">int</span>)s[i];
+   }
+   <span style="color:#66d9ef">return</span> res;
+}
+</code></pre></div><p>這裡注意一下 hash function 不一定要長這個樣子，上述只是範例。</p>
+<p>那為啥 rabin karp 要進行 hash 轉換呢 ? 等回兒會知道。接下來我們來看演算法的步驟。然後我們假設範例如下</p>
+<pre><code>source: &quot;abcabee&quot;
+target: &quot;ca&quot;
+
+source 長度: n
+target 長度: m
+</code></pre><h3 id="step-1--target--source--m--hash-">Step 1. 將 Target 與 Source 前 M 個字串進行 Hash 轉換</h3>
+<p>假設咱們的 hash function 為如下 :</p>
+<pre><code>a =&gt; 97
+b =&gt; 98
+z =&gt; 122
+
+hash(s) = ASCII(s[0]) + ASCII(s[1]) + ... + ASCII(S[n])
+</code></pre><p>所以我們的 target 透過 hash 轉換會得到 :</p>
+<pre><code>source: &quot;abcabee&quot;
+target: &quot;ca&quot;
+
+hash(&quot;ab&quot;) = 97 + 98 = 195
+hash(&quot;ca&quot;) = 99 + 97 = 196
+</code></pre><p><strong>注意 ! 應該有人有注意到這個 hash function 會有問題，這在下一章節會說說，這裡只是範例，只要有個 hash 方法就好。</strong></p>
+<h3 id="step-2--window--hash-">Step 2. 計算每一個 Window 字串的 Hash 值</h3>
+<p>然後接下來會用移動視窗的模式來計算每 m 的 hash 值。由於我們要找的 target 為長度 2 的字串，因此我們的 m 就為 2。所以就代表要計算出每個連續 2 個字元的字串的 hash 值。</p>
+<p>以下圖來看，它會照這以下的順序來計算每個字串的 hash 值，其中每個紅區塊就是一個 m 為為 2 的window。</p>
+<p><img src="http://yixiang8780.com/outImg/2020-06-25-rabinkarp-1.png" alt=""></p>
+<p><strong>那接下來要如何計算之後的字串的 hash 值呢 ? 不就是一樣 step 1 的方法嗎 ?</strong></p>
+<p>NoNo ~ 當然不是，你仔細想一下，這樣不就和爆力法一樣，每個字串都還是要 for loop 一次，那這樣對就代表時間複雜度還是 O(NxM)，下面為 O(NXM) 的完整寫法，你看會需要兩個 for loop。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// source: &#34;abcabee&#34;
+</span><span style="color:#75715e"></span><span style="color:#75715e">// 每一次 i 就是計算一個 window 的字串 hash
+</span><span style="color:#75715e"></span><span style="color:#75715e">// i=0 =&gt; ab
+</span><span style="color:#75715e"></span><span style="color:#75715e">// i=1 =&gt; bc
+</span><span style="color:#75715e"></span><span style="color:#75715e">// i=2 =&gt; ca
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> source.size();
+<span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> target.size();
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> n; i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+  hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> m; j<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+     hash <span style="color:#f92672">+</span><span style="color:#f92672">=</span> ASCII(s[i<span style="color:#f92672">+</span>j]);
+  }
+}
+</code></pre></div><p>這就是為什麼要用 hash 的關係。</p>
+<blockquote>
+<p>因為有了 hash 公式，我們可以用 O(1) 反推下一個 hash 值，這過程叫『 rehash 』</p>
+</blockquote>
+<p>以我們範例的 hash 公式來看，反推的方法為 :</p>
+<pre><code>source: &quot;abcabee&quot;
+a =&gt; 97
+b =&gt; 98
+c =&gt; 99
+hash(&quot;ab&quot;) =&gt; 97 + 98 = 195
+hash(&quot;bc&quot;) =&gt; 195 - 97(前 1 個字串的第一個字元) + 99(bc 的最後一個字元) = 197
+</code></pre><p>這樣就可以使用 O(1) 的時間複雜度來進行運算了。</p>
+<blockquote>
+<p>在設計 hash function 時，要記得設計出可以反推的 hash 公式，才能用在 Rabin-Karp。</p>
+</blockquote>
+<h3 id="step-3--target-hash--current-hash">Step 3. 判斷 target hash 是否等於 current hash</h3>
+<p>最後就只要判斷 target 的 hash 值，與某個 window 所計算出的 hash 值相等，那基本上它就是答案。</p>
+<pre><code>source: &quot;abcabee&quot;
+target: &quot;ca&quot; =&gt; 99 + 97 = 196
+
+window 1 : ab =&gt; 97 + 98 = 195
+window 2 : bc =&gt; 195 - 97 + 99 = 197
+window 3 : ca =&gt; 197 - 98 + 97 = 196
+window 4 : ab =&gt; 196 - 99 + 98 = 195
+window 5 : be =&gt; 195 - 97 + 100 = 198
+window 6 : ee =&gt; 198 - 98 + 100 = 200
+
+Ans: 196 = 196 = ca 所以 target 為 source 的子字串
+</code></pre><p><img src="http://yixiang8780.com/outImg/2020-06-25-rabinkarp-2.png" alt=""></p>
+<h2 id="rabinkarp--hash-function">Rabin-Karp 的 Hash Function</h2>
+<p>Rabin Karp 的 hash function 有兩個重點 :</p>
+<blockquote>
+<p>要可以『 用 O(1) 進行 rehash 』 且『 不要 overflow 』</p>
+</blockquote>
+<p>咱們接下來先從剛剛範例版本的來看看。</p>
+<h3 id="version-1--">Version 1 : 範例用版本</h3>
+<p>我們上面範例使用的 hash 方法如下，就是簡單將每個字元的 ascii 碼加總起，來產生一個值。</p>
+<pre><code>a =&gt; 97
+b =&gt; 98
+z =&gt; 122
+
+hash(s) = ASCII(s[0]) + ASCII(s[1]) + ... + ASCII(S[n])
+</code></pre><p>但是這個版本的 hash 值有問題。</p>
+<blockquote>
+<p>那就是 bc(98+99) 與 cb(99+98) 或 ad(97+100) 都會計算為 197</p>
+</blockquote>
+<p>這就所謂的『 hash 碰撞 ( collision ) 』。在傳統資料結構中，有兩種方法可以解決這個問題 :</p>
+<ul>
+<li>拉鏈法 : 也就是在這個 hash 對應下，會有一個 linklist 來儲放所有的值，就有點像是 197 : bc-&gt;cb-&gt;ad，但這個問題很明顯，如果 linklist 太長，就會由原本找 hash 對應值操作的時間複雜度 o(1) 變成 o(n( link list 的長度 ))。</li>
+<li>開放地址法 : 假設第一次操作時 hash 值 197(bc)，位置 1 插入 bc 沒碰撞，成功。第二次操作時 hash 值 197(cb)，插入位置 1 發生碰撞失敗，再嘗試插入位置 2 成功。</li>
+</ul>
+<p>這個大概就淺淺的說這兩種解決方法。詳細的內容建立去查查 hash 碰撞處理，應該就會知道更多了。</p>
+<h3 id="version-2--hash-">Version 2 : Hash 計算多考慮位置</h3>
+<p>事實上最理想的情況是儘可能的『 減少 hash 碰撞 』，因為不管是用那種方法，如果太常碰撞的話，都會讓搜尋或更新的時間複雜度大大幅的上升，所以接下來的 version 2 後就是開始往這方面來思考。</p>
+<p>要解決上述的 bc、cb、ad 這種換個位置就碰撞的方法，最簡單的就是 :</p>
+<blockquote>
+<p>Hash 值一起考慮每個字元的位置</p>
+</blockquote>
+<p>所以事實上可以改成以下的 hash 計算。為了簡單我們就不用 ascii 來當每個字元的編號，而使用 1 ~ 26 來代表 a 至 z。</p>
+<pre><code>hash(s) = s[0]*10^(n-1) + s[1]*10^(n-2) + s[n]*10^0
+
+{ a:1, b:2, c:3 }
+Ex. hash(&quot;abc&quot;) = 1*10^2 + 2*10^1 + 3*10^0 = 123
+</code></pre><h4 id="-10-">為什麼要乘一個 10 ?</h4>
+<p>先說一下，不一定要乘 10，你可以乘其它數。而乘它的原因在於 :</p>
+<blockquote>
+<p>減少 hash 碰撞</p>
+</blockquote>
+<p>假設我們沒有乘某個數變成如下 :</p>
+<pre><code>hash(s) = s[0]^2 + s[1]^1 
+</code></pre><p>那這時如果 s[0] = 2 而 s[0] = 0 這樣 hash 值會為 4 值。那如果這時有那一個編碼為  s[0]^2 且只有一個字元，那就碰撞了。如下範例。</p>
+<pre><code>hash(s) = s[0]^2 + s[1]^1
+&quot;1&quot; =&gt; 1
+&quot;2&quot; =&gt; 2
+
+hash(&quot;20&quot;) = 2^2 + 0 = 4
+hash(&quot;4&quot;) = 4^1 = 4 ( ! 碰撞 )
+</code></pre><h3 id="version-3---overflow-">Version 3 : 處理 overflow 問題</h3>
+<p>Version 2 事實上有個問題，如果 10^n 的 n 次方太大怎麼辦呢 ?</p>
+<blockquote>
+<p>會炸掉，以 c++ 來說 int(16) 就大約 15 就炸了。</p>
+</blockquote>
+<p>所以應該會有人想說，那就使用 mod 改成如下，mod 一個質數，越大越好，因為越小越容易發生 hash 衝突，至於為什麼是要選質數，<a href="https://blog.csdn.net/afei__/article/details/83010897?utm_medium=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-BlogCommendFromMachineLearnPai2-1.nonecase">請參考此篇</a>，我覺得寫的很清楚了 :</p>
+<pre><code>hash(s) = (s[0]*10^(n-1) + s[1]*10^(n-2) + s[n]*10^0) mod prime
+
+{ a:1, b:2, c:3 }
+prime = 11
+Ex. hash(&quot;abc&quot;) = (1*10^2 + 2*10^1 + 3*10^0) mod 11 
+= 123 mod 11
+= 2
+</code></pre><p><strong>可是如果是 10^n 太大怎麼辦呢 ?</strong></p>
+<p>這裡就需要就上公式進行一下轉換。</p>
+<pre><code>先假設只有 2 位
+(1) hash = (s[0]*10^1 + s[1]*10^0) mod p
+
+可以轉換成
+(2) hash = (((s[0] mod p) *10) mod p + s[1]) mod p
+</code></pre><p>然後公式 2 寫成程式碼就是如下，以 c++ 為例 :</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> s.size(); i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+    hash <span style="color:#f92672">=</span> ((hash <span style="color:#f92672">*</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">%</span> p <span style="color:#f92672">+</span> (<span style="color:#66d9ef">int</span>)s[i])) <span style="color:#f92672">%</span> p;
+}
+</code></pre></div><p>上面的公式(2) 就是<a href="https://zh.wikipedia.org/wiki/Rabin%E2%80%93Karp%E7%AE%97%E6%B3%95"> wiki rabin karp </a>上面所說的 hash function。</p>
+<p>至於 (1) 為什麼可以轉成 (2) 呢 ? 呵，說實話我還真推不太出來。目前只知道和以下兩個數學原理有關 :</p>
+<ul>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%A7%A6%E4%B9%9D%E9%9F%B6%E7%AE%97%E6%B3%95">Horner's Rule</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E6%A8%A1%E9%99%A4">Mod 運算</a></li>
+</ul>
+<p>這個公式轉換就先這樣，唉……只能說我當初離散數學完全沒在唸…… 這裡只要先知道公式 (1) 與公式(2)，兩個算出來是相等的，然後公式(2)可以讓我們避免發生 overflow。</p>
+<h4 id="rehash-">Rehash 運算</h4>
+<p>好接下來是 rehash，咱們先不考慮 mod 的情況下，咱們先來看看如何將以下的 hash function 進行 rehash。</p>
+<pre><code>hash(s) = s[0]^2 + s[1]^1 
+</code></pre><p>就直接參考以下的圖會比較好理解，先說明一下這裡的範例 1234567 它是一個文字，然後假設你要取得 hash(&ldquo;123&rdquo;) 它的 function 如下 :</p>
+<pre><code>hash(&quot;123&quot;) = 1*10^2 + 2*10^1 + 3 = 123
+</code></pre><p>然後接下來我們要進行 rehash 以 o(1) 的時間複雜度來取得，下一個字串 234 的方法就如下圖，這圖應該是很好理解囉。</p>
+<p><img src="http://yixiang8780.com/outImg/2020-06-25-rabinkarp-3.png" alt=""></p>
+<p>然後接下來考慮 mod 的情況，下列為前提條件。</p>
+<pre><code>Ex. &quot;12345&quot;
+now : 123 
+next : 234
+now_hash : (1*10^2 + 2*10^1 + 3*10^0) mod 11 = 2
+
+現在要求的為 next 的 hash。
+pow = ((10 mod 11)*10) mod 11 = 1
+備註: pow 等於於 (10^2) mod 11，會用這種方式是防止 10^n 炸掉
+</code></pre><p>然後下列為 rehash 考慮 mod 的流程。</p>
+<pre><code>(1) next_hash = (2 - 1*pow) = 1
+(2) next_hash = (next_hash mod 11 + 11) mod 11 = 1
+(3) next_hash = (next_hash*10 + 4) mod 11 = 3
+
+驗證 : (2*10^2 + 3*10^1 + 4*10^0) mod 11 = 3
+</code></pre><p><strong>其中需要注意上述流程(2)，為什麼它要多加個 11 然後在 mod 一次呢 ?</strong></p>
+<blockquote>
+<p>因為流程(1)可能會負數</p>
+</blockquote>
+<p>這裡我只能說負數的取餘數，不同的語言有可能會有不同的答案，而這個方法是比較好在程式碼比較通常的解法，詳細的負數取餘建立看看下面這篇文章，先理解一下問題在那。</p>
+<p><a href="https://www.itread01.com/content/1544306778.html">程式語言中負數取餘的問題</a></p>
+<h2 id="leetcode--implement-strstr">LeetCode 的題目 Implement strStr()</h2>
+<p>Implement strStr().</p>
+<p>Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.</p>
+<pre><code>Input: source = &quot;hello&quot;, target = &quot;ll&quot;
+Output: 2
+
+Input: source = &quot;aaaaa&quot;, target = &quot;bba&quot;
+Output: -1
+</code></pre><h4 id="rabin-karp-">Rabin Karp 解法</h4>
+<p>這一段程式碼就是標準的 rabin karp 來判斷 target 字串是否為 source 字串的寫法。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#</span><span style="color:#75715e">include</span> <span style="color:#75715e">&lt;math.h&gt;  </span><span style="color:#75715e">
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Solution</span> {
+<span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> BASE <span style="color:#f92672">=</span> <span style="color:#ae81ff">10</span>;
+    <span style="color:#66d9ef">int</span> MODE <span style="color:#f92672">=</span> <span style="color:#ae81ff">19260817</span>;
+    <span style="color:#75715e">// def: hash(s) = s[0]*BASE^n-1 + s[1]*BASE^n-2 ... s[n-1]*BASE^0 
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>(string s){
+        <span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> s.size(); i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+            hash <span style="color:#f92672">=</span> ((hash <span style="color:#f92672">*</span> BASE) <span style="color:#f92672">%</span> MODE <span style="color:#f92672">+</span> (<span style="color:#66d9ef">int</span>)s[i]) <span style="color:#f92672">%</span> MODE;
+        }
+        <span style="color:#66d9ef">return</span> hash;
+    };
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">int</span> strStr(string source, string target) {
+        <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> source.size();
+        <span style="color:#66d9ef">int</span> t <span style="color:#f92672">=</span> target.size();
+        <span style="color:#66d9ef">if</span>((n <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> t <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>) <span style="color:#f92672">|</span><span style="color:#f92672">|</span> t <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>){
+            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+        }
+        
+        <span style="color:#66d9ef">if</span>(n <span style="color:#f92672">&lt;</span> t){
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+        }
+        
+        <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> target_hash <span style="color:#f92672">=</span> hash(target);
+        <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> cur_hash <span style="color:#f92672">=</span> hash(source.substr(<span style="color:#ae81ff">0</span>, t)); 
+        <span style="color:#66d9ef">if</span>(target_hash <span style="color:#f92672">=</span><span style="color:#f92672">=</span> cur_hash){
+            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+        }
+        
+        <span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span> pow <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>; j<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+            pow <span style="color:#f92672">=</span> (pow <span style="color:#f92672">*</span> BASE) <span style="color:#f92672">%</span> MODE;
+        }
+        
+        <span style="color:#75715e">// rehash
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Ex. source = &#34;abcde&#34;, target = &#34;cd&#34;
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// cur_hash = hash(&#34;ab&#34;)
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// target_hash = hash(&#34;cd&#34;)
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// loop 
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// &#34;bc&#34; =&gt; &#34;cd&#34; =&gt; &#34;de&#34;
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>; i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> t; i<span style="color:#f92672">+</span><span style="color:#f92672">+</span>){
+            cur_hash <span style="color:#f92672">=</span> (cur_hash <span style="color:#f92672">-</span> (<span style="color:#66d9ef">long</span> <span style="color:#66d9ef">long</span>)source[i<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]<span style="color:#f92672">*</span>pow);
+            <span style="color:#75715e">// 注意下面這一段 !!!! 為了解決上一段可能會負數的問題。
+</span><span style="color:#75715e"></span>            cur_hash <span style="color:#f92672">=</span> (cur_hash <span style="color:#f92672">%</span> MODE <span style="color:#f92672">+</span> MODE) <span style="color:#f92672">%</span> MODE;
+            cur_hash <span style="color:#f92672">=</span> (cur_hash<span style="color:#f92672">*</span>BASE <span style="color:#f92672">+</span> (<span style="color:#66d9ef">int</span>)source[i<span style="color:#f92672">+</span>t<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]) <span style="color:#f92672">%</span> MODE;
+            <span style="color:#66d9ef">if</span>(cur_hash <span style="color:#f92672">=</span><span style="color:#f92672">=</span> target_hash){
+                <span style="color:#66d9ef">return</span> i;
+            }
+        }
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+    }
+};
+</code></pre></div><h2 id="heading">參考資料</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=BfUejqd07yo">Rolling Hash Function Tutorial, used by Rabin-Karp String Searching Algorithm</a></li>
+<li><a href="https://leetcode.com/problems/longest-duplicate-substring/">1044. Longest Duplicate Substring</a></li>
+<li><a href="https://www.youtube.com/watch?v=BfUejqd07yo">Rabin-Karp Hash 的產生</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E7%A7%A6%E4%B9%9D%E9%9F%B6%E7%AE%97%E6%B3%95">HORNER's Rule</a></li>
+</ul>
+
+  </section>
+
+  <section>
+    
+      <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "mark-lin" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+    
+  </section>
+
+</article>
+<div class="disqus markdown">
+    <div id="disqus_thread"></div>
+<script>
+
+
+
+
+
+(function() { 
+var d = document, s = d.createElement('script');
+s.src = 'https://mark-lin.disqus.com/embed.js';
+s.setAttribute('data-timestamp', +new Date());
+(d.head || d.body).appendChild(s);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                            
+  </div>
+
+      </div>
+
+      <div id="side" class="pr-1">
+        <aside class="pr-3">
+          
+  
+    <div id="toc" class="Box Box--blue mb-3">
+      <b>Rabin-Karp 演算法的詳細解析</b><nav id="TableOfContents">
+  <ul>
+    <li><a href="#rabinkarp-">Rabin-Karp 基本原理</a>
+      <ul>
+        <li><a href="#step-1--target--source--m--hash-">Step 1. 將 Target 與 Source 前 M 個字串進行 Hash 轉換</a></li>
+        <li><a href="#step-2--window--hash-">Step 2. 計算每一個 Window 字串的 Hash 值</a></li>
+        <li><a href="#step-3--target-hash--current-hash">Step 3. 判斷 target hash 是否等於 current hash</a></li>
+      </ul>
+    </li>
+    <li><a href="#rabinkarp--hash-function">Rabin-Karp 的 Hash Function</a>
+      <ul>
+        <li><a href="#version-1--">Version 1 : 範例用版本</a></li>
+        <li><a href="#version-2--hash-">Version 2 : Hash 計算多考慮位置</a></li>
+        <li><a href="#version-3---overflow-">Version 3 : 處理 overflow 問題</a></li>
+      </ul>
+    </li>
+    <li><a href="#leetcode--implement-strstr">LeetCode 的題目 Implement strStr()</a>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+    <li><a href="#heading">參考資料</a></li>
+  </ul>
+</nav></div>
+  
+
+  
+    <div>
+      
+    </div>
+  
+
+        </aside>
+      </div>
+
+      <div id="footer" class="pt-2 pb-3 text-center">
+        
+
+
+
+
+      </div>
+    </div>
+
+    
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({ tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']] } });</script>
+    
+  </body>
+</html>

@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>30-01 之何謂一個好的系統呢  ?</title>
+      <link>https://mark-lin.com/posts/20190901/</link>
+      <pubDate>Sun, 01 Sep 2019 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20190901/</guid>
+      <description>何謂一個好的系統呢 ? 為什麼會問這個問題呢 ? 因為事實上這個是我原本想要撰寫的主題。咱們工程師在開發系統，所學習的大部份的技術，基本上都是為了追求『建立一個好的系統』，然後我本來想將建立一個好的系統的知識</description>
+    </item>
     
     <item>
       <title>PHP 的 Web 運行原理 ( 4 ) - Reactor 的實現之 Swoole</title>
@@ -272,15 +281,6 @@
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20180911/</guid>
       <description>正文開始 上一文章中咱們理解了每一層通訊協議大約是在做什麼事情以後，咱們這篇文章中將專門來說明，在傳輸層的兩個協議TCP與UDP。 為什麼會選這兩個出來說呢 ? 因為在即時影音傳輸的世界中，這兩個協議常常拿出</description>
-    </item>
-    
-    <item>
-      <title>30-10之通訊協議的基本常識</title>
-      <link>https://mark-lin.com/posts/20180910/</link>
-      <pubDate>Mon, 10 Sep 2018 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20180910/</guid>
-      <description>正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是當你碰到問題時，或是想要追求更高的效能時，一定卡關。 通訊協議</description>
     </item>
     
   </channel>

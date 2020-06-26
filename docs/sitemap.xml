@@ -3,27 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://mark-lin.com/tags/algorithm/</loc>
+    <lastmod>2020-06-26T09:54:42+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mark-lin.com/posts/</loc>
+    <lastmod>2020-06-26T09:54:42+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mark-lin.com/posts/20200625/</loc>
+    <lastmod>2020-06-26T09:54:42+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mark-lin.com/tags/</loc>
+    <lastmod>2020-06-26T09:54:42+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://mark-lin.com/</loc>
+    <lastmod>2020-06-26T09:54:42+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://mark-lin.com/posts/20190930/</loc>
     <lastmod>2019-12-15T23:13:29+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://mark-lin.com/tags/it-%E9%90%B5%E4%BA%BA%E8%B3%BD-2019/</loc>
-    <lastmod>2020-04-21T16:29:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mark-lin.com/posts/</loc>
-    <lastmod>2020-04-21T16:29:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mark-lin.com/tags/</loc>
-    <lastmod>2020-04-21T16:29:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mark-lin.com/</loc>
     <lastmod>2020-04-21T16:29:00+08:00</lastmod>
   </url>
   
@@ -179,11 +189,6 @@
   
   <url>
     <loc>https://mark-lin.com/posts/20190903/</loc>
-    <lastmod>2019-12-16T11:28:49+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://mark-lin.com/tags/algorithm/</loc>
     <lastmod>2019-12-16T11:28:49+08:00</lastmod>
   </url>
   

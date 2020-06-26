@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>30-10之通訊協議的基本常識</title>
+      <link>https://mark-lin.com/posts/20180910/</link>
+      <pubDate>Mon, 10 Sep 2018 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20180910/</guid>
+      <description>正文開始 在開始進行流媒體通訊協議前，咱們要先來學習什麼是通訊協議，這個東西沒有學習好，雖然你還是可以幹出一個直播服務器，但就只是做出來，但是當你碰到問題時，或是想要追求更高的效能時，一定卡關。 通訊協議</description>
+    </item>
     
     <item>
       <title>30-09之別人要如何聽到我的聲音呢 ?</title>
@@ -272,15 +281,6 @@
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20170609/</guid>
       <description>本篇文章中，我們想要知道以下的重點 : passport 是啥鬼 ? 要如何使用它呢 ? 要如何使用一個 passport 的登入系統呢 ? passport 是啥 ? passport.js是 node 中的一段登入驗證中間層(middleware)，也就是說可以讓你簡單的使用</description>
-    </item>
-    
-    <item>
-      <title>Node之可擴展性 --- Nginx反向代理建立</title>
-      <link>https://mark-lin.com/posts/20170606/</link>
-      <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20170606/</guid>
-      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 : 反向代理器 這種擴展的</description>
     </item>
     
   </channel>

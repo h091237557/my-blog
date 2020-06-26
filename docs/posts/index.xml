@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>Rabin-Karp 演算法的詳細解析</title>
+      <link>https://mark-lin.com/posts/20200625/</link>
+      <pubDate>Wed, 24 Jun 2020 20:16:57 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20200625/</guid>
+      <description>Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 : 它可以判斷 t 字串是否為 s 字串的子字串 子字串例的範例如下 : s: &amp;quot;abcabee&amp;quot; t: &amp;quot;cab&amp;quot; t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。 那這裡問個問題。 **用兩次 for loop 就能找到子字串</description>
+    </item>
     
     <item>
       <title>30-30 之馬克版的一個好的系統攻略本 - 性能基礎篇</title>
@@ -272,15 +281,6 @@
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20190902/</guid>
       <description>接下來咱們會從最基本的開始 : 儘可能的優化單機性能 基本上不少高性能的書籍都是直接跳至分散式架構，但是如果一個開發者連單機都處理不好，我不太相信他開發出來的分散式架構是高性能的。 單機處理的好，才是高性能的</description>
-    </item>
-    
-    <item>
-      <title>30-01 之何謂一個好的系統呢  ?</title>
-      <link>https://mark-lin.com/posts/20190901/</link>
-      <pubDate>Sun, 01 Sep 2019 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20190901/</guid>
-      <description>何謂一個好的系統呢 ? 為什麼會問這個問題呢 ? 因為事實上這個是我原本想要撰寫的主題。咱們工程師在開發系統，所學習的大部份的技術，基本上都是為了追求『建立一個好的系統』，然後我本來想將建立一個好的系統的知識</description>
     </item>
     
   </channel>

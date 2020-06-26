@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Mon, 30 Sep 2019 20:16:57 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>Node之可擴展性 --- Nginx反向代理建立</title>
+      <link>https://mark-lin.com/posts/20170606/</link>
+      <pubDate>Tue, 06 Jun 2017 19:51:35 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20170606/</guid>
+      <description>在上一篇文章中，我們使用cluster來建立多process的應用，這個方法是我們上一篇所提到X軸擴展的複制的方法之一。 而這一篇文章，我們一樣是要來討論X軸擴展的複制的另一種方法 : 反向代理器 這種擴展的</description>
+    </item>
     
     <item>
       <title>Node之可擴展性 --- Node的Cluster</title>
@@ -272,15 +281,6 @@
       <author>h091237557@gmail.com (marklin)</author>
       <guid>https://mark-lin.com/posts/20160926/</guid>
       <description>前面幾篇文章我們說明完了分片的運用後，我們接下來，就來實際的模擬個情景，我們來學習要如何的一步一步完成，咱們選擇的模擬情境為股價應用，現在Fintech幾乎天天在報紙上看到，所以我們就來應景一下，來嘗</description>
-    </item>
-    
-    <item>
-      <title>30-25之MongoDB分片Sharding(3)---片鍵的選擇</title>
-      <link>https://mark-lin.com/posts/20160925/</link>
-      <pubDate>Sun, 25 Sep 2016 19:51:35 +0800</pubDate>
-      <author>h091237557@gmail.com (marklin)</author>
-      <guid>https://mark-lin.com/posts/20160925/</guid>
-      <description>上一篇文章我們詳細的說明完分片的機制後，接下來我們就要來詳細的說明片鍵的選擇，片鍵的選擇關係到你的分片執行速度與效能，並且一但建立後，要再修改幾乎是不太可能的，所以請像選老婆一樣，用心的選~ 完美的片鍵</description>
     </item>
     
   </channel>

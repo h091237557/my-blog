@@ -7,11 +7,20 @@
     <language>ja</language>
     <managingEditor>h091237557@gmail.com (marklin)</managingEditor>
     <webMaster>h091237557@gmail.com (marklin)</webMaster>
-    <lastBuildDate>Tue, 03 Sep 2019 19:51:35 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2020 20:16:57 +0800</lastBuildDate>
     
         <atom:link href="https://mark-lin.com/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
     
 
+    
+    <item>
+      <title>Rabin-Karp 演算法的詳細解析</title>
+      <link>https://mark-lin.com/posts/20200625/</link>
+      <pubDate>Wed, 24 Jun 2020 20:16:57 +0800</pubDate>
+      <author>h091237557@gmail.com (marklin)</author>
+      <guid>https://mark-lin.com/posts/20200625/</guid>
+      <description>Rabin-Karp 是啥呢 ? 它主要可以幫助我們進行以下的事情 : 它可以判斷 t 字串是否為 s 字串的子字串 子字串例的範例如下 : s: &amp;quot;abcabee&amp;quot; t: &amp;quot;cab&amp;quot; t 為 s 的子字串，但注意如果 t 為 cbe，則不是喔。 那這裡問個問題。 **用兩次 for loop 就能找到子字串</description>
+    </item>
     
     <item>
       <title>30-03 之應用層的運算加速 - 演算法</title>
